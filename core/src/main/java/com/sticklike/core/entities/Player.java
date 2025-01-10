@@ -26,7 +26,7 @@ public class Player {
     public Player() {
         Texture texture = new Texture("stickman.png");
         sprite = new Sprite(texture);
-        sprite.setSize(15, 50);
+        sprite.setSize(20, 70);
         sprite.setPosition(
             (GameScreen.WORLD_WIDTH / 2f) - sprite.getWidth() / 2,
             (GameScreen.WORLD_HEIGHT / 2f) - sprite.getHeight() / 2);

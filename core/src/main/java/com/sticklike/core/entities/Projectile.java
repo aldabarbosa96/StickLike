@@ -17,7 +17,7 @@ public class Projectile {
             texture = new Texture("bow_arrow.png");
         }
         sprite = new Sprite(texture);
-        sprite.setSize(25, 5);
+        sprite.setSize(8, 8);
         sprite.setPosition(x, y);
 
         this.directionX = directionX;
