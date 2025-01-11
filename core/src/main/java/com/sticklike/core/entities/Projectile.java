@@ -3,18 +3,19 @@ package com.sticklike.core.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.utils.AssetLoader;
 
 public class Projectile {
     private static Texture texture;
     private Sprite sprite;
-    private float speed = 300;
+    private float speed = 175f;
     private float directionX, directionY;
     private boolean active;
     private Enemy target;
 
     public Projectile(float x, float y, float directionX, float directionY, Enemy target) {
         if (texture == null) {
-            texture = new Texture("bow_arrow.png");
+            texture = AssetLoader.weapon01;
         }
         sprite = new Sprite(texture);
         sprite.setSize(8, 8);

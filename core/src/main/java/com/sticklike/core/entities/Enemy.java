@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.utils.AssetLoader;
 
 public class Enemy {
     private Sprite sprite;
@@ -21,8 +22,7 @@ public class Enemy {
 
 
     public Enemy(float x, float y, Player player, float speed) {
-        Texture texture = new Texture("enemy01.png");
-        sprite = new Sprite(texture);
+        sprite = new Sprite(AssetLoader.enemy01);
         sprite.setSize(38, 33);
         sprite.setPosition(x, y);
         this.player = player;

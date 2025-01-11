@@ -3,13 +3,14 @@ package com.sticklike.core;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sticklike.core.screens.GameScreen;
+import com.sticklike.core.utils.AssetLoader;
 
 public class MainGame extends Game {
     public SpriteBatch spriteBatch;
 
     @Override
     public void create() {
-        spriteBatch = new SpriteBatch(); // Generamos un objeto para dibujar elementos en pantalla
+        AssetLoader.load(); // Cargamos los assets al iniciar
         setScreen(new GameScreen()); // Asignamos la pantalla a visualizar
     }
 
@@ -20,7 +21,7 @@ public class MainGame extends Game {
 
     @Override
     public void dispose() {
-        spriteBatch.dispose();
         super.dispose();
+        AssetLoader.dispose();
     }
 }

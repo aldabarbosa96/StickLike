@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class GridRenderer {
-    private ShapeRenderer shapeRenderer;
-    private int cellSize;
+    private final ShapeRenderer shapeRenderer;
+    private final int cellSize;
 
     public GridRenderer(int cellSize) {
         this.shapeRenderer = new ShapeRenderer();

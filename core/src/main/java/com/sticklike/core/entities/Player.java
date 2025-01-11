@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.managers.EnemyManager;
 import com.sticklike.core.managers.ProjectileManager;
+import com.sticklike.core.utils.AssetLoader;
 
 import java.util.Random;
 
@@ -17,7 +18,7 @@ public class Player {
     private ProjectileManager projectileManager;
     private Sprite sprite;
     private float velocidadPlayer = 125;
-    private float health = 50f;
+    private float health = 50F;
     private float maxHealth = 50;
     private float temporizadorDisparo = 0;
     private static final float SHOOT_INTERVAL = 0.9f; // Intervalo mínimo entre disparos en segundos.
@@ -26,14 +27,11 @@ public class Player {
     private static final Random random = new Random();
 
     public Player(float startX, float startY) {
-        Texture texture = new Texture("stickman.png");
-        sprite = new Sprite(texture);
+        sprite = new Sprite(AssetLoader.stickman);
         sprite.setSize(20, 70);
-        sprite.setPosition(startX - sprite.getWidth() / 2, startY - sprite.getHeight() / 2);
         projectileManager = new ProjectileManager();
         isDead = false;
     }
-
     public boolean isDead() {
         return isDead;
     }
@@ -54,9 +52,6 @@ public class Player {
     public void updatePlayer(float delta, Array<InGameText> dmgText) {
         if (isDead) return;
 
-        float movimientoX = 0;
-        float movimientoY = 0;
-
         // Verifica si hay enemigos en colisión y aplica daño al player.
         for (Enemy enemy : enemyManager.getEnemies()) {
             if (isCollidingWith(enemy) && enemy.canDealDamage()) {
@@ -64,21 +59,7 @@ public class Player {
                 enemy.resetDamageTimer();
             }
         }
-
-        // Movimiento del jugador.
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) movimientoX -= velocidadPlayer * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) movimientoX += velocidadPlayer * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) movimientoY += velocidadPlayer * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) movimientoY -= velocidadPlayer * delta;
-
-        if (movimientoX != 0 && movimientoY != 0) {
-            float factorNormalizacion = (float) (1 / Math.sqrt(2));
-            movimientoX *= factorNormalizacion;
-            movimientoY *= factorNormalizacion;
-        }
-
-        sprite.translate(movimientoX, movimientoY); // Aplica el movimiento al sprite.
-
+        handleInput(delta);
         updateTarget();
 
         temporizadorDisparo += delta;
@@ -148,6 +129,25 @@ public class Player {
         }
     }
 
+    private void handleInput(float delta) {
+        float movimientoX = 0;
+        float movimientoY = 0;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) movimientoX -= velocidadPlayer * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) movimientoX += velocidadPlayer * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) movimientoY += velocidadPlayer * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) movimientoY -= velocidadPlayer * delta;
+
+        if (movimientoX != 0 && movimientoY != 0) {
+            float factorNormalizacion = (float) (1 / Math.sqrt(2));
+            movimientoX *= factorNormalizacion;
+            movimientoY *= factorNormalizacion;
+        }
+
+        sprite.translate(movimientoX, movimientoY);
+    }
+
+
     private boolean isCollidingWith(Enemy enemy) {
         return sprite.getBoundingRectangle().overlaps(enemy.getSprite().getBoundingRectangle());
     }
@@ -185,5 +185,9 @@ public class Player {
 
     public float getHealthPercentage() {
         return health / maxHealth;
+    }
+
+    public float getMaxHealth() {
+        return maxHealth;
     }
 }
