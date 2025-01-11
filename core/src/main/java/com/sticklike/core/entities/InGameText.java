@@ -8,7 +8,7 @@ public class InGameText {
     private String text;
     private float x,y;
     private float duration;
-    private BitmapFont font; // Fuente utilizada para renderizar el texto.
+    private BitmapFont font;
 
     public InGameText(String text, float x, float y, float duration) {
         this.text = text;
@@ -27,7 +27,7 @@ public class InGameText {
     public void render(SpriteBatch batch){
         font.draw(batch,text,x,y);
     }
-    public void update(float delta){ // Actualiza la posición y el tiempo restante del texto.
+    public void update(float delta){
         duration -= delta;
         y += delta * 30;
     }

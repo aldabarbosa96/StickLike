@@ -7,35 +7,100 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Enemy {
     private Sprite sprite;
+    private Player player;
     private float health = 100;
+    private float speed;
+    private float moveTimer, pauseDuration, moveDuration;
+    private boolean isMoving;
+    private float damageCooldown = 1f;
+    private float damageTimer = 0f;
+    private static final float MAX_PAUSE = 0.75f;
+    private static final float MIN_PAUSE = 0.25f;
+    private static final float MIN_MOVE_DURATION = 1.5f;
+    private static final float MAX_MOVE_DURATION = 3.0f;
 
-    public Enemy(float x, float y) {
+
+    public Enemy(float x, float y, Player player, float speed) {
         Texture texture = new Texture("enemy01.png");
         sprite = new Sprite(texture);
-        sprite.setSize(35, 30);
+        sprite.setSize(38, 33);
         sprite.setPosition(x, y);
+        this.player = player;
+        this.speed = speed;
+        this.moveTimer = 1;
+        this.isMoving = true;
+        this.pauseDuration = (float) (MIN_PAUSE + Math.random() * (MAX_PAUSE - MIN_PAUSE));
+        this.moveDuration = MIN_MOVE_DURATION + (float) Math.random() * (MAX_MOVE_DURATION - MIN_MOVE_DURATION);
     }
 
-    public void render(SpriteBatch batch) {
-        if (!isDead()) { // Verifica si el enemigo aún tiene vida.
-            sprite.draw(batch); // Dibuja el sprite en la pantalla.
+    public void renderEnemy(SpriteBatch batch) {
+        if (!isDead()) {
+            sprite.draw(batch);
         }
     }
 
-    public void update(float delta) {
-        // TODO: Implementar lógica de comportamiento, como movimiento o animaciones.
+    public void updateEnemy(float delta) {
+        moveTimer += delta;
+
+        if (isMoving) {
+            if (moveTimer >= moveDuration) {
+                isMoving = false;
+                moveTimer = 0;
+                pauseDuration = MIN_PAUSE + (float) Math.random() * (MAX_PAUSE - MIN_PAUSE);
+            } else {
+
+                float enemyPosX = getX();
+                float enemyPosY = getY();
+
+                float playerPosX = player.getSprite().getX();
+                float playerPosY = player.getSprite().getY();
+
+                float difX = playerPosX - enemyPosX;
+                float difY = playerPosY - enemyPosY;
+
+                // Añadimos un desplazamiento aleatorio para crear movimiento diagonal.
+                float randomOffsetX = (float) Math.random() * 150 - 50;
+                float randomOffsetY = (float) Math.random() * 150 - 50;
+
+                difX += randomOffsetX;
+                difY += randomOffsetY;
+
+                float distance = (float) Math.sqrt(difX * difX + difY * difY);
+
+                if (distance != 0) {
+                    difX /= distance;
+                    difY /= distance;
+                }
+                float movementX = difX * speed * delta;
+                float movementY = difY * speed * delta;
+
+                sprite.translate(movementX, movementY);
+            }
+        } else {
+            if (moveTimer >= pauseDuration) {
+                isMoving = true;
+                moveTimer = 0;
+                moveDuration = MIN_MOVE_DURATION + (float) Math.random() * (MAX_MOVE_DURATION - MIN_MOVE_DURATION);
+            }
+        }
+        if ( damageTimer> 0) {
+            damageTimer -= delta;
+        }
     }
 
-    // Verifica si un proyectil impacta en el enemigo.
     public boolean isHitBy(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        Rectangle rect = sprite.getBoundingRectangle();
-        // Calcula el centro del proyectil para una detección más precisa.
-        float projectileCenterX = projectileX + projectileWidth / 2;
-        float projectileCenterY = projectileY + projectileHeight / 2;
-        return rect.contains(projectileCenterX, projectileCenterY); // Devuelve si el proyectil está dentro del área del enemigo.
+        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
     }
 
-    // Getters/setters
+
+    public boolean canDealDamage() {
+        return damageTimer <= 0;
+    }
+
+    public void resetDamageTimer() {
+        damageTimer = damageCooldown;
+    }
+
     public void reduceHealth(float amount) {
         health -= amount;
     }

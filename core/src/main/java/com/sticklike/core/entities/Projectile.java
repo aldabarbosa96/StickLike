@@ -10,7 +10,7 @@ public class Projectile {
     private float speed = 300;
     private float directionX, directionY;
     private boolean active;
-    private Enemy target; // Enemigo objetivo del proyectil.
+    private Enemy target;
 
     public Projectile(float x, float y, float directionX, float directionY, Enemy target) {
         if (texture == null) {
@@ -22,32 +22,30 @@ public class Projectile {
 
         this.directionX = directionX;
         this.directionY = directionY;
-        this.active = true; // El proyectil está activo inicialmente.
-        this.target = target; // Asignamos el enemigo objetivo.
+        this.active = true;
+        this.target = target;
     }
 
     public void update(float delta) {
         if (active) {
-            sprite.translate(directionX * speed * delta, directionY * speed * delta); // Mueve el proyectil.
+            sprite.translate(directionX * speed * delta, directionY * speed * delta); // Movimiento del proyectil.
         }
     }
 
     public void render(SpriteBatch batch) {
         if (active) {
-            sprite.draw(batch); // Dibuja el proyectil solo si está activo.
+            sprite.draw(batch);
         }
     }
 
-    public void deactivate() {
-        active = false; // Desactiva el proyectil tras un impacto.
-    }
+    public void deactivate() {active = false;}
 
     public boolean isActive() {
         return active;
     }
 
     public Enemy getTarget() {
-        return target; // Devuelve el enemigo objetivo.
+        return target;
     }
 
     public void dispose() {
@@ -66,6 +64,6 @@ public class Projectile {
     }
 
     public com.badlogic.gdx.math.Rectangle getBoundingRectangle() {
-        return sprite.getBoundingRectangle(); // Devuelve el rectángulo de colisión.
+        return sprite.getBoundingRectangle(); // Devuelve el rectángulo de colisión para gestionar los impactos.
     }
 }

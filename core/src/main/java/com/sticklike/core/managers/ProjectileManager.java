@@ -21,15 +21,13 @@ public class ProjectileManager {
         projectiles.add(new Projectile(startX, startY, dx, dy, target));
     }
 
-
-    // Actualiza todos los proyectiles.
     public void update(float delta, Array<InGameText> dmgText) {
         Iterator<Projectile> iterator = projectiles.iterator();
         while (iterator.hasNext()) {
             Projectile projectile = iterator.next();
             projectile.update(delta);
 
-            Enemy target = projectile.getTarget(); // Recuperamos el objetivo del proyectil.
+            Enemy target = projectile.getTarget();
 
             if (projectile.isActive() && target != null && !target.isDead() && target.isHitBy(
                 projectile.getX(),
@@ -52,7 +50,6 @@ public class ProjectileManager {
             }
         }
     }
-
 
     public void render(SpriteBatch batch) {
         for (Projectile projectile : projectiles) {

@@ -5,13 +5,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sticklike.core.screens.GameScreen;
 
 public class MainGame extends Game {
-
     public SpriteBatch spriteBatch;
 
     @Override
     public void create() {
-        spriteBatch = new SpriteBatch();
-        setScreen(new GameScreen());
+        spriteBatch = new SpriteBatch(); // Generamos un objeto para dibujar elementos en pantalla
+        setScreen(new GameScreen()); // Asignamos la pantalla a visualizar
     }
 
     @Override

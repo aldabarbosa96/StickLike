@@ -27,7 +27,7 @@ public class EnemyManager {
         }
 
         for (Enemy enemy : enemies) {
-            enemy.update(delta);
+            enemy.updateEnemy(delta);
             if (enemy.isDead()) {
                 enemies.removeValue(enemy, true);
             }
@@ -35,8 +35,9 @@ public class EnemyManager {
     }
 
     public void render(SpriteBatch batch) {
+        enemies.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
         for (Enemy enemy : enemies) {
-            enemy.render(batch);
+            enemy.renderEnemy(batch);
         }
     }
 
@@ -48,17 +49,16 @@ public class EnemyManager {
 
     private void spawnEnemy() {
         float minDistance = 300f;
-        float margin = 100f;
         float x, y;
 
         // Calcula los límites dinámicos alrededor del jugador en base a su posición.
         float playerX = player.getSprite().getX() + player.getSprite().getWidth() / 2;
         float playerY = player.getSprite().getY() + player.getSprite().getHeight() / 2;
 
-        float leftLimit = playerX - GameScreen.WORLD_WIDTH / 2 + margin;
-        float rightLimit = playerX + GameScreen.WORLD_WIDTH / 2 - margin;
-        float bottomLimit = playerY - GameScreen.WORLD_HEIGHT / 2 + margin;
-        float topLimit = playerY + GameScreen.WORLD_HEIGHT / 2 - margin;
+        float leftLimit = playerX - GameScreen.WORLD_WIDTH / 2 + BORDER_MARGIN;
+        float rightLimit = playerX + GameScreen.WORLD_WIDTH / 2 - BORDER_MARGIN;
+        float bottomLimit = playerY - GameScreen.WORLD_HEIGHT / 2 + BORDER_MARGIN;
+        float topLimit = playerY + GameScreen.WORLD_HEIGHT / 2 - BORDER_MARGIN;
 
         do {
             // Genera coordenadas aleatorias dentro de los límites dinámicos.
@@ -67,8 +67,9 @@ public class EnemyManager {
 
         } while (Math.sqrt(Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2)) < minDistance);
 
-        // Añade el nuevo enemigo a la lista.
-        enemies.add(new Enemy(x, y));
+        float randomSpeed = 40f + (float) Math.random() * 45f;
+
+        enemies.add(new Enemy(x, y, player, randomSpeed));
     }
 
     public Array<Enemy> getEnemies() {
