@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.managers.EnemyManager;
 import com.sticklike.core.managers.ProjectileManager;
-import com.sticklike.core.screens.GameScreen;
 
 import java.util.Random;
 
@@ -23,6 +22,7 @@ public class Player {
     private float temporizadorDisparo = 0;
     private static final float SHOOT_INTERVAL = 0.9f; // Intervalo mínimo entre disparos en segundos.
     private float attackRange = 200f;
+    private boolean isDead;
     private static final Random random = new Random();
 
     public Player(float startX, float startY) {
@@ -31,15 +31,29 @@ public class Player {
         sprite.setSize(20, 70);
         sprite.setPosition(startX - sprite.getWidth() / 2, startY - sprite.getHeight() / 2);
         projectileManager = new ProjectileManager();
+        isDead = false;
     }
 
+    public boolean isDead() {
+        return isDead;
+    }
+
+    private void die() {
+        isDead = true;
+        System.out.println("GAME OVER");
+        // todo -> implementar lógica adicional al morir
+    }
 
     public void renderPlayerAndProjectile(SpriteBatch batch) {
-        sprite.draw(batch);
+        if (!isDead) {
+            sprite.draw(batch);
+        }
         projectileManager.render(batch);
     }
 
     public void updatePlayer(float delta, Array<InGameText> dmgText) {
+        if (isDead) return;
+
         float movimientoX = 0;
         float movimientoY = 0;
 
@@ -139,16 +153,13 @@ public class Player {
     }
 
     public void takeDamage(float damage) {
+        if (isDead) return;
+
         health -= damage;
         if (health <= 0) {
             health = 0;
-            alMorir();
+            die();
         }
-    }
-
-    private void alMorir() {
-        System.out.println("GAME OVER");
-        // todo -> hay que gestionar una pantalla de game over
     }
 
     public void dispose() {

@@ -58,9 +58,9 @@ public class Enemy {
                 float difX = playerPosX - enemyPosX;
                 float difY = playerPosY - enemyPosY;
 
-                // Añadimos un desplazamiento aleatorio para crear movimiento diagonal.
-                float randomOffsetX = (float) Math.random() * 150 - 50;
-                float randomOffsetY = (float) Math.random() * 150 - 50;
+                // Añadimos un desplazamiento aleatorio para simular movimiento diagonal.
+                float randomOffsetX = (float) Math.random() * 100 - 50;
+                float randomOffsetY = (float) Math.random() * 100;
 
                 difX += randomOffsetX;
                 difY += randomOffsetY;

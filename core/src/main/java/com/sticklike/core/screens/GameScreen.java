@@ -1,9 +1,12 @@
 package com.sticklike.core.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
@@ -48,10 +51,13 @@ public class GameScreen implements Screen {
         updateCameraPosition();
     }
 
-
-
     @Override
     public void render(float delta) {
+        if (player.isDead()) {
+            renderGameOverScreen();
+            return;
+        }
+
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -68,20 +74,23 @@ public class GameScreen implements Screen {
         }
 
         updateCameraPosition();
-
         gridRenderer.render(camera);
 
-        // Renderizamos todos los sprites (player, enemigos y texto flotante).
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
         enemyManager.render(spriteBatch);
         player.renderPlayerAndProjectile(spriteBatch);
-        for (InGameText floatingText : dmgText) { floatingText.render(spriteBatch); }
+        for (InGameText floatingText : dmgText) {
+            floatingText.render(spriteBatch);
+        }
         spriteBatch.end();
 
         hud.renderHUD(spriteBatch);
     }
 
+    private void renderGameOverScreen() {
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen((Game) Gdx.app.getApplicationListener()));
+    }
 
     public void updateCameraPosition(){
         camera.position.set(
@@ -114,9 +123,5 @@ public class GameScreen implements Screen {
             floatingText.dispose();
         }
         enemyManager.dispose();
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 }

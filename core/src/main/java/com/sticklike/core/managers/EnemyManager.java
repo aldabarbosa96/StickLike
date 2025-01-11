@@ -20,6 +20,9 @@ public class EnemyManager {
     }
 
     public void update(float delta) {
+        if (player.isDead()) {
+            return;
+        }
         spawnTimer += delta;
         if (spawnTimer >= spawnInterval) {
             spawnEnemy();
@@ -35,6 +38,8 @@ public class EnemyManager {
     }
 
     public void render(SpriteBatch batch) {
+        if (player.isDead()) return;
+
         enemies.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
         for (Enemy enemy : enemies) {
             enemy.renderEnemy(batch);
