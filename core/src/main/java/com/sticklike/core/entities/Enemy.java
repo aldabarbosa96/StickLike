@@ -9,7 +9,7 @@ import com.sticklike.core.utils.GameConfig;
 public class Enemy {
     private Sprite sprite;
     private Player player;
-    private float health = 50;
+    private float health = 60;
     private float speed;
     private float moveTimer, pauseDuration, moveDuration;
     private boolean isMoving;
@@ -98,7 +98,7 @@ public class Enemy {
     public XPobjects dropExperiencia() {
         if (!droppedXP) {
             droppedXP = true;
-            System.out.println("Generando XPObject...");
+            //System.out.println("Generando XPObject...");
             return new XPobjects(this.getX(), this.getY());
         }
         return null;

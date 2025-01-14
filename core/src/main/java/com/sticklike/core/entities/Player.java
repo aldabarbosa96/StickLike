@@ -23,6 +23,7 @@ public class Player {
     private float attackRange;
     private float shootInterval;
     private float temporizadorDisparo = 0;
+    private int projectilePerShot = 1;
     private boolean isDead;
     private float currentExperience = 0f;
     private float experienceToNextLevel = 100f;
@@ -102,7 +103,7 @@ public class Player {
             basicShot();
         }
 
-        projectileManager.update(delta, dmgText);
+        projectileManager.update(delta, enemyManager.getEnemies(),dmgText);
     }
 
     private void updateTarget() {
@@ -140,7 +141,6 @@ public class Player {
     private void basicShot() {
         if (enemyTarget == null || enemyTarget.isDead()) return;
 
-        // Verifica si el objetivo actual sigue dentro del rango.
         float distanceToTarget = (float) Math.sqrt(
             Math.pow(enemyTarget.getX() - sprite.getX(), 2) +
                 Math.pow(enemyTarget.getY() - sprite.getY(), 2)
@@ -152,19 +152,21 @@ public class Player {
 
         if (enemyTarget == null || enemyTarget.isDead()) return;
 
-        // Calcula la posición inicial del proyectil.
         float startX = sprite.getX() + sprite.getWidth() / 2;
         float startY = sprite.getY() + sprite.getHeight() / 2;
 
-        // Calcula la posición objetivo.
         float targetX = enemyTarget.getX() + enemyTarget.getSprite().getWidth() / 2;
         float targetY = enemyTarget.getY() + enemyTarget.getSprite().getHeight() / 2;
 
-        // Calcula la dirección normalizada hacia el objetivo.
         float[] direction = calculateNormalizedDirection(startX, startY, targetX, targetY);
 
-        if (distanceToTarget <= attackRange) {
-            projectileManager.addProjectile(startX, startY, direction[0], direction[1], enemyTarget);
+        for (int i = 0; i < projectilePerShot; i++) {
+            // Ajuste para disparar en ángulos levemente diferentes para cada proyectil.
+            float angleOffset = (i - (projectilePerShot - 1) / 2f) * 5f; // Ángulo entre proyectiles.
+            float adjustedDirectionX = (float) (direction[0] * Math.cos(Math.toRadians(angleOffset)) - direction[1] * Math.sin(Math.toRadians(angleOffset)));
+            float adjustedDirectionY = (float) (direction[0] * Math.sin(Math.toRadians(angleOffset)) + direction[1] * Math.cos(Math.toRadians(angleOffset)));
+
+            projectileManager.addProjectile(startX, startY, adjustedDirectionX, adjustedDirectionY, enemyTarget);
         }
     }
 
@@ -190,6 +192,10 @@ public class Player {
         System.out.println("Nuevo intervalo de disparo: " + this.shootInterval);
     }
 
+    public void increaseProjectilesPerShot(int amount) {
+        projectilePerShot += amount;
+        System.out.println("Número de proyectiles por disparo aumentado a: " + projectilePerShot);
+    }
     private void handleInput(float delta) {
         float movimientoX = 0;
         float movimientoY = 0;
@@ -259,5 +265,6 @@ public class Player {
     public ProjectileManager getProjectileManager() {
         return projectileManager;
     }
+
 
 }

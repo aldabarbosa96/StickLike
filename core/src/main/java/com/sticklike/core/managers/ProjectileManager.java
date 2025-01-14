@@ -20,43 +20,45 @@ public class ProjectileManager {
     }
 
     public void addProjectile(float startX, float startY, float dx, float dy, Enemy target) {
-        projectiles.add(new Projectile(startX, startY, dx, dy, target));
+        float randomSpeedMultiplier = 0.7f + (float) Math.random() * 0.3f;
+        projectiles.add(new Projectile(startX, startY, dx, dy, target, randomSpeedMultiplier));
     }
 
-    public void update(float delta, Array<InGameText> dmgText) {
+    public void update(float delta, Array<Enemy> enemies, Array<InGameText> dmgText) {
         Iterator<Projectile> iterator = projectiles.iterator();
+
         while (iterator.hasNext()) {
             Projectile projectile = iterator.next();
             projectile.update(delta);
 
-            Enemy target = projectile.getTarget();
+            for (Enemy enemy : enemies) {
+                if (!enemy.isDead() && projectile.isActive() &&
+                    enemy.isHitBy(projectile.getX(), projectile.getY(), projectile.getBoundingRectangle().width, projectile.getBoundingRectangle().height)) {
 
-            if (projectile.isActive() && target != null && !target.isDead() && target.isHitBy(
-                projectile.getX(),
-                projectile.getY(),
-                projectile.getBoundingRectangle().width,
-                projectile.getBoundingRectangle().height)) {
+                    // Cálculo del daño con el multiplicador aplicado
+                    float baseDamage = 25 + (float) Math.random() * 10; // Daño base aleatorio entre 25 y 34
+                    float damage = baseDamage * damageMultiplier;
 
-                // Cálculo del daño con el multiplicador aplicado
-                float baseDamage = 25 + (float) Math.random() * 10; // Daño base aleatorio entre 25 y 34
-                float damage = baseDamage * damageMultiplier;
+                    enemy.reduceHealth(damage);
 
-                target.reduceHealth(damage);
+                    // Mostrar el daño infligido como texto flotante
+                    dmgText.add(new InGameText(
+                        String.valueOf((int) damage),
+                        enemy.getX() + enemy.getSprite().getWidth() / 2,
+                        enemy.getY() + enemy.getSprite().getHeight() + 20,
+                        0.5f
+                    ));
 
-                // Mostramos el daño infligido como texto flotante
-                dmgText.add(new InGameText(
-                    String.valueOf((int) damage),
-                    target.getX() + target.getSprite().getWidth() / 2,
-                    target.getY() + target.getSprite().getHeight() + 20,
-                    0.5f
-                ));
+                    projectile.deactivate(); // El proyectil impacta y se desactiva
+                    break; // No necesitamos seguir verificando más enemigos para este proyectil
+                }
+            }
 
-                projectile.deactivate();
-                iterator.remove();
+            if (!projectile.isActive()) {
+                iterator.remove(); // Eliminar proyectiles inactivos
             }
         }
     }
-
 
     public void render(SpriteBatch batch) {
         for (Projectile projectile : projectiles) {

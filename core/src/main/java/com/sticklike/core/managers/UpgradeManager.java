@@ -40,7 +40,16 @@ public class UpgradeManager {
             "Reduce el intervalo de disparo un 9%",
             () -> player.reduceShootInterval(0.15f)
         ));
-        // todo -> añadir más mejoras próximamente
+        allUpgrades.add(new Upgrade(
+            "Daño Aumentado",
+            "Aumenta el daño del Ataque Básico un 6%",
+            () -> player.increaseDamage(1.06f)
+        ));
+        allUpgrades.add(new Upgrade(
+            "Proyectil Múltiple",
+            "Aumenta el número de Proyectiles en 1",
+            () -> player.increaseProjectilesPerShot(1)
+        ));
     }
 
     public void promptUpgrade() {

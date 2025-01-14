@@ -10,11 +10,12 @@ public class Projectile {
     private static Texture texture;
     private Sprite sprite;
     private float speed = GameConfig.PROJECTILE_SPEED;
+    private float speedMultiplier; // Nuevo atributo para modificar la velocidad
     private float directionX, directionY;
     private boolean active;
     private Enemy target;
 
-    public Projectile(float x, float y, float directionX, float directionY, Enemy target) {
+    public Projectile(float x, float y, float directionX, float directionY, Enemy target, float speedMultiplier) {
         if (texture == null) {
             texture = AssetLoader.weapon01;
         }
@@ -26,11 +27,13 @@ public class Projectile {
         this.directionY = directionY;
         this.active = true;
         this.target = target;
+        this.speedMultiplier = speedMultiplier; // Asignar el multiplicador de velocidad
     }
 
     public void update(float delta) {
         if (active) {
-            sprite.translate(directionX * speed * delta, directionY * speed * delta); // Movimiento del proyectil.
+            // Aplicamos el multiplicador de velocidad
+            sprite.translate(directionX * speed * speedMultiplier * delta, directionY * speed * speedMultiplier * delta);
         }
     }
 
@@ -40,15 +43,11 @@ public class Projectile {
         }
     }
 
-    public void deactivate() {active = false;}
+    public void deactivate() { active = false; }
 
-    public boolean isActive() {
-        return active;
-    }
+    public boolean isActive() { return active; }
 
-    public Enemy getTarget() {
-        return target;
-    }
+    public Enemy getTarget() { return target; }
 
     public void dispose() {
         if (texture != null) {
@@ -57,13 +56,9 @@ public class Projectile {
         }
     }
 
-    public float getX() {
-        return sprite.getX();
-    }
+    public float getX() { return sprite.getX(); }
 
-    public float getY() {
-        return sprite.getY();
-    }
+    public float getY() { return sprite.getY(); }
 
     public com.badlogic.gdx.math.Rectangle getBoundingRectangle() {
         return sprite.getBoundingRectangle(); // Devuelve el rectángulo de colisión para gestionar los impactos.
