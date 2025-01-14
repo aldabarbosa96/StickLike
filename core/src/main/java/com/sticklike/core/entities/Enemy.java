@@ -1,44 +1,47 @@
 package com.sticklike.core.entities;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.utils.AssetLoader;
+import com.sticklike.core.utils.GameConfig;
 
 public class Enemy {
     private Sprite sprite;
     private Player player;
-    private float health = 100;
+    private float health = 50;
     private float speed;
     private float moveTimer, pauseDuration, moveDuration;
     private boolean isMoving;
     private float damageCooldown = 1f;
     private float damageTimer = 0f;
-    private static final float MAX_PAUSE = 0.75f;
-    private static final float MIN_PAUSE = 0.25f;
-    private static final float MIN_MOVE_DURATION = 1.5f;
-    private static final float MAX_MOVE_DURATION = 3.0f;
+    private boolean droppedXP = false;
+    private boolean procesado = false;
+    private static final float MAX_PAUSE = GameConfig.ENEMY_MAX_PAUSE;
+    private static final float MIN_PAUSE = GameConfig.ENEMY_MIN_PAUSE;
+    private static final float MIN_MOVE_DURATION = GameConfig.ENEMY_MIN_MOVE_DURATION;
+    private static final float MAX_MOVE_DURATION = GameConfig.ENEMY_MAX_MOVE_DURATION;
 
 
     public Enemy(float x, float y, Player player, float speed) {
         sprite = new Sprite(AssetLoader.enemy01);
-        sprite.setSize(38, 33);
+        sprite.setSize(32, 27);
         sprite.setPosition(x, y);
         this.player = player;
         this.speed = speed;
         this.moveTimer = 1;
         this.isMoving = true;
-        this.pauseDuration = (float) (MIN_PAUSE + Math.random() * (MAX_PAUSE - MIN_PAUSE));
-        this.moveDuration = MIN_MOVE_DURATION + (float) Math.random() * (MAX_MOVE_DURATION - MIN_MOVE_DURATION);
-    }
+        this.pauseDuration = GameConfig.ENEMY_MIN_PAUSE + (float) Math.random() *
+            (GameConfig.ENEMY_MAX_PAUSE - GameConfig.ENEMY_MIN_PAUSE);
+        this.moveDuration = GameConfig.ENEMY_MIN_MOVE_DURATION + (float) Math.random() *
+            (GameConfig.ENEMY_MAX_MOVE_DURATION - GameConfig.ENEMY_MIN_MOVE_DURATION);
 
+    }
     public void renderEnemy(SpriteBatch batch) {
         if (!isDead()) {
             sprite.draw(batch);
         }
     }
-
     public void updateEnemy(float delta) {
         moveTimer += delta;
 
@@ -60,7 +63,7 @@ public class Enemy {
 
                 // Añadimos un desplazamiento aleatorio para simular movimiento diagonal.
                 float randomOffsetX = (float) Math.random() * 100 - 50;
-                float randomOffsetY = (float) Math.random() * 100;
+                float randomOffsetY = (float) Math.random() * 100 - 25;
 
                 difX += randomOffsetX;
                 difY += randomOffsetY;
@@ -92,6 +95,19 @@ public class Enemy {
         return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
     }
 
+    public XPobjects dropExperiencia() {
+        if (!droppedXP) {
+            droppedXP = true;
+            System.out.println("Generando XPObject...");
+            return new XPobjects(this.getX(), this.getY());
+        }
+        return null;
+    }
+
+    public boolean hasDroppedXP() {
+        return droppedXP;
+    }
+
 
     public boolean canDealDamage() {
         return damageTimer <= 0;
@@ -106,11 +122,13 @@ public class Enemy {
     }
 
     public boolean isDead() {
-        return health <= 0;
+        boolean dead = health <= 0;
+        return dead;
     }
 
+
     public void dispose() {
-        sprite.getTexture().dispose();
+        sprite = null;
     }
 
     public float getX() {
@@ -131,5 +149,13 @@ public class Enemy {
 
     public Sprite getSprite() {
         return sprite;
+    }
+
+    public boolean isProcesado() {
+        return procesado;
+    }
+
+    public void setProcesado(boolean procesado) {
+        this.procesado = procesado;
     }
 }

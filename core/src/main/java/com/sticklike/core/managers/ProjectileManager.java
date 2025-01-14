@@ -12,6 +12,8 @@ import java.util.Iterator;
 
 public class ProjectileManager {
     private ArrayList<Projectile> projectiles;
+    private float damageMultiplier = 1.0f;
+
 
     public ProjectileManager() {
         projectiles = new ArrayList<>();
@@ -35,9 +37,13 @@ public class ProjectileManager {
                 projectile.getBoundingRectangle().width,
                 projectile.getBoundingRectangle().height)) {
 
-                float damage = 25 + (float) Math.random() * 10; // Daño aleatorio entre 25 y 34.
+                // Cálculo del daño con el multiplicador aplicado
+                float baseDamage = 25 + (float) Math.random() * 10; // Daño base aleatorio entre 25 y 34
+                float damage = baseDamage * damageMultiplier;
+
                 target.reduceHealth(damage);
 
+                // Mostramos el daño infligido como texto flotante
                 dmgText.add(new InGameText(
                     String.valueOf((int) damage),
                     target.getX() + target.getSprite().getWidth() / 2,
@@ -51,10 +57,16 @@ public class ProjectileManager {
         }
     }
 
+
     public void render(SpriteBatch batch) {
         for (Projectile projectile : projectiles) {
             projectile.render(batch);
         }
+    }
+
+    public void increaseDamage(float multiplier) {
+        damageMultiplier += multiplier;
+        System.out.println("Multiplicador de daño actualizado a: " + damageMultiplier);
     }
 
     public void dispose() {

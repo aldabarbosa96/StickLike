@@ -6,7 +6,6 @@ import com.sticklike.core.screens.GameScreen;
 import com.sticklike.core.utils.AssetLoader;
 
 public class MainGame extends Game {
-    public SpriteBatch spriteBatch;
 
     @Override
     public void create() {

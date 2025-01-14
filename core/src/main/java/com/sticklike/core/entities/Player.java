@@ -2,36 +2,52 @@ package com.sticklike.core.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.managers.EnemyManager;
 import com.sticklike.core.managers.ProjectileManager;
 import com.sticklike.core.utils.AssetLoader;
-
-import java.util.Random;
+import com.sticklike.core.utils.GameConfig;
 
 public class Player {
     private Enemy enemyTarget;
     private EnemyManager enemyManager;
     private ProjectileManager projectileManager;
     private Sprite sprite;
-    private float velocidadPlayer = 125;
-    private float health = 50F;
-    private float maxHealth = 50;
+    private float velocidadPlayer;
+    private float health;
+    private float maxHealth;
+    private float attackRange;
+    private float shootInterval;
     private float temporizadorDisparo = 0;
-    private static final float SHOOT_INTERVAL = 0.9f; // Intervalo mínimo entre disparos en segundos.
-    private float attackRange = 200f;
     private boolean isDead;
-    private static final Random random = new Random();
+    private float currentExperience = 0f;
+    private float experienceToNextLevel = 100f;
+    private int level = 1;
+    private Animation<TextureRegion> movementAnimationRight, movementAnimationLeft, movementIdle;
+    private float animationTimer = 0;
 
     public Player(float startX, float startY) {
+        this.velocidadPlayer = GameConfig.PLAYER_SPEED;
+        this.health = GameConfig.PLAYER_HEALTH;
+        this.maxHealth = GameConfig.PLAYER_MAX_HEALTH;
+        this.attackRange = GameConfig.PLAYER_ATTACK_RANGE;
+        this.shootInterval = GameConfig.PLAYER_SHOOT_INTERVAL;
+
         sprite = new Sprite(AssetLoader.stickman);
-        sprite.setSize(20, 70);
+        sprite.setSize(15, 45);
         projectileManager = new ProjectileManager();
         isDead = false;
+
+        // Acceso a animaciones desde el HashMap
+        movementIdle = AssetLoader.animations.get("idle");
+        movementAnimationRight = AssetLoader.animations.get("moveRight");
+        movementAnimationLeft = AssetLoader.animations.get("moveLeft");
     }
+
     public boolean isDead() {
         return isDead;
     }
@@ -44,18 +60,36 @@ public class Player {
 
     public void renderPlayerAndProjectile(SpriteBatch batch) {
         if (!isDead) {
-            sprite.draw(batch);
+            TextureRegion currentFrame;
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) { // Moviéndose a la derecha
+                animationTimer += Gdx.graphics.getDeltaTime();
+                currentFrame = movementAnimationRight.getKeyFrame(animationTimer, true);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) { // Moviéndose a la izquierda
+                animationTimer += Gdx.graphics.getDeltaTime();
+                currentFrame = movementAnimationLeft.getKeyFrame(animationTimer, true);
+            } else {
+                animationTimer += Gdx.graphics.getDeltaTime();
+                currentFrame = movementIdle.getKeyFrame(animationTimer, true);
+            }
+            batch.draw(currentFrame, sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
         }
         projectileManager.render(batch);
     }
 
+
     public void updatePlayer(float delta, Array<InGameText> dmgText) {
+        if (enemyManager == null) {
+            System.err.println("EnemyManager no está inicializado.");
+            return;
+        }
         if (isDead) return;
+
+        animationTimer += delta;
 
         // Verifica si hay enemigos en colisión y aplica daño al player.
         for (Enemy enemy : enemyManager.getEnemies()) {
             if (isCollidingWith(enemy) && enemy.canDealDamage()) {
-                takeDamage(1);
+                takeDamage(2);
                 enemy.resetDamageTimer();
             }
         }
@@ -63,7 +97,7 @@ public class Player {
         updateTarget();
 
         temporizadorDisparo += delta;
-        if (temporizadorDisparo >= SHOOT_INTERVAL) {
+        if (temporizadorDisparo >= shootInterval) {
             temporizadorDisparo = 0;
             basicShot();
         }
@@ -96,13 +130,21 @@ public class Player {
         }
     }
 
+    private float[] calculateNormalizedDirection(float startX, float startY, float targetX, float targetY) {
+        float dx = targetX - startX;
+        float dy = targetY - startY;
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        return new float[]{dx / distance, dy / distance};
+    }
+
     private void basicShot() {
         if (enemyTarget == null || enemyTarget.isDead()) return;
 
         // Verifica si el objetivo actual sigue dentro del rango.
         float distanceToTarget = (float) Math.sqrt(
             Math.pow(enemyTarget.getX() - sprite.getX(), 2) +
-                Math.pow(enemyTarget.getY() - sprite.getY(), 2));
+                Math.pow(enemyTarget.getY() - sprite.getY(), 2)
+        );
 
         if (distanceToTarget > attackRange) {
             updateTarget();
@@ -114,27 +156,54 @@ public class Player {
         float startX = sprite.getX() + sprite.getWidth() / 2;
         float startY = sprite.getY() + sprite.getHeight() / 2;
 
-        // Calcula la dirección hacia el enemigo.
+        // Calcula la posición objetivo.
         float targetX = enemyTarget.getX() + enemyTarget.getSprite().getWidth() / 2;
         float targetY = enemyTarget.getY() + enemyTarget.getSprite().getHeight() / 2;
 
-        float dx = targetX - startX;
-        float dy = targetY - startY;
-        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        // Calcula la dirección normalizada hacia el objetivo.
+        float[] direction = calculateNormalizedDirection(startX, startY, targetX, targetY);
 
-        if (distance <= attackRange) {
-            dx /= distance; // Normaliza la dirección.
-            dy /= distance;
-            projectileManager.addProjectile(startX, startY, dx, dy, enemyTarget);
+        if (distanceToTarget <= attackRange) {
+            projectileManager.addProjectile(startX, startY, direction[0], direction[1], enemyTarget);
         }
+    }
+
+    public void increaseSpeed(float percentage) {
+        this.velocidadPlayer += this.velocidadPlayer * percentage;
+        System.out.println("Nueva velocidad: " + this.velocidadPlayer);
+    }
+
+    public void increaseAttackRange(float percentage) {
+        this.attackRange += this.attackRange * percentage;
+        System.out.println("Nuevo rango de ataque: " + this.attackRange);
+    }
+    public void increaseDamage(float amount) {
+        projectileManager.increaseDamage(amount);
+        System.out.println("Daño de proyectiles aumentado.");
+    }
+
+    public void reduceShootInterval(float percentage) {
+        this.shootInterval *= (1 - percentage);
+        if (this.shootInterval < 0.1f) {
+            this.shootInterval = 0.1f;
+        }
+        System.out.println("Nuevo intervalo de disparo: " + this.shootInterval);
     }
 
     private void handleInput(float delta) {
         float movimientoX = 0;
         float movimientoY = 0;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) movimientoX -= velocidadPlayer * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) movimientoX += velocidadPlayer * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            movimientoX -= velocidadPlayer * delta;
+            animationTimer += delta;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            movimientoX += velocidadPlayer * delta;
+            animationTimer += delta;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.W)) movimientoY += velocidadPlayer * delta;
         if (Gdx.input.isKeyPressed(Input.Keys.S)) movimientoY -= velocidadPlayer * delta;
 
@@ -167,10 +236,6 @@ public class Player {
         projectileManager.dispose();
     }
 
-    public EnemyManager getEnemyManager() {
-        return enemyManager;
-    }
-
     public void setEnemyManager(EnemyManager enemyManager) {
         this.enemyManager = enemyManager;
     }
@@ -190,4 +255,9 @@ public class Player {
     public float getMaxHealth() {
         return maxHealth;
     }
+
+    public ProjectileManager getProjectileManager() {
+        return projectileManager;
+    }
+
 }

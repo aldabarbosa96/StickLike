@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.sticklike.core.entities.Player;
+import com.sticklike.core.utils.GameConfig;
 
 public class GameOverScreen implements Screen {
     private final Game game;
@@ -18,9 +20,11 @@ public class GameOverScreen implements Screen {
     private GlyphLayout layout;
     private OrthographicCamera camera;
     private FitViewport viewport;
+    private Player player;
 
-    private static final float VIRTUAL_WIDTH = 1080;
-    private static final float VIRTUAL_HEIGHT = 720;
+    private static final float VIRTUAL_WIDTH = GameConfig.VIRTUAL_WIDTH;
+    private static final float VIRTUAL_HEIGHT = GameConfig.VIRTUAL_HEIGHT;
+    ;
 
     public GameOverScreen(Game game) {
         this.game = game;
@@ -69,6 +73,7 @@ public class GameOverScreen implements Screen {
         font.draw(spriteBatch, optionsText, textX, textY);
 
         spriteBatch.end();
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
             game.setScreen(new GameScreen());

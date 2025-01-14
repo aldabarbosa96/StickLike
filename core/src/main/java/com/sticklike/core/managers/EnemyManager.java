@@ -4,19 +4,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entities.Enemy;
 import com.sticklike.core.entities.Player;
+import com.sticklike.core.entities.XPobjects;
 import com.sticklike.core.screens.GameScreen;
+import com.sticklike.core.utils.GameConfig;
 
 public class EnemyManager {
+    private GameScreen gameScreen;
     private Array<Enemy> enemies;
     private Player player;
     private float spawnInterval, spawnTimer;
-    private static final float BORDER_MARGIN = 100f;
+    private static final float BORDER_MARGIN = GameConfig.BORDER_SPAWN_MARGIN;
+    private Array<Enemy> enemiesToRemove = new Array<>();
 
-    public EnemyManager(Player player, float spawnInterval) {
+    public EnemyManager(Player player, float spawnInterval, GameScreen gameScreen) {
         this.enemies = new Array<>();
         this.player = player;
         this.spawnInterval = spawnInterval;
         this.spawnTimer = 0;
+        this.gameScreen = gameScreen;
     }
 
     public void update(float delta) {
@@ -31,11 +36,25 @@ public class EnemyManager {
 
         for (Enemy enemy : enemies) {
             enemy.updateEnemy(delta);
-            if (enemy.isDead()) {
-                enemies.removeValue(enemy, true);
+
+            // Procesa enemigos muertos
+            if (enemy.isDead() && !enemy.isProcesado()) {
+                XPobjects xpObject = enemy.dropExperiencia();
+                if (xpObject != null) {
+                    gameScreen.addXPObject(xpObject);
+                }
+                enemy.setProcesado(true);
+                enemiesToRemove.add(enemy);
             }
         }
+
+        // Elimina enemigos marcados después de actualizar todos
+        for (Enemy enemy : enemiesToRemove) {
+            enemies.removeValue(enemy, true);
+        }
+        enemiesToRemove.clear();
     }
+
 
     public void render(SpriteBatch batch) {
         if (player.isDead()) return;
@@ -72,7 +91,7 @@ public class EnemyManager {
 
         } while (Math.sqrt(Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2)) < minDistance);
 
-        float randomSpeed = 40f + (float) Math.random() * 45f;
+        float randomSpeed = 50f + (float) Math.random() * 50f;
 
         enemies.add(new Enemy(x, y, player, randomSpeed));
     }

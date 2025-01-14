@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sticklike.core.utils.AssetLoader;
+import com.sticklike.core.utils.GameConfig;
 
 public class Projectile {
     private static Texture texture;
     private Sprite sprite;
-    private float speed = 175f;
+    private float speed = GameConfig.PROJECTILE_SPEED;
     private float directionX, directionY;
     private boolean active;
     private Enemy target;
@@ -18,7 +19,7 @@ public class Projectile {
             texture = AssetLoader.weapon01;
         }
         sprite = new Sprite(texture);
-        sprite.setSize(8, 8);
+        sprite.setSize(GameConfig.PROJECTILE_SIZE, GameConfig.PROJECTILE_SIZE);
         sprite.setPosition(x, y);
 
         this.directionX = directionX;
