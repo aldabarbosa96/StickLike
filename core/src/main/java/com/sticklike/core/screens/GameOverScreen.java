@@ -1,32 +1,27 @@
 package com.sticklike.core.screens;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.sticklike.core.entities.Player;
+import com.sticklike.core.MainGame;
 import com.sticklike.core.utils.GameConfig;
 
 public class GameOverScreen implements Screen {
-    private final Game game;
+    private final MainGame game;
     private SpriteBatch spriteBatch;
     private BitmapFont font;
     private GlyphLayout layout;
     private OrthographicCamera camera;
     private FitViewport viewport;
-    private Player player;
 
     private static final float VIRTUAL_WIDTH = GameConfig.VIRTUAL_WIDTH;
     private static final float VIRTUAL_HEIGHT = GameConfig.VIRTUAL_HEIGHT;
-    ;
 
-    public GameOverScreen(Game game) {
+    public GameOverScreen(MainGame game) {
         this.game = game;
     }
 
@@ -39,6 +34,19 @@ public class GameOverScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         viewport.apply();
+
+        // Establecemos el InputProcessor para manejar las entradas
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.R) {
+                    handleRestart();
+                } else if (keycode == Input.Keys.Q) {
+                    handleQuit();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -47,12 +55,14 @@ public class GameOverScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         viewport.apply();
+        camera.update();
+
         spriteBatch.setProjectionMatrix(camera.combined);
 
         spriteBatch.begin();
 
         font.getData().setScale(2f);
-        String gameOverText = "GAME OVER";
+        String gameOverText = "G A M E  O V E R";
         layout.setText(font, gameOverText);
         float textWidth = layout.width;
         float textHeight = layout.height;
@@ -73,13 +83,16 @@ public class GameOverScreen implements Screen {
         font.draw(spriteBatch, optionsText, textX, textY);
 
         spriteBatch.end();
+    }
 
+    private void handleRestart() {
+        game.gameScreen.dispose();
+        game.gameScreen = new GameScreen(game); // Crear una nueva instancia de GameScreen
+        game.setScreen(game.gameScreen);
+    }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-            game.setScreen(new GameScreen());
-        } else if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-            Gdx.app.exit();
-        }
+    private void handleQuit() {
+        Gdx.app.exit();
     }
 
     @Override
@@ -94,7 +107,13 @@ public class GameOverScreen implements Screen {
     public void resume() {}
 
     @Override
-    public void hide() {}
+    public void hide() {
+        spriteBatch.dispose();
+        font.dispose();
+
+        // Limpiamos el InputProcessor al ocultar la pantalla
+        Gdx.input.setInputProcessor(null);
+    }
 
     @Override
     public void dispose() {

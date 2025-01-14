@@ -1,14 +1,13 @@
 package com.sticklike.core.screens;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.sticklike.core.MainGame;
 import com.sticklike.core.entities.Enemy;
 import com.sticklike.core.entities.InGameText;
 import com.sticklike.core.entities.Player;
@@ -38,9 +37,13 @@ public class GameScreen implements Screen {
     private Array<XPobjects> xPobjects = new Array<>();
     private Array<Enemy> enemiesToRemove = new Array<>();
     private boolean pausado = false;
+    private MainGame game;
 
-    @Override
-    public void show() { //espero que el orden de instancia sea el adecuado para todos los casos...
+    // Constructor modificado para aceptar MainGame
+    public GameScreen(MainGame game) {
+        this.game = game;
+
+        // Inicializamos los componentes aquí
         shapeRenderer = new ShapeRenderer();
         spriteBatch = new SpriteBatch();
 
@@ -70,6 +73,15 @@ public class GameScreen implements Screen {
     }
 
     @Override
+    public void show() {
+        // Al mostrar GameScreen, reanudamos el juego
+        pausado = false;
+
+        // Limpiamos el InputProcessor para que no quede apuntando a UpgradeScreen
+        Gdx.input.setInputProcessor(null);
+    }
+
+    @Override
     public void render(float delta) {
         if (pausado) return;
 
@@ -77,6 +89,7 @@ public class GameScreen implements Screen {
             renderGameOverScreen();
             return;
         }
+
         // Clear de pantalla y actualizado de entidades
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -96,7 +109,6 @@ public class GameScreen implements Screen {
                 enemiesToRemove.add(enemy);
             }
         }
-
 
         for (int i = xPobjects.size - 1; i >= 0; i--) {
             XPobjects object = xPobjects.get(i);
@@ -132,7 +144,7 @@ public class GameScreen implements Screen {
     }
 
     private void renderGameOverScreen() {
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen((Game) Gdx.app.getApplicationListener()));
+        game.setScreen(new GameOverScreen(game)); // Pasamos la referencia de MainGame
     }
 
     private void updateCameraPosition() {
@@ -163,10 +175,9 @@ public class GameScreen implements Screen {
     private void showUpgradeScreen() {
         pausado = true;
 
-        // Instancia y muestra UpgradeScreen
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new UpgradeScreen(upgradeManager));
+        // Instancia y muestra UpgradeScreen pasando la referencia de MainGame
+        game.setScreen(new UpgradeScreen(upgradeManager, game));
     }
-
 
     public void resumeGame(){
         pausado = false;
@@ -181,7 +192,6 @@ public class GameScreen implements Screen {
     public void addXPObject(XPobjects xpObject) {
         xPobjects.add(xpObject);
     }
-
 
     @Override
     public void pause() {

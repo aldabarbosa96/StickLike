@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sticklike.core.MainGame;
 import com.sticklike.core.managers.UpgradeManager;
 import com.sticklike.core.upgrades.Upgrade;
 import com.sticklike.core.utils.GameConfig;
@@ -23,9 +24,11 @@ public class UpgradeScreen extends ScreenAdapter {
     private final BitmapFont font;
     private boolean upgradeSeleccionado;
     private List<Upgrade> upgradeOptions;
+    private MainGame game;
 
-    public UpgradeScreen(UpgradeManager upgradeManager) {
+    public UpgradeScreen(UpgradeManager upgradeManager, MainGame game) {
         this.upgradeManager = upgradeManager;
+        this.game = game;
 
         // Inicializamos la cámara y el Viewport
         this.camera = new OrthographicCamera();
@@ -33,7 +36,7 @@ public class UpgradeScreen extends ScreenAdapter {
         this.viewport = new FitViewport(GameConfig.VIRTUAL_WIDTH, GameConfig.VIRTUAL_HEIGHT, camera);
         this.viewport.apply();
 
-        // Inicializamos otros componentes
+        // Demás componentes
         this.spriteBatch = new SpriteBatch();
         this.shapeRenderer = new ShapeRenderer();
         this.font = new BitmapFont();
@@ -43,6 +46,7 @@ public class UpgradeScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        // Establecemos un InputProcessor para manejar las entradas del usuario
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -74,7 +78,7 @@ public class UpgradeScreen extends ScreenAdapter {
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
 
-        float startY = GameConfig.VIRTUAL_HEIGHT / 2f + 60f; // Comienza en el centro superior
+        float startY = GameConfig.VIRTUAL_HEIGHT / 2f + 60f;
         float stepY = 50f; // Espaciado entre las opciones
 
         for (int i = 0; i < upgradeOptions.size(); i++) {
@@ -82,7 +86,7 @@ public class UpgradeScreen extends ScreenAdapter {
 
             String optionText = (i + 1) + ". " + upgrade.getName() + " - " + upgrade.getDescription();
 
-            float textX = GameConfig.VIRTUAL_WIDTH / 2f - 150f; // Centrado horizontalmente
+            float textX = GameConfig.VIRTUAL_WIDTH / 2f - 230f;
             float textY = startY - (i * stepY);
 
             font.setColor(Color.WHITE);
@@ -103,10 +107,12 @@ public class UpgradeScreen extends ScreenAdapter {
         spriteBatch.dispose();
         shapeRenderer.dispose();
         font.dispose();
+
+        // Limpiamos el InputProcessor al ocultar la pantalla para evitar errores si se introduce algún input
+        Gdx.input.setInputProcessor(null);
     }
 
     public void handleInput(int selectedOption) {
-
         if (selectedOption < 1 || selectedOption > upgradeOptions.size()) {
             return;
         }
@@ -121,9 +127,9 @@ public class UpgradeScreen extends ScreenAdapter {
             return;
         }
 
-        // Cambiar de nuevo a la pantalla del juego
+        // Usamos la instancia existente de GameScreen para crear efecto de pausa sin reiniciar los demás elementos
         try {
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+            game.setScreen(game.gameScreen);
         } catch (Exception e) {
             e.printStackTrace();
         }
