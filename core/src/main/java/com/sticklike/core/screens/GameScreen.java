@@ -54,20 +54,17 @@ public class GameScreen implements Screen {
         float playerStartX = WORLD_WIDTH / 2f;
         float playerStartY = WORLD_HEIGHT / 2f + 125f;
         player = new Player(playerStartX, playerStartY);
-        levelingSystem = new LevelingSystem(player);
+
+        upgradeManager = new UpgradeManager(player, game); // Instanciamos UpgradeManager primero
+        levelingSystem = new LevelingSystem(player, upgradeManager); // Luego pasamos UpgradeManager a LevelingSystem (orden correcto sino da error)
+
         enemyManager = new EnemyManager(player, 1.5f, this);
-        upgradeManager = new UpgradeManager(player);
         player.setEnemyManager(enemyManager);
 
         gridRenderer = new GridRenderer((int) GameConfig.GRID_CELL_SIZE);
         hud = new HUD(player, levelingSystem, shapeRenderer, spriteBatch);
 
         dmgText = new Array<>();
-
-        levelingSystem.setOnLevelUpListener(() -> {
-            // Pausar el juego y mostrar UpgradeScreen
-            showUpgradeScreen();
-        });
 
         updateCameraPosition();
     }
@@ -170,17 +167,6 @@ public class GameScreen implements Screen {
         for (InGameText floatingText : dmgText) {
             floatingText.render(batch);
         }
-    }
-
-    private void showUpgradeScreen() {
-        pausado = true;
-
-        // Instancia y muestra UpgradeScreen pasando la referencia de MainGame
-        game.setScreen(new UpgradeScreen(upgradeManager, game));
-    }
-
-    public void resumeGame(){
-        pausado = false;
     }
 
     @Override

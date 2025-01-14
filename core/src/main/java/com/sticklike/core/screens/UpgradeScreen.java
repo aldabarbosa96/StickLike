@@ -18,7 +18,6 @@ import java.util.List;
 public class UpgradeScreen extends ScreenAdapter {
     private final UpgradeManager upgradeManager;
     private final SpriteBatch spriteBatch;
-    private final ShapeRenderer shapeRenderer;
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private final BitmapFont font;
@@ -38,7 +37,6 @@ public class UpgradeScreen extends ScreenAdapter {
 
         // Demás componentes
         this.spriteBatch = new SpriteBatch();
-        this.shapeRenderer = new ShapeRenderer();
         this.font = new BitmapFont();
         this.upgradeOptions = upgradeManager.generateUpgradeOptions(3);
         this.upgradeSeleccionado = false;
@@ -105,7 +103,6 @@ public class UpgradeScreen extends ScreenAdapter {
     @Override
     public void hide() {
         spriteBatch.dispose();
-        shapeRenderer.dispose();
         font.dispose();
 
         // Limpiamos el InputProcessor al ocultar la pantalla para evitar errores si se introduce algún input
@@ -127,7 +124,7 @@ public class UpgradeScreen extends ScreenAdapter {
             return;
         }
 
-        // Usamos la instancia existente de GameScreen para crear efecto de pausa sin reiniciar los demás elementos
+        // Volver a GameScreen después de aplicar la mejora
         try {
             game.setScreen(game.gameScreen);
         } catch (Exception e) {

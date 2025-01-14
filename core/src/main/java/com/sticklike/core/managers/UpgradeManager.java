@@ -1,9 +1,10 @@
 package com.sticklike.core.managers;
 
 import com.sticklike.core.entities.Player;
-import com.sticklike.core.enums.UpgradeOptions;
 import com.sticklike.core.upgrades.Upgrade;
-import com.sticklike.core.utils.GameConfig;
+import com.sticklike.core.screens.UpgradeScreen;
+import com.sticklike.core.MainGame;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,14 +12,15 @@ import java.util.List;
 
 public class UpgradeManager {
     private final Player player;
-    private final List<Upgrade> allUpgrades; // Todas las mejoras disponibles en el juego
-    private final List<Upgrade> currentUpgradeOptions; // Opciones actuales de mejoras
+    private final List<Upgrade> allUpgrades;
+    private final List<Upgrade> currentUpgradeOptions;
+    private final MainGame game;
 
-    public UpgradeManager(Player player) {
+    public UpgradeManager(Player player, MainGame game) {
         this.player = player;
+        this.game = game;
         this.allUpgrades = new ArrayList<>();
         this.currentUpgradeOptions = new ArrayList<>();
-
         initializeUpgrades();
     }
 
@@ -34,15 +36,15 @@ public class UpgradeManager {
             () -> player.increaseAttackRange(0.10f)
         ));
         allUpgrades.add(new Upgrade(
-            "Reducir Intervalo de Disparo",
-            "Reduce el intervalo de disparo un 15%",
+            "Aumentar Velocidad de Ataque",
+            "Reduce el intervalo de disparo un 9%",
             () -> player.reduceShootInterval(0.15f)
         ));
-        /*allUpgrades.add(new Upgrade(
-            "Aumentar Salud Máxima",
-            "Aumenta la salud máxima en 10 puntos",
-            () -> player.increaseMaxHealth(10)
-        ));*/
+        // todo -> añadir más mejoras próximamente
+    }
+
+    public void promptUpgrade() {
+        game.setScreen(new UpgradeScreen(this, game));
     }
 
     public List<Upgrade> generateUpgradeOptions(int count) {
