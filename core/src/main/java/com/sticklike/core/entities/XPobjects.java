@@ -44,7 +44,7 @@ public class XPobjects {
     }
 
     public void dispose() {
-        sprite.getTexture().dispose();
+        sprite = null;
     }
 }
 

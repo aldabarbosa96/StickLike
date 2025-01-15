@@ -7,7 +7,7 @@ public class LevelingSystem {
     private final Player player;
     private final UpgradeManager upgradeManager;
     private float currentExperience = 0f;
-    private float experienceToNextLevel = 100f;
+    private float experienceToNextLevel = 10f;
     private int level = 1;
 
     public LevelingSystem(Player player, UpgradeManager upgradeManager) {

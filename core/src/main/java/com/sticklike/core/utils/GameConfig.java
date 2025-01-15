@@ -24,7 +24,7 @@ public class GameConfig { // todo -> si escala demasiado habrá que gestionarlo 
     public static final float PLAYER_HEALTH = 50f;
     public static final float PLAYER_MAX_HEALTH = 50f;
     public static final float PLAYER_ATTACK_RANGE = 190f;
-    public static final float PLAYER_SHOOT_INTERVAL = 0.9f;
+    public static final float PLAYER_SHOOT_INTERVAL = 1.1f;
 
     // Configuración de los enemigos
     public static final float ENEMY_MAX_PAUSE = 0.75f;

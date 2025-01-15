@@ -18,9 +18,9 @@ public class AssetLoader {
     public static void loadAnimations() {
         animations = new HashMap<>();
 
-        animations.put("idle", createAnimation("actions/movement/stickman_idle", 3, 0.4f));
-        animations.put("moveRight", createAnimation("actions/movement/stickman_movementD", 5, 0.2f));
-        animations.put("moveLeft", createAnimation("actions/movement/stickman_movementI", 5, 0.2f));
+        animations.put("idle", createAnimation("actions/movement/stickman_idle", 3, 0.2f));
+        animations.put("moveRight", createAnimation("actions/movement/stickman_movementD", 5, 0.1f));
+        animations.put("moveLeft", createAnimation("actions/movement/stickman_movementI", 5, 0.1f));
     }
 
     public static void loadTextures(){

@@ -9,7 +9,7 @@ import com.sticklike.core.utils.GameConfig;
 public class Enemy {
     private Sprite sprite;
     private Player player;
-    private float health = 60;
+    private float health = 60f;
     private float speed;
     private float moveTimer, pauseDuration, moveDuration;
     private boolean isMoving;

@@ -2,9 +2,7 @@ package com.sticklike.core.managers;
 
 import com.sticklike.core.entities.Player;
 import com.sticklike.core.upgrades.Upgrade;
-import com.sticklike.core.screens.UpgradeScreen;
 import com.sticklike.core.MainGame;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +51,8 @@ public class UpgradeManager {
     }
 
     public void promptUpgrade() {
-        game.setScreen(new UpgradeScreen(this, game));
+        List<Upgrade> options = generateUpgradeOptions(3);
+        game.gameScreen.showUpgradePopup(options);
     }
 
     public List<Upgrade> generateUpgradeOptions(int count) {
@@ -72,7 +71,6 @@ public class UpgradeManager {
 
         selectedUpgrade.apply();
         System.out.println("Mejora aplicada: " + selectedUpgrade.getName());
-
         currentUpgradeOptions.clear();
     }
 }
