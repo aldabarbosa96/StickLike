@@ -10,7 +10,7 @@ public class Projectile {
     private static Texture texture;
     private Sprite sprite;
     private float speed = GameConfig.PROJECTILE_SPEED;
-    private float speedMultiplier; // Nuevo atributo para modificar la velocidad
+    private float speedMultiplier;
     private float directionX, directionY;
     private boolean active;
     private Enemy target;
@@ -27,7 +27,7 @@ public class Projectile {
         this.directionY = directionY;
         this.active = true;
         this.target = target;
-        this.speedMultiplier = speedMultiplier; // Asignar el multiplicador de velocidad
+        this.speedMultiplier = speedMultiplier;
     }
 
     public void update(float delta) {
@@ -43,22 +43,29 @@ public class Projectile {
         }
     }
 
-    public void deactivate() { active = false; }
-
-    public boolean isActive() { return active; }
-
-    public Enemy getTarget() { return target; }
-
-    public void dispose() {
-        if (texture != null) {
-            texture.dispose();
-            texture = null;
-        }
+    public void deactivate() {
+        active = false;
     }
 
-    public float getX() { return sprite.getX(); }
+    public boolean isActive() {
+        return active;
+    }
 
-    public float getY() { return sprite.getY(); }
+    public Enemy getTarget() {
+        return target;
+    }
+
+    public void dispose() {
+        texture = null;
+    }
+
+    public float getX() {
+        return sprite.getX();
+    }
+
+    public float getY() {
+        return sprite.getY();
+    }
 
     public com.badlogic.gdx.math.Rectangle getBoundingRectangle() {
         return sprite.getBoundingRectangle(); // Devuelve el rectángulo de colisión para gestionar los impactos.

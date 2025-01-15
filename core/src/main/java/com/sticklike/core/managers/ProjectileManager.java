@@ -1,6 +1,5 @@
 package com.sticklike.core.managers;
 
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
@@ -13,7 +12,6 @@ import java.util.Iterator;
 public class ProjectileManager {
     private ArrayList<Projectile> projectiles;
     private float damageMultiplier = 1.0f;
-
 
     public ProjectileManager() {
         projectiles = new ArrayList<>();
@@ -41,7 +39,6 @@ public class ProjectileManager {
 
                     enemy.reduceHealth(damage);
 
-                    // Mostrar el daño infligido como texto flotante
                     dmgText.add(new InGameText(
                         String.valueOf((int) damage),
                         enemy.getX() + enemy.getSprite().getWidth() / 2,
@@ -50,7 +47,7 @@ public class ProjectileManager {
                     ));
 
                     projectile.deactivate(); // El proyectil impacta y se desactiva
-                    break; // No necesitamos seguir verificando más enemigos para este proyectil
+                    break;
                 }
             }
 
@@ -69,6 +66,11 @@ public class ProjectileManager {
     public void increaseDamage(float multiplier) {
         damageMultiplier += multiplier;
         System.out.println("Multiplicador de daño actualizado a: " + damageMultiplier);
+    }
+
+    public void reset() { // Reseteamos estado de los proyectiles para evitar interferencias al reiniciar partida
+        projectiles.clear();
+        damageMultiplier = 1.0f;
     }
 
     public void dispose() {

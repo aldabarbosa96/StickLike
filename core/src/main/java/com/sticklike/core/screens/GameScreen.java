@@ -13,6 +13,7 @@ import com.sticklike.core.entities.InGameText;
 import com.sticklike.core.entities.Player;
 import com.sticklike.core.entities.XPobjects;
 import com.sticklike.core.managers.EnemyManager;
+import com.sticklike.core.managers.ProjectileManager;
 import com.sticklike.core.managers.UpgradeManager;
 import com.sticklike.core.renderers.GridRenderer;
 import com.sticklike.core.systems.LevelingSystem;
@@ -32,6 +33,7 @@ public class GameScreen implements Screen {
     private EnemyManager enemyManager;
     private UpgradeManager upgradeManager;
     private HUD hud;
+    private ProjectileManager projectileManager;
     private GridRenderer gridRenderer;
     private LevelingSystem levelingSystem;
     private Array<XPobjects> xPobjects = new Array<>();
@@ -39,11 +41,9 @@ public class GameScreen implements Screen {
     private boolean pausado = false;
     private MainGame game;
 
-    // Constructor modificado para aceptar MainGame
     public GameScreen(MainGame game) {
         this.game = game;
 
-        // Inicializamos los componentes aquí
         shapeRenderer = new ShapeRenderer();
         spriteBatch = new SpriteBatch();
 
@@ -71,7 +71,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        // Al mostrar GameScreen, reanudamos el juego
+        // Al mostrar GameScreen, reanudamos el juego sin reiniciar
         pausado = false;
 
         // Limpiamos el InputProcessor para que no quede apuntando a UpgradeScreen
@@ -178,6 +178,13 @@ public class GameScreen implements Screen {
     public void addXPObject(XPobjects xpObject) {
         xPobjects.add(xpObject);
     }
+    private void handleRestart() {
+        game.gameScreen.dispose();
+        game.gameScreen = new GameScreen(game);
+        game.gameScreen.getProjectileManager().reset(); // Reinicia el estado de los proyectiles
+        game.setScreen(game.gameScreen);
+    }
+
 
     @Override
     public void pause() {
@@ -200,5 +207,9 @@ public class GameScreen implements Screen {
             floatingText.dispose();
         }
         enemyManager.dispose();
+    }
+
+    public ProjectileManager getProjectileManager() {
+        return projectileManager;
     }
 }

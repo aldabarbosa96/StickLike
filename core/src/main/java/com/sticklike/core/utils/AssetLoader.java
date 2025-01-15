@@ -44,7 +44,11 @@ public class AssetLoader {
         if (stickman != null) stickman.dispose();
         if (enemy01 != null) enemy01.dispose();
         if (life != null) life.dispose();
-        if (weapon01 != null) weapon01.dispose();
+
+        if (weapon01 != null) {
+            weapon01.dispose();
+            weapon01 = null;
+        }
         if (xpIcon != null) xpIcon.dispose();
         if (xpObject != null) xpObject.dispose();
 
@@ -54,4 +58,5 @@ public class AssetLoader {
             }
         }
     }
+
 }
