@@ -23,9 +23,10 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entities.Enemigo;
-import com.sticklike.core.entities.TextoFlotante;
 import com.sticklike.core.entities.Jugador;
 import com.sticklike.core.entities.ObjetoXP;
+import com.sticklike.core.entities.TextoFlotante;
+import com.sticklike.core.logics.inputs.InputsJugador;
 import com.sticklike.core.managers.ControladorEnemigos;
 import com.sticklike.core.managers.ControladorMejoras;
 import com.sticklike.core.renderers.RenderizadoCuadriculaMapa;
@@ -38,15 +39,17 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.List;
 
 /**
- * GameScreen es la pantalla principal del juego. Gestiona la lógica de:
- * <p>
- * El jugador (movimiento, acciones, colisiones)
- * Los enemigos y su spawn (a través de EnemyManager)
- * El HUD (vida, experiencia, nivel, etc.)
- * La cámara y renderizado de las entidades
- * La aparición de un pop-up para upgrades cuando el jugador sube de nivel
- * <p>
- * Implementa la interfaz {@link com.badlogic.gdx.Screen}, propia del framework
+ * GameScreen (VentanaJuego) es la pantalla principal del juego.
+ * Gestiona la lógica de:
+ * <ul>
+ *   <li>El jugador (movimiento, acciones, colisiones)</li>
+ *   <li>Los enemigos y su spawn (a través de EnemyManager)</li>
+ *   <li>El HUD (vida, experiencia, nivel, etc.)</li>
+ *   <li>La cámara y renderizado de las entidades</li>
+ *   <li>La aparición de un pop-up para upgrades cuando el jugador sube de nivel</li>
+ * </ul>
+ *
+ * Implementa la interfaz {@link com.badlogic.gdx.Screen} propia de libGDX.
  */
 public class VentanaJuego implements Screen {
 
@@ -54,6 +57,7 @@ public class VentanaJuego implements Screen {
     public static final int WORLD_HEIGHT = (int) GestorConstantes.VIRTUAL_HEIGHT;
     private static final float CAMERA_OFFSET_Y = GestorConstantes.CAMERA_OFFSET_Y;
 
+    // Referencia al MainGame
     private MainGame game;
 
     // Render básico
@@ -83,11 +87,10 @@ public class VentanaJuego implements Screen {
     private boolean pausado = false;
 
     /**
-     * Inicializa todos los elementos necesarios para manejar el juego, como la cámara,
-     * el jugador, los managers de enemigos y de upgrades, y el HUD
+     * Construye la ventana principal del juego, inicializando la cámara,
+     * el jugador (con su controlador de inputs), los sistemas, el HUD, etc.
      *
-     * @param game referencia a la clase principal {@link MainGame}, donde se maneja el
-     *             {@code setScreen} y el ciclo de vida general
+     * @param game referencia a {@link MainGame}, que maneja el ciclo de vida
      */
     public VentanaJuego(MainGame game) {
         this.game = game;
@@ -102,44 +105,48 @@ public class VentanaJuego implements Screen {
 
         // Stage + Skin (para pop-up)
         uiStage = new Stage(new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT));
-        uiSkin = crearAspectoUI(); // Creamos un Skin con fondo simple todo --> *
+        uiSkin = crearAspectoUI();
 
-        // Jugador
+        // Instanciamos el controlador de input para el jugador
+        InputsJugador inputJugador = new InputsJugador();
+
+        // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
         float playerStartY = WORLD_HEIGHT / 2f + 125f;
-        jugador = new Jugador(playerStartX, playerStartY);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador);
 
-        // Managers
+        // Managers / sistemas de mejoras y enemigos
         controladorMejoras = new ControladorMejoras(jugador, game);
-        sistemaDeNiveles = new SistemaDeNiveles(jugador, controladorMejoras);
+        sistemaDeNiveles   = new SistemaDeNiveles(jugador, controladorMejoras);
         controladorEnemigos = new ControladorEnemigos(jugador, 1.5f, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
 
-        // Grid (mapa) y HUD
+        // Renderizado de la cuadrícula (mapa) y el HUD
         renderizadoCuadriculaMapa = new RenderizadoCuadriculaMapa((int) GestorConstantes.GRID_CELL_SIZE);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
 
-        // Listas
+        // Listas de texto daño, objetos XP y enemigos a eliminar
         textosDanyo = new Array<>();
         objetosXP = new Array<>();
         enemigosAEliminar = new Array<>();
 
+        // Ajustamos posición de la cámara siguiendo al jugador
         actualizarPosCamara();
     }
 
     /**
-     * Crea un {@link Skin} con un fondo simple (un Pixmap de color) par mostrar la ventana de upgrades
+     * Crea un {@link Skin} con un fondo simple (un Pixmap de color)
+     * para mostrar la ventana de upgrades.
      *
      * @return un Skin con estilo definido para la ventana y botones
      */
     private Skin crearAspectoUI() {
-        // todo -> * crear textura personalizada en un futuro estilo post-it para el pop-up de upgrades
         Skin skin = new Skin();
 
         BitmapFont font = new BitmapFont();
         skin.add("default-font", font);
 
-        // Se crea un Pixmap de 1x1 con color amarillo/ocre suave
+        // Pixmap de 1x1 con color amarillo/ocre suave
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
         pixmap.fill();
@@ -158,46 +165,38 @@ public class VentanaJuego implements Screen {
         return skin;
     }
 
-    /**
-     * Método de {@link Screen} que se llama al mostrar esta pantalla
-     */
     @Override
     public void show() {
         pausado = false;
+        // Eliminamos cualquier InputProcessor previo
         Gdx.input.setInputProcessor(null);
     }
 
-    /**
-     * Método principal de renderizado. Actualiza la lógica (si no está pausado),
-     * limpia la pantalla, dibuja el mapa, entidades, HUD y
-     * renderiza la UI del pop-up (si procede)
-     *
-     * @param delta tiempo transcurrido desde el último frame
-     */
     @Override
     public void render(float delta) {
+        // Si el jugador muere, pasamos a la pantalla de GameOver
         if (jugador.estaMuerto()) {
-            // Si el jugador muere, pasamos a la pantalla de GameOver
             game.setScreen(new VentanaGameOver(game));
             return;
         }
 
-        // Si no está pausado, actualizamos lógica
+        // Actualizamos lógica solo si no está en pausa
         if (!pausado) {
             actualizarLogica(delta);
         }
 
-        // Limpiamos
+        // Limpiamos la pantalla
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Render del mapa (grid)
+        // Render del mapa (cuadrícula)
         actualizarPosCamara();
         renderizadoCuadriculaMapa.renderizarLineasCuadricula(camara);
 
-        // Render de entidades
+        // Dibujo de entidades
         spriteBatch.setProjectionMatrix(camara.combined);
         spriteBatch.begin();
+
         controladorEnemigos.renderizarEnemigos(spriteBatch);
         jugador.renderizarJugadorYProyectil(spriteBatch);
 
@@ -207,27 +206,22 @@ public class VentanaJuego implements Screen {
         for (TextoFlotante txt : textosDanyo) {
             txt.renderizarTextoFlotante(spriteBatch);
         }
+
         spriteBatch.end();
 
-        // Render del HUD
+        // HUD
         hud.renderizarHUD();
 
-        // La UI del pop-up (Stage) se dibuja encima
+        // Stage de la UI (pop-up de upgrades, si lo hubiera)
         uiStage.act(delta);
         uiStage.draw();
     }
 
-    /**
-     * Actualiza la lógica principal: jugador, enemigos, XP, textos flotantes.
-     * Se llama en cada frame, salvo cuando el juego está pausado.
-     *
-     * @param delta tiempo transcurrido desde el último frame
-     */
     private void actualizarLogica(float delta) {
         jugador.actualizarJugador(delta, pausado, textosDanyo);
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
-        // Manejo de enemigos muertos => suelta objetoXP
+        // Manejo de enemigos muertos => suelta objeto XP
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo.estaMuerto() && !enemigo.haSoltadoXP()) {
                 ObjetoXP xp = enemigo.sueltaObjetoXP();
@@ -246,7 +240,7 @@ public class VentanaJuego implements Screen {
         // Recoger XP
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetoXP xp = objetosXP.get(i);
-            xp.actualizarObjetoXP(delta); // todo --> implementar si se requiere que se desplace el objetoXP (no hace nada por ahora)
+            xp.actualizarObjetoXP(delta); // si hace falta animar
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
                 xp.recolectar();
@@ -255,7 +249,7 @@ public class VentanaJuego implements Screen {
             }
         }
 
-        // Actualizar textos flotantes
+        // Textos flotantes (daño)
         for (int i = textosDanyo.size - 1; i >= 0; i--) {
             TextoFlotante floatingText = textosDanyo.get(i);
             floatingText.actualizarTextoFlotante(delta);
@@ -266,47 +260,49 @@ public class VentanaJuego implements Screen {
     }
 
     /**
-     * Ajusta la cámara para que siga al jugador, aplicando un offset vertical
-     * para que quede ligeramente más arriba y encage mejor con el HUD
+     * Ajusta la cámara para que siga al jugador, con offset vertical.
      */
     private void actualizarPosCamara() {
-        camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2,
-            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2 + CAMERA_OFFSET_Y, 0);
-
+        camara.position.set(
+            jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
+            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y,
+            0
+        );
         camara.update();
     }
 
     /**
-     * Muestra un pop-up con las mejoras disponibles (Upgrades)
-     * Pausa la lógica del juego y escucha las teclas 1,2,3 para escoger
-     *
-     * @param mejoras lista de upgrades a mostrar
+     * Muestra un pop-up de upgrades, pausando el juego hasta que se elija una.
      */
     public void mostrarPopUpDeMejoras(final List<Mejora> mejoras) {
         pausado = true;
 
-        // Creamos la ventana con estilo default
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         final Window upgradeWindow = new Window("\n\n\nU P G R A D E S", wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
 
         float w = 400;
         float h = 350;
-
         upgradeWindow.setSize(w, h);
-        upgradeWindow.setPosition((GestorConstantes.VIRTUAL_WIDTH - w) / 2f, (GestorConstantes.VIRTUAL_HEIGHT - h + 150f) / 2f);
+        upgradeWindow.setPosition(
+            (GestorConstantes.VIRTUAL_WIDTH  - w) / 2f,
+            (GestorConstantes.VIRTUAL_HEIGHT - h + 150f) / 2f
+        );
 
         upgradeWindow.padTop(75f);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
 
-        // Añadimos un botón por cada Upgrade
+        // Añadimos botones por cada mejora
         for (int i = 0; i < mejoras.size(); i++) {
             final int index = i;
             final Mejora mejora = mejoras.get(i);
 
             TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
-            TextButton btn = new TextButton((i + 1) + ") " + mejora.getNombreMejora() + " ==> " + mejora.getDescripcionMejora(), tbs);
+            TextButton btn = new TextButton(
+                (i + 1) + ") " + mejora.getNombreMejora() + " ==> " + mejora.getDescripcionMejora(),
+                tbs
+            );
 
             btn.getLabel().setWrap(true);
             btn.getLabel().setAlignment(Align.left);
@@ -336,21 +332,14 @@ public class VentanaJuego implements Screen {
 
         uiStage.addActor(upgradeWindow);
 
-        // Foco del teclado en el pop-up
+        // Foco al pop-up
         uiStage.setKeyboardFocus(upgradeWindow);
 
-        // Permite que Stage reciba las entradas del input
-        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage);
-        Gdx.input.setInputProcessor(inputMultiplexer);
+        // Stage recibe el input
+        InputMultiplexer im = new InputMultiplexer(uiStage);
+        Gdx.input.setInputProcessor(im);
     }
 
-    /**
-     * Aplica la mejora elegida y cierra el pop-up. Reanuda la lógica.
-     *
-     * @param index         índice de la mejora seleccionada
-     * @param mejoras      lista de todas las mejoras mostradas
-     * @param upgradeWindow la ventana que se cierra tras la selección
-     */
     private void seleccionarMejora(int index, List<Mejora> mejoras, Window upgradeWindow) {
         if (index < 0 || index >= mejoras.size()) return;
         controladorMejoras.aplicarMejora(mejoras.get(index));
@@ -360,17 +349,12 @@ public class VentanaJuego implements Screen {
     }
 
     /**
-     * Añade un {@link ObjetoXP} al array de objetosXP
-     *
-     * @param xpObject objeto de XP a añadir
+     * Añade un ObjetoXP al array de objetosXP.
      */
     public void addXPObject(ObjetoXP xpObject) {
         objetosXP.add(xpObject);
     }
 
-    /**
-     * Método de {@link Screen} llamado al redimensionar la ventana. Actualiza el viewport y el HUD
-     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
@@ -379,20 +363,16 @@ public class VentanaJuego implements Screen {
     }
 
     @Override
-    public void pause() {
-    }
+    public void pause() { }
 
     @Override
-    public void resume() {
-    }
+    public void resume() { }
 
     @Override
-    public void hide() {
-    }
-
+    public void hide() { }
 
     /**
-     * Libera los recursos usados por esta pantalla, incluidos los batch, shapes, Stage, texturas del HUD y entidades.
+     * Libera los recursos usados por esta pantalla.
      */
     @Override
     public void dispose() {
