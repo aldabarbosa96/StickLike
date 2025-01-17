@@ -64,7 +64,7 @@ public class GestorDeAssets {
 
     /**
      * Libera todos los recursos gráficos que haya cargado (texturas y animaciones)
-     * Debe llamarse al cerrar el juego para evitar pérdidas de memoria, en MainGame.dispose()
+     * Debe llamarse al cerrar el juego para evitar pérdidas de memoria, en {@link com.sticklike.core.MainGame#dispose()}
      */
     public static void dispose() {
         if (stickman != null) stickman.dispose();
