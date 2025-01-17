@@ -2,6 +2,8 @@ package com.sticklike.core.logics.inputs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.sticklike.core.entities.Jugador;
+import com.sticklike.core.logics.actions.DesplazamientoJugador;
 
 /**
  * Clase que gestiona la entrada de teclas para controlar el movimiento
@@ -9,7 +11,6 @@ import com.badlogic.gdx.Input;
  * solo reporta la intención de movimiento.
  */
 public class InputsJugador {
-
     /**
      * @param delta tiempo transcurrido desde el último frame
      * @return un objeto {@link ResultadoInput} con los valores de movimiento (x, y)
@@ -27,10 +28,10 @@ public class InputsJugador {
 
         // Movimiento horizontal
         if (pressLeft && !pressRight) {
-            movX = -1; // valor base: lo que indique "izquierda"
+            movX = -1;
             direction = Direction.LEFT;
         } else if (pressRight && !pressLeft) {
-            movX = 1;  // valor base: "derecha"
+            movX = 1;
             direction = Direction.RIGHT;
         } else {
             direction = Direction.IDLE;
@@ -46,10 +47,15 @@ public class InputsJugador {
         // Devolvemos un InputResult con movX, movY y la dirección horizontal
         return new ResultadoInput(movX, movY, direction);
     }
+    public void procesarInputYMovimiento(float delta, DesplazamientoJugador desplazamientoJugador, Jugador jugador) {
+        ResultadoInput result = this.procesarInput(delta);
+        desplazamientoJugador.mover(jugador, result, delta);
+        jugador.setDireccionActual(result.direction);
+    }
 
     /**
      * Enum para indicar la dirección horizontal: LEFT, RIGHT o IDLE.
-     * También podrías meter las diagonales si lo deseas (UP_LEFT, etc.).
+     * todo --> incluir diagonales en un futuro
      */
     public enum Direction {
         LEFT, RIGHT, IDLE

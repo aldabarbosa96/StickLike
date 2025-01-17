@@ -1,8 +1,9 @@
-package com.sticklike.core.logics.movement;
+package com.sticklike.core.logics.actions;
 
 import com.sticklike.core.entities.Enemigo;
 import com.sticklike.core.entities.Jugador;
 import com.sticklike.core.managers.ControladorProyectiles;
+
 import java.lang.Math;
 
 /**
@@ -28,11 +29,11 @@ public class AtaqueJugador {
         if (target == null) return;
 
         // Obtenemos coordenadas del centro del jugador
-        float startX = jug.getSprite().getX() + jug.getSprite().getWidth()  / 2f;
+        float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
         float startY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
 
         // Coordenadas del centro del enemigo
-        float targetX = target.getX() + target.getSprite().getWidth()  / 2f;
+        float targetX = target.getX() + target.getSprite().getWidth() / 2f;
         float targetY = target.getY() + target.getSprite().getHeight() / 2f;
 
         // Calculamos dirección normalizada (dx, dy)
@@ -42,19 +43,13 @@ public class AtaqueJugador {
         for (int i = 0; i < jug.getProyectilesPorDisparo(); i++) {
             // Ejemplo: separamos un poco los proyectiles por ángulo
             float angleOffset = (i - (jug.getProyectilesPorDisparo() - 1) / 2f) * 5f;
-            float adjustedX = (float)(dir[0] * Math.cos(Math.toRadians(angleOffset))
+            float adjustedX = (float) (dir[0] * Math.cos(Math.toRadians(angleOffset))
                 - dir[1] * Math.sin(Math.toRadians(angleOffset)));
-            float adjustedY = (float)(dir[0] * Math.sin(Math.toRadians(angleOffset))
+            float adjustedY = (float) (dir[0] * Math.sin(Math.toRadians(angleOffset))
                 + dir[1] * Math.cos(Math.toRadians(angleOffset)));
 
             // Añadimos el nuevo proyectil al ControladorProyectiles
-            jug.getControladorProyectiles().anyadirNuevoProyectil(
-                startX,
-                startY,
-                adjustedX,
-                adjustedY,
-                target
-            );
+            jug.getControladorProyectiles().anyadirNuevoProyectil(startX, startY, adjustedX, adjustedY, target);
         }
     }
 
@@ -72,7 +67,7 @@ public class AtaqueJugador {
             if (!e.estaMuerto()) {
                 float dx = e.getX() - jug.getSprite().getX();
                 float dy = e.getY() - jug.getSprite().getY();
-                float dist = (float)Math.sqrt(dx*dx + dy*dy);
+                float dist = (float) Math.sqrt(dx * dx + dy * dy);
 
                 if (dist < closestDist && dist <= jug.getRangoAtaqueJugador()) {
                     closestDist = dist;
@@ -91,8 +86,25 @@ public class AtaqueJugador {
     private float[] calcularDireccionNormalizada(float sx, float sy, float tx, float ty) {
         float dx = tx - sx;
         float dy = ty - sy;
-        float dist = (float)Math.sqrt(dx * dx + dy * dy);
+        float dist = (float) Math.sqrt(dx * dx + dy * dy);
         if (dist == 0) dist = 1f;
-        return new float[] { dx / dist, dy / dist };
+        return new float[]{dx / dist, dy / dist};
     }
+
+    /**
+     * Maneja el disparo del jugador y actualiza el temporizador de disparo
+     */
+    public void manejarDisparo(float delta, Jugador jugador) {
+        float temporizadorDisparo = jugador.getTemporizadorDisparo();
+
+        temporizadorDisparo += delta;
+
+        if (temporizadorDisparo >= jugador.getIntervaloDisparo()) {
+            temporizadorDisparo = 0;
+            procesarAtaque(jugador);
+        }
+        jugador.setTemporizadorDisparo(temporizadorDisparo);
+    }
+
+
 }

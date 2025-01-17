@@ -198,7 +198,10 @@ public class VentanaJuego implements Screen {
         spriteBatch.begin();
 
         controladorEnemigos.renderizarEnemigos(spriteBatch);
-        jugador.renderizarJugadorYProyectil(spriteBatch);
+
+        jugador.renderizarJugador(spriteBatch);
+
+        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
 
         for (ObjetoXP xp : objetosXP) {
             xp.renderizarObjetoXP(spriteBatch);
@@ -388,6 +391,7 @@ public class VentanaJuego implements Screen {
         if (controladorEnemigos != null) {
             controladorEnemigos.dispose();
         }
+
 
         for (TextoFlotante ft : textosDanyo) {
             ft.dispose();
