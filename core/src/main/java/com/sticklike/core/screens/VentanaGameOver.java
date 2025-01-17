@@ -8,9 +8,13 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.utils.GameConfig;
+import com.sticklike.core.utils.GestorConstantes;
 
-public class GameOverScreen implements Screen {
+/**
+ * Pantalla ** GAME OVER ** que se muestra al terminar la partida (al morir).
+ * Permite al usuario reiniciar el juego o salir
+ */
+public class VentanaGameOver implements Screen {
     private final MainGame game;
     private SpriteBatch spriteBatch;
     private BitmapFont font;
@@ -18,13 +22,21 @@ public class GameOverScreen implements Screen {
     private OrthographicCamera camera;
     private FitViewport viewport;
 
-    private static final float VIRTUAL_WIDTH = GameConfig.VIRTUAL_WIDTH;
-    private static final float VIRTUAL_HEIGHT = GameConfig.VIRTUAL_HEIGHT;
+    // Tamaño virtual de la ventana
+    private static final float VIRTUAL_WIDTH = GestorConstantes.VIRTUAL_WIDTH;
+    private static final float VIRTUAL_HEIGHT = GestorConstantes.VIRTUAL_HEIGHT;
 
-    public GameOverScreen(MainGame game) {
+    /**
+     * @param game referencia a la clase principal {@link MainGame}, la cual gestiona el cambio de pantallas.
+     */
+    public VentanaGameOver(MainGame game) {
         this.game = game;
     }
 
+    /**
+     * Llamado cuando se muestra esta pantalla por primera vez.
+     * Configura las variables de render y un {@link InputProcessor} para capturar teclas: R para reiniciar, Q para salir
+     */
     @Override
     public void show() {
         spriteBatch = new SpriteBatch();
@@ -40,17 +52,23 @@ public class GameOverScreen implements Screen {
             @Override
             public boolean keyDown(int keycode) {
                 if (keycode == Input.Keys.R) {
-                    handleRestart();
+                    reiniciarJuego();
                 } else if (keycode == Input.Keys.Q) {
-                    handleQuit();
+                    cerrarJuego();
                 }
                 return true;
             }
         });
     }
 
+    /**
+     * Método principal de renderizado. Dibuja el texto de Game Over y las instrucciones para reiniciar o salir
+     *
+     * @param delta tiempo transcurrido desde el último frame.
+     */
     @Override
     public void render(float delta) {
+        // Limpiamos la pantalla con un color rojizo oscuro
         Gdx.gl.glClearColor(0.2f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -79,19 +97,26 @@ public class GameOverScreen implements Screen {
         textHeight = layout.height;
 
         textX = (VIRTUAL_WIDTH - textWidth) / 2f;
-        textY -= 60;
+        textY -= 60; // Posicionamos el texto debajo de "GAME OVER"
         font.draw(spriteBatch, optionsText, textX, textY);
 
         spriteBatch.end();
     }
 
-    private void handleRestart() {
-        game.gameScreen.dispose();
-        game.gameScreen = new GameScreen(game); // Crear una nueva instancia de GameScreen
-        game.setScreen(game.gameScreen);
+    /**
+     * Llamado al pulsar la tecla R. Reinicia el juego creando una nueva instancia
+     * de la pantalla principal (VentanaJuego) y asignándola como pantalla actual
+     */
+    private void reiniciarJuego() {
+        game.ventanaJuego.dispose();
+        game.ventanaJuego = new VentanaJuego(game); // Crear una nueva instancia de GameScreen
+        game.setScreen(game.ventanaJuego);
     }
 
-    private void handleQuit() {
+    /**
+     * Llamado al pulsar la tecla Q. Cierra la aplicación
+     */
+    private void cerrarJuego() {
         Gdx.app.exit();
     }
 
@@ -101,11 +126,16 @@ public class GameOverScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
+    /**
+     * Se llama cuando se oculta la pantalla. Liberamos recursos para no malgastar memoria
+     */
     @Override
     public void hide() {
         spriteBatch.dispose();

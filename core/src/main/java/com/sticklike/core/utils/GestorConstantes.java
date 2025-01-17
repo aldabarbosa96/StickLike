@@ -1,6 +1,9 @@
 package com.sticklike.core.utils;
 
-public class GameConfig { // todo -> si escala demasiado habrá que gestionarlo con clases internas
+/**
+ * Clase para manejar de forma cómoda las constantes del juego
+ */
+public class GestorConstantes { // todo -> si escala demasiado habrá que gestionarlo con clases internas
     // Resolución virtual
     public static final float VIRTUAL_WIDTH = 1080f;
     public static final float VIRTUAL_HEIGHT = 720f;

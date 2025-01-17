@@ -1,17 +1,17 @@
 package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
-import com.sticklike.core.screens.GameScreen;
-import com.sticklike.core.utils.AssetLoader;
+import com.sticklike.core.screens.VentanaJuego;
+import com.sticklike.core.utils.GestorDeAssets;
 
 public class MainGame extends Game {
-    public GameScreen gameScreen;
+    public VentanaJuego ventanaJuego;
 
     @Override
     public void create() {
-        AssetLoader.load(); // Cargamos los assets al iniciar
-        gameScreen = new GameScreen(this); // Pasamos MainGame a GameScreen
-        setScreen(gameScreen); // Asignamos la pantalla a visualizar
+        GestorDeAssets.cargarRecursos(); // Cargamos los assets al iniciar
+        ventanaJuego = new VentanaJuego(this); // Pasamos MainGame a GameScreen
+        setScreen(ventanaJuego); // Asignamos la pantalla a visualizar
     }
 
     @Override
@@ -22,7 +22,7 @@ public class MainGame extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        AssetLoader.dispose();
-        gameScreen.dispose();
+        GestorDeAssets.dispose();
+        ventanaJuego.dispose();
     }
 }
