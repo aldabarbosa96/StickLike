@@ -1,9 +1,9 @@
-package com.sticklike.core.entities;
+package com.sticklike.core.entidades.objetos;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.utils.GestorDeAssets;
+import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**
  * La clase ObjetoXP representa los objetos que sueltan los enemigos al morir

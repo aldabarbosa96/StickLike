@@ -1,12 +1,12 @@
-package com.sticklike.core.managers;
+package com.sticklike.core.gameplay.managers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entities.Enemigo;
-import com.sticklike.core.entities.Jugador;
-import com.sticklike.core.entities.ObjetoXP;
-import com.sticklike.core.screens.VentanaJuego;
-import com.sticklike.core.utils.GestorConstantes;
+import com.sticklike.core.entidades.personajes.Enemigo;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.ObjetoXP;
+import com.sticklike.core.pantallas.VentanaJuego;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
  * La clase EnemyManager se encarga de:
@@ -47,7 +47,7 @@ public class ControladorEnemigos {
      * @param delta tiempo transcurrido desde el último frame
      */
     public void actualizarSpawnEnemigos(float delta) {
-        if (jugador.estaMuerto()) {
+        if (jugador.estaVivo()) {
             return;
         }
 
@@ -87,7 +87,7 @@ public class ControladorEnemigos {
      * @param batch SpriteBatch para dibujar
      */
     public void renderizarEnemigos(SpriteBatch batch) {
-        if (jugador.estaMuerto()) return;
+        if (jugador.estaVivo()) return;
 
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
         for (Enemigo enemigo : enemigos) {

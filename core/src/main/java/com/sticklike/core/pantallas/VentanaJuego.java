@@ -1,4 +1,4 @@
-package com.sticklike.core.screens;
+package com.sticklike.core.pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -22,21 +22,17 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.entities.Enemigo;
-import com.sticklike.core.entities.Jugador;
-import com.sticklike.core.entities.ObjetoXP;
-import com.sticklike.core.entities.TextoFlotante;
-import com.sticklike.core.logics.actions.AtaqueJugador;
-import com.sticklike.core.logics.actions.ColisionesJugador;
-import com.sticklike.core.logics.actions.DesplazamientoJugador;
-import com.sticklike.core.logics.inputs.InputsJugador;
-import com.sticklike.core.managers.ControladorEnemigos;
-import com.sticklike.core.managers.ControladorMejoras;
-import com.sticklike.core.managers.ControladorProyectiles;
-import com.sticklike.core.systems.SistemaDeNiveles;
+import com.sticklike.core.entidades.jugador.*;
+import com.sticklike.core.entidades.personajes.Enemigo;
+import com.sticklike.core.entidades.objetos.ObjetoXP;
+import com.sticklike.core.entidades.objetos.TextoFlotante;
+import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.gameplay.managers.ControladorMejoras;
+import com.sticklike.core.gameplay.managers.ControladorProyectiles;
+import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.ui.HUD;
-import com.sticklike.core.upgrades.Mejora;
-import com.sticklike.core.utils.GestorConstantes;
+import com.sticklike.core.mejoras.Mejora;
+import com.sticklike.core.utilidades.GestorConstantes;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.List;
@@ -84,6 +80,7 @@ public class VentanaJuego implements Screen {
     private DesplazamientoJugador desplazamientoJugador;
     private AtaqueJugador ataqueJugador;
     private ControladorProyectiles controladorProyectiles;
+    private RenderizarMovJugador renderizarMovJugador;
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
@@ -120,6 +117,7 @@ public class VentanaJuego implements Screen {
         desplazamientoJugador = new DesplazamientoJugador();
         ataqueJugador = new AtaqueJugador();
         controladorProyectiles = new ControladorProyectiles();
+        renderizarMovJugador = new RenderizarMovJugador();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
@@ -186,7 +184,7 @@ public class VentanaJuego implements Screen {
     @Override
     public void render(float delta) {
         // Si el jugador muere, pasamos a la pantalla de GameOver
-        if (jugador.estaMuerto()) {
+        if (jugador.estaVivo()) {
             game.setScreen(new VentanaGameOver(game));
             return;
         }
@@ -208,9 +206,8 @@ public class VentanaJuego implements Screen {
         spriteBatch.setProjectionMatrix(camara.combined);
         spriteBatch.begin();
 
+        jugador.aplicarRenderizadoJugador(spriteBatch);
         controladorEnemigos.renderizarEnemigos(spriteBatch);
-
-        jugador.renderizarJugador(spriteBatch);
 
         jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
 
@@ -232,7 +229,7 @@ public class VentanaJuego implements Screen {
     }
 
     private void actualizarLogica(float delta) {
-        jugador.actualizarJugador(delta, pausado, textosDanyo);
+        jugador.actualizarLogicaJugador(delta, pausado, textosDanyo);
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
         // Manejo de enemigos muertos => suelta objeto XP

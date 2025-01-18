@@ -1,8 +1,7 @@
-package com.sticklike.core.logics.actions;
+package com.sticklike.core.entidades.jugador;
 
-import com.sticklike.core.entities.Enemigo;
-import com.sticklike.core.entities.Jugador;
-import com.sticklike.core.logics.inputs.InputsJugador.ResultadoInput;
+import com.sticklike.core.entidades.personajes.Enemigo;
+import com.sticklike.core.entidades.jugador.InputsJugador.ResultadoInput;
 
 /**
  * {@code MovimientoJugador} se encarga de la lógica de movimiento
@@ -39,7 +38,5 @@ public class DesplazamientoJugador {
         // Movemos el sprite
         jugador.getSprite().translate(finalX, finalY);
     }
-    public boolean enColision(Enemigo enemigo, Jugador jugador) {
-        return jugador.getSprite().getBoundingRectangle().overlaps(enemigo.getSprite().getBoundingRectangle());
-    }
+
 }

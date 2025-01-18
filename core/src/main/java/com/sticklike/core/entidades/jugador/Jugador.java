@@ -1,20 +1,14 @@
-package com.sticklike.core.entities;
+package com.sticklike.core.entidades.jugador;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.logics.actions.ColisionesJugador;
-import com.sticklike.core.logics.inputs.InputsJugador;
-import com.sticklike.core.logics.inputs.InputsJugador.Direction;
-import com.sticklike.core.logics.actions.DesplazamientoJugador;
-import com.sticklike.core.logics.actions.AtaqueJugador;   // <-- Importamos la nueva clase de ataque
-
-import com.sticklike.core.managers.ControladorEnemigos;
-import com.sticklike.core.managers.ControladorProyectiles;
-import com.sticklike.core.utils.GestorDeAssets;
-import com.sticklike.core.utils.GestorConstantes;
+import com.sticklike.core.entidades.objetos.TextoFlotante;
+import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
+import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.gameplay.managers.ControladorProyectiles;
+import com.sticklike.core.utilidades.GestorDeAssets;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
  * La clase Jugador representa al personaje controlado por el jugador.
@@ -22,7 +16,8 @@ import com.sticklike.core.utils.GestorConstantes;
  * - Input en {@link InputsJugador}
  * - Movimiento en {@link DesplazamientoJugador}
  * - Ataque en {@link AtaqueJugador}
- * - Colisiones en {@link }
+ * - Colisiones en {@link ColisionesJugador}
+ * - Renderizado en {@link RenderizarMovJugador}
  */
 public class Jugador {
 
@@ -33,6 +28,7 @@ public class Jugador {
     private AtaqueJugador ataqueController;
     private DesplazamientoJugador desplazamientoJugador;
     private ColisionesJugador colisionesJugador;
+    private RenderizarMovJugador renderizarMovJugador;
 
     // Atributos de stats
     private float velocidadJugador;
@@ -42,90 +38,72 @@ public class Jugador {
     private float intervaloDisparo;
     public float temporizadorDisparo = 0;
     private int proyectilesPorDisparo = 1;
-    private boolean estaMuerto;
+    private boolean estaVivo;
     private Direction direccionActual = Direction.IDLE;
-
-    // Animaciones
-    private Animation<TextureRegion> animacionMovDerecha;
-    private Animation<TextureRegion> animacionMovIzquierda;
-    private Animation<TextureRegion> animacionIdle;
-    private float temporizadorAnimacion = 0;
 
     /**
      * Constructor principal del Jugador.
      */
-    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, DesplazamientoJugador desplazamientoJugador,
-                   AtaqueJugador ataqueJugador, ControladorProyectiles controladorProyectiles) {
+    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
+                   DesplazamientoJugador desplazamientoJugador, AtaqueJugador ataqueJugador,
+                   ControladorProyectiles controladorProyectiles) {
         this.velocidadJugador = GestorConstantes.PLAYER_SPEED;
         this.vidaJugador = GestorConstantes.PLAYER_HEALTH;
         this.maxVidaJugador = GestorConstantes.PLAYER_MAX_HEALTH;
         this.rangoAtaqueJugador = GestorConstantes.PLAYER_ATTACK_RANGE;
         this.intervaloDisparo = GestorConstantes.PLAYER_SHOOT_INTERVAL;
+        this.estaVivo = true;
 
-        estaMuerto = false;
+        // Inicializar el sprite del jugador
+        this.sprite = new Sprite(GestorDeAssets.stickman);
+        this.sprite.setSize(15, 45);
+        this.sprite.setPosition(startX, startY);
 
-        sprite = new Sprite(GestorDeAssets.stickman);
-        sprite.setSize(15, 45);
-        sprite.setPosition(startX, startY);
-
-        this.controladorProyectiles = controladorProyectiles;
-
-        // Inputs y colisiones
+        // Inicializar controladores
         this.inputController = inputController;
         this.colisionesJugador = colisionesJugador;
-
-        // Instanciamos la lógica de movimiento y ataque
         this.desplazamientoJugador = desplazamientoJugador;
         this.ataqueController = ataqueJugador;
-
-        // Cargamos animaciones
-        animacionIdle = GestorDeAssets.animations.get("idle");
-        animacionMovDerecha = GestorDeAssets.animations.get("moveRight");
-        animacionMovIzquierda = GestorDeAssets.animations.get("moveLeft");
+        this.controladorProyectiles = controladorProyectiles;
+        this.renderizarMovJugador = new RenderizarMovJugador();
     }
 
     /**
-     * Actualiza la lógica del jugador: mover, disparar y colisiones a través de los
+     * Actualiza la lógica del jugador: movimiento, disparo, colisiones
      */
-    public void actualizarJugador(float delta, boolean paused, Array<TextoFlotante> dmgText) {
-        if (estaMuerto) return;
+    public void actualizarLogicaJugador(float delta, boolean paused, Array<TextoFlotante> dmgText) {
+        if (!estaVivo) return;
 
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, desplazamientoJugador, this);
             ataqueController.manejarDisparo(delta, this);
-            colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos,desplazamientoJugador,this);
+            colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this);
         } else {
             direccionActual = Direction.IDLE;
         }
-
-        temporizadorAnimacion += delta; // Actualiza la animación
-        controladorProyectiles.actualizarProyectiles(delta, (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
+        renderizarMovJugador.actualizarAnimacion(delta);
+        controladorProyectiles.actualizarProyectiles(delta,
+            (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
     }
 
-    public void renderizarJugador(SpriteBatch batch) {
-        if (!estaMuerto) {
-            TextureRegion currentFrame;
-            switch (direccionActual) {
-                case LEFT:
-                    currentFrame = animacionMovIzquierda.getKeyFrame(temporizadorAnimacion, true);
-                    break;
-                case RIGHT:
-                    currentFrame = animacionMovDerecha.getKeyFrame(temporizadorAnimacion, true);
-                    break;
-                default:
-                    currentFrame = animacionIdle.getKeyFrame(temporizadorAnimacion, true);
-                    break;
-            }
-            batch.draw(currentFrame, sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
-        }
+    /**
+     * Aplica el renderizado de las animaciones al jugador
+     * @param batch sprite que representa al jugador
+     */
+    public void aplicarRenderizadoJugador(SpriteBatch batch) {
+        renderizarMovJugador.setDireccionActual(direccionActual);
+        renderizarMovJugador.renderizarJugador(batch, this);
     }
-
 
     public void muere() {
-        estaMuerto = true;
+        estaVivo = false;
         System.out.println("GAME OVER (player died)");
+        // todo --> implementar ventana de "vida extra" en un futuro
     }
 
+    /**
+     * Libera los recursos usados por el jugador.
+     */
     public void dispose() {
         if (sprite != null && sprite.getTexture() != null) {
             sprite.getTexture().dispose();
@@ -136,7 +114,7 @@ public class Jugador {
     }
 
     // -------------------------------------------------------------------
-    // Getters / Setters y métodos de stats
+    // Getters / Setters y métodos relacionados con los atributos del jugador
     // -------------------------------------------------------------------
     public float obtenerPorcetajeVida() {
         return vidaJugador / maxVidaJugador;
@@ -156,16 +134,14 @@ public class Jugador {
 
     public void reducirIntervaloDisparo(float percentage) {
         intervaloDisparo *= (1 - percentage);
-        if (intervaloDisparo < 0.1f) {
-            intervaloDisparo = 0.1f;
-        }
-    }
+        if (intervaloDisparo < 0.1f) intervaloDisparo = 0.1f;
 
+    }
     public void aumentarProyectilesPorDisparo(int amount) {
         proyectilesPorDisparo += amount;
     }
 
-    // Atributos para la lógica de combate
+    // Getters y Setters básicos
     public float getRangoAtaqueJugador() {
         return rangoAtaqueJugador;
     }
@@ -194,8 +170,8 @@ public class Jugador {
         return maxVidaJugador;
     }
 
-    public boolean estaMuerto() {
-        return estaMuerto;
+    public boolean estaVivo() {
+        return !estaVivo;
     }
 
     public Sprite getSprite() {
@@ -217,7 +193,6 @@ public class Jugador {
     public void setDireccionActual(Direction direccionActual) {
         this.direccionActual = direccionActual;
     }
-
 
     public float getIntervaloDisparo() {
         return intervaloDisparo;

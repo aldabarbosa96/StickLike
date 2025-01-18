@@ -1,8 +1,8 @@
 package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
-import com.sticklike.core.screens.VentanaJuego;
-import com.sticklike.core.utils.GestorDeAssets;
+import com.sticklike.core.pantallas.VentanaJuego;
+import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**
  * MainGame es la clase principal de la aplicación con libGDX

@@ -1,13 +1,13 @@
-package com.sticklike.core.managers;
+package com.sticklike.core.gameplay.managers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entities.Enemigo;
-import com.sticklike.core.entities.TextoFlotante;
-import com.sticklike.core.entities.Proyectil;
+import com.sticklike.core.entidades.personajes.Enemigo;
+import com.sticklike.core.entidades.objetos.TextoFlotante;
+import com.sticklike.core.entidades.objetos.Proyectil;
 
 import java.util.Iterator;
 

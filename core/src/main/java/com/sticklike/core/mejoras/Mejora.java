@@ -1,4 +1,4 @@
-package com.sticklike.core.upgrades;
+package com.sticklike.core.mejoras;
 
 /**
  * Clase base de las mejoras. Se definen y se aplica su efecto

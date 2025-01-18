@@ -1,10 +1,12 @@
-package com.sticklike.core.entities;
+package com.sticklike.core.entidades.personajes;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.utils.GestorDeAssets;
-import com.sticklike.core.utils.GestorConstantes;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.ObjetoXP;
+import com.sticklike.core.utilidades.GestorDeAssets;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
  * La clase Enemy gestiona el renderizado y actualizaciones de cada enemigo,

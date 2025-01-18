@@ -1,8 +1,7 @@
-package com.sticklike.core.logics.actions;
+package com.sticklike.core.entidades.jugador;
 
-import com.sticklike.core.entities.Enemigo;
-import com.sticklike.core.entities.Jugador;
-import com.sticklike.core.managers.ControladorProyectiles;
+import com.sticklike.core.entidades.personajes.Enemigo;
+import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 
 import java.lang.Math;
 

@@ -1,4 +1,4 @@
-package com.sticklike.core.screens;
+package com.sticklike.core.pantallas;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.utils.GestorConstantes;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
  * Pantalla ** GAME OVER ** que se muestra al terminar la partida (al morir).

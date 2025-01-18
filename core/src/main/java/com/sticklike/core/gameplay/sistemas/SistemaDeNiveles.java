@@ -1,7 +1,7 @@
-package com.sticklike.core.systems;
+package com.sticklike.core.gameplay.sistemas;
 
-import com.sticklike.core.entities.Jugador;
-import com.sticklike.core.managers.ControladorMejoras;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.managers.ControladorMejoras;
 
 /**
  * Esta clase gestiona la experiencia y los niveles del {@link Jugador}.

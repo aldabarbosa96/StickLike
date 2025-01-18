@@ -1,4 +1,4 @@
-package com.sticklike.core.utils;
+package com.sticklike.core.utilidades;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -30,16 +30,16 @@ public class GestorDeAssets {
     public static void cargarAnimaciones() {
         animations = new HashMap<>();
 
-        animations.put("idle", crearAnimacion("actions/movement/stickman_idle", 3, 0.15f));
-        animations.put("moveRight", crearAnimacion("actions/movement/stickman_movementD", 5, 0.09f));
-        animations.put("moveLeft", crearAnimacion("actions/movement/stickman_movementI", 5, 0.09f));
+        animations.put("idle", crearAnimacion("acciones/movement/stickman_idle", 3, 0.15f));
+        animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.09f));
+        animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.09f));
     }
 
     public static void cargarTexturas() {
-        stickman = new Texture("player/01stickman.png");
-        enemigoCulo = new Texture("enemies/01culo.png");
+        stickman = new Texture("jugador/01stickman.png");
+        enemigoCulo = new Texture("enemigos/01culo.png");
         corazonVida = new Texture("hud/life.png");
-        armaPiedra = new Texture("weapons/01piedra.png");
+        armaPiedra = new Texture("armas/01piedra.png");
         iconoXP = new Texture("hud/xp.png");
         recolectableCaca = new Texture("drops/caca.png");
     }

@@ -1,4 +1,4 @@
-package com.sticklike.core.utils;
+package com.sticklike.core.utilidades;
 
 /**
  * Clase para manejar de forma cómoda las constantes del juego

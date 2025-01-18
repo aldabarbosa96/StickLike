@@ -1,9 +1,9 @@
-package com.sticklike.core.logics.inputs;
+package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.sticklike.core.entities.Jugador;
-import com.sticklike.core.logics.actions.DesplazamientoJugador;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.jugador.DesplazamientoJugador;
 
 /**
  * Clase que gestiona la entrada de teclas para controlar el movimiento
@@ -19,7 +19,7 @@ public class InputsJugador {
     public ResultadoInput procesarInput(float delta) {
         float movX = 0;
         float movY = 0;
-        Direction direction = Direction.IDLE; // por ejemplo
+        Direction direction = Direction.IDLE;
 
         boolean pressLeft  = Gdx.input.isKeyPressed(Input.Keys.A);
         boolean pressRight = Gdx.input.isKeyPressed(Input.Keys.D);

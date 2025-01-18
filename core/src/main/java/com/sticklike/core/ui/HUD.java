@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.sticklike.core.entities.Jugador;
-import com.sticklike.core.systems.SistemaDeNiveles;
-import com.sticklike.core.utils.GestorDeAssets;
-import com.sticklike.core.utils.GestorConstantes;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+import com.sticklike.core.utilidades.GestorDeAssets;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
  * Clase responsable de dibujar la información de interfaz del jugador en pantalla (vida, experiencia, nivel, etc.)
