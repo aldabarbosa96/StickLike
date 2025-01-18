@@ -4,11 +4,11 @@ import com.sticklike.core.entities.Enemigo;
 import com.sticklike.core.entities.Jugador;
 import com.sticklike.core.managers.ControladorEnemigos;
 
-public class Colisiones {
+public class ColisionesJugador {
     /**
      * Verifica colisiones con los enemigos y aplica daño si es necesario.
      */
-    private void verificarColisionesConEnemigos(ControladorEnemigos controladorEnemigos, DesplazamientoJugador movimientoController, Jugador jugador) {
+    public void verificarColisionesConEnemigos(ControladorEnemigos controladorEnemigos, DesplazamientoJugador movimientoController, Jugador jugador) {
         if (controladorEnemigos != null) {
             for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
                 if (movimientoController.enColision(enemigo, jugador) && enemigo.puedeAplicarDanyo()) {

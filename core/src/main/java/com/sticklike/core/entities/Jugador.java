@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.logics.actions.Colisiones;
+import com.sticklike.core.logics.actions.ColisionesJugador;
 import com.sticklike.core.logics.inputs.InputsJugador;
 import com.sticklike.core.logics.inputs.InputsJugador.Direction;
 import com.sticklike.core.logics.actions.DesplazamientoJugador;
@@ -22,6 +22,7 @@ import com.sticklike.core.utils.GestorConstantes;
  * - Input en {@link InputsJugador}
  * - Movimiento en {@link DesplazamientoJugador}
  * - Ataque en {@link AtaqueJugador}
+ * - Colisiones en {@link }
  */
 public class Jugador {
 
@@ -29,10 +30,9 @@ public class Jugador {
     private ControladorEnemigos controladorEnemigos;
     private ControladorProyectiles controladorProyectiles;
     private InputsJugador inputController;
-    private DesplazamientoJugador movimientoController;
     private AtaqueJugador ataqueController;
     private DesplazamientoJugador desplazamientoJugador;
-    private Colisiones colisiones;
+    private ColisionesJugador colisionesJugador;
 
     // Atributos de stats
     private float velocidadJugador;
@@ -54,27 +54,29 @@ public class Jugador {
     /**
      * Constructor principal del Jugador.
      */
-    public Jugador(float startX, float startY, InputsJugador inputController) {
+    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, DesplazamientoJugador desplazamientoJugador,
+                   AtaqueJugador ataqueJugador, ControladorProyectiles controladorProyectiles) {
         this.velocidadJugador = GestorConstantes.PLAYER_SPEED;
         this.vidaJugador = GestorConstantes.PLAYER_HEALTH;
         this.maxVidaJugador = GestorConstantes.PLAYER_MAX_HEALTH;
         this.rangoAtaqueJugador = GestorConstantes.PLAYER_ATTACK_RANGE;
         this.intervaloDisparo = GestorConstantes.PLAYER_SHOOT_INTERVAL;
 
+        estaMuerto = false;
+
         sprite = new Sprite(GestorDeAssets.stickman);
         sprite.setSize(15, 45);
         sprite.setPosition(startX, startY);
 
-        controladorProyectiles = new ControladorProyectiles();
-        estaMuerto = false;
+        this.controladorProyectiles = controladorProyectiles;
 
+        // Inputs y colisiones
         this.inputController = inputController;
-        this.desplazamientoJugador = new DesplazamientoJugador();
-        this.colisiones = new Colisiones();
+        this.colisionesJugador = colisionesJugador;
 
         // Instanciamos la lógica de movimiento y ataque
-        this.movimientoController = new DesplazamientoJugador();
-        this.ataqueController = new AtaqueJugador();
+        this.desplazamientoJugador = desplazamientoJugador;
+        this.ataqueController = ataqueJugador;
 
         // Cargamos animaciones
         animacionIdle = GestorDeAssets.animations.get("idle");
@@ -83,7 +85,7 @@ public class Jugador {
     }
 
     /**
-     * Actualiza la lógica del jugador: mover, disparar y colisiones
+     * Actualiza la lógica del jugador: mover, disparar y colisiones a través de los
      */
     public void actualizarJugador(float delta, boolean paused, Array<TextoFlotante> dmgText) {
         if (estaMuerto) return;
@@ -91,27 +93,13 @@ public class Jugador {
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, desplazamientoJugador, this);
             ataqueController.manejarDisparo(delta, this);
-            verificarColisionesConEnemigos();
+            colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos,desplazamientoJugador,this);
         } else {
             direccionActual = Direction.IDLE;
         }
 
         temporizadorAnimacion += delta; // Actualiza la animación
         controladorProyectiles.actualizarProyectiles(delta, (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
-    }
-
-    /**
-     * Verifica colisiones con los enemigos y aplica daño si es necesario.
-     */
-    private void verificarColisionesConEnemigos() {
-        if (controladorEnemigos != null) {
-            for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
-                if (movimientoController.enColision(enemigo, this) && enemigo.puedeAplicarDanyo()) {
-                    colisiones.recibeDanyo(2,this);
-                    enemigo.reseteaTemporizadorDanyo();
-                }
-            }
-        }
     }
 
     public void renderizarJugador(SpriteBatch batch) {

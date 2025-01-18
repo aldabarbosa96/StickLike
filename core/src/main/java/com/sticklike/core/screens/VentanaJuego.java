@@ -26,10 +26,13 @@ import com.sticklike.core.entities.Enemigo;
 import com.sticklike.core.entities.Jugador;
 import com.sticklike.core.entities.ObjetoXP;
 import com.sticklike.core.entities.TextoFlotante;
+import com.sticklike.core.logics.actions.AtaqueJugador;
+import com.sticklike.core.logics.actions.ColisionesJugador;
+import com.sticklike.core.logics.actions.DesplazamientoJugador;
 import com.sticklike.core.logics.inputs.InputsJugador;
 import com.sticklike.core.managers.ControladorEnemigos;
 import com.sticklike.core.managers.ControladorMejoras;
-import com.sticklike.core.renderers.RenderizadoCuadriculaMapa;
+import com.sticklike.core.managers.ControladorProyectiles;
 import com.sticklike.core.systems.SistemaDeNiveles;
 import com.sticklike.core.ui.HUD;
 import com.sticklike.core.upgrades.Mejora;
@@ -77,6 +80,10 @@ public class VentanaJuego implements Screen {
     private ControladorMejoras controladorMejoras;
     private SistemaDeNiveles sistemaDeNiveles;
     private HUD hud;
+    private ColisionesJugador colisionesJugador;
+    private DesplazamientoJugador desplazamientoJugador;
+    private AtaqueJugador ataqueJugador;
+    private ControladorProyectiles controladorProyectiles;
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
@@ -109,11 +116,15 @@ public class VentanaJuego implements Screen {
 
         // Instanciamos el controlador de input para el jugador
         InputsJugador inputJugador = new InputsJugador();
+        colisionesJugador = new ColisionesJugador();
+        desplazamientoJugador = new DesplazamientoJugador();
+        ataqueJugador = new AtaqueJugador();
+        controladorProyectiles = new ControladorProyectiles();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
         float playerStartY = WORLD_HEIGHT / 2f + 125f;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador,desplazamientoJugador,ataqueJugador,controladorProyectiles);
 
         // Managers / sistemas de mejoras y enemigos
         controladorMejoras = new ControladorMejoras(jugador, game);

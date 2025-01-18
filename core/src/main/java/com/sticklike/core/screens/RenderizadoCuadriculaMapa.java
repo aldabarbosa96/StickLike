@@ -1,4 +1,4 @@
-package com.sticklike.core.renderers;
+package com.sticklike.core.screens;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
