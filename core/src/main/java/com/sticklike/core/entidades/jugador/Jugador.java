@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.jugador;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.TextoFlotante;
+import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
@@ -41,9 +41,6 @@ public class Jugador {
     private boolean estaVivo;
     private Direction direccionActual = Direction.IDLE;
 
-    /**
-     * Constructor principal del Jugador.
-     */
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
                    MovimientoJugador movimientoJugador, AtaqueJugador ataqueJugador,
                    ControladorProyectiles controladorProyectiles) {

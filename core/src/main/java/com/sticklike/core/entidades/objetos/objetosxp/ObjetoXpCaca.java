@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos;
+package com.sticklike.core.entidades.objetos.objetosxp;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,7 +10,7 @@ import com.sticklike.core.utilidades.GestorDeAssets;
  * La clase ObjetoXP representa los objetos que sueltan los enemigos al morir
  * y que otorgan experiencia al Jugador
  */
-public class Caca implements ObjetosXP {
+public class ObjetoXpCaca implements ObjetosXP {
     private Sprite sprite;
     private boolean recolectado = false;
 
@@ -18,7 +18,7 @@ public class Caca implements ObjetosXP {
      * Genera un nuevo objeto de experiencia en una posición determinada
      * @param x,y coordenadas spawn gestionadas por enemigo
      */
-    public Caca(float x, float y) {
+    public ObjetoXpCaca(float x, float y) {
         Texture texture = GestorDeAssets.recolectableCaca;
         sprite = new Sprite(texture);
         sprite.setSize(12, 12);
@@ -34,7 +34,7 @@ public class Caca implements ObjetosXP {
 
     @Override
     public void actualizar() {
-
+        // todo --> gestionar para crear efecto de recogida de XP
     }
 
     @Override

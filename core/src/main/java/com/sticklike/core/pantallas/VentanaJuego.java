@@ -23,9 +23,9 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.interfaces.Enemigo;
+import com.sticklike.core.entidades.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
-import com.sticklike.core.entidades.objetos.Caca;
-import com.sticklike.core.entidades.objetos.TextoFlotante;
+import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.gameplay.managers.ControladorMejoras;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
@@ -84,7 +84,7 @@ public class VentanaJuego implements Screen {
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
-    private Array<Caca> objetosXP;
+    private Array<ObjetosXP> objetosXP;
     private Array<Enemigo> enemigosAEliminar;
 
     // Control de pausa
@@ -207,13 +207,16 @@ public class VentanaJuego implements Screen {
         spriteBatch.begin();
 
         jugador.aplicarRenderizadoAlJugador(spriteBatch);
-        controladorEnemigos.renderizarEnemigos(spriteBatch);
+
 
         jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
 
-        for (Caca xp : objetosXP) {
+        for (ObjetosXP xp : objetosXP) {
             xp.renderizarObjetoXP(spriteBatch);
         }
+
+        controladorEnemigos.renderizarEnemigos(spriteBatch);
+
         for (TextoFlotante txt : textosDanyo) {
             txt.renderizarTextoFlotante(spriteBatch);
         }
@@ -241,7 +244,7 @@ public class VentanaJuego implements Screen {
         // Manejo de enemigos muertos => suelta objeto XP
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo.estaMuerto() && !enemigo.haSoltadoXP()) {
-                Caca xp = enemigo.sueltaObjetoXP();
+                ObjetosXP xp = enemigo.sueltaObjetoXP();
                 if (xp != null) {
                     objetosXP.add(xp);
                 }
@@ -258,7 +261,7 @@ public class VentanaJuego implements Screen {
     private void gestionarRecogidaXP(){
         // Recoger XP
         for (int i = objetosXP.size - 1; i >= 0; i--) {
-            Caca xp = objetosXP.get(i);
+            ObjetosXP xp = objetosXP.get(i);
             //xp.actualizarObjetoXP(delta); // para cuando haya que animar el objeto (efecto al recoger)
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
@@ -285,8 +288,8 @@ public class VentanaJuego implements Screen {
         camara.position.set(
             jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
             jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y,
-            0
-        );
+            0);
+
         camara.update();
     }
 
@@ -370,7 +373,7 @@ public class VentanaJuego implements Screen {
     /**
      * Añade un ObjetoXP al array de objetosXP.
      */
-    public void addXPObject(Caca xpObject) {
+    public void addXPObject(ObjetosXP xpObject) {
         objetosXP.add(xpObject);
     }
 
@@ -414,7 +417,7 @@ public class VentanaJuego implements Screen {
         }
         textosDanyo.clear();
 
-        for (Caca xp : objetosXP) {
+        for (ObjetosXP xp : objetosXP) {
             xp.dispose();
         }
         objetosXP.clear();

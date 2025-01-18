@@ -47,18 +47,8 @@ public class VentanaGameOver implements Screen {
         viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         viewport.apply();
 
-        // Establecemos el InputProcessor para manejar las entradas
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-                if (keycode == Input.Keys.R) {
-                    reiniciarJuego();
-                } else if (keycode == Input.Keys.Q) {
-                    cerrarJuego();
-                }
-                return true;
-            }
-        });
+        inputsVentanaGameOver();
+
     }
 
     /**
@@ -101,6 +91,21 @@ public class VentanaGameOver implements Screen {
         font.draw(spriteBatch, optionsText, textX, textY);
 
         spriteBatch.end();
+    }
+
+
+    private void inputsVentanaGameOver(){
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.R) {
+                    reiniciarJuego();
+                } else if (keycode == Input.Keys.Q) {
+                    cerrarJuego();
+                }
+                return true;
+            }
+        });
     }
 
     /**

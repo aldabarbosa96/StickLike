@@ -3,9 +3,9 @@ package com.sticklike.core.gameplay.managers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.interfaces.Enemigo;
-import com.sticklike.core.entidades.enemigos.Culo;
+import com.sticklike.core.entidades.enemigos.EnemigoCulo;
+import com.sticklike.core.entidades.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.Caca;
 import com.sticklike.core.pantallas.VentanaJuego;
 import com.sticklike.core.utilidades.GestorConstantes;
 
@@ -52,7 +52,7 @@ public class ControladorEnemigos {
             enemigo.actualizar(delta);
 
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
-                Caca xpObject = enemigo.sueltaObjetoXP();
+                ObjetosXP xpObject = enemigo.sueltaObjetoXP();
                 if (xpObject != null) {
                     ventanaJuego.addXPObject(xpObject);
                 }
@@ -117,7 +117,7 @@ public class ControladorEnemigos {
     public static Enemigo fabricaEnemigos(String tipo, float x, float y, Jugador jugador, float velocidad) {
         switch (tipo) {
             case "CULO":
-                return new Culo(x, y, jugador, velocidad);
+                return new EnemigoCulo(x, y, jugador, velocidad);
             /*case "ENEMIGO_TIPO2":
                 return new EnemigoTipo2(x, y, jugador, velocidad);
             case "ENEMIGO_TIPO3":

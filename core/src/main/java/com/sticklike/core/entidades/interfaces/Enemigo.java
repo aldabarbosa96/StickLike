@@ -2,7 +2,6 @@ package com.sticklike.core.entidades.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.entidades.objetos.Caca;
 
 public interface Enemigo {
     void actualizar(float delta);
@@ -12,7 +11,7 @@ public interface Enemigo {
     float getX();
     float getY();
     boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight);
-    Caca sueltaObjetoXP();
+    ObjetosXP sueltaObjetoXP();
     Sprite getSprite();
     void reseteaTemporizadorDanyo();
     boolean puedeAplicarDanyo();

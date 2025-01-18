@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos;
+package com.sticklike.core.entidades.objetos.texto;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

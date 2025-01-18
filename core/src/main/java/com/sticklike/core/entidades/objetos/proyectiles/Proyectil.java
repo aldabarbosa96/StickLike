@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos;
+package com.sticklike.core.entidades.objetos.proyectiles;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,23 +16,20 @@ import com.sticklike.core.utilidades.GestorConstantes;
 public class Proyectil {
     // Textura estática compartida por todos los proyectiles
     private static Texture textura;
-
     private Sprite sprite;
     private float velocidadProyectil = GestorConstantes.PROJECTILE_SPEED;
     private float multiplicadorVelocidad;
     private float direccionX, direccionY;
     private boolean proyectilActivo;
-    private Enemigo enemigoObjetivo;
 
     /**
      * Crea un nuevo proyectil con los parámetros indicados
      *
      * @param x,y posición inicial X,Y del proyectil
      * @param direccionX,direccionY componente X,Y de la dirección normalizada
-     * @param enemigoObjetivo referencia al enemigo objetivo (guiar o verificar colisiones)
      * @param multiplicadorVelocidad factor de velocidad extra (para alterar la velocidad de los proyectiles)
      */
-    public Proyectil(float x, float y, float direccionX, float direccionY, Enemigo enemigoObjetivo, float multiplicadorVelocidad) {
+    public Proyectil(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad) {
         if (textura == null) {
             textura = GestorDeAssets.armaPiedra;
         }
@@ -43,7 +40,6 @@ public class Proyectil {
         this.direccionX = direccionX;
         this.direccionY = direccionY;
         this.proyectilActivo = true;
-        this.enemigoObjetivo = enemigoObjetivo;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
     }
 
@@ -76,10 +72,6 @@ public class Proyectil {
 
     public boolean isProyectilActivo() {
         return proyectilActivo;
-    }
-
-    public Enemigo getEnemigoObjetivo() {
-        return enemigoObjetivo;
     }
 
     public void dispose() {

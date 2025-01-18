@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.interfaces.Enemigo;
-import com.sticklike.core.entidades.objetos.TextoFlotante;
-import com.sticklike.core.entidades.objetos.Proyectil;
+import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
+import com.sticklike.core.entidades.objetos.proyectiles.Proyectil;
 
 import java.util.Iterator;
 
@@ -38,11 +38,10 @@ public class ControladorProyectiles {
      *
      * @param startX,startY posición X,Y de inicio del proyectil
      * @param dx,dt         componente X,Y de la dirección normalizada
-     * @param target        enemigo objetivo (para calcular colisiones o guiarse)
      */
-    public void anyadirNuevoProyectil(float startX, float startY, float dx, float dy, Enemigo target) {
+    public void anyadirNuevoProyectil(float startX, float startY, float dx, float dy) {
         float randomSpeedMultiplier = 0.7f + (float) Math.random() * 0.4f;
-        proyectiles.add(new Proyectil(startX, startY, dx, dy, target, randomSpeedMultiplier));
+        proyectiles.add(new Proyectil(startX, startY, dx, dy, randomSpeedMultiplier));
     }
 
     /**

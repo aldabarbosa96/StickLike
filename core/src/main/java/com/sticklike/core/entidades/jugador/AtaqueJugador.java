@@ -48,7 +48,7 @@ public class AtaqueJugador {
                 + dir[1] * Math.cos(Math.toRadians(angleOffset)));
 
             // Añadimos el nuevo proyectil al ControladorProyectiles
-            jug.getControladorProyectiles().anyadirNuevoProyectil(startX, startY, adjustedX, adjustedY, target);
+            jug.getControladorProyectiles().anyadirNuevoProyectil(startX, startY, adjustedX, adjustedY);
         }
     }
 

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.Caca;
+import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.entidades.interfaces.Enemigo;
 
@@ -12,7 +12,7 @@ import com.sticklike.core.entidades.interfaces.Enemigo;
  * La clase Enemy gestiona el renderizado y actualizaciones de cada enemigo,
  * además de su estado y variables
  */
-public class Culo implements Enemigo {
+public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = 65f;
@@ -27,7 +27,7 @@ public class Culo implements Enemigo {
      * @param jugador          necesitamos acceder para calcular distancias y movimiento
      * @param velocidadEnemigo velocidad de movimiento del enemigo
      */
-    public Culo(float x, float y, Jugador jugador, float velocidadEnemigo) {
+    public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         sprite = new Sprite(GestorDeAssets.enemigoCulo);
         sprite.setSize(32, 27);
         sprite.setPosition(x, y);
@@ -64,11 +64,11 @@ public class Culo implements Enemigo {
     }
 
     @Override
-    public Caca sueltaObjetoXP() {
+    public ObjetoXpCaca sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
             //System.out.println("Generando XPObject...");
-            return new Caca(this.getX(), this.getY());
+            return new ObjetoXpCaca(this.getX(), this.getY());
         }
         return null;
     }
