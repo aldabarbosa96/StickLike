@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 
-public class RenderizarMovJugador {
+public class AnimacionesJugador {
     private Direction direccionActual = Direction.IDLE;
 
     // Animaciones
@@ -15,7 +15,7 @@ public class RenderizarMovJugador {
     private final Animation<TextureRegion> animacionIdle;
     private float temporizadorAnimacion = 0;
 
-    public RenderizarMovJugador() {
+    public AnimacionesJugador() {
         animacionIdle = GestorDeAssets.animations.get("idle");
         animacionMovDerecha = GestorDeAssets.animations.get("moveRight");
         animacionMovIzquierda = GestorDeAssets.animations.get("moveLeft");

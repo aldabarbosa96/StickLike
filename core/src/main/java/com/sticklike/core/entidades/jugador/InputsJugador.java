@@ -2,8 +2,6 @@ package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.jugador.DesplazamientoJugador;
 
 /**
  * Clase que gestiona la entrada de teclas para controlar el movimiento
@@ -47,9 +45,9 @@ public class InputsJugador {
         // Devolvemos un InputResult con movX, movY y la dirección horizontal
         return new ResultadoInput(movX, movY, direction);
     }
-    public void procesarInputYMovimiento(float delta, DesplazamientoJugador desplazamientoJugador, Jugador jugador) {
+    public void procesarInputYMovimiento(float delta, MovimientoJugador movimientoJugador, Jugador jugador) {
         ResultadoInput result = this.procesarInput(delta);
-        desplazamientoJugador.mover(jugador, result, delta);
+        movimientoJugador.mover(jugador, result, delta);
         jugador.setDireccionActual(result.direction);
     }
 

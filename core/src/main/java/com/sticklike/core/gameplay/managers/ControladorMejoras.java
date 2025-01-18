@@ -1,7 +1,7 @@
 package com.sticklike.core.gameplay.managers;
 
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.mejoras.Mejora;
+import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.MainGame;
 import java.util.ArrayList;
 import java.util.Collections;

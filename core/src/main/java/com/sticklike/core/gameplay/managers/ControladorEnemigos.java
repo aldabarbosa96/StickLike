@@ -2,9 +2,10 @@ package com.sticklike.core.gameplay.managers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.personajes.Enemigo;
+import com.sticklike.core.entidades.interfaces.Enemigo;
+import com.sticklike.core.entidades.enemigos.Culo;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.ObjetoXP;
+import com.sticklike.core.entidades.objetos.Caca;
 import com.sticklike.core.pantallas.VentanaJuego;
 import com.sticklike.core.utilidades.GestorConstantes;
 
@@ -27,12 +28,6 @@ public class ControladorEnemigos {
     private static final float BORDER_MARGIN = GestorConstantes.BORDER_SPAWN_MARGIN;
     private Array<Enemigo> enemigosAEliminar = new Array<>();
 
-    /**
-     * @param jugador              referencia al {@link Jugador}, para conocer su posición y estado de vida
-     * @param intervaloDeAparicion intervalo (en segundos) para generar nuevos enemigos
-     * @param ventanaJuego         referencia a la pantalla principal ({@link VentanaJuego}), necesaria para añadir
-     *                             {@link ObjetoXP} al morir un enemigo
-     */
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego ventanaJuego) {
         this.enemigos = new Array<>();
         this.jugador = jugador;
@@ -41,101 +36,95 @@ public class ControladorEnemigos {
         this.ventanaJuego = ventanaJuego;
     }
 
-    /**
-     * Lógica de actualización para "spawnear" enemigos y procesar cada uno de ellos
-     *
-     * @param delta tiempo transcurrido desde el último frame
-     */
     public void actualizarSpawnEnemigos(float delta) {
+
         if (jugador.estaVivo()) {
             return;
         }
-
-        // Spawnea un enemigo pasado el tiempo de intervaloDeAparicion
+        System.out.println("Generando enemigo...");
         temporizadorDeAparicion += delta;
         if (temporizadorDeAparicion >= intervaloDeAparicion) {
             spawnEnemigo();
             temporizadorDeAparicion = 0;
         }
 
-        // Actualiza cada enemigo
         for (Enemigo enemigo : enemigos) {
-            enemigo.actualizarEnemigo(delta);
+            enemigo.actualizar(delta);
 
-            // Si el enemigo muere y no ha soltado XP todavía, lo suelta
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
-                ObjetoXP xpObject = enemigo.sueltaObjetoXP();
+                Caca xpObject = enemigo.sueltaObjetoXP();
                 if (xpObject != null) {
                     ventanaJuego.addXPObject(xpObject);
                 }
                 enemigo.setProcesado(true);
                 enemigosAEliminar.add(enemigo);
             }
+
         }
 
-        // Elimina enemigos marcados después de actualizar todos
         for (Enemigo enemigo : enemigosAEliminar) {
             enemigos.removeValue(enemigo, true);
         }
         enemigosAEliminar.clear();
     }
 
-    /**
-     * Renderiza los enemigos en el {@link SpriteBatch}.
-     * Utilizado en la clase Enemigo para renderizar todos los enemigos
-     *
-     * @param batch SpriteBatch para dibujar
-     */
     public void renderizarEnemigos(SpriteBatch batch) {
         if (jugador.estaVivo()) return;
 
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
         for (Enemigo enemigo : enemigos) {
-            enemigo.renderizarEnemigo(batch);
+            enemigo.renderizar(batch);
         }
     }
 
-    /**
-     * Genera un nuevo enemigo en una posición aleatoria alrededor del jugador, respetando una distancia mínima.
-     */
     private void spawnEnemigo() {
         float minDistance = 300f;
         float x, y;
 
-        // Posición del jugador (centro)
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
-        // Cálculo de límites dinámicos según la posición del jugador
         float leftLimit = playerX - VentanaJuego.WORLD_WIDTH / 2 + BORDER_MARGIN;
         float rightLimit = playerX + VentanaJuego.WORLD_WIDTH / 2 - BORDER_MARGIN;
         float bottomLimit = playerY - VentanaJuego.WORLD_HEIGHT / 2 + BORDER_MARGIN;
         float topLimit = playerY + VentanaJuego.WORLD_HEIGHT / 2 - BORDER_MARGIN;
 
         do {
-            // Genera coordenadas aleatorias dentro de los límites dinámicos
             x = leftLimit + (float) (Math.random() * (rightLimit - leftLimit));
             y = bottomLimit + (float) (Math.random() * (topLimit - bottomLimit));
-
-            // Repetimos mientras estemos demasiado cerca (menos de minDistance)
         } while (Math.sqrt(Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2)) < minDistance);
 
-        // Velocidad aleatoria entre 50 y 100
         float randomSpeed = 50f + (float) Math.random() * 50f;
+        String[] tiposDeEnemigos = {"CULO"};
+        String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
 
-        enemigos.add(new Enemigo(x, y, jugador, randomSpeed));
+        // Crear y añadir el enemigo
+        enemigos.add(fabricaEnemigos(tipoElegido, x, y, jugador, randomSpeed));
     }
 
     public void dispose() {
         for (Enemigo enemigo : enemigos) {
-            enemigo.dispose();
+            if (enemigo != null) {
+                enemigo.dispose();
+            }
         }
     }
 
-    /**
-     * @return lista de enemigos activos
-     */
     public Array<Enemigo> getEnemigos() {
         return enemigos;
+    }
+
+    public static Enemigo fabricaEnemigos(String tipo, float x, float y, Jugador jugador, float velocidad) {
+        switch (tipo) {
+            case "CULO":
+                return new Culo(x, y, jugador, velocidad);
+            /*case "ENEMIGO_TIPO2":
+                return new EnemigoTipo2(x, y, jugador, velocidad);
+            case "ENEMIGO_TIPO3":
+                return new EnemigoTipo3(x, y, jugador, velocidad);*/
+            // todo --> añadir más enemigos próximamente
+            default:
+                throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipo);
+        }
     }
 }

@@ -14,10 +14,10 @@ import com.sticklike.core.utilidades.GestorConstantes;
  * La clase Jugador representa al personaje controlado por el jugador.
  * Delegamos:
  * - Input en {@link InputsJugador}
- * - Movimiento en {@link DesplazamientoJugador}
+ * - Movimiento en {@link MovimientoJugador}
  * - Ataque en {@link AtaqueJugador}
  * - Colisiones en {@link ColisionesJugador}
- * - Renderizado en {@link RenderizarMovJugador}
+ * - Renderizado en {@link AnimacionesJugador}
  */
 public class Jugador {
 
@@ -26,9 +26,9 @@ public class Jugador {
     private ControladorProyectiles controladorProyectiles;
     private InputsJugador inputController;
     private AtaqueJugador ataqueController;
-    private DesplazamientoJugador desplazamientoJugador;
+    private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
-    private RenderizarMovJugador renderizarMovJugador;
+    private AnimacionesJugador animacionesJugador;
 
     // Atributos de stats
     private float velocidadJugador;
@@ -45,7 +45,7 @@ public class Jugador {
      * Constructor principal del Jugador.
      */
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   DesplazamientoJugador desplazamientoJugador, AtaqueJugador ataqueJugador,
+                   MovimientoJugador movimientoJugador, AtaqueJugador ataqueJugador,
                    ControladorProyectiles controladorProyectiles) {
         this.velocidadJugador = GestorConstantes.PLAYER_SPEED;
         this.vidaJugador = GestorConstantes.PLAYER_HEALTH;
@@ -62,37 +62,36 @@ public class Jugador {
         // Inicializar controladores
         this.inputController = inputController;
         this.colisionesJugador = colisionesJugador;
-        this.desplazamientoJugador = desplazamientoJugador;
+        this.movimientoJugador = movimientoJugador;
         this.ataqueController = ataqueJugador;
         this.controladorProyectiles = controladorProyectiles;
-        this.renderizarMovJugador = new RenderizarMovJugador();
+        this.animacionesJugador = new AnimacionesJugador();
     }
 
     /**
      * Actualiza la lógica del jugador: movimiento, disparo, colisiones
      */
-    public void actualizarLogicaJugador(float delta, boolean paused, Array<TextoFlotante> dmgText) {
+    public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText) {
         if (!estaVivo) return;
 
         if (!paused) {
-            inputController.procesarInputYMovimiento(delta, desplazamientoJugador, this);
+            inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
             ataqueController.manejarDisparo(delta, this);
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this);
         } else {
             direccionActual = Direction.IDLE;
         }
-        renderizarMovJugador.actualizarAnimacion(delta);
-        controladorProyectiles.actualizarProyectiles(delta,
-            (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
+        animacionesJugador.actualizarAnimacion(delta);
+        controladorProyectiles.actualizarProyectiles(delta, (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
     }
 
     /**
      * Aplica el renderizado de las animaciones al jugador
      * @param batch sprite que representa al jugador
      */
-    public void aplicarRenderizadoJugador(SpriteBatch batch) {
-        renderizarMovJugador.setDireccionActual(direccionActual);
-        renderizarMovJugador.renderizarJugador(batch, this);
+    public void aplicarRenderizadoAlJugador(SpriteBatch batch) {
+        animacionesJugador.setDireccionActual(direccionActual);
+        animacionesJugador.renderizarJugador(batch, this);
     }
 
     public void muere() {

@@ -22,16 +22,16 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.entidades.interfaces.Enemigo;
 import com.sticklike.core.entidades.jugador.*;
-import com.sticklike.core.entidades.personajes.Enemigo;
-import com.sticklike.core.entidades.objetos.ObjetoXP;
+import com.sticklike.core.entidades.objetos.Caca;
 import com.sticklike.core.entidades.objetos.TextoFlotante;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.gameplay.managers.ControladorMejoras;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.ui.HUD;
-import com.sticklike.core.mejoras.Mejora;
+import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.utilidades.GestorConstantes;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -77,14 +77,14 @@ public class VentanaJuego implements Screen {
     private SistemaDeNiveles sistemaDeNiveles;
     private HUD hud;
     private ColisionesJugador colisionesJugador;
-    private DesplazamientoJugador desplazamientoJugador;
+    private MovimientoJugador movimientoJugador;
     private AtaqueJugador ataqueJugador;
     private ControladorProyectiles controladorProyectiles;
-    private RenderizarMovJugador renderizarMovJugador;
+    private AnimacionesJugador animacionesJugador;
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
-    private Array<ObjetoXP> objetosXP;
+    private Array<Caca> objetosXP;
     private Array<Enemigo> enemigosAEliminar;
 
     // Control de pausa
@@ -114,15 +114,15 @@ public class VentanaJuego implements Screen {
         // Instanciamos el controlador de input para el jugador
         InputsJugador inputJugador = new InputsJugador();
         colisionesJugador = new ColisionesJugador();
-        desplazamientoJugador = new DesplazamientoJugador();
+        movimientoJugador = new MovimientoJugador();
         ataqueJugador = new AtaqueJugador();
         controladorProyectiles = new ControladorProyectiles();
-        renderizarMovJugador = new RenderizarMovJugador();
+        animacionesJugador = new AnimacionesJugador();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
         float playerStartY = WORLD_HEIGHT / 2f + 125f;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador,desplazamientoJugador,ataqueJugador,controladorProyectiles);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador,ataqueJugador,controladorProyectiles);
 
         // Managers / sistemas de mejoras y enemigos
         controladorMejoras = new ControladorMejoras(jugador, game);
@@ -206,12 +206,12 @@ public class VentanaJuego implements Screen {
         spriteBatch.setProjectionMatrix(camara.combined);
         spriteBatch.begin();
 
-        jugador.aplicarRenderizadoJugador(spriteBatch);
+        jugador.aplicarRenderizadoAlJugador(spriteBatch);
         controladorEnemigos.renderizarEnemigos(spriteBatch);
 
         jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
 
-        for (ObjetoXP xp : objetosXP) {
+        for (Caca xp : objetosXP) {
             xp.renderizarObjetoXP(spriteBatch);
         }
         for (TextoFlotante txt : textosDanyo) {
@@ -229,13 +229,19 @@ public class VentanaJuego implements Screen {
     }
 
     private void actualizarLogica(float delta) {
-        jugador.actualizarLogicaJugador(delta, pausado, textosDanyo);
+        jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo);
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
+        gestionarEnemigos();
+        gestionarRecogidaXP();
+        gestionarTextoFlotante(delta);
+
+    }
+    private void gestionarEnemigos(){
         // Manejo de enemigos muertos => suelta objeto XP
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo.estaMuerto() && !enemigo.haSoltadoXP()) {
-                ObjetoXP xp = enemigo.sueltaObjetoXP();
+                Caca xp = enemigo.sueltaObjetoXP();
                 if (xp != null) {
                     objetosXP.add(xp);
                 }
@@ -247,11 +253,13 @@ public class VentanaJuego implements Screen {
             controladorEnemigos.getEnemigos().removeValue(e, true);
         }
         enemigosAEliminar.clear();
+    }
 
+    private void gestionarRecogidaXP(){
         // Recoger XP
         for (int i = objetosXP.size - 1; i >= 0; i--) {
-            ObjetoXP xp = objetosXP.get(i);
-            xp.actualizarObjetoXP(delta); // si hace falta animar
+            Caca xp = objetosXP.get(i);
+            //xp.actualizarObjetoXP(delta); // para cuando haya que animar el objeto (efecto al recoger)
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
                 xp.recolectar();
@@ -259,7 +267,8 @@ public class VentanaJuego implements Screen {
                 sistemaDeNiveles.agregarXP(20f);
             }
         }
-
+    }
+    private void gestionarTextoFlotante(float delta){
         // Textos flotantes (daño)
         for (int i = textosDanyo.size - 1; i >= 0; i--) {
             TextoFlotante floatingText = textosDanyo.get(i);
@@ -269,7 +278,6 @@ public class VentanaJuego implements Screen {
             }
         }
     }
-
     /**
      * Ajusta la cámara para que siga al jugador, con offset vertical.
      */
@@ -362,7 +370,7 @@ public class VentanaJuego implements Screen {
     /**
      * Añade un ObjetoXP al array de objetosXP.
      */
-    public void addXPObject(ObjetoXP xpObject) {
+    public void addXPObject(Caca xpObject) {
         objetosXP.add(xpObject);
     }
 
@@ -406,7 +414,7 @@ public class VentanaJuego implements Screen {
         }
         textosDanyo.clear();
 
-        for (ObjetoXP xp : objetosXP) {
+        for (Caca xp : objetosXP) {
             xp.dispose();
         }
         objetosXP.clear();

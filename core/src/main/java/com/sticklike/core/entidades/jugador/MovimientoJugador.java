@@ -1,6 +1,5 @@
 package com.sticklike.core.entidades.jugador;
 
-import com.sticklike.core.entidades.personajes.Enemigo;
 import com.sticklike.core.entidades.jugador.InputsJugador.ResultadoInput;
 
 /**
@@ -8,7 +7,7 @@ import com.sticklike.core.entidades.jugador.InputsJugador.ResultadoInput;
  * del jugador: normalizar diagonales, aplicar velocidad y
  * modificar la posición del sprite.
  */
-public class DesplazamientoJugador {
+public class MovimientoJugador {
 
     /**
      * Método principal que calcula y aplica el movimiento del jugador,

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.personajes.Enemigo;
+import com.sticklike.core.entidades.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.TextoFlotante;
 import com.sticklike.core.entidades.objetos.Proyectil;
 
@@ -61,19 +61,19 @@ public class ControladorProyectiles {
             Proyectil proyectil = iterator.next();
             proyectil.actualizarProyectil(delta);
 
-            for (Enemigo enemigo : enemies) {
+            for (Enemigo culo : enemies) {
                 // Verificamos impacto solo si el proyectil sigue activo y el enemigo no está muerto
-                if (!enemigo.estaMuerto() && proyectil.isProyectilActivo() &&
-                    enemigo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), proyectil.getBoundingRectangle().width, proyectil.getBoundingRectangle().height)) {
+                if (!culo.estaMuerto() && proyectil.isProyectilActivo() &&
+                    culo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), proyectil.getBoundingRectangle().width, proyectil.getBoundingRectangle().height)) {
 
                     // Cálculo del daño con el multiplicador aplicado
                     float baseDamage = 22 + (float) Math.random() * 8; // Daño base aleatorio entre 25 y 34
                     float damage = baseDamage * multiplicadorDeDanyo;
 
-                    enemigo.reduceHealth(damage);
+                    culo.reducirSalud(damage);
 
                     // Creamos un texto flotante con la cantidad de daño infligido
-                    dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f
+                    dmgText.add(new TextoFlotante(String.valueOf((int) damage), culo.getX() + culo.getSprite().getWidth() / 2, culo.getY() + culo.getSprite().getHeight() + 20, 0.5f
                     ));
 
                     // El proyectil impacta y se desactiva
