@@ -40,7 +40,7 @@ public class VentanaGameOver implements Screen {
      */
     @Override
     public void show() {
-        game.controladorAudio.pausarMusica();
+        game.controladorAudio.detenerMusica();
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
         layout = new GlyphLayout();

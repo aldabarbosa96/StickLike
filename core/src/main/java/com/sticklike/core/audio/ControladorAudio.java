@@ -22,7 +22,7 @@ public class ControladorAudio {
     public void reproducirMusica() {
         if (musicaFondo != null) {
             musicaFondo.setLooping(true); // Hacer que la música se repita en bucle
-            musicaFondo.setVolume(0.15f); // Ajustar el volumen (0 = silencio, 1 = máximo)
+            musicaFondo.setVolume(0.12f); // Ajustar el volumen (0 = silencio, 1 = máximo)
             musicaFondo.play();
         }
     }
@@ -41,12 +41,12 @@ public class ControladorAudio {
 
     public void reproducirEfecto() {
         if (efectoSonido != null) {
-            efectoSonido.play(0.9f); // Reproducir al volumen máximo
+            efectoSonido.play(0.85f); // Reproducir al volumen máximo
         }
     }
     public void reproducirEfecto2() {
         if (efectoSonido2 != null) {
-            efectoSonido2.play(0.9f); // Reproducir al volumen máximo
+            efectoSonido2.play(0.70f); // Reproducir al volumen máximo
         }
     }
 

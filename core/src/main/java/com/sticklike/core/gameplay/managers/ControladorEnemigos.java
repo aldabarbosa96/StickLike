@@ -97,8 +97,8 @@ public class ControladorEnemigos {
             y = bottomLimit + (float) (Math.random() * (topLimit - bottomLimit));
         } while (Math.sqrt(Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2)) < minDistance);
 
-        float randomSpeed = 50f + (float) Math.random() * 50f;
-        String[] tiposDeEnemigos = {"CULO", "CULO", "REGLA"};
+        float randomSpeed = 35f + (float) Math.random() * 45f;
+        String[] tiposDeEnemigos = {"CULO", "CULO","CULO", "REGLA"};
         String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
 
         // Crear y añadir el enemigo
@@ -120,7 +120,7 @@ public class ControladorEnemigos {
     public static Enemigo fabricaEnemigos(String tipo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera orthographicCamera) {
         switch (tipo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad);
+                return new EnemigoCulo(x, y, jugador, velocidad * 1.5f);
             case "REGLA":
                 return new EnemigoRegla(x, y, jugador, velocidad * 2f, orthographicCamera);
 

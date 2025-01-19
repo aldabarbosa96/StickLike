@@ -1,6 +1,8 @@
 package com.sticklike.core.entidades.jugador;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.utilidades.GestorDeAssets;
@@ -15,6 +17,10 @@ public class AnimacionesJugador {
     private final Animation<TextureRegion> animacionIdle;
     private float temporizadorAnimacion = 0;
 
+    // Estado de parpadeo
+    private boolean enParpadeo = false;
+    private float tiempoParpadeoRestante = 0;
+
     public AnimacionesJugador() {
         animacionIdle = GestorDeAssets.animations.get("idle");
         animacionMovDerecha = GestorDeAssets.animations.get("moveRight");
@@ -22,26 +28,47 @@ public class AnimacionesJugador {
     }
 
     public void renderizarJugador(SpriteBatch batch, Jugador jugador) {
-        if (!jugador.estaVivo()) {
-            TextureRegion currentFrame;
-            switch (direccionActual) {
-                case LEFT:
-                    currentFrame = animacionMovIzquierda.getKeyFrame(temporizadorAnimacion, true);
-                    break;
-                case RIGHT:
-                    currentFrame = animacionMovDerecha.getKeyFrame(temporizadorAnimacion, true);
-                    break;
-                default:
-                    currentFrame = animacionIdle.getKeyFrame(temporizadorAnimacion, true);
-                    break;
-            }
-            batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),
-                jugador.getSprite().getWidth(), jugador.getSprite().getHeight());
+        Animation<TextureRegion> animacionActual;
+        switch (direccionActual) {
+            case LEFT:
+                animacionActual = animacionMovIzquierda;
+                break;
+            case RIGHT:
+                animacionActual = animacionMovDerecha;
+                break;
+            default:
+                animacionActual = animacionIdle;
+                break;
+        }
+
+        TextureRegion currentFrame = animacionActual.getKeyFrame(temporizadorAnimacion, true);
+
+        if (enParpadeo) {
+            batch.setColor(1,0,0,1f);
+        }
+
+        batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),
+            jugador.getSprite().getWidth(), jugador.getSprite().getHeight());
+
+        if (enParpadeo) {
+            batch.setColor(1, 1, 1, 1); // Restauramos el color original
         }
     }
 
     public void actualizarAnimacion(float delta) {
         temporizadorAnimacion += delta;
+
+        if (enParpadeo) {
+            tiempoParpadeoRestante -= delta;
+            if (tiempoParpadeoRestante <= 0) {
+                enParpadeo = false; // Finaliza el parpadeo
+            }
+        }
+    }
+
+    public void activarParpadeo(float duracion) {
+        enParpadeo = true;
+        tiempoParpadeoRestante = duracion;
     }
 
     public void setDireccionActual(Direction direccion) {

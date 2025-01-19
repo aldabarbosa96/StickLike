@@ -1,10 +1,17 @@
 package com.sticklike.core.entidades.jugador;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.utilidades.GestorDeAssets;
 
 public class ColisionesJugador {
+    private boolean enParpadeo = false;
+    private float temporizadorParpadeo = 0;
+    private static final float DURACION_PARPADEO = 0.2f;
     /**
      * Verifica colisiones con los enemigos y aplica daño si es necesario.
      */
@@ -28,9 +35,12 @@ public class ColisionesJugador {
         jugador.restarVidaJugador(cantidad);
         controladorAudio.reproducirEfecto();
 
+
         if (jugador.getVidaJugador() <= 0) {
             jugador.setVidaJugador(0);
             jugador.muere();
+        } else {
+            jugador.getAnimacionesJugador().activarParpadeo(0.2f); // tiempo parpadeo
         }
     }
 

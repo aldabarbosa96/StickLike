@@ -206,4 +206,9 @@ public class Jugador {
     public void setVidaMax(float maxVidaJugador) {
         this.maxVidaJugador = maxVidaJugador;
     }
+
+    public AnimacionesJugador getAnimacionesJugador() {
+        return animacionesJugador;
+    }
+
 }

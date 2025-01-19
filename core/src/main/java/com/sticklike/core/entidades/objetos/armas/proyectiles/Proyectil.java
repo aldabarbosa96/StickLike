@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.proyectiles;
+package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;

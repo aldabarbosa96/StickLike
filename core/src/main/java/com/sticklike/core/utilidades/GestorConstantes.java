@@ -34,9 +34,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración de los enemigos
     public static final float ENEMY_MAX_PAUSE = 0.75f;
     public static final float ENEMY_MIN_PAUSE = 0.25f;
-    public static final float ENEMY_MIN_MOVE_DURATION = 1.5f;
-    public static final float ENEMY_MAX_MOVE_DURATION = 3.0f;
-    public static final float BORDER_SPAWN_MARGIN = 100f;
+    public static final float ENEMY_MIN_MOVE_DURATION = 2.5f;
+    public static final float ENEMY_MAX_MOVE_DURATION = 5.0f;
+    public static final float BORDER_SPAWN_MARGIN = 200f;
 
     // Configuración del proyectil
     public static final float PROJECTILE_SPEED = 175f;

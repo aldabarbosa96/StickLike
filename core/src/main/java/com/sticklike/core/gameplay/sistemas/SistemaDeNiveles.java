@@ -1,5 +1,6 @@
 package com.sticklike.core.gameplay.sistemas;
 
+import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 
 /**
@@ -32,10 +33,11 @@ public class SistemaDeNiveles {
      *
      * @param amount cantidad de experiencia a sumar
      */
-    public void agregarXP(float amount) {
+    public void agregarXP(float amount ) {
         xpActual += amount;
         if (xpActual >= xpHastaSiguienteNivel) {
             subirDeNivel();
+
         }
     }
 

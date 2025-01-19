@@ -44,26 +44,12 @@ public class SistemaDeMejoras {
     private void inicializarMejoras() {
         todasLasMejoras.add(new Mejora(
             "PIES VELOCES", "Aumenta la velocidad de movimiento un 15%", () -> jugador.aumentarVelocidad(0.15f)));
-        todasLasMejoras.add(new Mejora(
-            "BRAZOS LARGOS",
-            "Aumenta el rango de ataque un 10%",
-            () -> jugador.aumentarRangoAtaque(0.10f)
-        ));
-        todasLasMejoras.add(new Mejora(
-            "MANOS RÁPIDAS",
-            "Reduce el intervalo de disparo un 9%",
-            () -> jugador.reducirIntervaloDisparo(0.15f)
-        ));
-        todasLasMejoras.add(new Mejora(
-            "PUÑO DURO",
-            "Aumenta el daño del Ataque Básico un 4%",
-            () -> jugador.aumentarDanyo(1.03f)
-        ));
-        todasLasMejoras.add(new Mejora(
-            "MULTI PROYECTIL",
-            "Aumenta el número de Proyectiles en 1",
-            () -> jugador.aumentarProyectilesPorDisparo(1)
-        ));
+        todasLasMejoras.add(new Mejora("BRAZOS LARGOS", "Aumenta el rango de ataque un 10%", () -> jugador.aumentarRangoAtaque(0.10f)));
+        todasLasMejoras.add(new Mejora("MANOS RÁPIDAS", "Reduce el intervalo de disparo un 9%", () -> jugador.reducirIntervaloDisparo(0.15f)));
+        todasLasMejoras.add(new Mejora("PUÑO DURO", "Aumenta el daño del Ataque Básico un 4%", () -> jugador.aumentarDanyo(1.03f)));
+        todasLasMejoras.add(new Mejora("MULTI PROYECTIL", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1)));
+        //todasLasMejoras.add(new Mejora("CALCETÍN LEFADO","Añade un nuevo proyectil. Un calcetín acartonado que daña a todos los enemigos a su paso", () ->jugador.obtieneCalcetines()));
+        // todo --> implementar mejora calcetines
     }
 
     /**
@@ -90,6 +76,7 @@ public class SistemaDeMejoras {
     public void anyadirMejorasAlPopUp() {
         List<Mejora> options = generarOpcionesDeMejora(3);
         game.ventanaJuego.mostrarPopUpDeMejoras(options);
+
     }
 
     /**
