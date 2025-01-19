@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.interfaces.Enemigo;
+import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.objetos.proyectiles.Proyectil;
 

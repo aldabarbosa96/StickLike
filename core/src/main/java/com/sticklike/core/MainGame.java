@@ -1,6 +1,7 @@
 package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
+import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.pantallas.VentanaJuego;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
@@ -12,6 +13,7 @@ import com.sticklike.core.utilidades.GestorDeAssets;
  */
 public class MainGame extends Game {
     public VentanaJuego ventanaJuego;
+    public ControladorAudio controladorAudio;
 
     /**
      * Se llama al iniciar la aplicación. Carga los assets e instancia la pantalla principal
@@ -19,6 +21,8 @@ public class MainGame extends Game {
     @Override
     public void create() {
         GestorDeAssets.cargarRecursos(); // Cargamos los assets al iniciar
+        controladorAudio = new ControladorAudio();
+        controladorAudio.reproducirMusica();
         ventanaJuego = new VentanaJuego(this); // Pasamos MainGame a GameScreen
         setScreen(ventanaJuego); // Asignamos la pantalla a visualizar
     }
@@ -36,5 +40,6 @@ public class MainGame extends Game {
         super.dispose();
         GestorDeAssets.dispose();
         ventanaJuego.dispose();
+        controladorAudio.dispose();
     }
 }

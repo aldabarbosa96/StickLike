@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.regla.EnemigoRegla;
-import com.sticklike.core.entidades.interfaces.Enemigo;
+import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
-import com.sticklike.core.entidades.interfaces.ObjetosXP;
+import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.pantallas.VentanaJuego;
 import com.sticklike.core.utilidades.GestorConstantes;
@@ -81,7 +81,7 @@ public class ControladorEnemigos {
     }
 
     private void spawnEnemigo() {
-        float minDistance = 300f;
+        float minDistance = 250f;
         float x, y;
 
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
@@ -98,7 +98,7 @@ public class ControladorEnemigos {
         } while (Math.sqrt(Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2)) < minDistance);
 
         float randomSpeed = 50f + (float) Math.random() * 50f;
-        String[] tiposDeEnemigos = {"CULO", "REGLA"};
+        String[] tiposDeEnemigos = {"CULO", "CULO", "REGLA"};
         String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
 
         // Crear y añadir el enemigo
@@ -122,7 +122,7 @@ public class ControladorEnemigos {
             case "CULO":
                 return new EnemigoCulo(x, y, jugador, velocidad);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * 1.75f, orthographicCamera);
+                return new EnemigoRegla(x, y, jugador, velocidad * 2f, orthographicCamera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/

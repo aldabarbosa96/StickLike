@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
@@ -39,6 +40,7 @@ public class VentanaGameOver implements Screen {
      */
     @Override
     public void show() {
+        game.controladorAudio.pausarMusica();
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
         layout = new GlyphLayout();
@@ -84,6 +86,7 @@ public class VentanaGameOver implements Screen {
         game.ventanaJuego.dispose();
         game.ventanaJuego = new VentanaJuego(game); // Crear una nueva instancia de GameScreen
         game.setScreen(game.ventanaJuego);
+        game.controladorAudio.reproducirMusica();
     }
 
     /**

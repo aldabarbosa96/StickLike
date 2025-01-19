@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
 import com.sticklike.core.utilidades.GestorDeAssets;
-import com.sticklike.core.entidades.interfaces.Enemigo;
+import com.sticklike.core.interfaces.Enemigo;
 
 /**
  * La clase Enemy gestiona el renderizado y actualizaciones de cada enemigo,

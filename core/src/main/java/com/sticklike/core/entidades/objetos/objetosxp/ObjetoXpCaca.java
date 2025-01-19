@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.objetos.objetosxp;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.entidades.interfaces.ObjetosXP;
+import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**

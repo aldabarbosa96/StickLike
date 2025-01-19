@@ -8,7 +8,7 @@ import com.sticklike.core.entidades.jugador.ColisionesJugador;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
 import com.sticklike.core.utilidades.GestorDeAssets;
-import com.sticklike.core.entidades.interfaces.Enemigo;
+import com.sticklike.core.interfaces.Enemigo;
 
 /**
  * La clase EnemigoRegla gestiona el renderizado y actualizaciones de este enemigo,

@@ -28,7 +28,8 @@ public class HUD {
     private final FillViewport hudViewport;
     private final BitmapFont fuente;
     private final GlyphLayout layout; // Sirve para calcular el tamaño del texto
-    private static final float VIRTUAL_WIDTH = GestorConstantes.VIRTUAL_WIDTH; // Usamos VIRTUAL_WIDTH para algunas referencias de dibujo (alineaciones, etc.)
+    private static final float VIRTUAL_WIDTH = GestorConstantes.VIRTUAL_WIDTH;
+    private static final float DESPLAZAMIENTO_VERTICAL_HUD = GestorConstantes.DESPLAZAMIENTO_VERTICAL_HUD;
 
     /**
      * @param jugador          referencia al jugador, para consultar su vida
@@ -65,8 +66,8 @@ public class HUD {
 
         float hudHeight = 200f;
         renderizarFondoHUD();
-        renderizarLineaDivisoria();
         renderizarLineasHorizontalesCuadricula(hudHeight);
+        renderizarMarcoHUD();
         renderizarBarraDeSalud();
         renderizarBarraXP();
         renderizarTextoSalud(hudHeight);
@@ -79,21 +80,46 @@ public class HUD {
      */
     private void renderizarFondoHUD() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.99f, 0.9735f, 0.863f, 1);
-        shapeRenderer.rect(0, 0, GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.HUD_HEIGHT);
+        shapeRenderer.setColor(1.0f, 0.96f, 0.78f, 1);
+        shapeRenderer.rect(0, 0, GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.HUD_HEIGHT+DESPLAZAMIENTO_VERTICAL_HUD);
         shapeRenderer.end();
     }
 
     /**
-     * Dibuja una línea divisoria entre el HUD y el área de juego para crear efecto de sombra leve
-     * o de separador (es un folio superpuesto en el cuaderno, se supone)
+     * Dibuja un marco alrededor del HUD con un borde negro y una sombra más clara que sobresale.
      */
-    private void renderizarLineaDivisoria() {
+    private void renderizarMarcoHUD() {
+        float grosorMarcoNegro = 0.9f;
+        float grosorSombra = 0.7f;
+        float grosorTotalSombra = grosorMarcoNegro + grosorSombra;
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        // Dibujar REBORDE NEGRO
         shapeRenderer.setColor(0.1f, 0.1f, 0.1f, 1);
-        shapeRenderer.rect(0, GestorConstantes.HUD_HEIGHT, GestorConstantes.VIRTUAL_WIDTH, 1);
+
+        // Parte superior reborde
+        shapeRenderer.rect(-grosorSombra, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorTotalSombra, GestorConstantes.VIRTUAL_WIDTH + 2 * grosorSombra, grosorTotalSombra);
+        // Parte izquierda reborde
+        shapeRenderer.rect(-grosorSombra, -grosorSombra, grosorTotalSombra, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
+        // Parte derecha reborde
+        shapeRenderer.rect(GestorConstantes.VIRTUAL_WIDTH - grosorMarcoNegro, -grosorSombra, grosorTotalSombra, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
+
+        // Dibujar SOMBRA
+        shapeRenderer.setColor(0.45f, 0.45f, 0.45f, 1);
+
+        // Parte superior sombra
+        shapeRenderer.rect(0, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorMarcoNegro, GestorConstantes.VIRTUAL_WIDTH, grosorMarcoNegro);
+        // Parte izquierda sombra
+        shapeRenderer.rect(0, 0, grosorMarcoNegro, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
+        // Parte derecha sombra
+        shapeRenderer.rect(GestorConstantes.VIRTUAL_WIDTH - grosorMarcoNegro, 0, grosorMarcoNegro, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
+
         shapeRenderer.end();
     }
+
+
+
 
     /**
      * Dibuja una cuadrícula (grid) en la zona del HUD, utilizando shapeRenderer en modo línea (horizontal)
@@ -124,7 +150,7 @@ public class HUD {
         layout.setText(fuente, levelText + levelNumber);
 
         float textX = (VIRTUAL_WIDTH - layout.width) / 2;
-        float textY = GestorConstantes.HUD_HEIGHT - 22f;
+        float textY = GestorConstantes.HUD_HEIGHT - 13f + DESPLAZAMIENTO_VERTICAL_HUD;
 
         spriteBatch.begin();
 
@@ -143,7 +169,7 @@ public class HUD {
         // Coordenadas para el número
         float levelTextWidth = new GlyphLayout(fuente, levelText).width;
         float levelNumberX = textX + levelTextWidth;
-        float textYNumber = GestorConstantes.HUD_HEIGHT - 17.5f;
+        float textYNumber = GestorConstantes.HUD_HEIGHT - 8.5f + DESPLAZAMIENTO_VERTICAL_HUD;
 
         // Texto número
         fuente.getData().setScale(1.4f);
@@ -169,13 +195,13 @@ public class HUD {
         float barWidth = GestorConstantes.HUD_BAR_WIDTH;
         float barHeight = GestorConstantes.HUD_BAR_HEIGHT;
         float barX = GestorConstantes.HUD_BAR_X;
-        float barY = GestorConstantes.HUD_HEIGHT - barHeight - GestorConstantes.HUD_BAR_Y_OFFSET;
+        float barY = GestorConstantes.HUD_HEIGHT - barHeight - GestorConstantes.HUD_BAR_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD +5f;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         // Borde negro
         shapeRenderer.setColor(0, 0, 0, 1f);
-        shapeRenderer.rect(barX - 2f, barY - 2, barWidth + 4f, barHeight + 4f);
+        shapeRenderer.rect(barX - 1.8f, barY - 1.8f, barWidth + 3.6f, barHeight + 3.6f);
 
         // Fondo rojo
         shapeRenderer.setColor(0.8f, 0.1f, 0.1f, 0.5f);
@@ -194,9 +220,9 @@ public class HUD {
      * @param hudHeight altura del HUD para posicionar el texto
      */
     private void renderizarTextoSalud(float hudHeight) {
-        float barX = 75f;
+        float barX = GestorConstantes.HUD_BAR_X;
         float barWidth = 180f;
-        float barY = hudHeight - 24;
+        float barY = hudHeight - 16f + DESPLAZAMIENTO_VERTICAL_HUD;
 
         String healthText = (int) jugador.getVidaJugador() + " / " + (int) jugador.getMaxVidaJugador();
 
@@ -218,7 +244,7 @@ public class HUD {
 
         fuente.setColor(1, 1, 1, 1);
         fuente.draw(spriteBatch, healthText, textX, barY);
-        fuente.getData().setScale(1.0f);
+        fuente.getData().setScale(0.8f);
 
         spriteBatch.end();
     }
@@ -229,7 +255,7 @@ public class HUD {
     private void renderizarIconoVidaJugador() {
         float heartSize = GestorConstantes.HEART_SIZE;
         float heartX = GestorConstantes.HEART_X;
-        float heartY = GestorConstantes.HUD_HEIGHT - heartSize - GestorConstantes.HEART_Y_OFFSET;
+        float heartY = GestorConstantes.HUD_HEIGHT - heartSize - GestorConstantes.HEART_Y_OFFSET+ DESPLAZAMIENTO_VERTICAL_HUD +5f;
 
         spriteBatch.begin();
         spriteBatch.draw(texturaCorazonVida, heartX, heartY, heartSize, heartSize);
@@ -243,7 +269,7 @@ public class HUD {
         float barWidth = GestorConstantes.HUD_BAR_WIDTH;
         float barHeight = GestorConstantes.HUD_BAR_HEIGHT;
         float barX = GestorConstantes.HUD_BAR_X;
-        float barY = GestorConstantes.HUD_HEIGHT - barHeight - GestorConstantes.HUD_BAR_Y_OFFSET - 38;
+        float barY = GestorConstantes.HUD_HEIGHT - barHeight - GestorConstantes.HUD_BAR_Y_OFFSET - 25f +DESPLAZAMIENTO_VERTICAL_HUD;
         float experiencePercentage = sistemaDeNiveles.getXpActual() / sistemaDeNiveles.getXpHastaSiguienteNivel();
 
         renderizarFondoBarraXP(barX, barY, barWidth, barHeight, experiencePercentage);
@@ -263,7 +289,7 @@ public class HUD {
 
         // Borde negro
         shapeRenderer.setColor(0, 0, 0, 1f);
-        shapeRenderer.rect(barX - 2f, barY - 2f, barWidth + 4f, barHeight + 4f);
+        shapeRenderer.rect(barX - 1.8f, barY - 1.8f, barWidth + 3.6f, barHeight + 3.6f);
 
         // Fondo gris claro
         shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 0.5f);

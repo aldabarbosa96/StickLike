@@ -21,12 +21,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.entidades.interfaces.Enemigo;
-import com.sticklike.core.entidades.interfaces.ObjetosXP;
+import com.sticklike.core.interfaces.Enemigo;
+import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
-import com.sticklike.core.gameplay.managers.ControladorMejoras;
+import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.ui.HUD;
@@ -72,7 +72,7 @@ public class VentanaJuego implements Screen {
     // Jugador y sistemas
     private Jugador jugador;
     private ControladorEnemigos controladorEnemigos;
-    private ControladorMejoras controladorMejoras;
+    private SistemaDeMejoras sistemaDeMejoras;
     private SistemaDeNiveles sistemaDeNiveles;
     private HUD hud;
     private ColisionesJugador colisionesJugador;
@@ -136,8 +136,8 @@ public class VentanaJuego implements Screen {
 
     private void inicializarSistemasYControladores() {
         // Managers / sistemas de mejoras y enemigos
-        controladorMejoras = new ControladorMejoras(jugador, game);
-        sistemaDeNiveles = new SistemaDeNiveles(jugador, controladorMejoras);
+        sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
+        sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
         controladorEnemigos = new ControladorEnemigos(jugador, 1.5f, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
@@ -356,7 +356,7 @@ public class VentanaJuego implements Screen {
 
     private void seleccionarMejora(int index, List<Mejora> mejoras, Window upgradeWindow) {
         if (index < 0 || index >= mejoras.size()) return;
-        controladorMejoras.aplicarMejora(mejoras.get(index));
+        sistemaDeMejoras.aplicarMejora(mejoras.get(index));
         upgradeWindow.remove();
         pausado = false;
         Gdx.input.setInputProcessor(null);

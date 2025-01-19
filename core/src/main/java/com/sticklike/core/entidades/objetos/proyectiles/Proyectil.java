@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.interfaces.Enemigo;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.utilidades.GestorConstantes;
 

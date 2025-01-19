@@ -1,30 +1,29 @@
 package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.gameplay.managers.ControladorMejoras;
 
 /**
  * Esta clase gestiona la experiencia y los niveles del {@link Jugador}.
- * Cada vez que el jugador acumula la suficiente XP para subir de nivel, se llama al {@link ControladorMejoras}
+ * Cada vez que el jugador acumula la suficiente XP para subir de nivel, se llama al {@link SistemaDeMejoras}
  * para ofrecer nuevas mejoras
  */
 public class SistemaDeNiveles {
     private final Jugador jugador;
-    private final ControladorMejoras controladorMejoras;
+    private final SistemaDeMejoras sistemaDeMejoras;
     private float xpActual = 0f;
     private float xpHastaSiguienteNivel = 100f;
     private int nivelActual = 1;
 
     /**
-     * Crea un nuevo SistemaDeNiveles, asociando un {@link Jugador} y un {@link ControladorMejoras}
+     * Crea un nuevo SistemaDeNiveles, asociando un {@link Jugador} y un {@link SistemaDeMejoras}
      * para manejar las subidas de nivel y las mejoras a ofrecer
      *
      * @param jugador            jugador cuyo nivel y experiencia se gestionan
-     * @param controladorMejoras controlador de mejoras, para mostrar las mejoras al subir de nivel
+     * @param sistemaDeMejoras controlador de mejoras, para mostrar las mejoras al subir de nivel
      */
-    public SistemaDeNiveles(Jugador jugador, ControladorMejoras controladorMejoras) {
+    public SistemaDeNiveles(Jugador jugador, SistemaDeMejoras sistemaDeMejoras) {
         this.jugador = jugador;
-        this.controladorMejoras = controladorMejoras;
+        this.sistemaDeMejoras = sistemaDeMejoras;
     }
 
     /**
@@ -42,7 +41,7 @@ public class SistemaDeNiveles {
 
     /**
      * Lógica de subida de nivel. Incrementa el nivel en 1, aumenta la XP requerida para el siguiente nivel en un 50%
-     * y delega en {@link ControladorMejoras} para mostrar nuevas mejoras
+     * y delega en {@link SistemaDeMejoras} para mostrar nuevas mejoras
      */
     private void subirDeNivel() {
         xpActual -= xpHastaSiguienteNivel;
@@ -50,8 +49,8 @@ public class SistemaDeNiveles {
         xpHastaSiguienteNivel *= 1.55f;
 
         // Delegamos en ControladorMejoras para manejar las mejoras
-        if (controladorMejoras != null) {
-            controladorMejoras.anyadirMejorasAlPopUp();
+        if (sistemaDeMejoras != null) {
+            sistemaDeMejoras.anyadirMejorasAlPopUp();
         }
     }
 
