@@ -33,10 +33,10 @@ public class EnemigoRegla implements Enemigo {
      */
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         sprite = new Sprite(GestorDeAssets.enemigoRegla);
-        sprite.setSize(8, 32);
+        sprite.setSize(6, 38);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoEnemigo = new MovimientoRegla(velocidadEnemigo,720);
+        this.movimientoEnemigo = new MovimientoRegla(velocidadEnemigo,540);
         this.orthographicCamera = orthographicCamera;
     }
 
