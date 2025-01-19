@@ -40,7 +40,7 @@ public class AtaqueJugador {
 
         // Disparamos tantos proyectiles como indique "proyectilesPorDisparo"
         for (int i = 0; i < jug.getProyectilesPorDisparo(); i++) {
-            // Ejemplo: separamos un poco los proyectiles por ángulo
+            // separamos un poco los proyectiles por ángulo
             float angleOffset = (i - (jug.getProyectilesPorDisparo() - 1) / 2f) * 5f;
             float adjustedX = (float) (dir[0] * Math.cos(Math.toRadians(angleOffset))
                 - dir[1] * Math.sin(Math.toRadians(angleOffset)));

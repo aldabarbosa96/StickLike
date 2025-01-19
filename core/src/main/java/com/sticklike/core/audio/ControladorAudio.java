@@ -9,56 +9,41 @@ public class ControladorAudio {
     private Sound efectoSonido;
 
     public ControladorAudio() {
-        // Cargar los recursos de audio
         cargarRecursos();
     }
 
     private void cargarRecursos() {
         // Cargar música de fondo
-        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo.mp3"));
+        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo2.mp3"));
+        efectoSonido = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/recibeDaño.wav"));
     }
 
-    /**
-     * Reproducir música de fondo.
-     */
     public void reproducirMusica() {
         if (musicaFondo != null) {
             musicaFondo.setLooping(true); // Hacer que la música se repita en bucle
-            musicaFondo.setVolume(0.35f); // Ajustar el volumen (0 = silencio, 1 = máximo)
+            musicaFondo.setVolume(0.15f); // Ajustar el volumen (0 = silencio, 1 = máximo)
             musicaFondo.play();
         }
     }
 
-    /**
-     * Pausar la música de fondo.
-     */
     public void pausarMusica() {
         if (musicaFondo != null) {
             musicaFondo.pause();
         }
     }
 
-    /**
-     * Detener la música de fondo.
-     */
     public void detenerMusica() {
         if (musicaFondo != null) {
             musicaFondo.stop();
         }
     }
 
-    /**
-     * Reproducir un efecto de sonido.
-     */
     public void reproducirEfecto() {
         if (efectoSonido != null) {
-            efectoSonido.play(1.0f); // Reproducir al volumen máximo
+            efectoSonido.play(0.9f); // Reproducir al volumen máximo
         }
     }
 
-    /**
-     * Liberar los recursos de audio.
-     */
     public void dispose() {
         if (musicaFondo != null) {
             musicaFondo.dispose();

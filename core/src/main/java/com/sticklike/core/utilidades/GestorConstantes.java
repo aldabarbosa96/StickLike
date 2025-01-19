@@ -18,9 +18,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float HUD_BAR_HEIGHT = 15f;
     public static final float HUD_BAR_X = 70f;
     public static final float HUD_BAR_Y_OFFSET = 20f;
-    public static final float HEART_SIZE = 25f;
-    public static final float HEART_X = 35f;
-    public static final float HEART_Y_OFFSET = 12f;
+    public static final float HEART_SIZE = 22f;
+    public static final float HEART_X = 40f;
+    public static final float HEART_Y_OFFSET = 10f;
     public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f; // Mueve el HUD completo 20 píxeles hacia abajo
 
 

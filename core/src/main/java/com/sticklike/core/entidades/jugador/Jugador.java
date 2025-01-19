@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.jugador;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
@@ -68,13 +69,13 @@ public class Jugador {
     /**
      * Actualiza la lógica del jugador: movimiento, disparo, colisiones
      */
-    public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText) {
+    public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText, ControladorAudio controladorAudio) {
         if (!estaVivo) return;
 
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
             ataqueController.manejarDisparo(delta, this);
-            colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this);
+            colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
             direccionActual = Direction.IDLE;
         }
@@ -200,5 +201,9 @@ public class Jugador {
 
     public void setTemporizadorDisparo(float temporizadorDisparo) {
         this.temporizadorDisparo = temporizadorDisparo;
+    }
+
+    public void setVidaMax(float maxVidaJugador) {
+        this.maxVidaJugador = maxVidaJugador;
     }
 }

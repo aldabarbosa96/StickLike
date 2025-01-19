@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -80,6 +81,7 @@ public class VentanaJuego implements Screen {
     private AtaqueJugador ataqueJugador;
     private ControladorProyectiles controladorProyectiles;
     private AnimacionesJugador animacionesJugador;
+    private ControladorAudio controladorAudio;
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
@@ -123,6 +125,7 @@ public class VentanaJuego implements Screen {
         // Instanciamos el controlador de input y su lógica relacionada
         InputsJugador inputJugador = new InputsJugador();
         colisionesJugador = new ColisionesJugador();
+        controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
         ataqueJugador = new AtaqueJugador();
         controladorProyectiles = new ControladorProyectiles();
@@ -138,7 +141,7 @@ public class VentanaJuego implements Screen {
         // Managers / sistemas de mejoras y enemigos
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
-        controladorEnemigos = new ControladorEnemigos(jugador, 1.5f, this);
+        controladorEnemigos = new ControladorEnemigos(jugador, 1.2f, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
 
@@ -209,7 +212,7 @@ public class VentanaJuego implements Screen {
 
         // Actualizamos lógica solo si no está en pausa
         if (!pausado) {
-            actualizarLogica(delta);
+            actualizarLogica(delta, controladorAudio);
         }
 
         // Renderizado de los componentes principales de la ventana
@@ -220,8 +223,8 @@ public class VentanaJuego implements Screen {
         uiStage.draw();
     }
 
-    private void actualizarLogica(float delta) {
-        jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo);
+    private void actualizarLogica(float delta, ControladorAudio controladorAudio) {
+        jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, controladorAudio);
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
         gestionarEnemigos();
@@ -258,6 +261,7 @@ public class VentanaJuego implements Screen {
                 xp.recolectar();
                 objetosXP.removeIndex(i);
                 sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
+
             }
         }
     }

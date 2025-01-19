@@ -18,7 +18,7 @@ public class SistemaDeNiveles {
      * Crea un nuevo SistemaDeNiveles, asociando un {@link Jugador} y un {@link SistemaDeMejoras}
      * para manejar las subidas de nivel y las mejoras a ofrecer
      *
-     * @param jugador            jugador cuyo nivel y experiencia se gestionan
+     * @param jugador          jugador cuyo nivel y experiencia se gestionan
      * @param sistemaDeMejoras controlador de mejoras, para mostrar las mejoras al subir de nivel
      */
     public SistemaDeNiveles(Jugador jugador, SistemaDeMejoras sistemaDeMejoras) {
@@ -47,7 +47,8 @@ public class SistemaDeNiveles {
         xpActual -= xpHastaSiguienteNivel;
         nivelActual++;
         xpHastaSiguienteNivel *= 1.55f;
-
+        jugador.setVidaMax(jugador.getMaxVidaJugador() + 5);
+        jugador.setVidaJugador(jugador.getVidaJugador() + 5);
         // Delegamos en ControladorMejoras para manejar las mejoras
         if (sistemaDeMejoras != null) {
             sistemaDeMejoras.anyadirMejorasAlPopUp();

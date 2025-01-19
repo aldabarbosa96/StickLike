@@ -60,7 +60,7 @@ public class RenderVentanaJuego {
         spriteBatch.end();
 
         // Encima renderizamos el HUD
-        hud.renderizarHUD();
+        hud.renderizarHUD(delta);
     }
 
     public void renderizarLineasCuadricula(OrthographicCamera camera) {
