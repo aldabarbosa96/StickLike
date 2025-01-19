@@ -14,7 +14,7 @@ public class ControladorAudio {
 
     private void cargarRecursos() {
         // Cargar música de fondo
-        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo2.mp3"));
+        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo.mp3"));
         efectoSonido = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/recibeDaño.wav"));
         efectoSonido2 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoLanzarPiedra.wav"));
     }
