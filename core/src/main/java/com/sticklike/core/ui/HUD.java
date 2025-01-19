@@ -283,8 +283,15 @@ public class HUD {
      * @param barWidth,barHeight  ancho, alto de la barra
      */
     private void renderizarTextoBarraXP(float barX, float barY, float barWidth, float barHeight) {
-        String experienceText = (int) sistemaDeNiveles.getXpActual() + "/" + (int) sistemaDeNiveles.getXpHastaSiguienteNivel();
+        // Calculamos el porcentaje de experiencia
+        float xpActual = sistemaDeNiveles.getXpActual();
+        float xpHastaSiguienteNivel = sistemaDeNiveles.getXpHastaSiguienteNivel();
+        int porcentajeXP = (int) ((xpActual / xpHastaSiguienteNivel) * 100);
+
+        // Formateamos el texto para mostrar el porcentaje
+        String experienceText = porcentajeXP + "%";
         layout.setText(fuente, experienceText);
+
         float textWidth = layout.width;
         float textX = barX + (barWidth - textWidth) / 2;
         float textY = barY + (barHeight + layout.height + 1) / 2;
@@ -306,6 +313,7 @@ public class HUD {
         fuente.getData().setScale(1.0f);
         spriteBatch.end();
     }
+
 
     /**
      * Dibuja un icono al lado de la barra de XP como indicativo

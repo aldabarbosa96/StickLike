@@ -2,6 +2,7 @@ package com.sticklike.core.entidades.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.entidades.jugador.Jugador;
 
 public interface ObjetosXP {
     void actualizar();

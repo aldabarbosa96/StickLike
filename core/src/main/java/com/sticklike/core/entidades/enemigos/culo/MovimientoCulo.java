@@ -1,17 +1,17 @@
-package com.sticklike.core.entidades.enemigos;
+package com.sticklike.core.entidades.enemigos.culo;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.utilidades.GestorConstantes;
 
-public class MovimientoEnemigo {
+public class MovimientoCulo {
     private final float velocidadEnemigo;
     private float tempMovimiento;
     private float duracionPausa;
     private float duracionMovimiento;
     private boolean seMueve;
 
-    public MovimientoEnemigo(float velocidadEnemigo) {
+    public MovimientoCulo(float velocidadEnemigo) {
         this.velocidadEnemigo = velocidadEnemigo;
         this.tempMovimiento = 0;
         this.seMueve = true;

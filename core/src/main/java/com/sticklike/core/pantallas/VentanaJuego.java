@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -47,7 +46,7 @@ import java.util.List;
  *   <li>La cámara y renderizado de las entidades</li>
  *   <li>La aparición de un pop-up para upgrades cuando el jugador sube de nivel</li>
  * </ul>
- *
+ * <p>
  * Implementa la interfaz {@link com.badlogic.gdx.Screen} propia de libGDX.
  */
 public class VentanaJuego implements Screen {
@@ -64,7 +63,7 @@ public class VentanaJuego implements Screen {
     private ShapeRenderer shapeRenderer;
     private OrthographicCamera camara;
     private Viewport viewport;
-    private RenderizadoCuadriculaMapa renderizadoCuadriculaMapa;
+    private RenderVentanaJuego renderVentanaJuego;
 
     // UI Scene2D (pop-up upgrades)
     private Stage uiStage;
@@ -99,6 +98,18 @@ public class VentanaJuego implements Screen {
     public VentanaJuego(MainGame game) {
         this.game = game;
 
+        inicializarRenderYCamara();
+        inicializarJugador();
+        inicializarSistemasYControladores();
+        inicializarCuadriculaYHUD();
+        inicializarListas();
+        inicializarPopUp();
+
+        // Ajustamos posición de la cámara siguiendo al jugador
+        actualizarPosCamara();
+    }
+
+    private void inicializarRenderYCamara() {
         // Render base
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -106,12 +117,10 @@ public class VentanaJuego implements Screen {
         camara = new OrthographicCamera();
         viewport = new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT, camara);
         viewport.apply();
+    }
 
-        // Stage + Skin (para pop-up)
-        uiStage = new Stage(new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT));
-        uiSkin = crearAspectoUI();
-
-        // Instanciamos el controlador de input para el jugador
+    private void inicializarJugador() {
+        // Instanciamos el controlador de input y su lógica relacionada
         InputsJugador inputJugador = new InputsJugador();
         colisionesJugador = new ColisionesJugador();
         movimientoJugador = new MovimientoJugador();
@@ -122,25 +131,34 @@ public class VentanaJuego implements Screen {
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
         float playerStartY = WORLD_HEIGHT / 2f + 125f;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador,ataqueJugador,controladorProyectiles);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataqueJugador, controladorProyectiles);
+    }
 
+    private void inicializarSistemasYControladores() {
         // Managers / sistemas de mejoras y enemigos
         controladorMejoras = new ControladorMejoras(jugador, game);
-        sistemaDeNiveles   = new SistemaDeNiveles(jugador, controladorMejoras);
+        sistemaDeNiveles = new SistemaDeNiveles(jugador, controladorMejoras);
         controladorEnemigos = new ControladorEnemigos(jugador, 1.5f, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
+    }
 
+    private void inicializarCuadriculaYHUD() {
         // Renderizado de la cuadrícula (mapa) y el HUD
-        renderizadoCuadriculaMapa = new RenderizadoCuadriculaMapa((int) GestorConstantes.GRID_CELL_SIZE);
+        renderVentanaJuego = new RenderVentanaJuego((int) GestorConstantes.GRID_CELL_SIZE);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
+    }
 
+    private void inicializarListas() {
         // Listas de texto daño, objetos XP y enemigos a eliminar
         textosDanyo = new Array<>();
         objetosXP = new Array<>();
         enemigosAEliminar = new Array<>();
+    }
 
-        // Ajustamos posición de la cámara siguiendo al jugador
-        actualizarPosCamara();
+    private void inicializarPopUp() {
+        // Stage + Skin (para pop-up)
+        uiStage = new Stage(new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT));
+        uiSkin = crearAspectoUI();
     }
 
     /**
@@ -194,39 +212,10 @@ public class VentanaJuego implements Screen {
             actualizarLogica(delta);
         }
 
-        // Limpiamos la pantalla
-        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // Renderizado de los componentes principales de la ventana
+        renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
 
-        // Render del mapa (cuadrícula)
-        actualizarPosCamara();
-        renderizadoCuadriculaMapa.renderizarLineasCuadricula(camara);
-
-        // Dibujo de entidades
-        spriteBatch.setProjectionMatrix(camara.combined);
-        spriteBatch.begin();
-
-        jugador.aplicarRenderizadoAlJugador(spriteBatch);
-
-
-        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
-
-        for (ObjetosXP xp : objetosXP) {
-            xp.renderizarObjetoXP(spriteBatch);
-        }
-
-        controladorEnemigos.renderizarEnemigos(spriteBatch);
-
-        for (TextoFlotante txt : textosDanyo) {
-            txt.renderizarTextoFlotante(spriteBatch);
-        }
-
-        spriteBatch.end();
-
-        // HUD
-        hud.renderizarHUD();
-
-        // Stage de la UI (pop-up de upgrades, si lo hubiera)
+        // Stage de la UI (pop-up de upgrades)
         uiStage.act(delta);
         uiStage.draw();
     }
@@ -236,11 +225,12 @@ public class VentanaJuego implements Screen {
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
         gestionarEnemigos();
-        gestionarRecogidaXP();
+        gestionarRecogidaXP(delta);
         gestionarTextoFlotante(delta);
 
     }
-    private void gestionarEnemigos(){
+
+    private void gestionarEnemigos() {
         // Manejo de enemigos muertos => suelta objeto XP
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo.estaMuerto() && !enemigo.haSoltadoXP()) {
@@ -258,20 +248,21 @@ public class VentanaJuego implements Screen {
         enemigosAEliminar.clear();
     }
 
-    private void gestionarRecogidaXP(){
+    private void gestionarRecogidaXP(float delta) {
         // Recoger XP
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
-            //xp.actualizarObjetoXP(delta); // para cuando haya que animar el objeto (efecto al recoger)
+            //xp.actualizar(jugador,delta); // para cuando haya que animar el objeto (efecto al recoger)
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
                 xp.recolectar();
                 objetosXP.removeIndex(i);
-                sistemaDeNiveles.agregarXP(20f);
+                sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
             }
         }
     }
-    private void gestionarTextoFlotante(float delta){
+
+    private void gestionarTextoFlotante(float delta) {
         // Textos flotantes (daño)
         for (int i = textosDanyo.size - 1; i >= 0; i--) {
             TextoFlotante floatingText = textosDanyo.get(i);
@@ -281,10 +272,11 @@ public class VentanaJuego implements Screen {
             }
         }
     }
+
     /**
      * Ajusta la cámara para que siga al jugador, con offset vertical.
      */
-    private void actualizarPosCamara() {
+    public void actualizarPosCamara() {
         camara.position.set(
             jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
             jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y,
@@ -307,7 +299,7 @@ public class VentanaJuego implements Screen {
         float h = 350;
         upgradeWindow.setSize(w, h);
         upgradeWindow.setPosition(
-            (GestorConstantes.VIRTUAL_WIDTH  - w) / 2f,
+            (GestorConstantes.VIRTUAL_WIDTH - w) / 2f,
             (GestorConstantes.VIRTUAL_HEIGHT - h + 150f) / 2f
         );
 
@@ -385,13 +377,16 @@ public class VentanaJuego implements Screen {
     }
 
     @Override
-    public void pause() { }
+    public void pause() {
+    }
 
     @Override
-    public void resume() { }
+    public void resume() {
+    }
 
     @Override
-    public void hide() { }
+    public void hide() {
+    }
 
     /**
      * Libera los recursos usados por esta pantalla.
@@ -400,7 +395,7 @@ public class VentanaJuego implements Screen {
     public void dispose() {
         spriteBatch.dispose();
         shapeRenderer.dispose();
-        renderizadoCuadriculaMapa.dispose();
+        renderVentanaJuego.dispose();
         uiStage.dispose();
         uiSkin.dispose();
 
@@ -421,5 +416,9 @@ public class VentanaJuego implements Screen {
             xp.dispose();
         }
         objetosXP.clear();
+    }
+
+    public OrthographicCamera getOrtographicCamera() {
+        return camara;
     }
 }

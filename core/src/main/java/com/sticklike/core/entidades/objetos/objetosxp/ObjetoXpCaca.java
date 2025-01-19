@@ -34,7 +34,7 @@ public class ObjetoXpCaca implements ObjetosXP {
 
     @Override
     public void actualizar() {
-        // todo --> gestionar para crear efecto de recogida de XP
+
     }
 
     @Override

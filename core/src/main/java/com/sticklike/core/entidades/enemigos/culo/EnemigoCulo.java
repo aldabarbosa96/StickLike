@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos;
+package com.sticklike.core.entidades.enemigos.culo;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,7 +16,7 @@ public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = 65f;
-    private MovimientoEnemigo movimientoEnemigo;
+    private MovimientoCulo movimientoCulo;
     private float coolDownDanyo = 1f;
     private float temporizadorDanyo = 0f;
     private boolean haSoltadoXP = false;
@@ -32,7 +32,7 @@ public class EnemigoCulo implements Enemigo {
         sprite.setSize(32, 27);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoEnemigo = new MovimientoEnemigo(velocidadEnemigo);
+        this.movimientoCulo = new MovimientoCulo(velocidadEnemigo);
     }
 
     /**
@@ -50,7 +50,7 @@ public class EnemigoCulo implements Enemigo {
     @Override
     public void actualizar(float delta) {
         if (!estaMuerto()) {
-            movimientoEnemigo.actualizarMovimiento(delta, sprite, jugador);
+            movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
         }
 
         if (temporizadorDanyo > 0) {

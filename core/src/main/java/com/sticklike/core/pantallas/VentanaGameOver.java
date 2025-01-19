@@ -1,7 +1,6 @@
 package com.sticklike.core.pantallas;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -19,6 +18,7 @@ public class VentanaGameOver implements Screen {
     private SpriteBatch spriteBatch;
     private BitmapFont font;
     private GlyphLayout layout;
+    private RenderVentanaGameOver renderVentanaGameOver;
     private OrthographicCamera camera;
     private FitViewport viewport;
 
@@ -42,7 +42,7 @@ public class VentanaGameOver implements Screen {
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
         layout = new GlyphLayout();
-
+        renderVentanaGameOver = new RenderVentanaGameOver();
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         viewport.apply();
@@ -58,39 +58,7 @@ public class VentanaGameOver implements Screen {
      */
     @Override
     public void render(float delta) {
-        // Limpiamos la pantalla con un color rojizo oscuro
-        Gdx.gl.glClearColor(0.2f, 0.1f, 0.1f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        viewport.apply();
-        camera.update();
-
-        spriteBatch.setProjectionMatrix(camera.combined);
-
-        spriteBatch.begin();
-
-        font.getData().setScale(2f);
-        String gameOverText = "G A M E  O V E R";
-        layout.setText(font, gameOverText);
-        float textWidth = layout.width;
-        float textHeight = layout.height;
-
-        float textX = (VIRTUAL_WIDTH - textWidth) / 2f;
-        float textY = (VIRTUAL_HEIGHT + textHeight) / 2f;
-        font.draw(spriteBatch, gameOverText, textX, textY);
-
-        font.getData().setScale(1f);
-        String optionsText = "Press R to Restart or Q to Quit";
-        layout.setText(font, optionsText);
-
-        textWidth = layout.width;
-        textHeight = layout.height;
-
-        textX = (VIRTUAL_WIDTH - textWidth) / 2f;
-        textY -= 60; // Posicionamos el texto debajo de "GAME OVER"
-        font.draw(spriteBatch, optionsText, textX, textY);
-
-        spriteBatch.end();
+        renderVentanaGameOver.renderizarVentanaGameOver(viewport,camera,spriteBatch,layout,font);
     }
 
 

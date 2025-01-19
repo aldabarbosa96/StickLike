@@ -47,7 +47,7 @@ public class SistemaDeNiveles {
     private void subirDeNivel() {
         xpActual -= xpHastaSiguienteNivel;
         nivelActual++;
-        xpHastaSiguienteNivel *= 1.50f;
+        xpHastaSiguienteNivel *= 1.55f;
 
         // Delegamos en ControladorMejoras para manejar las mejoras
         if (controladorMejoras != null) {
