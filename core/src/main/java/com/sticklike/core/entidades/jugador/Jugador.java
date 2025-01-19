@@ -74,7 +74,7 @@ public class Jugador {
 
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
-            ataqueController.manejarDisparo(delta, this);
+            ataqueController.manejarDisparo(delta, this,controladorAudio);
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
             direccionActual = Direction.IDLE;

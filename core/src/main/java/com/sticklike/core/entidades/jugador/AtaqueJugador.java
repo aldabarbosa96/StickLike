@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.jugador;
 
+import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 
@@ -19,13 +20,15 @@ public class AtaqueJugador {
      *
      * @param jug referencia al {@link Jugador} que ataca
      */
-    public void procesarAtaque(Jugador jug) {
+    public void procesarAtaque(Jugador jug, ControladorAudio controladorAudio) {
+
         // Si no hay enemigos controlados, no hacemos nada
         if (jug.getControladorEnemigos() == null) return;
 
         // Buscamos un objetivo en rango
         Enemigo target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
+        controladorAudio.reproducirEfecto2();
 
         // Obtenemos coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
@@ -38,6 +41,7 @@ public class AtaqueJugador {
         // Calculamos dirección normalizada (dx, dy)
         float[] dir = calcularDireccionNormalizada(startX, startY, targetX, targetY);
 
+
         // Disparamos tantos proyectiles como indique "proyectilesPorDisparo"
         for (int i = 0; i < jug.getProyectilesPorDisparo(); i++) {
             // separamos un poco los proyectiles por ángulo
@@ -49,6 +53,7 @@ public class AtaqueJugador {
 
             // Añadimos el nuevo proyectil al ControladorProyectiles
             jug.getControladorProyectiles().anyadirNuevoProyectil(startX, startY, adjustedX, adjustedY);
+
         }
     }
 
@@ -93,14 +98,14 @@ public class AtaqueJugador {
     /**
      * Maneja el disparo del jugador y actualiza el temporizador de disparo
      */
-    public void manejarDisparo(float delta, Jugador jugador) {
+    public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
         float temporizadorDisparo = jugador.getTemporizadorDisparo();
 
         temporizadorDisparo += delta;
 
         if (temporizadorDisparo >= jugador.getIntervaloDisparo()) {
             temporizadorDisparo = 0;
-            procesarAtaque(jugador);
+            procesarAtaque(jugador,controladorAudio);
         }
         jugador.setTemporizadorDisparo(temporizadorDisparo);
     }
