@@ -35,52 +35,6 @@ El juego se inspira en el género **roguelike** y en títulos como *Vampire Surv
 
 ---
 
-## Estructura de Proyecto actual
-
-**main
-├── java
-│   └── com
-│       └── sticklike
-│           ├── core
-│           │   ├── effects
-│           │   └── entities
-│           │       ├── Enemy
-│           │       ├── InGameText
-│           │       ├── Player
-│           │       ├── Projectile
-│           │       └── XObjects
-│           ├── managers
-│           │   ├── EnemyManager
-│           │   ├── ProjectileManager
-│           │   └── UpgradeManager
-│           ├── renderers
-│           │   └── GridRenderer
-│           ├── screens
-│           │   ├── GameOverScreen
-│           │   └── GameScreen
-│           ├── systems
-│           │   └── LevelingSystem
-│           ├── ui
-│           │   └── HUD
-│           ├── mejoras
-│           │   └── Upgrade
-│           ├── utils
-│           │   ├── AssetLoader
-│           │   └── GameConfig
-│           └── MainGame
-└── resources
-    ├── actions
-    │   ├── movement
-    │   └── spriteSheets
-    ├── drops
-    ├── enemies
-    ├── hud
-    ├── jugador
-    └── weapons**
-
-
----
-
 ## Cómo ejecutar
 
 1. **Clona** o descarga este repositorio.
