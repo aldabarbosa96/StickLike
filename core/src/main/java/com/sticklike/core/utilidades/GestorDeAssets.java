@@ -42,7 +42,7 @@ public class GestorDeAssets {
         enemigoRegla = new Texture("enemigos/02regla.png");
         corazonVida = new Texture("hud/life.png");
         armaPiedra = new Texture("armas/01piedra.png");
-        armaCalcetin = new Texture("armas/01piedra.png");
+        armaCalcetin = new Texture("armas/02calcetin.png");
         iconoXP = new Texture("hud/xp.png");
         recolectableCaca = new Texture("drops/caca.png");
     }

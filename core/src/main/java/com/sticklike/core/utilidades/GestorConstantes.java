@@ -39,7 +39,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float BORDER_SPAWN_MARGIN = 200f;
 
     // Configuración del proyectil
-    public static final float PROJECTILE_SPEED = 175f;
+    public static final float PROJECTILE_SPEED = 150f;
     public static final float PROJECTILE_SIZE = 8f;
     public static final float PROJECTILE_BASE_DAMAGE = 8f; //gestionar en un futuro
 }

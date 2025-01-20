@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.utilidades.GestorConstantes;
 
@@ -12,7 +13,7 @@ import com.sticklike.core.utilidades.GestorConstantes;
  * (en un futuro también por enemigos). Se encarga de gestionar su
  * posición, movimiento y colisiones
  */
-public class Proyectil {
+public class ProyectilPiedra implements Proyectiles {
     // Textura estática compartida por todos los proyectiles
     private static Texture textura;
     private Sprite sprite;
@@ -28,7 +29,7 @@ public class Proyectil {
      * @param direccionX,direccionY componente X,Y de la dirección normalizada
      * @param multiplicadorVelocidad factor de velocidad extra (para alterar la velocidad de los proyectiles)
      */
-    public Proyectil(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad) {
+    public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad) {
         if (textura == null) {
             textura = GestorDeAssets.armaPiedra;
         }
@@ -47,6 +48,7 @@ public class Proyectil {
      *
      * @param delta tiempo transcurrido desde el último frame
      */
+    @Override
     public void actualizarProyectil(float delta) {
         if (proyectilActivo) {
             // Aplicamos el multiplicador de velocidad
@@ -59,6 +61,7 @@ public class Proyectil {
      *
      * @param batch SpriteBatch para renderizar
      */
+    @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
             sprite.draw(batch);
@@ -73,19 +76,23 @@ public class Proyectil {
         return proyectilActivo;
     }
 
+    @Override
     public void dispose() {
         textura = null;
     }
 
+    @Override
     public float getX() {
         return sprite.getX();
     }
 
+    @Override
     public float getY() {
         return sprite.getY();
     }
 
-    public Rectangle getBoundingRectangle() {
+    @Override
+    public Rectangle getRectanguloColision() {
         return sprite.getBoundingRectangle(); // Devuelve el rectángulo de colisión para gestionar los impactos.
     }
 }

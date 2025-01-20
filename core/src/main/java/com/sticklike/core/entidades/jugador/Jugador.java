@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
@@ -16,7 +18,7 @@ import com.sticklike.core.utilidades.GestorConstantes;
  * Delegamos:
  * - Input en {@link InputsJugador}
  * - Movimiento en {@link MovimientoJugador}
- * - Ataque en {@link AtaqueJugador}
+ * - Ataque en {@link AtaquePiedra}
  * - Colisiones en {@link ColisionesJugador}
  * - Renderizado en {@link AnimacionesJugador}
  */
@@ -26,7 +28,8 @@ public class Jugador {
     private ControladorEnemigos controladorEnemigos;
     private ControladorProyectiles controladorProyectiles;
     private InputsJugador inputController;
-    private AtaqueJugador ataqueController;
+    private AtaquePiedra pedrada;
+    private AtaqueCalcetin calcetinazo;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private AnimacionesJugador animacionesJugador;
@@ -43,7 +46,7 @@ public class Jugador {
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   MovimientoJugador movimientoJugador, AtaqueJugador ataqueJugador,
+                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaqueCalcetin calcetinazo,
                    ControladorProyectiles controladorProyectiles) {
         this.velocidadJugador = GestorConstantes.PLAYER_SPEED;
         this.vidaJugador = GestorConstantes.PLAYER_HEALTH;
@@ -61,7 +64,8 @@ public class Jugador {
         this.inputController = inputController;
         this.colisionesJugador = colisionesJugador;
         this.movimientoJugador = movimientoJugador;
-        this.ataqueController = ataqueJugador;
+        this.pedrada = ataquePiedra;
+        this.calcetinazo = calcetinazo;
         this.controladorProyectiles = controladorProyectiles;
         this.animacionesJugador = new AnimacionesJugador();
     }
@@ -74,7 +78,8 @@ public class Jugador {
 
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
-            ataqueController.manejarDisparo(delta, this,controladorAudio);
+            pedrada.manejarDisparo(delta, this,controladorAudio);
+            calcetinazo.manejarDisparo(delta,this,controladorAudio);
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
             direccionActual = Direction.IDLE;

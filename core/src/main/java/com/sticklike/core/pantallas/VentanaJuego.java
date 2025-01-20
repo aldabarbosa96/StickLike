@@ -22,6 +22,8 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -78,7 +80,8 @@ public class VentanaJuego implements Screen {
     private HUD hud;
     private ColisionesJugador colisionesJugador;
     private MovimientoJugador movimientoJugador;
-    private AtaqueJugador ataqueJugador;
+    private AtaquePiedra ataquePiedra;
+    private AtaqueCalcetin ataqueCalcetin;
     private ControladorProyectiles controladorProyectiles;
     private AnimacionesJugador animacionesJugador;
     private ControladorAudio controladorAudio;
@@ -127,14 +130,15 @@ public class VentanaJuego implements Screen {
         colisionesJugador = new ColisionesJugador();
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
-        ataqueJugador = new AtaqueJugador();
+        ataquePiedra = new AtaquePiedra(1f);
+        ataqueCalcetin = new AtaqueCalcetin(2.5f);
         controladorProyectiles = new ControladorProyectiles();
         animacionesJugador = new AnimacionesJugador();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
         float playerStartY = WORLD_HEIGHT / 2f + 125f;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataqueJugador, controladorProyectiles);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra,ataqueCalcetin, controladorProyectiles);
     }
 
     private void inicializarSistemasYControladores() {

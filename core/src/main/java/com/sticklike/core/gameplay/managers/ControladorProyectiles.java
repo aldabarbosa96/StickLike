@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.Proyectil;
-
+import com.sticklike.core.interfaces.Proyectiles;
 import java.util.Iterator;
 
 /**
@@ -22,7 +21,7 @@ import java.util.Iterator;
  * Renderizarlos y liberar recursos al morir
  */
 public class ControladorProyectiles {
-    private ArrayList<Proyectil> proyectiles;
+    private ArrayList<Proyectiles> proyectiles;
     private float multiplicadorDeDanyo = 1.0f;
 
     /**
@@ -32,16 +31,8 @@ public class ControladorProyectiles {
         proyectiles = new ArrayList<>();
     }
 
-    /**
-     * Crea y añade un nuevo proyectil a la lista, con posición inicial, dirección y enemigo objetivo
-     * Además, se le asigna un multiplicador de velocidad aleatorio entre 0.7 y 1.1 para variar la trayectoria
-     *
-     * @param startX,startY posición X,Y de inicio del proyectil
-     * @param dx,dt         componente X,Y de la dirección normalizada
-     */
-    public void anyadirNuevoProyectil(float startX, float startY, float dx, float dy) {
-        float randomSpeedMultiplier = 0.85f + (float) Math.random() * 0.4f;
-        proyectiles.add(new Proyectil(startX, startY, dx, dy, randomSpeedMultiplier));
+    public void anyadirNuevoProyectil(Proyectiles proyectil) {
+        proyectiles.add(proyectil);
     }
 
     /**
@@ -54,16 +45,16 @@ public class ControladorProyectiles {
      * @param dmgText  array para almacenar textos flotantes de daño
      */
     public void actualizarProyectiles(float delta, Array<Enemigo> enemies, Array<TextoFlotante> dmgText) {
-        Iterator<Proyectil> iterator = proyectiles.iterator();
+        Iterator<Proyectiles> iterator = proyectiles.iterator();
 
         while (iterator.hasNext()) {
-            Proyectil proyectil = iterator.next();
-            proyectil.actualizarProyectil(delta);
+            Proyectiles proyectiles = iterator.next();
+            proyectiles.actualizarProyectil(delta);
 
             for (Enemigo enemigo : enemies) {
                 // Verificamos impacto solo si el proyectil sigue activo y el enemigo no está muerto
-                if (!enemigo.estaMuerto() && proyectil.isProyectilActivo() &&
-                    enemigo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), proyectil.getBoundingRectangle().width, proyectil.getBoundingRectangle().height)) {
+                if (!enemigo.estaMuerto() && proyectiles.isProyectilActivo() &&
+                    enemigo.esGolpeadoPorProyectil(proyectiles.getX(), proyectiles.getY(), proyectiles.getRectanguloColision().width, proyectiles.getRectanguloColision().height)) {
 
                     // Cálculo del daño con el multiplicador aplicado
                     float baseDamage = 22 + (float) Math.random() * 8; // Daño base aleatorio entre 25 y 34
@@ -76,12 +67,12 @@ public class ControladorProyectiles {
                     ));
 
                     // El proyectil impacta y se desactiva
-                    proyectil.desactivarProyectil();
+                    proyectiles.desactivarProyectil();
                     break; // No verificamos más enemigos para este proyectil
                 }
             }
 
-            if (!proyectil.isProyectilActivo()) {
+            if (!proyectiles.isProyectilActivo()) {
                 iterator.remove(); // Eliminar proyectiles inactivos
             }
         }
@@ -93,7 +84,7 @@ public class ControladorProyectiles {
      * @param batch SpriteBatch para dibujar
      */
     public void renderizarProyectiles(SpriteBatch batch) {
-        for (Proyectil proyectil : proyectiles) {
+        for (Proyectiles proyectil : proyectiles) {
             proyectil.renderizarProyectil(batch);
         }
     }
@@ -115,7 +106,7 @@ public class ControladorProyectiles {
     }
 
     public void dispose() {
-        for (Proyectil proyectil : proyectiles) {
+        for (Proyectiles proyectil : proyectiles) {
             proyectil.dispose();
         }
     }

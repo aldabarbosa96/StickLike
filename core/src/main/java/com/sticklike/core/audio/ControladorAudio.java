@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 
 public class ControladorAudio {
     private Music musicaFondo;
-    private Sound efectoSonido, efectoSonido2;
+    private Sound efectoSonido, efectoSonido2, efectoSonido3;
 
     public ControladorAudio() {
         cargarRecursos();
@@ -17,6 +17,7 @@ public class ControladorAudio {
         musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo.mp3"));
         efectoSonido = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/recibeDaño.wav"));
         efectoSonido2 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoLanzarPiedra.wav"));
+        efectoSonido3 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoCalcetines.wav"));
     }
 
     public void reproducirMusica() {
@@ -41,12 +42,12 @@ public class ControladorAudio {
 
     public void reproducirEfecto() {
         if (efectoSonido != null) {
-            efectoSonido.play(0.85f); // Reproducir al volumen máximo
+            efectoSonido.play(0.85f); // Reproducir al volumen máximo (1.0f)
         }
     }
     public void reproducirEfecto2() {
         if (efectoSonido2 != null) {
-            efectoSonido2.play(0.70f); // Reproducir al volumen máximo
+            efectoSonido2.play(0.70f);
         }
     }
 
@@ -56,6 +57,12 @@ public class ControladorAudio {
         }
         if (efectoSonido != null) {
             efectoSonido.dispose();
+        }
+    }
+
+    public void reproducirEfecto3() {
+        if (efectoSonido3 != null) {
+            efectoSonido3.play(0.50f);
         }
     }
 }

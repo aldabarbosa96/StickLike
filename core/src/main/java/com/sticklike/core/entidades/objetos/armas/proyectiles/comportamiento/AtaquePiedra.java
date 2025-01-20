@@ -1,18 +1,33 @@
-package com.sticklike.core.entidades.jugador;
+package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
 import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 
 import java.lang.Math;
 
 /**
- * {@code AtaqueJugador} maneja la lógica de ataque automático del jugador:
+ * {@code AtaquePiedra} maneja la lógica de ataque automático del jugador:
  * - Encontrar el enemigo más cercano en el rango
  * - Calcular la dirección de disparo
  * - Crear los proyectiles y asignarlos al {@link ControladorProyectiles}
  */
-public class AtaqueJugador {
+public class AtaquePiedra {
+
+    private float temporizadorDisparo = 0f;
+    private float intervaloDisparo = 0.5f; // Intervalo en segundos (ajustar según necesidad)
+
+    /**
+     * Constructor de AtaquePiedra.
+     * Permite configurar el intervalo de disparo.
+     *
+     * @param intervaloDisparoInicial Intervalo inicial entre disparos en segundos.
+     */
+    public AtaquePiedra(float intervaloDisparoInicial) {
+        this.intervaloDisparo = intervaloDisparoInicial;
+    }
 
     /**
      * Procesa el ataque automático del jugador, si hay un enemigo en rango,
@@ -51,8 +66,9 @@ public class AtaqueJugador {
             float adjustedY = (float) (dir[0] * Math.sin(Math.toRadians(angleOffset))
                 + dir[1] * Math.cos(Math.toRadians(angleOffset)));
 
+            ProyectilPiedra piedra = new ProyectilPiedra(startX, startY, adjustedX, adjustedY, 1.2f);
             // Añadimos el nuevo proyectil al ControladorProyectiles
-            jug.getControladorProyectiles().anyadirNuevoProyectil(startX, startY, adjustedX, adjustedY);
+            jug.getControladorProyectiles().anyadirNuevoProyectil(piedra);
 
         }
     }
@@ -99,16 +115,20 @@ public class AtaqueJugador {
      * Maneja el disparo del jugador y actualiza el temporizador de disparo
      */
     public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
-        float temporizadorDisparo = jugador.getTemporizadorDisparo();
-
         temporizadorDisparo += delta;
 
-        if (temporizadorDisparo >= jugador.getIntervaloDisparo()) {
+        if (temporizadorDisparo >= intervaloDisparo) {
             temporizadorDisparo = 0;
-            procesarAtaque(jugador,controladorAudio);
+            procesarAtaque(jugador, controladorAudio);
         }
-        jugador.setTemporizadorDisparo(temporizadorDisparo);
     }
 
-
+    /**
+     * Permite ajustar el intervalo de disparo después de la inicialización.
+     *
+     * @param nuevoIntervaloNuevo Intervalo en segundos.
+     */
+    public void setIntervaloDisparo(float nuevoIntervaloNuevo) {
+        this.intervaloDisparo = nuevoIntervaloNuevo;
+    }
 }

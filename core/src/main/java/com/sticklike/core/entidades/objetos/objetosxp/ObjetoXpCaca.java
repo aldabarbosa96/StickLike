@@ -33,7 +33,7 @@ public class ObjetoXpCaca implements ObjetosXP {
     }
 
     @Override
-    public void actualizar() {
+    public void actualizarObjetoXP() {
 
     }
 
