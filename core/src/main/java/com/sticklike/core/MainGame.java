@@ -6,7 +6,7 @@ import com.sticklike.core.pantallas.VentanaJuego;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**
- * MainGame es la clase principal de la aplicación con libGDX
+ * MainGame es la clase principal del juego con libGDX
  * Extiende de {@link Game}, de modo que puede administrar múltiples pantallas (Screens)
  * <p>
  * Carga los recursos (GestoDeAssets.cargarRecursos()) y crea una instancia de la pantalla principal (VentanaJuego), asignándola como pantalla activa
@@ -16,7 +16,8 @@ public class MainGame extends Game {
     public ControladorAudio controladorAudio;
 
     /**
-     * Se llama al iniciar la aplicación. Carga los assets e instancia la pantalla principal
+     * Llamado al cargar el juego
+     * Carga los assets, inicializa el controlador de audio y establece la pantalla de juego
      */
     @Override
     public void create() {
@@ -35,6 +36,10 @@ public class MainGame extends Game {
         super.render();
     }
 
+    /**
+     * Método llamado al cerrar la aplicación
+     * Libera todos los recursos utilizados
+     */
     @Override
     public void dispose() {
         super.dispose();

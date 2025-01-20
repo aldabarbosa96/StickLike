@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
@@ -56,15 +58,27 @@ public class ControladorProyectiles {
                 if (!enemigo.estaMuerto() && proyectiles.isProyectilActivo() &&
                     enemigo.esGolpeadoPorProyectil(proyectiles.getX(), proyectiles.getY(), proyectiles.getRectanguloColision().width, proyectiles.getRectanguloColision().height)) {
 
-                    // Cálculo del daño con el multiplicador aplicado
-                    float baseDamage = 22 + (float) Math.random() * 8; // Daño base aleatorio entre 25 y 34
-                    float damage = baseDamage * multiplicadorDeDanyo;
+                    if (proyectiles instanceof ProyectilPiedra) { // todo --> manejar el daño de cada proyectil de manera independiente
+                        // Cálculo del daño con el multiplicador aplicado
+                        float baseDamage = 22 + (float) Math.random() * 12; // Daño base aleatorio entre 22 y 34
+                        float damage = baseDamage * multiplicadorDeDanyo;
 
-                    enemigo.reducirSalud(damage);
+                        enemigo.reducirSalud(damage);
 
-                    // Creamos un texto flotante con la cantidad de daño infligido
-                    dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f
-                    ));
+                        // Creamos un texto flotante con la cantidad de daño infligido
+                        dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f
+                        ));
+                    } else if (proyectiles instanceof ProyectilCalcetin) {
+                        // Cálculo del daño con el multiplicador aplicado
+                        float baseDamage = 15 + (float) Math.random() * 11; // Daño base aleatorio entre 15 y 26
+                        float damage = baseDamage * multiplicadorDeDanyo;
+
+                        enemigo.reducirSalud(damage);
+
+                        // Creamos un texto flotante con la cantidad de daño infligido
+                        dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f
+                        ));
+                    }
 
                     // El proyectil impacta y se desactiva
                     proyectiles.desactivarProyectil();

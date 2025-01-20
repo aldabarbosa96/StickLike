@@ -17,6 +17,7 @@ import com.sticklike.core.utilidades.GestorConstantes;
  * <p>
  * Utiliza un {@link ShapeRenderer} para dibujar formas (barras de vida y XP) y un {@link SpriteBatch} para renderizar
  * iconos y texto. Maneja también una cámara y un viewport independientes para la interfaz (HUD)
+ * todo --> mover toda la lógica de renderizado de componentes del HUD a otra clase dedicada
  */
 public class HUD {
     private final ShapeRenderer shapeRenderer;
@@ -61,9 +62,9 @@ public class HUD {
 
 
     /**
-     * Renderiza un temporizador en la pantalla del HUD, mostrando el tiempo transcurrido desde el inicio del juego.
+     * Renderiza un temporizador en la pantalla del HUD, mostrando el tiempo transcurrido desde el inicio del juego
      *
-     * @param delta Tiempo transcurrido entre frames.
+     * @param delta Tiempo transcurrido entre frames
      */
     private void renderizarTemporizador(float delta) {
         // Actualizamos el tiempo transcurrido
@@ -87,10 +88,10 @@ public class HUD {
     }
 
     /**
-     * Convierte el tiempo en segundos a un formato "MM:SS".
+     * Convierte el tiempo en segundos a un formato "MM:SS"
      *
      * @param tiempoSegundos Tiempo en segundos.
-     * @return Tiempo formateado como "MM:SS".
+     * @return Tiempo formateado como "MM:SS"
      */
     private String formatearTiempo(float tiempoSegundos) {
         int minutos = (int) (tiempoSegundos / 60);
@@ -132,7 +133,7 @@ public class HUD {
     }
 
     /**
-     * Dibuja un marco alrededor del HUD con un borde negro y una sombra más clara que sobresale.
+     * Dibuja un marco alrededor del HUD con un borde negro y una sombra más clara que sobresale
      */
     private void renderizarMarcoHUD() {
         float grosorMarcoNegro = 0.9f;
@@ -226,8 +227,6 @@ public class HUD {
         fuente.setColor(1, 1, 1, 1); // Blanco/Azul
         fuente.draw(spriteBatch, levelNumber, levelNumberX, textYNumber);
 
-        fuente.getData().setScale(1.4f);
-
         spriteBatch.end();
     }
 
@@ -273,7 +272,7 @@ public class HUD {
 
         layout.setText(fuente, healthText);
         float textWidth = layout.width;
-        float textHeight = layout.height;
+        float textHeight = layout.height + 1.5f;
 
         // Centramos el texto dentro de la barra
         float textX = barX + (barWidth - textWidth) / 2;

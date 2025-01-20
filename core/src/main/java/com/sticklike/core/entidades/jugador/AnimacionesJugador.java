@@ -44,7 +44,7 @@ public class AnimacionesJugador {
         TextureRegion currentFrame = animacionActual.getKeyFrame(temporizadorAnimacion, true);
 
         if (enParpadeo) {
-            batch.setColor(1,0,0,1f);
+            batch.setColor(1,0,0,5f);
         }
 
         batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),

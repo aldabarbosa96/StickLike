@@ -40,7 +40,6 @@ public class Jugador {
     private float maxVidaJugador;
     private float rangoAtaqueJugador;
     private float intervaloDisparo;
-    public float temporizadorDisparo = 0;
     private int proyectilesPorDisparo = 1;
     private boolean estaVivo;
     private Direction direccionActual = Direction.IDLE;
@@ -101,6 +100,7 @@ public class Jugador {
         estaVivo = false;
         System.out.println("GAME OVER (player died)");
         // todo --> implementar ventana de "vida extra" en un futuro
+
     }
 
     /**
@@ -200,13 +200,6 @@ public class Jugador {
         return intervaloDisparo;
     }
 
-    public float getTemporizadorDisparo() {
-        return temporizadorDisparo;
-    }
-
-    public void setTemporizadorDisparo(float temporizadorDisparo) {
-        this.temporizadorDisparo = temporizadorDisparo;
-    }
 
     public void setVidaMax(float maxVidaJugador) {
         this.maxVidaJugador = maxVidaJugador;

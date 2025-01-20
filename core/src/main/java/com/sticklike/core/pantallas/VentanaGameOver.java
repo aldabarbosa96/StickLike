@@ -11,7 +11,7 @@ import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
- * Pantalla ** GAME OVER ** que se muestra al terminar la partida (al morir).
+ * Pantalla ** GAME OVER ** que se muestra al terminar la partida (al morir)
  * Permite al usuario reiniciar el juego o salir
  */
 public class VentanaGameOver implements Screen {
@@ -28,14 +28,14 @@ public class VentanaGameOver implements Screen {
     private static final float VIRTUAL_HEIGHT = GestorConstantes.VIRTUAL_HEIGHT;
 
     /**
-     * @param game referencia a la clase principal {@link MainGame}, la cual gestiona el cambio de pantallas.
+     * @param game referencia a la clase principal {@link MainGame}, la cual gestiona el cambio de pantallas
      */
     public VentanaGameOver(MainGame game) {
         this.game = game;
     }
 
     /**
-     * Llamado cuando se muestra esta pantalla por primera vez.
+     * Llamado cuando se muestra esta pantalla por primera vez
      * Configura las variables de render y un {@link InputProcessor} para capturar teclas: R para reiniciar, Q para salir
      */
     @Override
@@ -56,7 +56,7 @@ public class VentanaGameOver implements Screen {
     /**
      * Método principal de renderizado. Dibuja el texto de Game Over y las instrucciones para reiniciar o salir
      *
-     * @param delta tiempo transcurrido desde el último frame.
+     * @param delta tiempo transcurrido desde el último frame
      */
     @Override
     public void render(float delta) {

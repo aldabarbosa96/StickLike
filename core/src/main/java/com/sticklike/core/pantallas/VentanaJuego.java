@@ -145,7 +145,7 @@ public class VentanaJuego implements Screen {
         // Managers / sistemas de mejoras y enemigos
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
-        controladorEnemigos = new ControladorEnemigos(jugador, 1.2f, this);
+        controladorEnemigos = new ControladorEnemigos(jugador, 1f, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
 
@@ -214,10 +214,12 @@ public class VentanaJuego implements Screen {
             return;
         }
 
-        // Actualizamos lógica solo si no está en pausa
+        // Actualizamos lógica solo si no está en pausa todo --> gestionar el pausado y reanudado de la música de otra manera
         if (!pausado) {
             actualizarLogica(delta, controladorAudio);
-        }
+            controladorAudio.reproducirMusica();
+
+        } else controladorAudio.pausarMusica();
 
         // Renderizado de los componentes principales de la ventana
         renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
@@ -265,7 +267,6 @@ public class VentanaJuego implements Screen {
                 xp.recolectar();
                 objetosXP.removeIndex(i);
                 sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
-
             }
         }
     }
@@ -300,7 +301,7 @@ public class VentanaJuego implements Screen {
         pausado = true;
 
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
-        final Window upgradeWindow = new Window("\n\n\nU P G R A D E S", wStyle);
+        final Window upgradeWindow = new Window("\n\n\nU P G R A D E S\n------------------------", wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
 
         float w = 400;
@@ -360,6 +361,7 @@ public class VentanaJuego implements Screen {
         // Stage recibe el input
         InputMultiplexer im = new InputMultiplexer(uiStage);
         Gdx.input.setInputProcessor(im);
+
     }
 
     private void seleccionarMejora(int index, List<Mejora> mejoras, Window upgradeWindow) {
@@ -428,5 +430,9 @@ public class VentanaJuego implements Screen {
 
     public OrthographicCamera getOrtographicCamera() {
         return camara;
+    }
+
+    public boolean isPausado() {
+        return pausado;
     }
 }

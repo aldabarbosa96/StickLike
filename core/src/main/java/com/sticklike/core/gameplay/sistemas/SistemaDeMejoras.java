@@ -3,18 +3,17 @@ package com.sticklike.core.gameplay.sistemas;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.MainGame;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Clase que gestiona la inicialización, creación y aplicación de las mejoras
- * disponibles para el {@link Jugador}. Permite:
- *
+ * Clase que gestiona la inicialización, creación y aplicación de las mejoras disponibles para el {@link Jugador}
+ * Permite:
  * Definir todas las mejoras posibles (con su nombre, descripción y efecto)
  * Seleccionar un conjunto de upgrades aleatorias para mostrarlas al jugador
  * Aplicar la mejora elegida, ejecutando su efecto sobre el jugador
- *
  */
 public class SistemaDeMejoras {
     private final Jugador jugador;
@@ -42,8 +41,7 @@ public class SistemaDeMejoras {
      * Se añaden a la lista {@code todasLasMejoras}
      */
     private void inicializarMejoras() {
-        todasLasMejoras.add(new Mejora(
-            "PIES VELOCES", "Aumenta la velocidad de movimiento un 15%", () -> jugador.aumentarVelocidad(0.15f)));
+        todasLasMejoras.add(new Mejora("PIES VELOCES", "Aumenta la velocidad de movimiento un 15%", () -> jugador.aumentarVelocidad(0.15f)));
         todasLasMejoras.add(new Mejora("BRAZOS LARGOS", "Aumenta el rango de ataque un 10%", () -> jugador.aumentarRangoAtaque(0.10f)));
         todasLasMejoras.add(new Mejora("MANOS RÁPIDAS", "Reduce el intervalo de disparo un 9%", () -> jugador.reducirIntervaloDisparo(0.15f)));
         todasLasMejoras.add(new Mejora("PUÑO DURO", "Aumenta el daño del Ataque Básico un 4%", () -> jugador.aumentarDanyo(1.03f)));
