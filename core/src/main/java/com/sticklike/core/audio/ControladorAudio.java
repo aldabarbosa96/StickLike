@@ -24,7 +24,7 @@ public class ControladorAudio {
     public void reproducirMusica() {
         if (musicaFondo != null) {
             musicaFondo.setLooping(true); // Hacer que la música se repita en bucle
-            musicaFondo.setVolume(0.15f); // Ajustar el volumen (0 = silencio, 1 = máximo)
+            musicaFondo.setVolume(0.135f); // Ajustar el volumen (0 = silencio, 1 = máximo)
             musicaFondo.play();
         }
     }

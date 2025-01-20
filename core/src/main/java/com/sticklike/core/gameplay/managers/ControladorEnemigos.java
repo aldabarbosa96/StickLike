@@ -122,9 +122,9 @@ public class ControladorEnemigos {
     public static Enemigo fabricaEnemigos(String tipo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera orthographicCamera) {
         switch (tipo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad * 1.5f);
+                return new EnemigoCulo(x, y, jugador, velocidad * 1.75f);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * 2f, orthographicCamera);
+                return new EnemigoRegla(x, y, jugador, velocidad * 2.4f, orthographicCamera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/

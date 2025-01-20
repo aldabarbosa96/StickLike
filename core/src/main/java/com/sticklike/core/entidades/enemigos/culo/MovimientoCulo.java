@@ -50,7 +50,7 @@ public class MovimientoCulo {
         float difY = playerPosY - enemyPosY;
 
         // Añadimos un desplazamiento aleatorio para simular movimiento diagonal.
-        float randomOffsetX = (float) Math.random() * 100 - 50;
+        float randomOffsetX = (float) Math.random() * 100 - 65;
         float randomOffsetY = (float) Math.random() * 100 - 50;
 
         difX += randomOffsetX;
@@ -67,7 +67,7 @@ public class MovimientoCulo {
         float movementY = difY * velocidadEnemigo * delta;
 
         // Cálculamos la posición vertical final del enemigo de manera aleatoria en base al sprite del jugador
-        sprite.translate(movementX, (float) (Math.random() * movementY));
+        sprite.translate(movementX,movementY);
     }
 
     private void calcularDuracionPausa() {
