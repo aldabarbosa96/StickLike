@@ -85,7 +85,6 @@ public class VentanaJuego implements Screen {
     private AtaquePiedra ataquePiedra;
     private AtaqueCalcetin ataqueCalcetin;
     private ControladorProyectiles controladorProyectiles;
-    private AnimacionesJugador animacionesJugador;
     private ControladorAudio controladorAudio;
 
     // Arrays de entidades
@@ -135,9 +134,8 @@ public class VentanaJuego implements Screen {
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
         ataquePiedra = new AtaquePiedra(GestorConstantes.PLAYER_SHOOT_INTERVAL);
-        ataqueCalcetin = new AtaqueCalcetin(2.5f);
+        ataqueCalcetin = new AtaqueCalcetin(GestorConstantes.ATAQUE_CALCETIN_INTERVALO);
         controladorProyectiles = new ControladorProyectiles();
-        animacionesJugador = new AnimacionesJugador();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
@@ -149,7 +147,7 @@ public class VentanaJuego implements Screen {
         // Managers / sistemas de mejoras y enemigos
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
-        controladorEnemigos = new ControladorEnemigos(jugador, 0.7f, this);
+        controladorEnemigos = new ControladorEnemigos(jugador, GestorConstantes.INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
 
@@ -194,7 +192,7 @@ public class VentanaJuego implements Screen {
 
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(pixmapTexture);
 
-        Window.WindowStyle wStyle = new Window.WindowStyle(font, Color.BLACK, backgroundDrawable);
+        Window.WindowStyle wStyle = new Window.WindowStyle(font, Color.BLUE, backgroundDrawable);
         skin.add("default-window", wStyle);
 
         TextButton.TextButtonStyle tbs = new TextButton.TextButtonStyle();
@@ -282,7 +280,7 @@ public class VentanaJuego implements Screen {
                     sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
                 } else if (xp instanceof ObjetoVida) {
                     jugador.setVidaJugador(jugador.getVidaJugador() + (float) Math.random() * (15 - 5) + 5);
-                    if (jugador.getVidaJugador() >= jugador.getMaxVidaJugador()){
+                    if (jugador.getVidaJugador() >= jugador.getMaxVidaJugador()) {
                         jugador.setVidaJugador(jugador.getMaxVidaJugador());
                     }
                 }
@@ -323,8 +321,8 @@ public class VentanaJuego implements Screen {
         final Window upgradeWindow = new Window("\n\n\nU P G R A D E S\n------------------------", wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
 
-        float w = 400;
-        float h = 350;
+        float w = GestorConstantes.POPUP_WIDTH;
+        float h = GestorConstantes.POPUP_HEIGHT;
         upgradeWindow.setSize(w, h);
         upgradeWindow.setPosition(
             (GestorConstantes.VIRTUAL_WIDTH - w) / 2f,
@@ -449,9 +447,5 @@ public class VentanaJuego implements Screen {
 
     public OrthographicCamera getOrtographicCamera() {
         return camara;
-    }
-
-    public boolean isPausado() {
-        return pausado;
     }
 }
