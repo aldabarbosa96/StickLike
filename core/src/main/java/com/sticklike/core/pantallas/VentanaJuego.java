@@ -130,7 +130,7 @@ public class VentanaJuego implements Screen {
         colisionesJugador = new ColisionesJugador();
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
-        ataquePiedra = new AtaquePiedra(1f);
+        ataquePiedra = new AtaquePiedra(GestorConstantes.PLAYER_SHOOT_INTERVAL);
         ataqueCalcetin = new AtaqueCalcetin(2.5f);
         controladorProyectiles = new ControladorProyectiles();
         animacionesJugador = new AnimacionesJugador();

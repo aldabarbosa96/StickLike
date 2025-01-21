@@ -39,6 +39,8 @@ public class Jugador {
     private float vidaJugador;
     private float maxVidaJugador;
     private float rangoAtaqueJugador;
+    private float danyoAtaqueJugador;
+    private float velocidadAtaque;
     private float intervaloDisparo;
     private int proyectilesPorDisparo = 1;
     private boolean estaVivo;
@@ -47,11 +49,13 @@ public class Jugador {
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
                    MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaqueCalcetin calcetinazo,
                    ControladorProyectiles controladorProyectiles) {
+        this.danyoAtaqueJugador = GestorConstantes.DANYO;
         this.velocidadJugador = GestorConstantes.PLAYER_SPEED;
         this.vidaJugador = GestorConstantes.PLAYER_HEALTH;
         this.maxVidaJugador = GestorConstantes.PLAYER_MAX_HEALTH;
         this.rangoAtaqueJugador = GestorConstantes.PLAYER_ATTACK_RANGE;
         this.intervaloDisparo = GestorConstantes.PLAYER_SHOOT_INTERVAL;
+        this.velocidadAtaque = GestorConstantes.PLAYER_ATTACK_SPEED;
         this.estaVivo = true;
 
         // Inicializar el sprite del jugador
@@ -77,8 +81,8 @@ public class Jugador {
 
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
-            pedrada.manejarDisparo(delta, this,controladorAudio);
-            calcetinazo.manejarDisparo(delta,this,controladorAudio);
+            pedrada.manejarDisparo(delta, this, controladorAudio);
+            calcetinazo.manejarDisparo(delta, this, controladorAudio);
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
             direccionActual = Direction.IDLE;
@@ -89,6 +93,7 @@ public class Jugador {
 
     /**
      * Aplica el renderizado de las animaciones al jugador
+     *
      * @param batch sprite que representa al jugador
      */
     public void aplicarRenderizadoAlJugador(SpriteBatch batch) {
@@ -132,13 +137,16 @@ public class Jugador {
 
     public void aumentarDanyo(float amount) {
         controladorProyectiles.aumentarDanyoProyectil(amount);
+        danyoAtaqueJugador *= amount;
     }
 
     public void reducirIntervaloDisparo(float percentage) {
         intervaloDisparo *= (1 - percentage);
         if (intervaloDisparo < 0.1f) intervaloDisparo = 0.1f;
 
+        velocidadAtaque = 1 / intervaloDisparo;
     }
+
     public void aumentarProyectilesPorDisparo(int amount) {
         proyectilesPorDisparo += amount;
     }
@@ -158,6 +166,10 @@ public class Jugador {
 
     public float getVidaJugador() {
         return vidaJugador;
+    }
+
+    public float getDanyoAtaqueJugador() {
+        return danyoAtaqueJugador;
     }
 
     public void restarVidaJugador(float vidaJugador) {
@@ -209,4 +221,7 @@ public class Jugador {
         return animacionesJugador;
     }
 
+    public float getVelocidadAtaque() {
+        return velocidadAtaque;
+    }
 }

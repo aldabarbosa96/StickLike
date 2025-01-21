@@ -1,14 +1,18 @@
 package com.sticklike.core.ui;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
+
+import java.text.DecimalFormat;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
@@ -19,6 +23,7 @@ public class RenderHUDComponents {
     private SpriteBatch spriteBatch;
     private Jugador jugador;
     private SistemaDeNiveles sistemaDeNiveles;
+    private ControladorProyectiles controladorProyectiles;
     private final Texture texturaCorazonVida, texturaLapizXP;
     private float tiempoTranscurrido = 0;
     private String tiempoFormateado;
@@ -32,6 +37,7 @@ public class RenderHUDComponents {
         this.jugador = jugador;
         this.texturaCorazonVida = GestorDeAssets.corazonVida;
         this.texturaLapizXP = GestorDeAssets.iconoXP;
+        this.controladorProyectiles = jugador.getControladorProyectiles();
     }
 
     /**
@@ -70,6 +76,7 @@ public class RenderHUDComponents {
         int segundos = (int) (tiempoSegundos % 60);
         return String.format("%02d : %02d", minutos, segundos);
     }
+
     /**
      * Dibuja un fondo claro para la zona del HUD
      */
@@ -351,6 +358,58 @@ public class RenderHUDComponents {
         spriteBatch.draw(texturaLapizXP, iconX, iconY, iconSize - 10, iconSize);
         spriteBatch.end();
     }
+
+    public void renderizarStatsJugador() {
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        // Definimos los textos de las estadísticas
+        String velocidadJugador = "Vel. Movimiento   " + df.format(jugador.getVelocidadJugador());
+        String rangoJugador = "Rango Disparo   " + df.format(jugador.getRangoAtaqueJugador());
+        String velocidadAtaque = "Vel. Ataque   " + df.format(jugador.getVelocidadAtaque());
+        String fuerzaAtaque = "Fuerza   " + df.format(jugador.getDanyoAtaqueJugador());
+        String numProyectiles = "Núm. Proyectiles   " + df.format(jugador.getProyectilesPorDisparo());
+
+        // Definimos las posiciones de renderizado (parte derecha del HUD)
+        float margenDerecho = 75f;
+        float statsX = VIRTUAL_WIDTH - margenDerecho;
+        float statsY = GestorConstantes.HUD_HEIGHT - 42.5f;
+        float espaciado = 18f; // Espacio entre líneas
+
+        // Calculamos el ancho del texto más largo para alinear todas las líneas
+        float maxWidth = calcularAnchoMaximoTexto(velocidadJugador, rangoJugador, velocidadAtaque, fuerzaAtaque);
+
+        spriteBatch.begin();
+
+        fuente.getData().setScale(0.8f);
+        fuente.setColor(Color.BLACK);
+
+        // Renderizamos cada línea de estadísticas alineadas a la derecha
+        fuente.draw(spriteBatch, fuerzaAtaque, statsX - maxWidth, statsY);
+        fuente.draw(spriteBatch, velocidadAtaque, statsX - maxWidth, statsY - espaciado);
+        fuente.draw(spriteBatch, velocidadJugador, statsX - maxWidth, statsY - 2 * espaciado);
+        fuente.draw(spriteBatch, rangoJugador, statsX - maxWidth, statsY - 3 * espaciado);
+        fuente.draw(spriteBatch, numProyectiles, statsX - maxWidth, statsY - 4 * espaciado);
+
+        spriteBatch.end();
+    }
+
+    /**
+     * Calcula el ancho máximo entre varias líneas de texto.
+     *
+     * @param textos Varias líneas de texto.
+     * @return El ancho máximo entre las líneas.
+     */
+    private float calcularAnchoMaximoTexto(String... textos) {
+        float maxWidth = 0f;
+        for (String texto : textos) {
+            layout.setText(fuente, texto);
+            if (layout.width > maxWidth) {
+                maxWidth = layout.width;
+            }
+        }
+        return maxWidth;
+    }
+
 
     public void dispose() {
         if (texturaCorazonVida != null) texturaCorazonVida.dispose();

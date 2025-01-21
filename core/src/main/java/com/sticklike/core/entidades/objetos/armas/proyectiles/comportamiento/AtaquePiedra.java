@@ -5,6 +5,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 import java.lang.Math;
 
@@ -66,7 +67,9 @@ public class AtaquePiedra {
             float adjustedY = (float) (dir[0] * Math.sin(Math.toRadians(angleOffset))
                 + dir[1] * Math.cos(Math.toRadians(angleOffset)));
 
-            ProyectilPiedra piedra = new ProyectilPiedra(startX, startY, adjustedX, adjustedY, 1.2f);
+            float velocidadAleatoria = 0.8f + (float) Math.random() * (1.2f - 0.8f);
+
+            ProyectilPiedra piedra = new ProyectilPiedra(startX, startY, adjustedX, adjustedY, velocidadAleatoria);
             // Añadimos el nuevo proyectil al ControladorProyectiles
             jug.getControladorProyectiles().anyadirNuevoProyectil(piedra);
 

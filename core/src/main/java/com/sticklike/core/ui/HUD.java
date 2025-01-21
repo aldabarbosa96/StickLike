@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.utilidades.GestorConstantes;
 
@@ -38,6 +39,7 @@ public class HUD {
         this.hudCamara = new OrthographicCamera();
         this.hudViewport = new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT, hudCamara);
         this.hudCamara.update();
+
     }
 
     /**
@@ -60,6 +62,7 @@ public class HUD {
         renderHUDComponents.renderizarIconoVidaJugador();
         renderHUDComponents.renderizarTextoNivelPlayer();
         renderHUDComponents.renderizarTemporizador(delta);
+        renderHUDComponents.renderizarStatsJugador();
     }
 
 

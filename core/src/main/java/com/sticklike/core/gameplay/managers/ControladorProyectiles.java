@@ -10,6 +10,7 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
+
 import java.util.Iterator;
 
 /**
@@ -25,6 +26,7 @@ import java.util.Iterator;
 public class ControladorProyectiles {
     private ArrayList<Proyectiles> proyectiles;
     private float multiplicadorDeDanyo = 1.0f;
+
 
     /**
      * Inicializamos una lista de proyectiles vacía en el constructor
@@ -42,9 +44,9 @@ public class ControladorProyectiles {
      * Cuando un proyectil impacta, se calcula el daño y se genera un texto flotante
      * Los proyectiles inactivos se eliminan de la lista
      *
-     * @param delta    tiempo transcurrido desde el último frame
-     * @param enemies  lista de enemigos activos
-     * @param dmgText  array para almacenar textos flotantes de daño
+     * @param delta   tiempo transcurrido desde el último frame
+     * @param enemies lista de enemigos activos
+     * @param dmgText array para almacenar textos flotantes de daño
      */
     public void actualizarProyectiles(float delta, Array<Enemigo> enemies, Array<TextoFlotante> dmgText) {
         Iterator<Proyectiles> iterator = proyectiles.iterator();
@@ -109,7 +111,7 @@ public class ControladorProyectiles {
      * @param multiplier valor a sumar al multiplicador de daño
      */
     public void aumentarDanyoProyectil(float multiplier) {
-        multiplicadorDeDanyo += multiplier;
+        multiplicadorDeDanyo *= multiplier;
         System.out.println("Multiplicador de daño actualizado a: " + multiplicadorDeDanyo);
     }
 
@@ -124,5 +126,6 @@ public class ControladorProyectiles {
             proyectil.dispose();
         }
     }
+
 }
 

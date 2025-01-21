@@ -25,11 +25,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
 
 
     // Configuración del jugador
-    public static final float PLAYER_SPEED = 125f;
+    public static final float PLAYER_SPEED = 125.0f;
+    public static final float DANYO = 25f;
+    public static final float PLAYER_ATTACK_SPEED = 0.83f;
     public static final float PLAYER_HEALTH = 50f;
     public static final float PLAYER_MAX_HEALTH = 50f;
-    public static final float PLAYER_ATTACK_RANGE = 190f;
-    public static final float PLAYER_SHOOT_INTERVAL = 1.1f;
+    public static final float PLAYER_ATTACK_RANGE = 175.0f;
+    public static final float PLAYER_SHOOT_INTERVAL = 1.2f;
 
     // Configuración de los enemigos
     public static final float ENEMY_MAX_PAUSE = 0.75f;
