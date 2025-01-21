@@ -45,7 +45,7 @@ public class AnimacionesJugador {
 
         if (enParpadeo) {
 
-            batch.setColor(1,1,1,0.1f);
+            batch.setColor(1,1,1,0.2f);
         }
 
         batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),

@@ -261,10 +261,10 @@ public class VentanaJuego implements Screen {
         // Recoger XP
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
-            //xp.actualizar(jugador,delta); // para cuando haya que animar el objeto (efecto al recoger)
+            xp.actualizarObjetoXP(delta,jugador, controladorAudio); // Efecto de recogida
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
-                xp.recolectar();
+                xp.recolectar(controladorAudio);
                 objetosXP.removeIndex(i);
                 sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
             }

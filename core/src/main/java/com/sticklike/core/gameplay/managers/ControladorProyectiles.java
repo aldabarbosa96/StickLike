@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.enemigos.culo.AnimacionesCulo;
+import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.regla.EnemigoRegla;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
@@ -62,10 +65,11 @@ public class ControladorProyectiles {
 
                     if (proyectiles instanceof ProyectilPiedra) { // todo --> manejar el daño de cada proyectil de manera independiente
                         // Cálculo del daño con el multiplicador aplicado
-                        float baseDamage = 22 + (float) Math.random() * 12; // Daño base aleatorio entre 22 y 34
+                        float baseDamage = 21 + (float) Math.random() * 12; // Daño base aleatorio entre 21 y 33
                         float damage = baseDamage * multiplicadorDeDanyo;
 
                         enemigo.reducirSalud(damage);
+                        enemigo.activarParpadeo(0.2f);
 
                         // Creamos un texto flotante con la cantidad de daño infligido
                         dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f
@@ -76,6 +80,7 @@ public class ControladorProyectiles {
                         float damage = baseDamage * multiplicadorDeDanyo;
 
                         enemigo.reducirSalud(damage);
+                        enemigo.activarParpadeo(0.2f);
 
                         // Creamos un texto flotante con la cantidad de daño infligido
                         dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f

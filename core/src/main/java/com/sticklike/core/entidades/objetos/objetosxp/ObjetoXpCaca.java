@@ -3,26 +3,33 @@ package com.sticklike.core.entidades.objetos.objetosxp;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**
- * La clase ObjetoXP representa los objetos que sueltan los enemigos al morir
- * y que otorgan experiencia al Jugador
+ * La clase ObjetoXpCaca representa los objetos que sueltan los EnemigoCulo al morir y que otorgan experiencia
  */
 public class ObjetoXpCaca implements ObjetosXP {
     private Sprite sprite;
     private boolean recolectado = false;
 
-    /**
-     * Genera un nuevo objeto de experiencia en una posición determinada
-     * @param x,y coordenadas spawn gestionadas por enemigo
-     */
+    private float x, y;
+
+    private final float distanciaActivacion = 60f;
+    private final float velocidadAtraccion = 200f;
+
+
     public ObjetoXpCaca(float x, float y) {
         Texture texture = GestorDeAssets.recolectableCaca;
         sprite = new Sprite(texture);
         sprite.setSize(12, 12);
         sprite.setPosition(x, y);
+
+        // Inicializa las coordenadas
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -32,30 +39,54 @@ public class ObjetoXpCaca implements ObjetosXP {
         }
     }
 
-    @Override
-    public void actualizarObjetoXP() {
 
+    @Override
+    public void actualizarObjetoXP(float delta, Jugador jugador, ControladorAudio controladorAudio) {
+        if (recolectado) {
+            return;
+        }
+
+        // Coordenadas del jugador
+        float jugadorX = jugador.getSprite().getX();
+        float jugadorY = jugador.getSprite().getY();
+
+        // Calcula la distancia al jugador
+        float distancia = (float) Math.sqrt(Math.pow(jugadorX - x, 2) + Math.pow(jugadorY - y, 2));
+
+        if (distancia < distanciaActivacion) {
+            // Movimiento hacia el jugador
+            float direccionX = jugadorX - x;
+            float direccionY = jugadorY - y;
+            float longitud = (float) Math.sqrt(direccionX * direccionX + direccionY * direccionY);
+            direccionX /= longitud; // Normaliza
+            direccionY /= longitud;
+
+            x += direccionX * velocidadAtraccion * delta;
+            y += direccionY * velocidadAtraccion * delta;
+
+            sprite.setPosition(x, y);
+
+            // Si colisiona con el jugador, se recolecta
+            if (distancia < 10) {
+                recolectar(controladorAudio);
+            }
+        }
     }
 
     @Override
-    public void recolectar() {
+    public void recolectar(ControladorAudio controladorAudio) {
+        controladorAudio.reproducirEfecto5();
         recolectado = true;
         sprite = null;
     }
 
-
-    /**
-     * Detecta colisión con cualquier otro sprite (Jugador por ahora)
-     * @param otherSprite sprite con el que colisiona
-     * @return devuelve true si existe colisión
-     */
     @Override
     public boolean colisionaConOtroSprite(Sprite otherSprite) {
-        return sprite.getBoundingRectangle().overlaps(otherSprite.getBoundingRectangle());
+        return sprite != null && sprite.getBoundingRectangle().overlaps(otherSprite.getBoundingRectangle());
     }
 
+    @Override
     public void dispose() {
         sprite = null;
     }
 }
-

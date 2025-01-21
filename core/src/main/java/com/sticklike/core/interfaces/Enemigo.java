@@ -18,5 +18,6 @@ public interface Enemigo {
     boolean haSoltadoXP();
     void setProcesado(boolean procesado);
     boolean isProcesado();
+    void activarParpadeo(float duracion);
     void dispose();
 }

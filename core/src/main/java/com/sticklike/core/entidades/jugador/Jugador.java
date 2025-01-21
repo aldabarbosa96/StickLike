@@ -208,11 +208,6 @@ public class Jugador {
         this.direccionActual = direccionActual;
     }
 
-    public float getIntervaloDisparo() {
-        return intervaloDisparo;
-    }
-
-
     public void setVidaMax(float maxVidaJugador) {
         this.maxVidaJugador = maxVidaJugador;
     }

@@ -17,7 +17,7 @@ import com.sticklike.core.interfaces.Enemigo;
 public class EnemigoRegla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = 100f; // Vida inicial específica para este enemigo
+    private float vidaEnemigo = 100f; // Vida inicial
     private MovimientoRegla movimientoEnemigo;
     private ColisionesJugador colisionesJugador;
     private OrthographicCamera orthographicCamera;
@@ -127,6 +127,10 @@ public class EnemigoRegla implements Enemigo {
         return procesado;
     }
 
+    @Override
+    public void activarParpadeo(float duracion) {
+
+    }
     @Override
     public void setProcesado(boolean procesado) {
         this.procesado = procesado;

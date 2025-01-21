@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.enemigos.culo;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -9,23 +10,24 @@ import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.interfaces.Enemigo;
 
 /**
- * La clase Enemy gestiona el renderizado y actualizaciones de cada enemigo,
- * además de su estado y variables
+ * La clase EnemigoCulo gestiona el renderizado y actualizaciones de cada enemigo,
+ * además de su estado y variables.
  */
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = 65f;
+    private float vidaEnemigo = 30f;
     private MovimientoCulo movimientoCulo;
     private float coolDownDanyo = 1f;
     private float temporizadorDanyo = 0f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
+    private AnimacionesCulo animacionesCulo;
 
     /**
-     * @param x,y              cordenadas gestionan el spawn de los enemigos
-     * @param jugador          necesitamos acceder para calcular distancias y movimiento
-     * @param velocidadEnemigo velocidad de movimiento del enemigo
+     * @param x,y              Coordenadas que gestionan el spawn de los enemigos.
+     * @param jugador          Necesitamos acceder para calcular distancias y movimiento.
+     * @param velocidadEnemigo Velocidad de movimiento del enemigo.
      */
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         sprite = new Sprite(GestorDeAssets.enemigoCulo);
@@ -33,17 +35,32 @@ public class EnemigoCulo implements Enemigo {
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadEnemigo);
+        this.animacionesCulo = new AnimacionesCulo();
     }
 
     /**
-     * Renderiza el enemigo en pantalla, si no está muerto
+     * Renderiza el enemigo en pantalla, si no está muerto.
      *
-     * @param batch SpriteBatch para dibujar el sprite del enemigo
+     * @param batch SpriteBatch para dibujar el sprite del enemigo.
      */
     @Override
     public void renderizar(SpriteBatch batch) {
         if (!estaMuerto()) {
+            // Guarda el color original del sprite
+            Color originalColor = sprite.getColor().cpy();
+
+            // Aplica el parpadeo si está activo
+            if (animacionesCulo.estaEnParpadeo()) {
+                animacionesCulo.aplicarParpadeo(sprite);
+            }
+
+            // Dibuja el sprite una sola vez
             sprite.draw(batch);
+
+            // Restaura el color original
+            if (animacionesCulo.estaEnParpadeo()) {
+                animacionesCulo.restaurarColor(sprite, originalColor);
+            }
         }
     }
 
@@ -56,18 +73,34 @@ public class EnemigoCulo implements Enemigo {
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
+
+        // Actualiza el estado del parpadeo
+        animacionesCulo.actualizarParpadeo(delta);
+    }
+
+    @Override
+    public void activarParpadeo(float duracion) {
+        animacionesCulo.activarParpadeo(duracion);
     }
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        Rectangle projectileRect = new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight);
+        Rectangle spriteRect = sprite.getBoundingRectangle();
+
+        if (spriteRect.overlaps(projectileRect)) {
+            activarParpadeo(0.01f); // Duración del parpadeo en segundos
+            reseteaTemporizadorDanyo();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public ObjetoXpCaca sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
-            //System.out.println("Generando XPObject...");
             return new ObjetoXpCaca(this.getX(), this.getY());
         }
         return null;
@@ -77,6 +110,7 @@ public class EnemigoCulo implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
     }
+
     @Override
     public boolean haSoltadoXP() {
         return haSoltadoXP;
@@ -94,9 +128,9 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        boolean dead = vidaEnemigo <= 0;
-        return dead;
+        return vidaEnemigo <= 0;
     }
+
     @Override
     public void dispose() {
         sprite = null;
