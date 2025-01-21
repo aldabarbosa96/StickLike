@@ -93,6 +93,8 @@ public class VentanaJuego implements Screen {
 
     // Control de pausa
     private boolean pausado = false;
+    private boolean efecto6Reproducido = false;
+
 
     /**
      * Construye la ventana principal del juego, inicializando la cámara,
@@ -145,7 +147,7 @@ public class VentanaJuego implements Screen {
         // Managers / sistemas de mejoras y enemigos
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
-        controladorEnemigos = new ControladorEnemigos(jugador, 1f, this);
+        controladorEnemigos = new ControladorEnemigos(jugador, 0.7f, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
 
@@ -166,6 +168,7 @@ public class VentanaJuego implements Screen {
         // Stage + Skin (para pop-up)
         uiStage = new Stage(new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
+        //controladorAudio.reproducirEfecto6(); todo --> probar con otro audio distinto
     }
 
     /**
@@ -218,8 +221,15 @@ public class VentanaJuego implements Screen {
         if (!pausado) {
             actualizarLogica(delta, controladorAudio);
             controladorAudio.reproducirMusica();
+            efecto6Reproducido = false;
 
-        } else controladorAudio.pausarMusica();
+        } else {
+            controladorAudio.pausarMusica();
+            if (!efecto6Reproducido) {
+                controladorAudio.reproducirEfecto6();
+                efecto6Reproducido = true;
+            }
+        }
 
         // Renderizado de los componentes principales de la ventana
         renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
