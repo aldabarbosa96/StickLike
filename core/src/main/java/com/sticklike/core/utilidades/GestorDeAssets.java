@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class GestorDeAssets {
 
     // Texturas individuales
-    public static Texture stickman, enemigoCulo,enemigoRegla, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableCaca;
+    public static Texture stickman, enemigoCulo,enemigoRegla, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableCaca, recolectableVida;
 
     // Diccionario para animaciones, indexadas por string
     public static HashMap<String, Animation<TextureRegion>> animations;
@@ -45,6 +45,7 @@ public class GestorDeAssets {
         armaCalcetin = new Texture("armas/02calcetin.png");
         iconoXP = new Texture("hud/xp.png");
         recolectableCaca = new Texture("drops/caca.png");
+        recolectableVida = new Texture("drops/vida.png");
     }
 
 

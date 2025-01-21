@@ -22,7 +22,7 @@ public class EnemigoCulo implements Enemigo {
     private float temporizadorDanyo = 0f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private AnimacionesCulo animacionesCulo;
+    private AnimacionesEnemigos animacionesEnemigos;
 
     /**
      * @param x,y              Coordenadas que gestionan el spawn de los enemigos.
@@ -35,7 +35,7 @@ public class EnemigoCulo implements Enemigo {
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadEnemigo);
-        this.animacionesCulo = new AnimacionesCulo();
+        this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
     /**
@@ -50,16 +50,16 @@ public class EnemigoCulo implements Enemigo {
             Color originalColor = sprite.getColor().cpy();
 
             // Aplica el parpadeo si está activo
-            if (animacionesCulo.estaEnParpadeo()) {
-                animacionesCulo.aplicarParpadeo(sprite);
+            if (animacionesEnemigos.estaEnParpadeo()) {
+                animacionesEnemigos.aplicarParpadeo(sprite);
             }
 
             // Dibuja el sprite una sola vez
             sprite.draw(batch);
 
             // Restaura el color original
-            if (animacionesCulo.estaEnParpadeo()) {
-                animacionesCulo.restaurarColor(sprite, originalColor);
+            if (animacionesEnemigos.estaEnParpadeo()) {
+                animacionesEnemigos.restaurarColor(sprite, originalColor);
             }
         }
     }
@@ -75,26 +75,17 @@ public class EnemigoCulo implements Enemigo {
         }
 
         // Actualiza el estado del parpadeo
-        animacionesCulo.actualizarParpadeo(delta);
+        animacionesEnemigos.actualizarParpadeo(delta);
     }
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesCulo.activarParpadeo(duracion);
+        animacionesEnemigos.activarParpadeo(duracion);
     }
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        Rectangle projectileRect = new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight);
-        Rectangle spriteRect = sprite.getBoundingRectangle();
-
-        if (spriteRect.overlaps(projectileRect)) {
-            activarParpadeo(0.01f); // Duración del parpadeo en segundos
-            reseteaTemporizadorDanyo();
-            return true;
-        }
-
-        return false;
+        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
     }
 
     @Override

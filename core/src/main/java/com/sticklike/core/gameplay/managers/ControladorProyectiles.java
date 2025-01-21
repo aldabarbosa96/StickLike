@@ -5,9 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.enemigos.culo.AnimacionesCulo;
-import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
-import com.sticklike.core.entidades.enemigos.regla.EnemigoRegla;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;

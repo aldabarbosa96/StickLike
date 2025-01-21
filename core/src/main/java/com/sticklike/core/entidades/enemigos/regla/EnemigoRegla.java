@@ -1,12 +1,14 @@
 package com.sticklike.core.entidades.enemigos.regla;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.entidades.enemigos.culo.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.ColisionesJugador;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
+import com.sticklike.core.entidades.objetos.objetosxp.ObjetoVida;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.interfaces.Enemigo;
 
@@ -19,13 +21,12 @@ public class EnemigoRegla implements Enemigo {
     private Jugador jugador;
     private float vidaEnemigo = 100f; // Vida inicial
     private MovimientoRegla movimientoEnemigo;
-    private ColisionesJugador colisionesJugador;
     private OrthographicCamera orthographicCamera;
     private float coolDownDanyo = 1.5f;
     private float temporizadorDanyo = 0f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-
+    private AnimacionesEnemigos animacionesEnemigos;
     /**
      * @param x,y              coordenadas gestionan el spawn de los enemigos
      * @param jugador          necesitamos acceder para calcular distancias y movimiento
@@ -38,6 +39,7 @@ public class EnemigoRegla implements Enemigo {
         this.jugador = jugador;
         this.movimientoEnemigo = new MovimientoRegla(velocidadEnemigo,540);
         this.orthographicCamera = orthographicCamera;
+        this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
     /**
@@ -48,7 +50,21 @@ public class EnemigoRegla implements Enemigo {
     @Override
     public void renderizar(SpriteBatch batch) {
         if (!estaMuerto()) {
+            // Guarda el color original del sprite
+            Color originalColor = sprite.getColor().cpy();
+
+            // Aplica el parpadeo si está activo
+            if (animacionesEnemigos.estaEnParpadeo()) {
+                animacionesEnemigos.aplicarParpadeo(sprite);
+            }
+
+            // Dibuja el sprite una sola vez
             sprite.draw(batch);
+
+            // Restaura el color original
+            if (animacionesEnemigos.estaEnParpadeo()) {
+                animacionesEnemigos.restaurarColor(sprite, originalColor);
+            }
         }
     }
 
@@ -61,6 +77,7 @@ public class EnemigoRegla implements Enemigo {
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
+        animacionesEnemigos.actualizarParpadeo(delta);
     }
 
     @Override
@@ -69,10 +86,10 @@ public class EnemigoRegla implements Enemigo {
     }
 
     @Override
-    public ObjetoXpCaca sueltaObjetoXP() {
+    public ObjetoVida sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
-            return new ObjetoXpCaca(this.getX(), this.getY()); // Suelta el objeto XP específico
+            return new ObjetoVida(this.getX(), this.getY()); // Suelta el objeto XP específico
         }
         return null;
     }
@@ -129,7 +146,7 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public void activarParpadeo(float duracion) {
-
+        animacionesEnemigos.activarParpadeo(duracion);
     }
     @Override
     public void setProcesado(boolean procesado) {

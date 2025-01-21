@@ -24,6 +24,8 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
+import com.sticklike.core.entidades.objetos.objetosxp.ObjetoVida;
+import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -140,7 +142,7 @@ public class VentanaJuego implements Screen {
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
         float playerStartX = WORLD_WIDTH / 2f;
         float playerStartY = WORLD_HEIGHT / 2f + 125f;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra,ataqueCalcetin, controladorProyectiles);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, ataqueCalcetin, controladorProyectiles);
     }
 
     private void inicializarSistemasYControladores() {
@@ -271,12 +273,19 @@ public class VentanaJuego implements Screen {
         // Recoger XP
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
-            xp.actualizarObjetoXP(delta,jugador, controladorAudio); // Efecto de recogida
+            xp.actualizarObjetoXP(delta, jugador, controladorAudio); // Efecto de recogida
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
                 xp.recolectar(controladorAudio);
                 objetosXP.removeIndex(i);
-                sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
+                if (xp instanceof ObjetoXpCaca) {
+                    sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
+                } else if (xp instanceof ObjetoVida) {
+                    jugador.setVidaJugador(jugador.getVidaJugador() + (float) Math.random() * (15 - 5) + 5);
+                    if (jugador.getVidaJugador() >= jugador.getMaxVidaJugador()){
+                        jugador.setVidaJugador(jugador.getMaxVidaJugador());
+                    }
+                }
             }
         }
     }
