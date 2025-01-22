@@ -3,7 +3,9 @@ package com.sticklike.core.utilidades;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,6 +16,9 @@ public class GestorDeAssets {
 
     // Texturas individuales
     public static Texture stickman, enemigoCulo,enemigoRegla, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableCaca, recolectableVida;
+    //Texturas por lotes
+    public static Array<Texture> borrones; // Lista de texturas de borrón
+
 
     // Diccionario para animaciones, indexadas por string
     public static HashMap<String, Animation<TextureRegion>> animations;
@@ -46,6 +51,25 @@ public class GestorDeAssets {
         iconoXP = new Texture("hud/xp.png");
         recolectableCaca = new Texture("drops/caca.png");
         recolectableVida = new Texture("drops/vida.png");
+
+        borrones = new Array<>();
+
+        borrones.add(new Texture("fondo/borronPolla.png"));
+        borrones.add(new Texture("fondo/borronPolla2.png"));
+        borrones.add(new Texture("fondo/borronPolla3.png"));
+        borrones.add(new Texture("fondo/borronTetasText.png"));
+        borrones.add(new Texture("fondo/borronAnalText.png"));
+        borrones.add(new Texture("fondo/borronTontoQuienLoLea.png"));
+        borrones.add(new Texture("fondo/borronTetas.png"));
+        borrones.add(new Texture("fondo/borronAmorText.png"));
+        borrones.add(new Texture("fondo/borronLOL.png"));
+        borrones.add(new Texture("fondo/borronTeleranya.png"));
+        borrones.add(new Texture("fondo/borronFollar.png"));
+        borrones.add(new Texture("fondo/borronPizza2.png"));
+        borrones.add(new Texture("fondo/borronELBARTO.png"));
+        borrones.add(new Texture("fondo/borronColgado.png"));
+        borrones.add(new Texture("fondo/borronPezpolla.png"));
+
     }
 
 
@@ -75,18 +99,15 @@ public class GestorDeAssets {
         if (enemigoCulo != null) enemigoCulo.dispose();
         if (enemigoRegla != null) enemigoRegla.dispose();
         if (corazonVida != null) corazonVida.dispose();
-
-        if (armaPiedra != null) {
-            armaPiedra.dispose();
-            armaPiedra = null;
-        }
-        if (armaCalcetin != null) {
-            armaCalcetin.dispose();
-            armaCalcetin = null;
-        }
+        if (armaPiedra != null) armaPiedra.dispose();
+        if (armaCalcetin != null) armaCalcetin.dispose();
         if (iconoXP != null) iconoXP.dispose();
         if (recolectableCaca != null) recolectableCaca.dispose();
-
+        if (borrones != null) {
+            for (Texture t : borrones) {
+                if (t != null) t.dispose();
+            }
+        }
         for (Animation<TextureRegion> animation : animations.values()) {
             for (TextureRegion frame : animation.getKeyFrames()) {
                 frame.getTexture().dispose();
