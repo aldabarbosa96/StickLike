@@ -33,5 +33,6 @@ public class Mejora {
      */
     public void apply(){
         efectoMejora.run();
+        System.out.println(descripcionMejora);
     }
 }

@@ -69,6 +69,7 @@ public class PopUpMejoras {
 
     public void mostrarPopUpMejoras(final List<Mejora> mejoras) {
         ventanaJuego.setPausado(true);
+        ventanaJuego.getRenderHUDComponents().pausarTemporizador();
 
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         final Window upgradeWindow = new Window(GestorConstantes.POPUP_HEADER, wStyle);
@@ -133,6 +134,7 @@ public class PopUpMejoras {
         sistemaDeMejoras.aplicarMejora(mejoras.get(index));
         upgradeWindow.remove();
         ventanaJuego.setPausado(false);
+        ventanaJuego.getRenderHUDComponents().reanudarTemporizador();
         Gdx.input.setInputProcessor(null);
     }
 

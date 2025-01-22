@@ -122,9 +122,9 @@ public class ControladorEnemigos {
     public static Enemigo fabricaEnemigos(String tipo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera orthographicCamera) {
         switch (tipo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad * 1.75f);
+                return new EnemigoCulo(x, y, jugador, velocidad * 1.7f);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * 2.4f, orthographicCamera);
+                return new EnemigoRegla(x, y, jugador, velocidad * 2.5f, orthographicCamera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/
@@ -132,5 +132,13 @@ public class ControladorEnemigos {
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipo);
         }
+    }
+
+    public void setIntervaloDeAparicion(float intervaloDeAparicion) {
+        this.intervaloDeAparicion = intervaloDeAparicion;
+    }
+
+    public float getIntervaloDeAparicion() {
+        return intervaloDeAparicion;
     }
 }

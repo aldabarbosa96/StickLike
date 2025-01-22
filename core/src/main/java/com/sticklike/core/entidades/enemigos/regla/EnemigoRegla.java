@@ -37,7 +37,7 @@ public class EnemigoRegla implements Enemigo {
         sprite.setSize(6, 38);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoEnemigo = new MovimientoRegla(velocidadEnemigo,540);
+        this.movimientoEnemigo = new MovimientoRegla(velocidadEnemigo,666);
         this.orthographicCamera = orthographicCamera;
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }

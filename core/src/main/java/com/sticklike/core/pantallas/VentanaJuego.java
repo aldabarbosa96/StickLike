@@ -13,6 +13,7 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.Ata
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoVida;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
+import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -23,6 +24,7 @@ import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.ui.HUD;
 import com.sticklike.core.gameplay.mejoras.Mejora;
+import com.sticklike.core.ui.RenderHUDComponents;
 import com.sticklike.core.utilidades.GestorConstantes;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -56,11 +58,13 @@ public class VentanaJuego implements Screen {
     private OrthographicCamera camara;
     private Viewport viewport;
     private RenderVentanaJuego renderVentanaJuego;
+    private RenderHUDComponents renderHUDComponents;
     // Jugador y sistemas
     private Jugador jugador;
     private ControladorEnemigos controladorEnemigos;
     private SistemaDeMejoras sistemaDeMejoras;
     private SistemaDeNiveles sistemaDeNiveles;
+    private SistemaDeEventos sistemaDeEventos;
     private HUD hud;
     private ColisionesJugador colisionesJugador;
     private MovimientoJugador movimientoJugador;
@@ -77,7 +81,7 @@ public class VentanaJuego implements Screen {
 
     // Control de pausa
     private boolean pausado = false;
-    private boolean efecto6Reproducido = false;
+    private boolean efectoSonidoPopUpReproducido = false;
 
 
     /**
@@ -94,7 +98,7 @@ public class VentanaJuego implements Screen {
         inicializarSistemasYControladores();
         inicializarCuadriculaYHUD();
         inicializarListas();
-        this.popUpMejoras = new PopUpMejoras(sistemaDeMejoras, this);
+
 
 
         // Ajustamos posición de la cámara siguiendo al jugador
@@ -128,17 +132,24 @@ public class VentanaJuego implements Screen {
     }
 
     private void inicializarSistemasYControladores() {
-        // Managers / sistemas de mejoras y enemigos
+        // Primero inicializa los sistemas base
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
+        this.popUpMejoras = new PopUpMejoras(sistemaDeMejoras, this);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
+
+        // Luego los controladores dependientes
         controladorEnemigos = new ControladorEnemigos(jugador, GestorConstantes.INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
+
 
     private void inicializarCuadriculaYHUD() {
         // Renderizado de la cuadrícula (mapa) y el HUD
         renderVentanaJuego = new RenderVentanaJuego((int) GestorConstantes.GRID_CELL_SIZE);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
+        this.renderHUDComponents = hud.getRenderHUDComponents();
+        sistemaDeEventos = new SistemaDeEventos(renderHUDComponents,controladorEnemigos);
+
     }
 
     private void inicializarListas() {
@@ -158,24 +169,15 @@ public class VentanaJuego implements Screen {
     @Override
     public void render(float delta) {
         // Si el jugador muere, pasamos a la pantalla de GameOver
-        if (jugador.estaVivo()) {
+        if (jugador.estaVivo()) { // este boleano está invertido todo --> mejorar en un futuro para mayor claridad
             game.setScreen(new VentanaGameOver(game));
             return;
         }
-
-        // Actualizamos lógica solo si no está en pausa todo --> gestionar el pausado y reanudado de la música de otra manera
         if (!pausado) {
             actualizarLogica(delta, controladorAudio);
-            controladorAudio.reproducirMusica();
-            efecto6Reproducido = false;
+            reproducirMusica();
 
-        } else {
-            controladorAudio.pausarMusica();
-            if (!efecto6Reproducido) {
-                controladorAudio.reproducirEfecto6();
-                efecto6Reproducido = true;
-            }
-        }
+        } else pausarMusica();
 
         // Renderizado de los componentes principales de la ventana
         renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
@@ -184,14 +186,26 @@ public class VentanaJuego implements Screen {
         popUpMejoras.getUiStage().act(delta);
         popUpMejoras.getUiStage().draw();
     }
+    private void reproducirMusica(){
+        controladorAudio.reproducirMusica();
+        efectoSonidoPopUpReproducido = false;
+    }
+    private void pausarMusica(){ // genera además un efecto de sonido "wow"
+        controladorAudio.pausarMusica();
+        if (!efectoSonidoPopUpReproducido) {
+            controladorAudio.reproducirEfecto6();
+            efectoSonidoPopUpReproducido = true;
+        }
+    }
 
     private void actualizarLogica(float delta, ControladorAudio controladorAudio) {
         jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, controladorAudio);
         controladorEnemigos.actualizarSpawnEnemigos(delta);
-
         actualizarEnemigos();
         actualizarRecogidaXP(delta);
         actualizarTextoFlotante(delta);
+        sistemaDeEventos.actualizar();
+
 
     }
 
@@ -326,5 +340,9 @@ public class VentanaJuego implements Screen {
 
     public void setPausado(boolean pausa) {
         this.pausado = pausa;
+    }
+
+    public RenderHUDComponents getRenderHUDComponents() {
+        return renderHUDComponents;
     }
 }

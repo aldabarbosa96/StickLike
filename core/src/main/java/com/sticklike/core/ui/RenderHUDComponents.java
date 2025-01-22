@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+import com.sticklike.core.pantallas.VentanaJuego;
 import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
@@ -28,6 +29,8 @@ public class RenderHUDComponents {
     private final Texture texturaCorazonVida, texturaLapizXP;
     private float tiempoTranscurrido = 0;
     private String tiempoFormateado;
+    private boolean pausadoTemporizador = false;
+
 
     public RenderHUDComponents(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, Jugador jugador, SistemaDeNiveles sistemaDeNiveles) {
         this.sistemaDeNiveles = sistemaDeNiveles;
@@ -47,8 +50,10 @@ public class RenderHUDComponents {
      * @param delta Tiempo transcurrido entre frames
      */
     public void renderizarTemporizador(float delta) {
-        // Actualizamos el tiempo transcurrido
-        tiempoTranscurrido += delta;
+        if (!pausadoTemporizador) {
+            // Actualizamos el tiempo transcurrido si no está en pausa
+            tiempoTranscurrido += delta;
+        }
 
         // Formateamos el tiempo en "MM:SS"
         tiempoFormateado = formatearTiempo(tiempoTranscurrido);
@@ -416,5 +421,17 @@ public class RenderHUDComponents {
         if (texturaCorazonVida != null) texturaCorazonVida.dispose();
         if (texturaLapizXP != null) texturaLapizXP.dispose();
         if (fuente != null) fuente.dispose();
+    }
+
+    public float getTiempoTranscurrido() {
+        return tiempoTranscurrido;
+    }
+
+    public void pausarTemporizador() {
+        pausadoTemporizador = true;
+    }
+
+    public void reanudarTemporizador() {
+        pausadoTemporizador = false;
     }
 }

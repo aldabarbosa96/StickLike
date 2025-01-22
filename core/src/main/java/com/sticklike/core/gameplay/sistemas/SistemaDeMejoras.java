@@ -47,7 +47,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("PUÑO DURO", "Aumenta el daño del Ataque Básico un 6%", () -> jugador.aumentarDanyo(1.06f)));
         todasLasMejoras.add(new Mejora("MULTI PROYECTIL", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1)));
         //todasLasMejoras.add(new Mejora("CALCETÍN LEFADO","Añade un nuevo proyectil. Un calcetín acartonado que daña a todos los enemigos a su paso", () ->jugador.obtieneCalcetines()));
-        // todo --> implementar mejora calcetines
+        // todo --> implementar AtaqueCalcetin como una posible mejora
     }
 
     /**
@@ -88,9 +88,10 @@ public class SistemaDeMejoras {
             throw new IllegalArgumentException("La mejora seleccionada no es válida.");
         }
 
+        System.out.println("Mejora aplicada: " + mejoraSeleccionada.getNombreMejora());
         mejoraSeleccionada.apply();
 
-        System.out.println("Mejora aplicada: " + mejoraSeleccionada.getNombreMejora());
+
         mejorasMostradas.clear();
     }
 }

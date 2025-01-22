@@ -19,7 +19,7 @@ public class MovimientoRegla {
     public MovimientoRegla(float velocidadEnFaseDisparo, float velocidadRotacion) {
         this.velocidadEnFaseDisparo = velocidadEnFaseDisparo;
         this.velocidadRotacion = velocidadRotacion;
-        this.tiempoCarga = 0.8f; // Tiempo que permanece girando en la fase de carga
+        this.tiempoCarga = 0.3f; // Tiempo que permanece girando en la fase de carga
         this.enFaseCarga = true;
         this.enFaseDisparo = false;
         this.direccionCalculada = false;
@@ -103,7 +103,7 @@ public class MovimientoRegla {
         // Reinicia el estado para comenzar de nuevo
         enFaseCarga = true;
         enFaseDisparo = false;
-        tiempoCarga = 1f; // Reinicia el tiempo de carga
+        tiempoCarga = 0.6f; // Reinicia el tiempo de carga
         direccionCalculada = false; // Reseteamos la dirección para el próximo disparo
     }
 }
