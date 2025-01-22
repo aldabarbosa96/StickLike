@@ -77,7 +77,7 @@ public class PopUpMejoras {
         float w = GestorConstantes.POPUP_WIDTH;
         float h = GestorConstantes.POPUP_HEIGHT;
         upgradeWindow.setSize(w, h);
-        upgradeWindow.setPosition((GestorConstantes.VIRTUAL_WIDTH - w) / 2f, (GestorConstantes.VIRTUAL_HEIGHT - h + 150f) / 2f);
+        upgradeWindow.setPosition((GestorConstantes.VIRTUAL_WIDTH - w)  / 2f, (GestorConstantes.VIRTUAL_HEIGHT - h + 150f) / 2f);
         upgradeWindow.padTop(75f);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
@@ -92,11 +92,11 @@ public class PopUpMejoras {
                 + GestorConstantes.POPUP_FOOTER, tbs);
 
             btn.getLabel().setWrap(true);
-            btn.getLabel().setAlignment(Align.left);
+            btn.getLabel().setAlignment(Align.center);
             btn.getLabel().setColor(Color.BLACK);
 
             upgradeWindow.row().pad(0);
-            upgradeWindow.add(btn).width(350).pad(10);
+            upgradeWindow.add(btn).width(350).pad(7);
         }
 
         // Listener de teclado para 1,2,3

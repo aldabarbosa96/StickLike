@@ -26,8 +26,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f; // Mueve el HUD completo 30 píxeles hacia abajo
     public static final float POPUP_WIDTH = 400;
     public static final float POPUP_HEIGHT = 350;
-    public static final String POPUP_HEADER = "\n\n<< < U P G R A D E S > >>";
-    public static final String POPUP_FOOTER = "\n";
+    public static final String POPUP_HEADER = "\n\n<< < U P G R A D E S > >> ";
+    public static final String POPUP_FOOTER = "   \n";
 
 
     // Configuración del jugador

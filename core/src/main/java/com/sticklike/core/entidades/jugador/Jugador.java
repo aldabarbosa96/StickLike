@@ -145,6 +145,8 @@ public class Jugador {
         if (intervaloDisparo < 0.1f) intervaloDisparo = 0.1f;
 
         velocidadAtaque = 1 / intervaloDisparo;
+       pedrada.setIntervaloDisparo(intervaloDisparo);
+
     }
 
     public void aumentarProyectilesPorDisparo(int amount) {
