@@ -34,7 +34,7 @@ public class ControladorAudio {
 
     public void pausarMusica() {
         if (musicaFondo != null) {
-            musicaFondo.pause();
+            musicaFondo.setVolume(0.05f);
         }
     }
 
