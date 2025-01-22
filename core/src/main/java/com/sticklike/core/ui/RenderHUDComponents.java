@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+
 public class RenderHUDComponents {
     private ShapeRenderer shapeRenderer;
     private GlyphLayout layout;

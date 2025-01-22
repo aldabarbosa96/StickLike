@@ -9,10 +9,9 @@ public class AnimacionesEnemigos {
 
     public void aplicarParpadeo(Sprite sprite) {
         if (enParpadeo) {
-            sprite.setColor(1, 0, 0, 0.8f); // Aplica color semitransparente
+            sprite.setColor(1, 0, 0, 0.8f); // Aplica color rojo semitransparente
         }
     }
-
 
     public void restaurarColor(Sprite sprite, Color originalColor) {
         if (enParpadeo) {
@@ -34,7 +33,6 @@ public class AnimacionesEnemigos {
             }
         }
     }
-
 
     public boolean estaEnParpadeo() {
         return enParpadeo;

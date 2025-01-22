@@ -44,8 +44,8 @@ public class HUD {
 
     /**
      * Dibuja el HUD estático en la parte inferior de la pantalla:
-     * fondo, barras de salud y XP, iconos, texto de nivel, etc.
-     * todo -- > falta implementar elementos en el HUD (stats player, mejoras obtenidas...)
+     * fondo, barras de salud y XP, iconos, texto de nivel, etc. desde la clase RenderHUDComponents
+     * todo -- > falta implementar elementos en el HUD (iconos stats player, mejoras obtenidas...)
      */
     public void renderizarHUD(float delta) {
         hudViewport.apply();
