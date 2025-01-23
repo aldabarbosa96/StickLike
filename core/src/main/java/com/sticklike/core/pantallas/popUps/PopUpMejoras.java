@@ -1,4 +1,4 @@
-package com.sticklike.core.pantallas;
+package com.sticklike.core.pantallas.popUps;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
+import com.sticklike.core.pantallas.juego.VentanaJuego;
 import com.sticklike.core.utilidades.GestorConstantes;
 
 import java.util.List;

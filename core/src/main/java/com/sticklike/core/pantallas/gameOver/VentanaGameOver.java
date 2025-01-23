@@ -1,4 +1,4 @@
-package com.sticklike.core.pantallas;
+package com.sticklike.core.pantallas.gameOver;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.pantallas.juego.VentanaJuego;
 import com.sticklike.core.utilidades.GestorConstantes;
 
 /**

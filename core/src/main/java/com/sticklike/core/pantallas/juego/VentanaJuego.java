@@ -1,4 +1,4 @@
-package com.sticklike.core.pantallas;
+package com.sticklike.core.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,6 +22,8 @@ import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+import com.sticklike.core.pantallas.popUps.PopUpMejoras;
+import com.sticklike.core.pantallas.gameOver.VentanaGameOver;
 import com.sticklike.core.ui.HUD;
 import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.ui.RenderHUDComponents;
@@ -239,7 +241,7 @@ public class VentanaJuego implements Screen {
                 if (xp instanceof ObjetoXpCaca) {
                     sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
                 } else if (xp instanceof ObjetoVida) {
-                    jugador.setVidaJugador(jugador.getVidaJugador() + (float) Math.random() * (15 - 5) + 5);
+                    jugador.setVidaJugador(jugador.getVidaJugador() + (float) Math.random() * (12 - 3 + 1) + 3);
                     if (jugador.getVidaJugador() >= jugador.getMaxVidaJugador()) {
                         jugador.setVidaJugador(jugador.getMaxVidaJugador());
                     }

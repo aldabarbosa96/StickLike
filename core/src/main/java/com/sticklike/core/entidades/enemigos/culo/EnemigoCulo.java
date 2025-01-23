@@ -31,12 +31,19 @@ public class EnemigoCulo implements Enemigo {
      * @param velocidadEnemigo Velocidad de movimiento del enemigo.
      */
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
-        sprite = new Sprite(GestorDeAssets.enemigoCulo);
+        esConOjo();
         sprite.setSize(37, 32);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadEnemigo);
         this.animacionesEnemigos = new AnimacionesEnemigos();
+    }
+
+    private void esConOjo(){
+        float random = (float) (Math.random() * 10);
+        if (random >= 5)sprite = new Sprite(GestorDeAssets.enemigoCulo);
+        else sprite = new Sprite(GestorDeAssets.enemigoCuloOjo);
+        sprite.setSize(37, 32);
     }
 
     /**

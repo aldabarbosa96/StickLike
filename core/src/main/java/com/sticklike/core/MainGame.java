@@ -2,7 +2,7 @@ package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
 import com.sticklike.core.audio.ControladorAudio;
-import com.sticklike.core.pantallas.VentanaJuego;
+import com.sticklike.core.pantallas.juego.VentanaJuego;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**

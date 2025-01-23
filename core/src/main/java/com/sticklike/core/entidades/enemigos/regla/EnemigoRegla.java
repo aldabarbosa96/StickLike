@@ -32,13 +32,23 @@ public class EnemigoRegla implements Enemigo {
      * @param velocidadEnemigo velocidad de movimiento del enemigo
      */
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
-        sprite = new Sprite(GestorDeAssets.enemigoRegla);
-        sprite.setSize(6, 38);
+        esCruzada();
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoEnemigo = new MovimientoRegla(velocidadEnemigo,666);
         this.orthographicCamera = orthographicCamera;
         this.animacionesEnemigos = new AnimacionesEnemigos();
+    }
+
+    private void esCruzada(){
+        float random = (float) (Math.random() * 10);
+        if (random >= 5){
+            sprite = new Sprite(GestorDeAssets.enemigoReglaCruzada);
+            sprite.setSize(32, 32);
+        } else {
+            sprite = new Sprite(GestorDeAssets.enemigoRegla);
+            sprite.setSize(6,32);
+        }
     }
 
     /**

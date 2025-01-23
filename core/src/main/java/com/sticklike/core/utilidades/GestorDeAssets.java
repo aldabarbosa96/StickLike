@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class GestorDeAssets {
 
     // Texturas individuales
-    public static Texture stickman, enemigoCulo,enemigoRegla, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableCaca, recolectableVida;
+    public static Texture stickman, enemigoCulo,enemigoCuloOjo,enemigoRegla,enemigoReglaCruzada, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableCaca, recolectableVida;
     //Texturas por lotes
     public static Array<Texture> borrones; // Lista de texturas de borrón
 
@@ -44,7 +44,9 @@ public class GestorDeAssets {
     public static void cargarTexturas() {
         stickman = new Texture("jugador/01stickman.png");
         enemigoCulo = new Texture("enemigos/01culo.png");
+        enemigoCuloOjo = new Texture("enemigos/04culoOjo.png");
         enemigoRegla = new Texture("enemigos/02regla.png");
+        enemigoReglaCruzada = new Texture("enemigos/03reglaCruzada.png");
         corazonVida = new Texture("hud/life.png");
         armaPiedra = new Texture("armas/01piedra.png");
         armaCalcetin = new Texture("armas/02calcetin.png");

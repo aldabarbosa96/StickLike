@@ -8,7 +8,7 @@ import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.pantallas.VentanaJuego;
+import com.sticklike.core.pantallas.juego.VentanaJuego;
 import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
@@ -98,7 +98,7 @@ public class ControladorEnemigos {
         } while (Math.sqrt(Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2)) < minDistance);
 
         float randomSpeed = 35f + (float) Math.random() * 45f;
-        String[] tiposDeEnemigos = {"CULO","CULO","CULO", "REGLA"};
+        String[] tiposDeEnemigos = {"CULO","CULO","CULO","CULO","CULO", "REGLA"};
         String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
 
         // Crear y añadir el enemigo
@@ -124,7 +124,7 @@ public class ControladorEnemigos {
             case "CULO":
                 return new EnemigoCulo(x, y, jugador, velocidad * 1.7f);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * 2.5f, orthographicCamera);
+                return new EnemigoRegla(x, y, jugador, velocidad * 3f, orthographicCamera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/

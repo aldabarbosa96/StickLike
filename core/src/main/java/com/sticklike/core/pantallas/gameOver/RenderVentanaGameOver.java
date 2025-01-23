@@ -1,4 +1,4 @@
-package com.sticklike.core.pantallas;
+package com.sticklike.core.pantallas.gameOver;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
