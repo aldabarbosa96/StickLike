@@ -46,7 +46,7 @@ public class ControladorAudio {
 
     public void reproducirEfecto() { // todo --> manejar efectos con un efectLoader o algo similar en un futuro
         if (efectoSonido != null) {
-            efectoSonido.play(0.85f); // Mínimo 0.1f, máximo 1.0f
+            efectoSonido.play(0.9f); // Mínimo 0.1f, máximo 1.0f
         }
     }
     public void reproducirEfecto2() {
@@ -57,7 +57,7 @@ public class ControladorAudio {
 
     public void reproducirEfecto3() {
         if (efectoSonido3 != null) {
-            efectoSonido3.play(0.50f);
+            efectoSonido3.play(0.70f);
         }
     }
 

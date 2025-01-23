@@ -26,7 +26,7 @@ public class RenderVentanaJuego {
 
     // Máximo de reintentos para colocar un borrón sin conflicto
     private static final int MAX_ATTEMPTS = 5;
-    private static final int CANTIDAD_BORRONES = 2000;
+    private static final int CANTIDAD_BORRONES = 1000;
 
     // Límites "mapa" para generar borrones
     private static final float MAP_MIN_X = -10000;

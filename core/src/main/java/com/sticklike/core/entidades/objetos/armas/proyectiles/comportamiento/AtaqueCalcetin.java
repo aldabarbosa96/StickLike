@@ -9,8 +9,8 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
  */
 public class AtaqueCalcetin {
 
-    private final int NUM_CALCETINES = 3;
-    private final float ANGULO_SEPARACION = 120f;
+    private final int NUM_CALCETINES = 4;
+    private final float ANGULO_SEPARACION = 90f;
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo = 1.0f; // Intervalo en segundos (ajustar según necesidad)
 
@@ -42,10 +42,11 @@ public class AtaqueCalcetin {
             float direccionX = (float) Math.cos(radianes);
             float direccionY = (float) Math.sin(radianes);
 
-            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY, 125f, 1.5f);
+            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY, 175f, 1.8f);
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
-            controladorAudio.reproducirEfecto3();
+
         }
+        controladorAudio.reproducirEfecto3();
     }
 
     /**

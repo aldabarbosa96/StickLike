@@ -39,7 +39,7 @@ public class RenderVentanaGameOver {
         font.draw(spriteBatch, gameOverText, textX, textY);
 
         font.getData().setScale(1f);
-        String optionsText = "Press R to Restart or Q to Quit";
+        String optionsText = "Pulsa R para Restart o Q para Quit";
         layout.setText(font, optionsText);
 
         textWidth = layout.width;

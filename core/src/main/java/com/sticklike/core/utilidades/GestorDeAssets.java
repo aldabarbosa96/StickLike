@@ -56,7 +56,7 @@ public class GestorDeAssets {
 
         borrones.add(new Texture("fondo/borronPolla.png"));
         borrones.add(new Texture("fondo/borronPolla2.png"));
-        borrones.add(new Texture("fondo/borronPolla3.png"));
+        borrones.add(new Texture("fondo/borronPezpolla.png"));
         borrones.add(new Texture("fondo/borronTetasText.png"));
         borrones.add(new Texture("fondo/borronAnalText.png"));
         borrones.add(new Texture("fondo/borronTontoQuienLoLea.png"));
@@ -66,9 +66,9 @@ public class GestorDeAssets {
         borrones.add(new Texture("fondo/borronTeleranya.png"));
         borrones.add(new Texture("fondo/borronFollar.png"));
         borrones.add(new Texture("fondo/borronPizza2.png"));
-        borrones.add(new Texture("fondo/borronELBARTO.png"));
+        borrones.add(new Texture("fondo/borronELBERTO.png"));
         borrones.add(new Texture("fondo/borronColgado.png"));
-        borrones.add(new Texture("fondo/borronPezpolla.png"));
+        borrones.add(new Texture("fondo/borronSmile.png"));
 
     }
 

@@ -49,12 +49,11 @@ public class MovimientoCulo {
         float difX = playerPosX - enemyPosX;
         float difY = playerPosY - enemyPosY;
 
-        // Añadimos un desplazamiento aleatorio para simular movimiento diagonal.
-        float randomOffsetX = (float) Math.random() * 100 - 65;
+        // Añadimos un desplazamiento aleatorio para simular movimiento diagonal. todo --> valorar si se mantiene en un futuro (genera un efecto de vibración extraño)
+       /* float randomOffsetX = (float) Math.random() * 100 - 65;
         float randomOffsetY = (float) Math.random() * 100 - 50;
-
         difX += randomOffsetX;
-        difY += randomOffsetY;
+        difY += randomOffsetY;*/
 
         float distance = (float) Math.sqrt(difX * difX + difY * difY);
 
@@ -66,7 +65,7 @@ public class MovimientoCulo {
         float movementX = difX * velocidadEnemigo * delta;
         float movementY = difY * velocidadEnemigo * delta;
 
-        // Cálculamos la posición vertical final del enemigo de manera aleatoria en base al sprite del jugador
+        // Cálculamos la posición vertical final del enemigo de manera aleatoria basándonos en el sprite del jugador
         sprite.translate(movementX,movementY);
     }
 

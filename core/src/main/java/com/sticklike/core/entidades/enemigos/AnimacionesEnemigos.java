@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos.culo;
+package com.sticklike.core.entidades.enemigos;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;

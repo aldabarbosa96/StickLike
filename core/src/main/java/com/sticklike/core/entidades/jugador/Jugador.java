@@ -42,7 +42,7 @@ public class Jugador {
     private float danyoAtaqueJugador;
     private float velocidadAtaque;
     private float intervaloDisparo;
-    private int proyectilesPorDisparo = 1;
+    private int proyectilesPorDisparo = 2;
     private boolean estaVivo;
     private Direction direccionActual = Direction.IDLE;
 

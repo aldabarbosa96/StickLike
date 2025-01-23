@@ -26,7 +26,7 @@ public class ProyectilCalcetin implements Proyectiles {
         this.distanciaRecorrida = 0f;
 
         sprite = new Sprite(textura);
-        sprite.setSize(GestorConstantes.PROJECTILE_SIZE + 15f, GestorConstantes.PROJECTILE_SIZE + 15f);
+        sprite.setSize(GestorConstantes.PROJECTILE_SIZE + 14f, GestorConstantes.PROJECTILE_SIZE + 16f);
         sprite.setPosition(x, y);
         this.velocidadProyectil = velocidadProyectil;
         this.direccionX = direccionX;

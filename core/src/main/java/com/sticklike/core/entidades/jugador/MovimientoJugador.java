@@ -10,9 +10,8 @@ import com.sticklike.core.entidades.jugador.InputsJugador.ResultadoInput;
 public class MovimientoJugador {
 
     /**
-     * Método principal que calcula y aplica el movimiento del jugador,
-     * en base al input y a la velocidad. Se encarga también de la
-     * normalización al moverse en diagonal.
+     * Método principal que calcula y aplica el movimiento del jugador, en base al input y a la velocidad.
+     * Se encarga también de la normalización al moverse en diagonal
      *
      * @param jugador   referencia al Jugador, para acceder a su velocidad y sprite
      * @param resInput  resultado del input (movX, movY, etc.)

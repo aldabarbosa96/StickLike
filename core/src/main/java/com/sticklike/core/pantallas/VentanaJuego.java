@@ -148,7 +148,7 @@ public class VentanaJuego implements Screen {
         renderVentanaJuego = new RenderVentanaJuego((int) GestorConstantes.GRID_CELL_SIZE);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
-        sistemaDeEventos = new SistemaDeEventos(renderHUDComponents,controladorEnemigos);
+        sistemaDeEventos = new SistemaDeEventos(renderHUDComponents,controladorEnemigos, sistemaDeNiveles);
 
     }
 
@@ -262,11 +262,8 @@ public class VentanaJuego implements Screen {
     /**
      * Ajusta la cámara para que siga al jugador, con offset vertical.
      */
-    public void actualizarPosCamara() {
-        camara.position.set(
-            jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
-            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y,
-            0);
+    public void actualizarPosCamara() {camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
+            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y, 0);
 
         camara.update();
     }

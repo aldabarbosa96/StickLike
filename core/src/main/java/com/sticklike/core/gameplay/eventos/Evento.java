@@ -1,14 +1,18 @@
 package com.sticklike.core.gameplay.eventos;
 
+import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+
 public class Evento implements Comparable<Evento> {
     private Runnable efectoEvento;
     private String nombreEvento;
-    private float tiempoActivacion;
+    private int nivelRequerido;
+    private SistemaDeNiveles sistemaDeNiveles;
 
-    public Evento(String nombreEvento, float tiempoActivacion, Runnable efectoEvento) {
+    public Evento(String nombreEvento, SistemaDeNiveles sistemaDeNiveles, Runnable efectoEvento, int nivelRequerido) {
         this.nombreEvento = nombreEvento;
         this.efectoEvento = efectoEvento;
-        this.tiempoActivacion = tiempoActivacion;
+        this.nivelRequerido = nivelRequerido;
+        this.sistemaDeNiveles = sistemaDeNiveles;
     }
 
     public void applyEvento() {
@@ -19,12 +23,13 @@ public class Evento implements Comparable<Evento> {
         return nombreEvento;
     }
 
-    public float getTiempoActivacion() {
-        return tiempoActivacion;
+    public int getNivelRequerido() {
+        return nivelRequerido;
     }
 
     @Override
-    public int compareTo(Evento otroEvento) {
-        return Float.compare(this.tiempoActivacion, otroEvento.tiempoActivacion);
+    public int compareTo(Evento otro) {
+        // Ordenar de menor a mayor nivelRequerido
+        return Integer.compare(this.nivelRequerido, otro.nivelRequerido);
     }
 }
