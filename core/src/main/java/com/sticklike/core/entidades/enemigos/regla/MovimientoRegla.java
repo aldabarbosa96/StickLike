@@ -2,61 +2,63 @@ package com.sticklike.core.entidades.enemigos.regla;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.sticklike.core.entidades.enemigos.MovimientoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 
-public class MovimientoRegla {
+/**
+ * Movimiento de "Regla": rota constantemente y realiza una fase de carga antes de dispararse en línea recta
+ */
+public class MovimientoRegla extends MovimientoBase {
     private final float velocidadEnFaseDisparo;
     private final float velocidadRotacion;
     private float tiempoCarga;
     private boolean enFaseCarga;
     private boolean enFaseDisparo;
 
-    // Variables para la trayectoria en línea recta
     private float direccionX;
     private float direccionY;
     private boolean direccionCalculada;
+    private OrthographicCamera camara;
 
-    public MovimientoRegla(float velocidadEnFaseDisparo, float velocidadRotacion) {
+    public MovimientoRegla(float velocidadEnFaseDisparo, float velocidadRotacion, OrthographicCamera camara, boolean canKnockback) {
+        super(canKnockback);
         this.velocidadEnFaseDisparo = velocidadEnFaseDisparo;
         this.velocidadRotacion = velocidadRotacion;
-        this.tiempoCarga = 0.25f; // Tiempo que permanece girando en la fase de carga
+        this.camara = camara;
+
+        this.tiempoCarga = 0.25f;
         this.enFaseCarga = true;
         this.enFaseDisparo = false;
         this.direccionCalculada = false;
     }
 
-    public void actualizarMovimiento(float delta, Sprite sprite, Jugador jugador, OrthographicCamera camara) {
+    @Override
+    protected void actualizarMovimientoEspecifico(float delta, Sprite sprite, Jugador jugador) {
         // Rotación siempre activa
         sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
         sprite.rotate(velocidadRotacion * delta);
 
         if (enFaseCarga) {
-            // Fase de carga: solo rota y espera
             tiempoCarga -= delta;
             if (tiempoCarga <= 0) {
-                // Cambiamos a la fase de disparo
                 enFaseCarga = false;
                 enFaseDisparo = true;
-                direccionCalculada = false; // Reseteamos la dirección
+                direccionCalculada = false;
             }
         } else if (enFaseDisparo) {
-            // Fase de disparo: movimiento rápido hacia el jugador
             dispararHaciaJugador(delta, sprite, jugador);
 
-            // Si sale de los límites, reinicia la animación
-            if (fueraDeLimites(sprite, camara)) {
+            if (fueraDeLimites(sprite)) {
                 reiniciar(sprite);
             }
         }
     }
-
 
     private void dispararHaciaJugador(float delta, Sprite sprite, Jugador jugador) {
         if (!direccionCalculada) {
             calcularDireccion(sprite, jugador);
         }
 
-        // Movimiento rápido en la dirección calculada
         float movementX = direccionX * velocidadEnFaseDisparo * delta;
         float movementY = direccionY * velocidadEnFaseDisparo * delta;
 
@@ -64,7 +66,6 @@ public class MovimientoRegla {
     }
 
     private void calcularDireccion(Sprite sprite, Jugador jugador) {
-        // Calculamos la dirección inicial hacia el jugador
         float enemyPosX = sprite.getX();
         float enemyPosY = sprite.getY();
 
@@ -73,7 +74,6 @@ public class MovimientoRegla {
 
         float difX = playerPosX - enemyPosX;
         float difY = playerPosY - enemyPosY;
-
         float distance = (float) Math.sqrt(difX * difX + difY * difY);
 
         if (distance != 0) {
@@ -84,8 +84,7 @@ public class MovimientoRegla {
         direccionCalculada = true;
     }
 
-    private boolean fueraDeLimites(Sprite sprite, OrthographicCamera camara) {
-        // Verifica si el sprite está fuera de los límites visibles de la cámara
+    private boolean fueraDeLimites(Sprite sprite) {
         float x = sprite.getX();
         float y = sprite.getY();
 
@@ -98,12 +97,10 @@ public class MovimientoRegla {
             y < bottomLimit - sprite.getHeight() || y > topLimit + sprite.getHeight();
     }
 
-
     private void reiniciar(Sprite sprite) {
-        // Reinicia el estado para comenzar de nuevo
         enFaseCarga = true;
         enFaseDisparo = false;
-        tiempoCarga = 0.6f; // Reinicia el tiempo de carga
-        direccionCalculada = false; // Reseteamos la dirección para el próximo disparo
+        tiempoCarga = 0.6f;
+        direccionCalculada = false;
     }
 }

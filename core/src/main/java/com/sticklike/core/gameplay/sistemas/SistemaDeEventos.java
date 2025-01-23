@@ -1,7 +1,9 @@
 package com.sticklike.core.gameplay.sistemas;
 
+import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
 import com.sticklike.core.gameplay.eventos.Evento;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
 
 import java.util.PriorityQueue;
@@ -31,15 +33,29 @@ public class SistemaDeEventos {
     }
 
     private void eventoAumentaEnemigos1() {
-        controladorEnemigos.setIntervaloDeAparicion(0.55f);
+        controladorEnemigos.setIntervaloDeAparicion(0.5f);
+        incrementarVelocidadCulo(1.35f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
+        System.out.println("Velocidad enemigo aumentada un 35%");
     }
 
     private void eventoAumentaEnemigos2() {
         controladorEnemigos.setIntervaloDeAparicion(0.35f);
+        incrementarVelocidadCulo(1.75f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
+        System.out.println("Velocidad enemigo aumentada un 65%");
+
+    }
+    private void incrementarVelocidadCulo(float factorMultiplicador) {
+        for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
+            if (enemigo instanceof EnemigoCulo) {
+                EnemigoCulo culo = (EnemigoCulo) enemigo;
+                float velocidadActual = culo.getVelocidad();
+                culo.setVelocidad(velocidadActual * factorMultiplicador);
+            }
+        }
     }
 
     public void actualizar() {

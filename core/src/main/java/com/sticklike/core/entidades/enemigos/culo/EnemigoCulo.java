@@ -17,12 +17,16 @@ import com.sticklike.core.interfaces.Enemigo;
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = 30f;
+    private float vidaEnemigo = 15f;
     private MovimientoCulo movimientoCulo;
     private float coolDownDanyo = 1f;
     private float temporizadorDanyo = 0f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
+    private float knockbackVelX = 0f;
+    private float knockbackVelY = 0f;
+    private float knockbackTimer = 0f;
+    private float knockbackDuration = 0.2f;
     private AnimacionesEnemigos animacionesEnemigos;
 
     /**
@@ -34,16 +38,21 @@ public class EnemigoCulo implements Enemigo {
         esConOjo();
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoCulo = new MovimientoCulo(velocidadEnemigo);
+        this.movimientoCulo = new MovimientoCulo(velocidadEnemigo,true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void esConOjo(){
+    private void esConOjo() {
         float random = (float) (Math.random() * 10);
-        if (random >= 5)sprite = new Sprite(GestorDeAssets.enemigoCulo);
+        if (random >= 5) sprite = new Sprite(GestorDeAssets.enemigoCulo);
         else sprite = new Sprite(GestorDeAssets.enemigoCuloOjo);
         sprite.setSize(37, 32);
     }
+    @Override
+    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
+        movimientoCulo.aplicarKnockback(fuerza, dirX, dirY);
+    }
+
 
     /**
      * Renderiza el enemigo en pantalla, si no está muerto.
@@ -52,38 +61,37 @@ public class EnemigoCulo implements Enemigo {
      */
     @Override
     public void renderizar(SpriteBatch batch) {
-        if (!estaMuerto()) {
-            // Guarda el color original del sprite
+        // 1) Comprobamos si seguimos “vivo” o en fade
+        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
+
+        if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
 
-            // Aplica el parpadeo si está activo
+            // 2) Aplicar parpadeo rojo si procede
             if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.aplicarParpadeo(sprite);
+                animacionesEnemigos.aplicarParpadeo1(sprite);
+            } else {
+
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());
             }
 
-            // Dibuja el sprite una sola vez
+            // 3) Dibujar
             sprite.draw(batch);
 
-            // Restaura el color original
-            if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.restaurarColor(sprite, originalColor);
-            }
+            // 4) Restaurar color
+            animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
+
 
     @Override
     public void actualizar(float delta) {
-        if (!estaMuerto()) {
-            movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
-        }
-
-        if (temporizadorDanyo > 0) {
-            temporizadorDanyo -= delta;
-        }
-
-        // Actualiza el estado del parpadeo
         animacionesEnemigos.actualizarParpadeo(delta);
+        animacionesEnemigos.actualizarFade(delta);
+        movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
     }
+
+
 
     @Override
     public void activarParpadeo(float duracion) {
@@ -107,7 +115,15 @@ public class EnemigoCulo implements Enemigo {
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
+        if (vidaEnemigo <= 0) {
+            // En lugar de marcarlo como “muerto” final, activamos el fade
+            if (!animacionesEnemigos.estaEnFade()) {
+                animacionesEnemigos.iniciarFadeMuerte(0.2f);
+                animacionesEnemigos.activarParpadeo(0.15f);
+            }
+        }
     }
+
 
     @Override
     public boolean haSoltadoXP() {
@@ -126,8 +142,11 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        return vidaEnemigo <= 0;
+        // Si la vida es <= 0 y ya finalizó el fade, lo consideramos muerto
+        return (vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade());
     }
+
+
 
     @Override
     public void dispose() {
@@ -158,4 +177,15 @@ public class EnemigoCulo implements Enemigo {
     public void setProcesado(boolean procesado) {
         this.procesado = procesado;
     }
+
+    // En EnemigoCulo:
+
+    public float getVelocidad() {
+        return movimientoCulo.getVelocidadEnemigo();
+    }
+
+    public void setVelocidad(float nuevaVelocidad) {
+        movimientoCulo.setVelocidadEnemigo(nuevaVelocidad);
+    }
+
 }

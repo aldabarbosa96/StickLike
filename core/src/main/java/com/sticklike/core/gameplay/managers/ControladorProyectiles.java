@@ -4,18 +4,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
- * La clase ProjectileManager gestiona todos los proyectiles disparados
- * por el jugador (o potencialmente por enemigos en el futuro)
+ * La clase ProjectileManager gestiona todos los proyectiles disparados por el jugador (o potencialmente por enemigos en el futuro)
  * Se encarga de:
  * <p>
  * Añadir proyectiles nuevos con dirección y objetivo definidos
@@ -26,6 +26,7 @@ import java.util.Iterator;
 public class ControladorProyectiles {
     private ArrayList<Proyectiles> proyectiles;
     private float multiplicadorDeDanyo = 1.0f;
+    private Map<Enemigo, Float> ultimaYTexto = new HashMap<>();
 
 
     /**
@@ -52,46 +53,73 @@ public class ControladorProyectiles {
         Iterator<Proyectiles> iterator = proyectiles.iterator();
 
         while (iterator.hasNext()) {
-            Proyectiles proyectiles = iterator.next();
-            proyectiles.actualizarProyectil(delta);
+            Proyectiles proyectil = iterator.next();
+            proyectil.actualizarProyectil(delta);
 
+            // Para cada enemigo, verificamos colisión
             for (Enemigo enemigo : enemies) {
-                // Verificamos impacto solo si el proyectil sigue activo y el enemigo no está muerto
-                if (!enemigo.estaMuerto() && proyectiles.isProyectilActivo() &&
-                    enemigo.esGolpeadoPorProyectil(proyectiles.getX(), proyectiles.getY(), proyectiles.getRectanguloColision().width, proyectiles.getRectanguloColision().height)) {
+                if (!enemigo.estaMuerto() && proyectil.isProyectilActivo() &&
+                    enemigo.esGolpeadoPorProyectil(
+                        proyectil.getX(),
+                        proyectil.getY(),
+                        proyectil.getRectanguloColision().width,
+                        proyectil.getRectanguloColision().height)) {
 
-                    if (proyectiles instanceof ProyectilPiedra) { // todo --> manejar el daño de cada proyectil de manera independiente
-                        // Cálculo del daño con el multiplicador aplicado
-                        float baseDamage = 21 + (float) Math.random() * 12; // Daño base aleatorio entre 21 y 33
-                        float damage = baseDamage * multiplicadorDeDanyo;
+                    // 1) Calcular daño
+                    float baseDamage = proyectil.getBaseDamage();
+                    float damage = baseDamage * multiplicadorDeDanyo;
 
-                        enemigo.reducirSalud(damage);
-                        enemigo.activarParpadeo(0.2f);
+                    // 2) Aplicar daño y parpadeo
+                    enemigo.reducirSalud(damage);
+                    enemigo.activarParpadeo(0.15f);
 
-                        // Creamos un texto flotante con la cantidad de daño infligido
-                        dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f
-                        ));
-                    } else if (proyectiles instanceof ProyectilCalcetin) {
-                        // Cálculo del daño con el multiplicador aplicado
-                        float baseDamage = 15 + (float) Math.random() * 11; // Daño base aleatorio entre 15 y 26
-                        float damage = baseDamage * multiplicadorDeDanyo;
+                    // CENTRO del enemigo
+                    float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
+                    float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
 
-                        enemigo.reducirSalud(damage);
-                        enemigo.activarParpadeo(0.2f);
+                    // CENTRO del proyectil (su bounding rectangle)
+                    float projCenterX = proyectil.getX() + proyectil.getRectanguloColision().width / 2f;
+                    float projCenterY = proyectil.getY() + proyectil.getRectanguloColision().height / 2f;
 
-                        // Creamos un texto flotante con la cantidad de daño infligido
-                        dmgText.add(new TextoFlotante(String.valueOf((int) damage), enemigo.getX() + enemigo.getSprite().getWidth() / 2, enemigo.getY() + enemigo.getSprite().getHeight() + 20, 0.5f
-                        ));
+                    // Vector de dirección (enemigo - proyectil)
+                    float difX = enemyCenterX - projCenterX;
+                    float difY = enemyCenterY - projCenterY;
+
+                    float dist = (float) Math.sqrt(difX * difX + difY * difY);
+                    if (dist != 0) {
+                        difX /= dist; // normalizamos
+                        difY /= dist;
                     }
 
-                    // El proyectil impacta y se desactiva
-                    proyectiles.desactivarProyectil();
-                    break; // No verificamos más enemigos para este proyectil
+                    float fuerza = proyectil.getKnockbackForce();
+                    enemigo.aplicarKnockback(fuerza, difX, difY);
+
+                    float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
+                    float baseY = enemigo.getY() + enemigo.getSprite().getHeight() + 12f;
+
+                    // Si ya existe un valor en ultimaYTexto para este enemigo, incrementa
+                    Float ultimaY = ultimaYTexto.get(enemigo);
+                    if (ultimaY != null) {
+                        baseY = ultimaY + 12;
+                    }
+
+                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, baseY, 0.5f);
+                    dmgText.add(damageText);
+
+                    // Actualiza el valor en el map
+                    ultimaYTexto.put(enemigo, baseY);
+
+
+
+                    // 5) Desactivar proyectil
+                    proyectil.desactivarProyectil();
+                    break; // Salimos del loop de enemigos
                 }
             }
 
-            if (!proyectiles.isProyectilActivo()) {
-                iterator.remove(); // Eliminar proyectiles inactivos
+            // Si se desactivó el proyectil, lo eliminamos
+            if (!proyectil.isProyectilActivo()) {
+                iterator.remove();
             }
         }
     }
@@ -120,7 +148,7 @@ public class ControladorProyectiles {
     public void reset() { // Reseteamos de proyectiles para evitar interferencias y poder gestionar el nuevo estado de estos
         // todo --> se deberá gestionar desde aquí en vez de desde dispose (así podrán mantenerse algunas mejoras si existe la posibilidad de vida extra)
         proyectiles.clear();
-        multiplicadorDeDanyo = 1.0f;
+        //multiplicadorDeDanyo = 1.0f;
     }
 
     public void dispose() {

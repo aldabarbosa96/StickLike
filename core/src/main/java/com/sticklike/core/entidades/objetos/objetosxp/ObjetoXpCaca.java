@@ -17,8 +17,8 @@ public class ObjetoXpCaca implements ObjetosXP {
 
     private float x, y;
 
-    private final float distanciaActivacion = 60f;
-    private final float velocidadAtraccion = 200f;
+    private final float distanciaActivacion = 65f;
+    private final float velocidadAtraccion = 250f;
 
 
     public ObjetoXpCaca(float x, float y) {

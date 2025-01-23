@@ -20,4 +20,5 @@ public interface Enemigo {
     boolean isProcesado();
     void activarParpadeo(float duracion);
     void dispose();
+    void aplicarKnockback(float fuerza, float dirX, float dirY);
 }

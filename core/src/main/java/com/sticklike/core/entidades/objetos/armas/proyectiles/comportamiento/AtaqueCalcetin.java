@@ -12,7 +12,7 @@ public class AtaqueCalcetin {
     private final int NUM_CALCETINES = 4;
     private final float ANGULO_SEPARACION = 90f;
     private float temporizadorDisparo = 0f;
-    private float intervaloDisparo = 1.0f; // Intervalo en segundos (ajustar según necesidad)
+    private float intervaloDisparo = 1.0f;
 
     /**
      * Constructor de AtaqueCalcetin.
@@ -36,8 +36,12 @@ public class AtaqueCalcetin {
         float startY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
 
         // Calculamos los ángulos para los calcetines
+        float anguloInicial = 45f;
+        float anguloSeparacion = 90f;
+
+        // Calculamos los ángulos para los calcetines
         for (int i = 0; i < NUM_CALCETINES; i++) {
-            float angulo = i * ANGULO_SEPARACION;
+            float angulo = anguloInicial + i * anguloSeparacion;
             float radianes = (float) Math.toRadians(angulo);
             float direccionX = (float) Math.cos(radianes);
             float direccionY = (float) Math.sin(radianes);

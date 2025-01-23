@@ -8,51 +8,60 @@ import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
+/**
+ * Proyectil tipo "Calcetín".
+ * Define su propio daño base y fuerza de empuje (mayor que la piedra).
+ */
 public class ProyectilCalcetin implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
-    private float velocidadProyectil = GestorConstantes.PROJECTILE_SPEED;
+    private float velocidadProyectil = GestorConstantes.PROJECTILE_CALCETIN_SPEED;
     private float multiplicadorVelocidad;
-    private float direccionX, direccionY;
     private float distanciaMaxima;
     private float distanciaRecorrida;
     private boolean proyectilActivo;
+    private float direccionX, direccionY;
+    private float rotationSpeed = 720f;
 
-    public ProyectilCalcetin(float x, float y,float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad) {
+    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY,
+                             float velocidadProyectil, float multiplicadorVelocidad) {
         if (textura == null) {
             textura = GestorDeAssets.armaCalcetin;
         }
-        this.distanciaMaxima = 250f;
+        this.distanciaMaxima = 300f;
         this.distanciaRecorrida = 0f;
 
         sprite = new Sprite(textura);
-        sprite.setSize(GestorConstantes.PROJECTILE_SIZE + 14f, GestorConstantes.PROJECTILE_SIZE + 16f);
+        sprite.setSize(GestorConstantes.PROJECTILE_SIZE + 12f, GestorConstantes.PROJECTILE_SIZE + 16f);
         sprite.setPosition(x, y);
+        sprite.setOriginCenter();
+
         this.velocidadProyectil = velocidadProyectil;
         this.direccionX = direccionX;
         this.direccionY = direccionY;
-        this.proyectilActivo = true;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
-
+        this.proyectilActivo = true;
     }
 
     @Override
     public void actualizarProyectil(float delta) {
-        if (!isProyectilActivo()) return;
+        if (!proyectilActivo) return;
 
         float desplazamiento = velocidadProyectil * multiplicadorVelocidad * delta;
         sprite.translate(direccionX * desplazamiento, direccionY * desplazamiento);
         distanciaRecorrida += desplazamiento;
 
-        // Verificar si ha alcanzado la distancia máxima
+        sprite.rotate(rotationSpeed * delta);
+
+        // Verificar si ha recorrido su distancia máxima
         if (distanciaRecorrida >= distanciaMaxima) {
-            desactivarProyectil(); // Desactivar el proyectil
+            desactivarProyectil();
         }
     }
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
-        if (proyectilActivo){
+        if (proyectilActivo) {
             sprite.draw(batch);
         }
     }
@@ -85,5 +94,19 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public void desactivarProyectil() {
         proyectilActivo = false;
+    }
+
+    // =============== MÉTODOS NUEVOS: DAÑO Y KNOCKBACK ===============
+
+    @Override
+    public float getBaseDamage() {
+        // daño base entre 15 y 26
+        return 15 + (float) Math.random() * 11;
+    }
+
+    @Override
+    public float getKnockbackForce() {
+        // El calcetín empuja más que la piedra
+        return 100f;
     }
 }

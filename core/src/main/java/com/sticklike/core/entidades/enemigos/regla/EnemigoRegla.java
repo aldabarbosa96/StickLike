@@ -18,14 +18,19 @@ import com.sticklike.core.interfaces.Enemigo;
 public class EnemigoRegla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = 100f; // Vida inicial
-    private MovimientoRegla movimientoEnemigo;
+    private float vidaEnemigo = 95f;
+    private MovimientoRegla movimientoRegla;
     private OrthographicCamera orthographicCamera;
     private float coolDownDanyo = 1.5f;
     private float temporizadorDanyo = 0f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
+    private float knockbackVelX = 0f;
+    private float knockbackVelY = 0f;
+    private float knockbackTimer = 0f;
+    private float knockbackDuration = 0.2f;
     private AnimacionesEnemigos animacionesEnemigos;
+
     /**
      * @param x,y              coordenadas gestionan el spawn de los enemigos
      * @param jugador          necesitamos acceder para calcular distancias y movimiento
@@ -35,20 +40,25 @@ public class EnemigoRegla implements Enemigo {
         esCruzada();
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoEnemigo = new MovimientoRegla(velocidadEnemigo,666);
+        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, false);
         this.orthographicCamera = orthographicCamera;
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void esCruzada(){
+    private void esCruzada() {
         float random = (float) (Math.random() * 10);
-        if (random >= 5){
+        if (random >= 5) {
             sprite = new Sprite(GestorDeAssets.enemigoReglaCruzada);
             sprite.setSize(32, 32);
         } else {
             sprite = new Sprite(GestorDeAssets.enemigoRegla);
-            sprite.setSize(6,32);
+            sprite.setSize(6, 32);
         }
+    }
+
+    @Override
+    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
+        movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     /**
@@ -58,35 +68,30 @@ public class EnemigoRegla implements Enemigo {
      */
     @Override
     public void renderizar(SpriteBatch batch) {
-        if (!estaMuerto()) {
-            // Guarda el color original del sprite
+        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
+
+        if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
 
-            // Aplica el parpadeo si está activo
             if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.aplicarParpadeo(sprite);
+                animacionesEnemigos.aplicarParpadeo2(sprite);
+            } else {
+
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());
             }
 
-            // Dibuja el sprite una sola vez
             sprite.draw(batch);
 
-            // Restaura el color original
-            if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.restaurarColor(sprite, originalColor);
-            }
+            animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
 
     @Override
     public void actualizar(float delta) {
-        if (!estaMuerto()) {
-            movimientoEnemigo.actualizarMovimiento(delta, sprite, jugador,orthographicCamera);
-        }
-
-        if (temporizadorDanyo > 0) {
-            temporizadorDanyo -= delta;
-        }
         animacionesEnemigos.actualizarParpadeo(delta);
+        animacionesEnemigos.actualizarFade(delta);
+        movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
+
     }
 
     @Override
@@ -96,9 +101,10 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public ObjetoVida sueltaObjetoXP() {
-        if (!haSoltadoXP) {
+        float corazonONo = (float) (Math.random());
+        if (!haSoltadoXP && corazonONo < 0.25f) { // 25% de probabilidades de que suelte vida
             haSoltadoXP = true;
-            return new ObjetoVida(this.getX(), this.getY()); // Suelta el objeto XP específico
+            return new ObjetoVida(this.getX(), this.getY());
         }
         return null;
     }
@@ -106,6 +112,12 @@ public class EnemigoRegla implements Enemigo {
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
+        if (vidaEnemigo <= 0) {
+            if (!animacionesEnemigos.estaEnFade()) {
+                //animacionesEnemigos.iniciarFadeMuerte(0.2f); no queda tan bien el fade-out en la regla
+                animacionesEnemigos.activarParpadeo(0.15f);
+            }
+        }
     }
 
     @Override
@@ -125,7 +137,7 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        return vidaEnemigo <= 0;
+        return (vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade());
     }
 
     @Override
@@ -157,6 +169,7 @@ public class EnemigoRegla implements Enemigo {
     public void activarParpadeo(float duracion) {
         animacionesEnemigos.activarParpadeo(duracion);
     }
+
     @Override
     public void setProcesado(boolean procesado) {
         this.procesado = procesado;

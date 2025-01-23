@@ -9,26 +9,17 @@ import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
- * La clase Projectile representa un proyectil disparado por el jugador
- * (en un futuro también por enemigos). Se encarga de gestionar su
- * posición, movimiento y colisiones
+ * Representa un proyectil tipo "Piedra" lanzado por el jugador.
+ * Define su propio daño base y fuerza de empuje.
  */
 public class ProyectilPiedra implements Proyectiles {
-    // Textura estática compartida por todos los proyectiles
     private static Texture textura;
     private Sprite sprite;
-    private float velocidadProyectil = GestorConstantes.PROJECTILE_SPEED;
+    private float velocidadProyectil = GestorConstantes.PROJECTILE_PIEDRA_SPEED;
     private float multiplicadorVelocidad;
     private float direccionX, direccionY;
     private boolean proyectilActivo;
 
-    /**
-     * Crea un nuevo proyectil con los parámetros indicados
-     *
-     * @param x,y posición inicial X,Y del proyectil
-     * @param direccionX,direccionY componente X,Y de la dirección normalizada
-     * @param multiplicadorVelocidad factor de velocidad extra (para alterar la velocidad de los proyectiles)
-     */
     public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad) {
         if (textura == null) {
             textura = GestorDeAssets.armaPiedra;
@@ -43,24 +34,16 @@ public class ProyectilPiedra implements Proyectiles {
         this.multiplicadorVelocidad = multiplicadorVelocidad;
     }
 
-    /**
-     * Actualiza la posición del proyectil en base a su velocidad y dirección
-     *
-     * @param delta tiempo transcurrido desde el último frame
-     */
     @Override
     public void actualizarProyectil(float delta) {
         if (proyectilActivo) {
-            // Aplicamos el multiplicador de velocidad
-            sprite.translate(direccionX * velocidadProyectil * multiplicadorVelocidad * delta, direccionY * velocidadProyectil * multiplicadorVelocidad * delta);
+            sprite.translate(
+                direccionX * velocidadProyectil * multiplicadorVelocidad * delta,
+                direccionY * velocidadProyectil * multiplicadorVelocidad * delta
+            );
         }
     }
 
-    /**
-     * Dibuja el proyectil, si está activo
-     *
-     * @param batch SpriteBatch para renderizar
-     */
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
@@ -68,16 +51,9 @@ public class ProyectilPiedra implements Proyectiles {
         }
     }
 
-    public void desactivarProyectil() { // Para cuando colisiona
-        proyectilActivo = false;
-    }
-
-    public boolean isProyectilActivo() {
-        return proyectilActivo;
-    }
-
     @Override
     public void dispose() {
+        // No liberamos la textura globalmente, se podría manejar de otra forma.
         textura = null;
     }
 
@@ -93,6 +69,30 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        return sprite.getBoundingRectangle(); // Devuelve el rectángulo de colisión para gestionar los impactos.
+        return sprite.getBoundingRectangle();
+    }
+
+    @Override
+    public boolean isProyectilActivo() {
+        return proyectilActivo;
+    }
+
+    @Override
+    public void desactivarProyectil() {
+        proyectilActivo = false;
+    }
+
+    // =============== MÉTODOS NUEVOS: DAÑO Y KNOCKBACK ===============
+
+    @Override
+    public float getBaseDamage() {
+        // Ej: daño base aleatorio entre 21 y 33
+        return 21 + (float)Math.random() * 10;
+    }
+
+    @Override
+    public float getKnockbackForce() {
+        // Ej: la piedra empuja con fuerza moderada
+        return 75f;
     }
 }

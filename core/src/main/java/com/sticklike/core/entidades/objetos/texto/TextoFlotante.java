@@ -54,6 +54,7 @@ public class TextoFlotante {
     public void actualizarTextoFlotante(float delta){
         duracion -= delta;
         y += delta * 30;
+        x += delta * 30;
     }
     public void dispose() {
         fuente.dispose();

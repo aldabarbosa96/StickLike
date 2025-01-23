@@ -2,6 +2,7 @@ package com.sticklike.core.gameplay.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.regla.EnemigoRegla;
 import com.sticklike.core.interfaces.Enemigo;
@@ -19,8 +20,7 @@ import com.sticklike.core.utilidades.GestorConstantes;
  * Renderizar los enemigos en el {@link SpriteBatch}
  * Gestionar la liberación de recursos al final
  * <p>
- * Interactúa con el {@link Jugador} para evitar spawnear enemigos
- * demasiado cerca de él y también para comprobar si el jugador ha muerto
+ * Interactúa con el {@link Jugador} para evitar spawnear enemigos demasiado cerca de él y también para comprobar si el jugador ha muerto
  */
 public class ControladorEnemigos {
     private VentanaJuego ventanaJuego;
@@ -28,8 +28,12 @@ public class ControladorEnemigos {
     private Jugador jugador;
     private OrthographicCamera camera;
     private float intervaloDeAparicion, temporizadorDeAparicion;
+    private float randomSpeed = 0;
+    private int spawnCounter = 0;
     private static final float BORDER_MARGIN = GestorConstantes.BORDER_SPAWN_MARGIN;
     private Array<Enemigo> enemigosAEliminar = new Array<>();
+    private String[] tiposDeEnemigos = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego ventanaJuego) {
         this.enemigos = new Array<>();
@@ -81,27 +85,43 @@ public class ControladorEnemigos {
     }
 
     private void spawnEnemigo() {
-        float minDistance = 250f;
-        float x, y;
-
+        spawnCounter++;
+        // Centro del jugador
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
-        float leftLimit = playerX - VentanaJuego.WORLD_WIDTH / 2 + BORDER_MARGIN;
-        float rightLimit = playerX + VentanaJuego.WORLD_WIDTH / 2 - BORDER_MARGIN;
-        float bottomLimit = playerY - VentanaJuego.WORLD_HEIGHT / 2 + BORDER_MARGIN;
-        float topLimit = playerY + VentanaJuego.WORLD_HEIGHT / 2 - BORDER_MARGIN;
+        // Calcula los límites visibles de la cámara (o un poco más, si quieres que aparezcan “fuera” de la pantalla)
+        float leftLimit = playerX - VentanaJuego.WORLD_WIDTH / 2 - 50;
+        float rightLimit = playerX + VentanaJuego.WORLD_WIDTH / 2 - 50;
+        float bottomLimit = playerY - VentanaJuego.WORLD_HEIGHT / 2 - 50;
+        float topLimit = playerY + VentanaJuego.WORLD_HEIGHT / 2 - 50;
 
-        do {
-            x = leftLimit + (float) (Math.random() * (rightLimit - leftLimit));
-            y = bottomLimit + (float) (Math.random() * (topLimit - bottomLimit));
-        } while (Math.sqrt(Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2)) < minDistance);
+        float x = 0, y = 0;
 
-        float randomSpeed = 35f + (float) Math.random() * 45f;
-        String[] tiposDeEnemigos = {"CULO","CULO","CULO","CULO","CULO", "REGLA"};
+        // Elegir aleatoriamente un borde: 0=arriba, 1=abajo, 2=izquierda, 3=derecha
+        int side = MathUtils.random(3);
+        switch (side) {
+            case 0: // arriba
+                y = topLimit;
+                x = MathUtils.random(leftLimit, rightLimit);
+                break;
+            case 1: // abajo
+                y = bottomLimit;
+                x = MathUtils.random(leftLimit, rightLimit);
+                break;
+            case 2: // izquierda
+                x = leftLimit;
+                y = MathUtils.random(bottomLimit, topLimit);
+                break;
+            case 3: // derecha
+                x = rightLimit;
+                y = MathUtils.random(bottomLimit, topLimit);
+                break;
+
+        }
+
+        randomSpeed = 35f + (float) Math.random() * 45f;
         String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
-
-        // Crear y añadir el enemigo
         enemigos.add(fabricaEnemigos(tipoElegido, x, y, jugador, randomSpeed, camera));
     }
 
@@ -122,9 +142,9 @@ public class ControladorEnemigos {
     public static Enemigo fabricaEnemigos(String tipo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera orthographicCamera) {
         switch (tipo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad * 1.7f);
+                return new EnemigoCulo(x, y, jugador, velocidad * 1.2f);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * 5f, orthographicCamera);
+                return new EnemigoRegla(x, y, jugador, velocidad * 3.8f, orthographicCamera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/
@@ -141,4 +161,9 @@ public class ControladorEnemigos {
     public float getIntervaloDeAparicion() {
         return intervaloDeAparicion;
     }
+
+    public void setTiposDeEnemigos(String[] nuevosTipos) {
+        this.tiposDeEnemigos = nuevosTipos;
+    }
+
 }

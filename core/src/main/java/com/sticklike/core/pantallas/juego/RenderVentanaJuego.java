@@ -26,7 +26,7 @@ public class RenderVentanaJuego {
 
     // Máximo de reintentos para colocar un borrón sin conflicto
     private static final int MAX_ATTEMPTS = 5;
-    private static final int CANTIDAD_BORRONES = 1000;
+    private static final int CANTIDAD_BORRONES = 1750; // todo --> dibujar más borrones
 
     // Límites "mapa" para generar borrones
     private static final float MAP_MIN_X = -10000;
@@ -38,15 +38,15 @@ public class RenderVentanaJuego {
     //  Clase interna: datos borrón
     // ================================
     private static class Borron {
-        Texture textura; // Textura del borrón
-        float x, y;      // Posición en el mapa
-        float scale;     // Escala (tamaño relativo)
-        float rotation;  // Rotación en grados
+        Texture textura;
+        float posX, posY;
+        float scale;
+        float rotation;
 
-        public Borron(Texture textura, float x, float y, float scale, float rotation) {
+        public Borron(Texture textura, float posX, float posY, float scale, float rotation) {
             this.textura = textura;
-            this.x = x;
-            this.y = y;
+            this.posX = posX;
+            this.posY = posY;
             this.scale = scale;
             this.rotation = rotation;
         }
@@ -55,7 +55,6 @@ public class RenderVentanaJuego {
     private Array<Borron> borrones;
 
     /**
-     * Constructor:
      * Crea el ShapeRenderer para la cuadrícula.
      * Genera borrones aleatorios sin que se solapen y sin que la misma textura esté demasiado cerca
      *
@@ -67,6 +66,82 @@ public class RenderVentanaJuego {
 
         // Genera la lista de borrones aleatorios
         generarBorronesRandom(CANTIDAD_BORRONES);
+    }
+
+
+    /**
+     * Render principal de la ventana de juego
+     */
+    public void renderizarVentana(float delta, VentanaJuego ventanaJuego, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
+                                  Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
+        // 1) Limpiamos la pantalla con un color gris claro
+        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
+        spriteBatch.setProjectionMatrix(camara.combined);
+
+        // 3) Dibujar los borrones
+        spriteBatch.begin();
+        for (Borron b : borrones) {
+            float drawWidth  = b.textura.getWidth()  * b.scale;
+            float drawHeight = b.textura.getHeight() * b.scale;
+
+            float originX = drawWidth  / 2f;
+            float originY = drawHeight / 2f;
+
+            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f,
+                b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
+        }
+        spriteBatch.end();
+
+        // 4) Renderizar la cuadrícula
+        ventanaJuego.actualizarPosCamara();
+        this.renderizarLineasCuadricula(camara);
+
+        // 5) Dibujo de entidades (jugador, enemigos, proyectiles, etc.)
+        spriteBatch.begin();
+        jugador.aplicarRenderizadoAlJugador(spriteBatch);
+        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
+
+
+        for (ObjetosXP xp : objetosXP) {
+            xp.renderizarObjetoXP(spriteBatch);
+        }
+        controladorEnemigos.renderizarEnemigos(spriteBatch);
+
+        for (TextoFlotante txt : textosDanyo) {
+            txt.renderizarTextoFlotante(spriteBatch);
+        }
+        spriteBatch.end();
+
+        // 6) Renderizar HUD
+        hud.renderizarHUD(delta);
+    }
+
+    /**
+     * Renderiza las líneas de la cuadrícula en base a la posición de la cámara
+     */
+    public void renderizarLineasCuadricula(OrthographicCamera camera) {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0.64f, 0.80f, 0.86f, 1);
+
+        float startX = camera.position.x - camera.viewportWidth / 2;
+        float endX   = camera.position.x + camera.viewportWidth / 2;
+        float startY = camera.position.y - camera.viewportHeight / 2;
+        float endY   = camera.position.y + camera.viewportHeight / 2;
+
+        // Líneas verticales
+        for (float x = startX - (startX % tamanyoCeldas); x <= endX; x += tamanyoCeldas) {
+            shapeRenderer.line(x, startY, x, endY);
+        }
+        // Líneas horizontales
+        for (float y = startY - (startY % tamanyoCeldas); y <= endY; y += tamanyoCeldas) {
+            shapeRenderer.line(startX, y, endX, y);
+        }
+
+        shapeRenderer.end();
     }
 
     /**
@@ -102,7 +177,7 @@ public class RenderVentanaJuego {
                 boolean solapado = seSolapaConOtroBorron(x, y, borrWidth, borrHeight);
 
                 // 6) Comprobar distancia mínima con la misma textura
-                boolean demasiadoCerca = estaDemasiadoCercaMismoBorrón(tex, x, y, scale);
+                boolean demasiadoCerca = estaDemasiadoCercaMismoBorron(tex, x, y, scale);
 
                 if (!solapado && !demasiadoCerca) {
                     nuevoBorron = new Borron(tex, x, y, scale, rotation);
@@ -139,25 +214,24 @@ public class RenderVentanaJuego {
             float bw = b.textura.getWidth() * b.scale;
             float bh = b.textura.getHeight() * b.scale;
 
-            float leftB   = b.x;
-            float rightB  = b.x + bw;
-            float bottomB = b.y;
-            float topB    = b.y + bh;
+            float leftB   = b.posX;
+            float rightB  = b.posX + bw;
+            float bottomB = b.posY;
+            float topB    = b.posY + bh;
 
             // Comprobación de overlap entre dos rectángulos A y B
             if (!(rightA < leftB || leftA > rightB || topA < bottomB || bottomA > topB)) {
-                // se solapan
-                return true;
+                return true; // se solapan
+
             }
         }
         return false;
     }
 
     /**
-     * Comprueba si ya existe un borrón con la misma textura a menos de MIN_DIST_SAME_TEXTURE, considerando la escala
-     * y posición (aprox. centros)
+     * Comprueba si ya existe un borrón con la misma textura a menos de MIN_DIST_SAME_TEXTURE, considerando la escala y posición
      */
-    private boolean estaDemasiadoCercaMismoBorrón(Texture tex, float x, float y, float scale) {
+    private boolean estaDemasiadoCercaMismoBorron(Texture tex, float x, float y, float scale) {
         // Centro del borrón candidate
         float cx  = x + tex.getWidth()  * scale / 2f;
         float cy  = y + tex.getHeight() * scale / 2f;
@@ -165,99 +239,20 @@ public class RenderVentanaJuego {
         for (Borron b : borrones) {
             if (b.textura == tex) {
                 // Centro del borrón existente
-                float bx  = b.x + b.textura.getWidth()  * b.scale / 2f;
-                float by  = b.y + b.textura.getHeight() * b.scale / 2f;
+                float bx  = b.posX + b.textura.getWidth()  * b.scale / 2f;
+                float by  = b.posY + b.textura.getHeight() * b.scale / 2f;
 
                 float distX = bx - cx;
                 float distY = by - cy;
                 float sqDist = distX * distX + distY * distY;
 
                 if (sqDist < (MIN_DIST_SAME_TEXTURE * MIN_DIST_SAME_TEXTURE)) {
-                    return true; // Está demasiado cerca
+                    return true; // Si está demasiado cerca
                 }
             }
         }
         return false;
     }
-
-    /**
-     * Render principal de la ventana de juego.
-     */
-    public void renderizarVentana(float delta, VentanaJuego ventanaJuego, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
-                                  Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
-        // 1) Limpiamos la pantalla con un color gris claro
-        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
-        spriteBatch.setProjectionMatrix(camara.combined);
-
-        // 3) Dibujar los borrones
-        spriteBatch.begin();
-        for (Borron b : borrones) {
-            float drawWidth  = b.textura.getWidth()  * b.scale;
-            float drawHeight = b.textura.getHeight() * b.scale;
-
-            float originX = drawWidth  / 2f;
-            float originY = drawHeight / 2f;
-
-            spriteBatch.draw(b.textura, b.x, b.y, originX, originY, drawWidth, drawHeight, 1f, 1f,
-                b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
-        }
-        spriteBatch.end();
-
-        // 4) Renderizar la cuadrícula
-        ventanaJuego.actualizarPosCamara();
-        this.renderizarLineasCuadricula(camara);
-
-        // 5) Dibujo de entidades (jugador, enemigos, proyectiles, etc.)
-        spriteBatch.begin();
-        jugador.aplicarRenderizadoAlJugador(spriteBatch);
-        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
-
-
-        for (ObjetosXP xp : objetosXP) {
-            xp.renderizarObjetoXP(spriteBatch);
-        }
-        controladorEnemigos.renderizarEnemigos(spriteBatch);
-
-        for (TextoFlotante txt : textosDanyo) {
-            txt.renderizarTextoFlotante(spriteBatch);
-        }
-        spriteBatch.end();
-
-        // 6) Renderizar HUD
-        hud.renderizarHUD(delta);
-    }
-
-    /**
-     * Renderiza las líneas de la cuadrícula en base a la posición de la cámara.
-     */
-    public void renderizarLineasCuadricula(OrthographicCamera camera) {
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.64f, 0.80f, 0.86f, 1);
-
-        float startX = camera.position.x - camera.viewportWidth / 2;
-        float endX   = camera.position.x + camera.viewportWidth / 2;
-        float startY = camera.position.y - camera.viewportHeight / 2;
-        float endY   = camera.position.y + camera.viewportHeight / 2;
-
-        // Líneas verticales
-        for (float x = startX - (startX % tamanyoCeldas); x <= endX; x += tamanyoCeldas) {
-            shapeRenderer.line(x, startY, x, endY);
-        }
-        // Líneas horizontales
-        for (float y = startY - (startY % tamanyoCeldas); y <= endY; y += tamanyoCeldas) {
-            shapeRenderer.line(startX, y, endX, y);
-        }
-
-        shapeRenderer.end();
-    }
-
-    /**
-     * Libera recursos del renderer.
-     */
     public void dispose() {
         shapeRenderer.dispose();
     }
