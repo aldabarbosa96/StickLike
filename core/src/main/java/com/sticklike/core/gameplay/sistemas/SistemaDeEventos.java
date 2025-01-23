@@ -31,13 +31,13 @@ public class SistemaDeEventos {
     }
 
     private void eventoAumentaEnemigos1() {
-        controladorEnemigos.setIntervaloDeAparicion(0.6f);
+        controladorEnemigos.setIntervaloDeAparicion(0.55f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
     }
 
     private void eventoAumentaEnemigos2() {
-        controladorEnemigos.setIntervaloDeAparicion(0.4f);
+        controladorEnemigos.setIntervaloDeAparicion(0.35f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
     }
@@ -48,8 +48,7 @@ public class SistemaDeEventos {
             Evento siguiente = eventos.peek();
             if (sistemaDeNiveles.getNivelActual() >= siguiente.getNivelRequerido()) {
                 Evento evento = eventos.poll();
-                System.out.println("Activando evento: " + evento.getNombreEvento()
-                    + " [nivel requerido: " + evento.getNivelRequerido() + "]");
+                System.out.println("Activando evento: " + evento.getNombreEvento() + " [nivel requerido: " + evento.getNivelRequerido() + "]");
                 evento.applyEvento();
             }
         }

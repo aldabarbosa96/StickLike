@@ -32,7 +32,6 @@ public class EnemigoCulo implements Enemigo {
      */
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         esConOjo();
-        sprite.setSize(37, 32);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadEnemigo);

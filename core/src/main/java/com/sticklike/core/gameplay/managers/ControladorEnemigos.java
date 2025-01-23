@@ -124,7 +124,7 @@ public class ControladorEnemigos {
             case "CULO":
                 return new EnemigoCulo(x, y, jugador, velocidad * 1.7f);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * 3f, orthographicCamera);
+                return new EnemigoRegla(x, y, jugador, velocidad * 5f, orthographicCamera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/

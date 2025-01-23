@@ -19,7 +19,7 @@ public class MovimientoRegla {
     public MovimientoRegla(float velocidadEnFaseDisparo, float velocidadRotacion) {
         this.velocidadEnFaseDisparo = velocidadEnFaseDisparo;
         this.velocidadRotacion = velocidadRotacion;
-        this.tiempoCarga = 0.3f; // Tiempo que permanece girando en la fase de carga
+        this.tiempoCarga = 0.25f; // Tiempo que permanece girando en la fase de carga
         this.enFaseCarga = true;
         this.enFaseDisparo = false;
         this.direccionCalculada = false;
