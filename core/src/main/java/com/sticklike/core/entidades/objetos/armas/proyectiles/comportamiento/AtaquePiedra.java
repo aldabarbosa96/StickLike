@@ -44,7 +44,7 @@ public class AtaquePiedra {
         // Buscamos un objetivo en rango
         Enemigo target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
-        controladorAudio.reproducirEfecto2();
+        controladorAudio.reproducirEfecto("lanzarPiedra",0.7f);
 
         // Obtenemos coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;

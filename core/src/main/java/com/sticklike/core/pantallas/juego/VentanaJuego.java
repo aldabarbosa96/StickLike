@@ -195,7 +195,7 @@ public class VentanaJuego implements Screen {
     private void pausarMusica(){ // genera además un efecto de sonido "wow"
         controladorAudio.pausarMusica();
         if (!efectoSonidoPopUpReproducido) {
-            controladorAudio.reproducirEfecto6();
+            controladorAudio.reproducirEfecto("upgrade",0.5f);
             efectoSonidoPopUpReproducido = true;
         }
     }

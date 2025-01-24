@@ -27,11 +27,11 @@ public class ColisionesJugador {
     public void recibeDanyo(float cantidad, Jugador jugador, ControladorAudio controladorAudio) {
         if (jugador.estaVivo()) return;
         jugador.restarVidaJugador(cantidad);
-        controladorAudio.reproducirEfecto();
+        controladorAudio.reproducirEfecto("recibeDanyo",0.9f);
 
 
         if (jugador.getVidaJugador() <= 0) {
-            controladorAudio.reproducirEfecto4();
+            controladorAudio.reproducirEfecto("muerteJugador",0.7f);
             jugador.setVidaJugador(0);
             jugador.muere();
 

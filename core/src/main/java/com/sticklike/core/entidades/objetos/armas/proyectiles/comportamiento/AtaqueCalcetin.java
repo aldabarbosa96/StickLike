@@ -50,7 +50,7 @@ public class AtaqueCalcetin {
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
 
         }
-        controladorAudio.reproducirEfecto3();
+        controladorAudio.reproducirEfecto("lanzarCalcetin",0.75f);
     }
 
     /**

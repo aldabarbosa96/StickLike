@@ -4,31 +4,35 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ControladorAudio {
     private Music musicaFondo;
-    private Sound efectoSonido, efectoSonido2, efectoSonido3, efectoSonido4, efectoSonido5, efectoSonido6
-        ;
+    private Map<String, Sound> efectosSonido;
 
     public ControladorAudio() {
+        efectosSonido = new HashMap<>();
         cargarRecursos();
     }
 
     private void cargarRecursos() {
         // Cargar música de fondo
         musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo2.mp3"));
-        efectoSonido = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/recibeDaño.wav"));
-        efectoSonido2 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoLanzarPiedra.wav"));
-        efectoSonido3 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoCalcetines.wav"));
-        efectoSonido4 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteJugador.wav"));
-        efectoSonido5 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerObjetoXPCaca.wav"));
-        efectoSonido6 = Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoUpgrade.wav"));
+        musicaFondo.setLooping(true);
+        musicaFondo.setVolume(0.135f);
+
+        efectosSonido.put("recibeDanyo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/recibeDaño.wav")));
+        efectosSonido.put("lanzarPiedra", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoLanzarPiedra.wav")));
+        efectosSonido.put("lanzarCalcetin", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoCalcetines.wav")));
+        efectosSonido.put("muerteJugador", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteJugador.wav")));
+        efectosSonido.put("recogerXP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerObjetoXPCaca.wav")));
+        efectosSonido.put("upgrade", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoUpgrade.wav")));
     }
 
     public void reproducirMusica() {
         if (musicaFondo != null) {
-            musicaFondo.setLooping(true); // Hacer que la música se repita en bucle
-            musicaFondo.setVolume(0.135f); // Ajustar el volumen (0 = silencio, 1 = máximo)
-            musicaFondo.play();
+           musicaFondo.play();
         }
     }
 
@@ -44,45 +48,19 @@ public class ControladorAudio {
         }
     }
 
-    public void reproducirEfecto() { // todo --> manejar efectos con una clase interna EffectLoader o algo similar en un futuro
-        if (efectoSonido != null) {
-            efectoSonido.play(0.9f); // Mínimo 0.1f, máximo 1.0f
+    public void reproducirEfecto(String nombreEfecto, float volumen) { // todo --> usar try/catch en un futuro
+        Sound efecto = efectosSonido.get(nombreEfecto);
+        if (efecto != null) {
+            efecto.play(volumen);
         }
     }
-    public void reproducirEfecto2() {
-        if (efectoSonido2 != null) {
-            efectoSonido2.play(0.70f);
-        }
-    }
-
-    public void reproducirEfecto3() {
-        if (efectoSonido3 != null) {
-            efectoSonido3.play(0.70f);
-        }
-    }
-
-    public void reproducirEfecto4() {
-        if (efectoSonido4 != null) {
-            efectoSonido4.play(0.70f);
-        }
-    }
-    public void reproducirEfecto5() {
-        if (efectoSonido5 != null) {
-            efectoSonido5.play(2f);
-        }
-    }
-    public void reproducirEfecto6( ) {
-
-        if (efectoSonido6 != null) {
-            efectoSonido6.play(0.5f);
-        }
-    }
-        public void dispose() {
+    public void dispose() {
         if (musicaFondo != null) {
             musicaFondo.dispose();
         }
-        if (efectoSonido != null) {
-            efectoSonido.dispose();
+        for (Sound efecto : efectosSonido.values()) {
+            efecto.dispose();
         }
+        efectosSonido.clear();
     }
 }
