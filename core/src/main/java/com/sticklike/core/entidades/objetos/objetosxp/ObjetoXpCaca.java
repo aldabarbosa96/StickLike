@@ -75,7 +75,7 @@ public class ObjetoXpCaca implements ObjetosXP {
 
     @Override
     public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogeXP",1f);
+        controladorAudio.reproducirEfecto("recogerXP",1f);
         recolectado = true;
         sprite = null;
     }

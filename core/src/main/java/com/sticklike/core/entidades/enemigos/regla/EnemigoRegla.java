@@ -42,7 +42,7 @@ public class EnemigoRegla implements Enemigo {
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void esCruzada() {
+    private void esCruzada() { // todo --> declarar números mágicos como constantes (revisar método)
         float random = (float) (Math.random() * 10);
         if (random >= 5) {
             sprite = new Sprite(GestorDeAssets.enemigoReglaCruzada);

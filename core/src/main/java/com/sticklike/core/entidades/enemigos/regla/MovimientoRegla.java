@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.enemigos.MovimientoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
- * Movimiento de "Regla": rota constantemente y realiza una fase de carga antes de dispararse en línea recta
+ * Movimiento de "Regla": rota constantemente y realiza una fase de carga antes de dispararse en línea recta en la dirección del jugador
  */
 public class MovimientoRegla extends MovimientoBase {
     private final float velocidadEnFaseDisparo;
@@ -26,7 +27,7 @@ public class MovimientoRegla extends MovimientoBase {
         this.velocidadRotacion = velocidadRotacion;
         this.camara = camara;
 
-        this.tiempoCarga = 0.25f;
+        this.tiempoCarga = GestorConstantes.TIEMPO_CARGA_REGLA;
         this.enFaseCarga = true;
         this.enFaseDisparo = false;
         this.direccionCalculada = false;
@@ -100,7 +101,7 @@ public class MovimientoRegla extends MovimientoBase {
     private void reiniciar(Sprite sprite) {
         enFaseCarga = true;
         enFaseDisparo = false;
-        tiempoCarga = 0.6f;
+        tiempoCarga = GestorConstantes.TIEMPO_CARGA_REGLA;
         direccionCalculada = false;
     }
 }

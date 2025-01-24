@@ -17,8 +17,8 @@ import java.lang.Math;
  */
 public class AtaquePiedra {
 
-    private float temporizadorDisparo = 0f;
-    private float intervaloDisparo = 0.5f; // Intervalo en segundos (ajustar según necesidad)
+    private float temporizadorDisparo = GestorConstantes.TEMPORIZADOR_DISPARO;
+    private float intervaloDisparo;
 
     /**
      * Constructor de AtaquePiedra.
@@ -44,7 +44,7 @@ public class AtaquePiedra {
         // Buscamos un objetivo en rango
         Enemigo target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
-        controladorAudio.reproducirEfecto("lanzarPiedra",0.7f);
+        controladorAudio.reproducirEfecto("lanzarPiedra",GestorConstantes.AUDIO_PIEDRA);
 
         // Obtenemos coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;

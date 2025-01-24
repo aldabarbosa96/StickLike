@@ -36,7 +36,7 @@ public class ColisionesJugador {
             jugador.muere();
 
         } else {
-            jugador.getAnimacionesJugador().activarParpadeo(0.2f); // tiempo parpadeo
+            jugador.getAnimacionesJugador().activarParpadeoJugador(0.2f);
         }
     }
 

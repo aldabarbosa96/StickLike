@@ -19,8 +19,6 @@ public class ControladorAudio {
     private void cargarRecursos() {
         // Cargar música de fondo
         musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo2.mp3"));
-        musicaFondo.setLooping(true);
-        musicaFondo.setVolume(0.135f);
 
         efectosSonido.put("recibeDanyo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/recibeDaño.wav")));
         efectosSonido.put("lanzarPiedra", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoLanzarPiedra.wav")));
@@ -32,7 +30,9 @@ public class ControladorAudio {
 
     public void reproducirMusica() {
         if (musicaFondo != null) {
-           musicaFondo.play();
+            musicaFondo.setLooping(true);
+            musicaFondo.setVolume(0.135f);
+            musicaFondo.play();
         }
     }
 

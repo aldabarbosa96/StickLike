@@ -3,16 +3,18 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
  * La clase AtaqueCalcetin maneja la lógica para disparar calcetines en todas las direcciones.
  */
 public class AtaqueCalcetin {
 
-    private final int NUM_CALCETINES = 4;
-    private final float ANGULO_SEPARACION = 90f;
-    private float temporizadorDisparo = 0f;
-    private float intervaloDisparo = 1.0f;
+    private final int numCalcetines = GestorConstantes.NUM_CALCETINES_INICIALES;
+    private final float anguloSeparacion = GestorConstantes.ANGULO_SEPARACION;
+    private final float anguloInicial = GestorConstantes.ANGULO_INCIAL;
+    private float temporizadorDisparo = GestorConstantes.TEMPORIZADOR_DISPARO;
+    private float intervaloDisparo;
 
     /**
      * Constructor de AtaqueCalcetin.
@@ -36,21 +38,18 @@ public class AtaqueCalcetin {
         float startY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
 
         // Calculamos los ángulos para los calcetines
-        float anguloInicial = 45f;
-        float anguloSeparacion = 90f;
-
-        // Calculamos los ángulos para los calcetines
-        for (int i = 0; i < NUM_CALCETINES; i++) {
+        for (int i = 0; i < numCalcetines; i++) {
             float angulo = anguloInicial + i * anguloSeparacion;
             float radianes = (float) Math.toRadians(angulo);
             float direccionX = (float) Math.cos(radianes);
             float direccionY = (float) Math.sin(radianes);
 
-            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY, 175f, 1.8f);
+            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY,
+                GestorConstantes.PROJECTILE_CALCETIN_SPEED, GestorConstantes.SPEED_MULT);
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
 
         }
-        controladorAudio.reproducirEfecto("lanzarCalcetin",0.75f);
+        controladorAudio.reproducirEfecto("lanzarCalcetin",GestorConstantes.AUDIO_CALCETIN);
     }
 
     /**
@@ -67,14 +66,5 @@ public class AtaqueCalcetin {
             temporizadorDisparo = 0;
             procesarAtaque(jugador, controladorAudio);
         }
-    }
-
-    /**
-     * Permite ajustar el intervalo de disparo después de la inicialización.
-     *
-     * @param nuevoIntervaloNuevo Intervalo en segundos.
-     */
-    public void setIntervaloDisparo(float nuevoIntervaloNuevo) {
-        this.intervaloDisparo = nuevoIntervaloNuevo;
     }
 }

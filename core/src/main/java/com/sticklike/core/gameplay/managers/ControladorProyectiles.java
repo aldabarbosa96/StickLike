@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,7 +72,7 @@ public class ControladorProyectiles {
 
                     // 2) Aplicar daño y parpadeo
                     enemigo.reducirSalud(damage);
-                    enemigo.activarParpadeo(0.15f);
+                    enemigo.activarParpadeo(GestorConstantes.DURACION_PARPADEO_ENEMIGO);
 
                     // CENTRO del enemigo
                     float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
@@ -95,15 +96,15 @@ public class ControladorProyectiles {
                     enemigo.aplicarKnockback(fuerza, difX, difY);
 
                     float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                    float baseY = enemigo.getY() + enemigo.getSprite().getHeight() + 12f;
+                    float baseY = enemigo.getY() + enemigo.getSprite().getHeight() + GestorConstantes.DESPLAZAMIENTOY_TEXTO;
 
                     // Si ya existe un valor en ultimaYTexto para este enemigo, incrementa
                     Float ultimaY = ultimaYTexto.get(enemigo);
                     if (ultimaY != null) {
-                        baseY = ultimaY + 12;
+                        baseY = ultimaY + GestorConstantes.DESPLAZAMIENTOY_TEXTO;
                     }
 
-                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, baseY, 0.5f);
+                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, baseY, GestorConstantes.DURACION_TEXTO);
                     dmgText.add(damageText);
 
                     // Actualiza el valor en el map

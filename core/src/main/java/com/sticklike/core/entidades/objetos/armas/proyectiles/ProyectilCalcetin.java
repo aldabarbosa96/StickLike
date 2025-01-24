@@ -15,23 +15,23 @@ import com.sticklike.core.utilidades.GestorDeAssets;
 public class ProyectilCalcetin implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
-    private float velocidadProyectil = GestorConstantes.PROJECTILE_CALCETIN_SPEED;
+    private float velocidadProyectil;
     private float multiplicadorVelocidad;
     private float distanciaMaxima;
     private float distanciaRecorrida;
     private boolean proyectilActivo;
     private float direccionX, direccionY;
-    private float rotationSpeed = 1080;
+    private float rotationSpeed = GestorConstantes.VEL_ROTACION_CALCETIN;
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad) {
         if (textura == null) {
             textura = GestorDeAssets.armaCalcetin;
         }
-        this.distanciaMaxima = 300f;
-        this.distanciaRecorrida = 0f;
+        this.distanciaMaxima = GestorConstantes.MAX_DISTANCIA;
+        this.distanciaRecorrida = GestorConstantes.DISTANCIA_RECORRIDA;
 
         sprite = new Sprite(textura);
-        sprite.setSize(GestorConstantes.PROJECTILE_SIZE + 12f, GestorConstantes.PROJECTILE_SIZE + 16f);
+        sprite.setSize(GestorConstantes.CALCETIN_W_SIZE, GestorConstantes.CALCETIN_H_SIZE);
         sprite.setPosition(x, y);
         sprite.setOriginCenter();
 
@@ -99,13 +99,13 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        // daño base entre 15 y 26
-        return 15 + (float) Math.random() * 11;
+        // daño base entre 13 y 24
+        return GestorConstantes.DANYO_BASE_CALCETIN;
     }
 
     @Override
     public float getKnockbackForce() {
-        // El calcetín empuja más que la piedra
-        return 100f;
+        // El calcetín empuja más que la piedra de base
+        return GestorConstantes.EMPUJE_BASE_CALCETIN;
     }
 }

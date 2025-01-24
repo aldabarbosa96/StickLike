@@ -11,8 +11,7 @@ import com.badlogic.gdx.Input;
 public class InputsJugador {
     /**
      * @param delta tiempo transcurrido desde el último frame
-     * @return un objeto {@link ResultadoInput} con los valores de movimiento (x, y)
-     *         y la dirección horizontal (LEFT, RIGHT, IDLE).
+     * @return un objeto {@link ResultadoInput} con los valores de movimiento (x, y) y la dirección horizontal (LEFT, RIGHT, IDLE)
      */
     public ResultadoInput procesarInput(float delta) {
         float movX = 0;
@@ -53,7 +52,7 @@ public class InputsJugador {
 
     /**
      * Enum para indicar la dirección horizontal: LEFT, RIGHT o IDLE.
-     * todo --> incluir diagonales en un futuro
+     * todo --> incluir direcciones verticales y diagonales en un futuro
      */
     public enum Direction {
         LEFT, RIGHT, IDLE
@@ -61,7 +60,7 @@ public class InputsJugador {
 
     /**
      * Clase contenedora del resultado del input:
-     * - movX, movY (normalizados o no)
+     * - movX, movY (normalizados)
      * - direction (LEFT, RIGHT, IDLE)
      */
     public static class ResultadoInput {

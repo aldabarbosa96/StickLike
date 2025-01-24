@@ -42,7 +42,7 @@ public class Jugador {
     private float danyoAtaqueJugador;
     private float velocidadAtaque;
     private float intervaloDisparo;
-    private int proyectilesPorDisparo = 2;
+    private int proyectilesPorDisparo;
     private boolean estaVivo;
     private Direction direccionActual = Direction.IDLE;
 
@@ -50,17 +50,18 @@ public class Jugador {
                    MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaqueCalcetin calcetinazo,
                    ControladorProyectiles controladorProyectiles) {
         this.danyoAtaqueJugador = GestorConstantes.DANYO;
-        this.velocidadJugador = GestorConstantes.PLAYER_SPEED;
-        this.vidaJugador = GestorConstantes.PLAYER_HEALTH;
-        this.maxVidaJugador = GestorConstantes.PLAYER_MAX_HEALTH;
-        this.rangoAtaqueJugador = GestorConstantes.PLAYER_ATTACK_RANGE;
-        this.intervaloDisparo = GestorConstantes.PLAYER_SHOOT_INTERVAL;
-        this.velocidadAtaque = GestorConstantes.PLAYER_ATTACK_SPEED;
+        this.velocidadJugador = GestorConstantes.VEL_MOV_JUGADOR;
+        this.vidaJugador = GestorConstantes.VIDA_JUGADOR;
+        this.maxVidaJugador = GestorConstantes.VIDAMAX_JUGADOR;
+        this.rangoAtaqueJugador = GestorConstantes.RANGO_ATAQUE_JUGADOR;
+        this.intervaloDisparo = GestorConstantes.INTERVALO_DISPARO;
+        this.velocidadAtaque = GestorConstantes.VEL_ATAQUE_JUGADOR;
+        this.proyectilesPorDisparo = GestorConstantes.NUM_PROYECTILES_INICIALES;
         this.estaVivo = true;
 
         // Inicializar el sprite del jugador
         this.sprite = new Sprite(GestorDeAssets.stickman);
-        this.sprite.setSize(15, 45);
+        this.sprite.setSize(GestorConstantes.WIDTH_JUGADOR, GestorConstantes.HEIGHT_JUGADOR);
         this.sprite.setPosition(startX, startY);
 
         // Inicializar controladores
@@ -142,10 +143,10 @@ public class Jugador {
 
     public void reducirIntervaloDisparo(float percentage) {
         intervaloDisparo *= (1 - percentage);
-        if (intervaloDisparo < 0.1f) intervaloDisparo = 0.1f;
+        if (intervaloDisparo < GestorConstantes.INTERVALO_MIN_DISPARO) intervaloDisparo = GestorConstantes.INTERVALO_MIN_DISPARO;
 
         velocidadAtaque = 1 / intervaloDisparo;
-       pedrada.setIntervaloDisparo(intervaloDisparo);
+        pedrada.setIntervaloDisparo(intervaloDisparo);
 
     }
 

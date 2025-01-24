@@ -70,7 +70,7 @@ public class ObjetoVida implements ObjetosXP {
 
     @Override
     public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerXP",1f);
+        controladorAudio.reproducirEfecto("recogerXP",1f); // crear efecto único para recolectar el corazón
         recolectado = true;
         sprite = null;
     }

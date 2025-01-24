@@ -6,8 +6,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
- * Movimiento de "Culo" basado en pausas y movimientos
- * intermitentes hacia el jugador.
+ * Movimiento de "Culo" basado en pausas y movimientos intermitentes hacia el jugador
  */
 public class MovimientoCulo extends MovimientoBase {
     private float velocidadEnemigo;
@@ -57,8 +56,8 @@ public class MovimientoCulo extends MovimientoBase {
         float difY = playerPosY - enemyPosY;
 
         // Añadimos un desplazamiento aleatorio
-        float randomOffsetX = (float) Math.random() * 100 - 65;
-        float randomOffsetY = (float) Math.random() * 100 - 50;
+        float randomOffsetX = (float) Math.random() * GestorConstantes.MAX_OFFSET - GestorConstantes.AJUSTE_OFFSET_X;
+        float randomOffsetY = (float) Math.random() * GestorConstantes.MAX_OFFSET - GestorConstantes.AJUSTE_OFFSET_Y;
         difX += randomOffsetX;
         difY += randomOffsetY;
 

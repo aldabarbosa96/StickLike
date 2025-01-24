@@ -25,7 +25,7 @@ public class ProyectilPiedra implements Proyectiles {
             textura = GestorDeAssets.armaPiedra;
         }
         sprite = new Sprite(textura);
-        sprite.setSize(GestorConstantes.PROJECTILE_SIZE, GestorConstantes.PROJECTILE_SIZE);
+        sprite.setSize(GestorConstantes.PIEDRA_SIZE, GestorConstantes.PIEDRA_SIZE);
         sprite.setPosition(x, y);
 
         this.direccionX = direccionX;
@@ -53,7 +53,7 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public void dispose() {
-        // No liberamos la textura globalmente, se podría manejar de otra forma.
+        // No liberamos la textura globalmente, se podría manejar de otra forma
         textura = null;
     }
 
@@ -86,13 +86,12 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        // Ej: daño base aleatorio entre 21 y 33
-        return 21 + (float)Math.random() * 10;
+        // Daño base aleatorio entre 21 y 33
+        return GestorConstantes.DANYO_BASE_PIEDRA;
     }
 
     @Override
     public float getKnockbackForce() {
-        // Ej: la piedra empuja con fuerza moderada
-        return 75f;
+        return GestorConstantes.EMPUJE_BASE_PIEDRA;
     }
 }

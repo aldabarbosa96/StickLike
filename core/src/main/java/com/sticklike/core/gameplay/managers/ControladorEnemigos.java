@@ -164,6 +164,6 @@ public class ControladorEnemigos {
 
     public void setTiposDeEnemigos(String[] nuevosTipos) {
         this.tiposDeEnemigos = nuevosTipos;
-    }
+    } // con esto podremos crear enemigo según queramos con el sistema de eventos
 
 }

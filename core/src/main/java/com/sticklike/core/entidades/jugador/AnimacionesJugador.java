@@ -1,10 +1,9 @@
 package com.sticklike.core.entidades.jugador;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 
@@ -12,14 +11,15 @@ public class AnimacionesJugador {
     private Direction direccionActual = Direction.IDLE;
 
     // Animaciones
+    // todo --> añadir animaciones N,S,NO,NE,SO,SE
     private final Animation<TextureRegion> animacionMovDerecha;
     private final Animation<TextureRegion> animacionMovIzquierda;
     private final Animation<TextureRegion> animacionIdle;
-    private float temporizadorAnimacion = 0;
+    private float temporizadorAnimacion = GestorConstantes.TEMPORIZADOR_ANIMACION_MOV;
 
     // Estado de parpadeo
     private boolean enParpadeo = false;
-    private float tiempoParpadeoRestante = 0;
+    private float tiempoParpadeoRestante = GestorConstantes.TIEMPO_PARPADEO_RESTANTE;
 
     public AnimacionesJugador() {
         animacionIdle = GestorDeAssets.animations.get("idle");
@@ -45,7 +45,7 @@ public class AnimacionesJugador {
 
         if (enParpadeo) {
 
-            batch.setColor(1,1,1,0.2f);
+            batch.setColor(1, 1, 1, 0.15f);
         }
 
         batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),
@@ -62,12 +62,12 @@ public class AnimacionesJugador {
         if (enParpadeo) {
             tiempoParpadeoRestante -= delta;
             if (tiempoParpadeoRestante <= 0) {
-                enParpadeo = false; // Finaliza el parpadeo
+                enParpadeo = false;
             }
         }
     }
 
-    public void activarParpadeo(float duracion) {
+    public void activarParpadeoJugador(float duracion) {
         enParpadeo = true;
         tiempoParpadeoRestante = duracion;
     }
