@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
 public class ObjetoVida implements ObjetosXP {
@@ -14,19 +15,20 @@ public class ObjetoVida implements ObjetosXP {
 
     private float x, y;
 
-    private final float distanciaActivacion = 60f;
-    private final float velocidadAtraccion = 200f;
+    private final float distanciaActivacion = GestorConstantes.DISTANCIA_ACTIVACION;
+    private final float velocidadAtraccion = GestorConstantes.VEL_ATRACCION;
 
     public ObjetoVida(float x, float y) {
-        Texture texture = GestorDeAssets.recolectableVida;
-        sprite = new Sprite(texture);
-        sprite.setSize(12, 12);
+        Texture corazon = GestorDeAssets.recolectableVida;
+        sprite = new Sprite(corazon);
+        sprite.setSize(GestorConstantes.OBJETO_VIDA_WIDTH, GestorConstantes.OBJETO_VIDA_HEIGHT);
         sprite.setPosition(x, y);
 
         // Inicializa las coordenadas
         this.x = x;
         this.y = y;
     }
+
     @Override
     public void actualizarObjetoXP(float delta, Jugador jugador, ControladorAudio controladorAudio) {
         if (recolectado) {
@@ -63,14 +65,14 @@ public class ObjetoVida implements ObjetosXP {
 
     @Override
     public void renderizarObjetoXP(SpriteBatch batch) {
-        if (!recolectado){
+        if (!recolectado) {
             sprite.draw(batch);
         }
     }
 
     @Override
     public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerXP",1f); // crear efecto único para recolectar el corazón
+        controladorAudio.reproducirEfecto("recogerVida", GestorConstantes.AUDIO_RECOLECCION_CACA);
         recolectado = true;
         sprite = null;
     }

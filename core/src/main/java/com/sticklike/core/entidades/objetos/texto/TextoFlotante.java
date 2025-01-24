@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.objetos.texto;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 /**
  * La clase InGameText se encarga de gestionar el renderizado, actualizado y destrucción
@@ -53,8 +54,8 @@ public class TextoFlotante {
      */
     public void actualizarTextoFlotante(float delta){
         duracion -= delta;
-        y += delta * 30;
-        x += delta * 30;
+        y += delta * GestorConstantes.DESPLAZAMIENTOY_TEXTO;
+        x += delta * GestorConstantes.DESPLAZAMIENTOY_TEXTO;
     }
     public void dispose() {
         fuente.dispose();

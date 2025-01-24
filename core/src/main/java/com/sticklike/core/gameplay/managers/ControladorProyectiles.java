@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
@@ -96,12 +95,12 @@ public class ControladorProyectiles {
                     enemigo.aplicarKnockback(fuerza, difX, difY);
 
                     float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                    float baseY = enemigo.getY() + enemigo.getSprite().getHeight() + GestorConstantes.DESPLAZAMIENTOY_TEXTO;
+                    float baseY = enemigo.getY() + enemigo.getSprite().getHeight() + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
 
                     // Si ya existe un valor en ultimaYTexto para este enemigo, incrementa
                     Float ultimaY = ultimaYTexto.get(enemigo);
                     if (ultimaY != null) {
-                        baseY = ultimaY + GestorConstantes.DESPLAZAMIENTOY_TEXTO;
+                        baseY = ultimaY + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
                     }
 
                     TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, baseY, GestorConstantes.DURACION_TEXTO);

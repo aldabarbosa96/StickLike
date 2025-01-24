@@ -82,12 +82,10 @@ public class ProyectilPiedra implements Proyectiles {
         proyectilActivo = false;
     }
 
-    // =============== MÉTODOS NUEVOS: DAÑO Y KNOCKBACK ===============
-
     @Override
     public float getBaseDamage() {
         // Daño base aleatorio entre 21 y 33
-        return GestorConstantes.DANYO_BASE_PIEDRA;
+        return 21 + (float) Math.random() * 10;
     }
 
     @Override

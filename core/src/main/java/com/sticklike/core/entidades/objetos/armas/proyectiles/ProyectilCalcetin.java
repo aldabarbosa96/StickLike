@@ -95,12 +95,10 @@ public class ProyectilCalcetin implements Proyectiles {
         proyectilActivo = false;
     }
 
-    // =============== MÉTODOS NUEVOS: DAÑO Y KNOCKBACK ===============
-
     @Override
     public float getBaseDamage() {
         // daño base entre 13 y 24
-        return GestorConstantes.DANYO_BASE_CALCETIN;
+        return  13 + (float) Math.random() * 11;
     }
 
     @Override

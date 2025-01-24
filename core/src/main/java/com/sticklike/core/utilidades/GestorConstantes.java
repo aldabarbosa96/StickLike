@@ -27,7 +27,6 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String POPUP_HEADER = "\n\n<< < U P G R A D E S > >> ";
     public static final String POPUP_FOOTER = "   \n";
 
-
     // Configuración del jugador
     public static final float VEL_MOV_JUGADOR = 125.0f;
     public static final float DANYO = 25f;
@@ -70,7 +69,6 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DURACION_EMPUJE = 0.15f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
 
-
     // Configuración del proyectil
     public static final float PROJECTILE_PIEDRA_SPEED = 250f;
     public static final float PROJECTILE_CALCETIN_SPEED = 185f;
@@ -86,17 +84,27 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TEMPORIZADOR_DISPARO = 0f;
     public static final float MAX_DISTANCIA = 350f;
     public static final float DISTANCIA_RECORRIDA = 0f;
-    public static final float DANYO_BASE_CALCETIN = 13 + (float) Math.random() * 11;
-    public static final float DANYO_BASE_PIEDRA = 21 + (float) Math.random() * 10;
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
 
     // Configuración TextoFlotante
-    public static final float DESPLAZAMIENTOY_TEXTO = 12f;
-    public static final float DURACION_TEXTO = 0.4f;
+    public static final float DESPLAZAMIENTOY_TEXTO = 30f;
+    public static final float DESPLAZAMIENTOY_TEXTO2 = 12f;
+    public static final float DURACION_TEXTO = 0.3f;
+
+    // Configuración recolectables
+    public static final float DISTANCIA_ACTIVACION = 75f;
+    public static final float VEL_ATRACCION = 250f;
+    public static final float OBJETO_VIDA_WIDTH= 14f;
+    public static final float OBJETO_VIDA_HEIGHT= 14f;
+    public static final float OBJETO_CACA_WIDTH= 10f;
+    public static final float OBJETO_CACA_HEIGHT= 10f;
+
 
     // Controlador AUDIO
 
     public static final float AUDIO_CALCETIN = 0.9f;
     public static final float AUDIO_PIEDRA = 0.7f;
+    public static final float AUDIO_RECOLECCION_CACA = 1f;
+    public static final float AUDIO_RECOLECCION_VIDA = 0.7f;
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**
@@ -17,14 +18,14 @@ public class ObjetoXpCaca implements ObjetosXP {
 
     private float x, y;
 
-    private final float distanciaActivacion = 65f;
-    private final float velocidadAtraccion = 250f;
+    private final float distanciaActivacion = GestorConstantes.DISTANCIA_ACTIVACION;
+    private final float velocidadAtraccion = GestorConstantes.VEL_ATRACCION;
 
 
     public ObjetoXpCaca(float x, float y) {
         Texture texture = GestorDeAssets.recolectableCaca;
         sprite = new Sprite(texture);
-        sprite.setSize(12, 12);
+        sprite.setSize(GestorConstantes.OBJETO_CACA_WIDTH, GestorConstantes.OBJETO_CACA_HEIGHT);
         sprite.setPosition(x, y);
 
         // Inicializa las coordenadas
@@ -75,7 +76,7 @@ public class ObjetoXpCaca implements ObjetosXP {
 
     @Override
     public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerXP",1f);
+        controladorAudio.reproducirEfecto("recogerXP",GestorConstantes.AUDIO_RECOLECCION_CACA);
         recolectado = true;
         sprite = null;
     }
