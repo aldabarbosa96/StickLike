@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
+import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.interfaces.Enemigo;
 
@@ -17,16 +18,12 @@ import com.sticklike.core.interfaces.Enemigo;
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = 30f;
+    private float vidaEnemigo = GestorConstantes.VIDA_ENEMIGOCULO;
     private MovimientoCulo movimientoCulo;
-    private float coolDownDanyo = 1f;
-    private float temporizadorDanyo = 0f;
+    private float coolDownDanyo = GestorConstantes.COOLDOWN_ENEMIGOCULO;
+    private float temporizadorDanyo = GestorConstantes.TEMPORIZADOR_DANYO;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private float knockbackVelX = 0f;
-    private float knockbackVelY = 0f;
-    private float knockbackTimer = 0f;
-    private float knockbackDuration = 0.2f;
     private AnimacionesEnemigos animacionesEnemigos;
 
     /**
@@ -38,16 +35,23 @@ public class EnemigoCulo implements Enemigo {
         esConOjo();
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoCulo = new MovimientoCulo(velocidadEnemigo,true);
+        this.movimientoCulo = new MovimientoCulo(velocidadEnemigo, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void esConOjo() {
+    private void esConOjo() { // maneja la aleatoriedad de aparición de enemigoCulo con o sin ojo
         float random = (float) (Math.random() * 10);
-        if (random >= 5) sprite = new Sprite(GestorDeAssets.enemigoCulo);
-        else sprite = new Sprite(GestorDeAssets.enemigoCuloOjo);
-        sprite.setSize(37, 32);
+        if (random >= 2.5f) {
+            sprite = new Sprite(GestorDeAssets.enemigoCulo);
+            sprite.setSize(32, 28);
+        } else {
+            sprite = new Sprite(GestorDeAssets.enemigoCuloOjo);
+            sprite.setSize(40, 34);
+            vidaEnemigo = GestorConstantes.VIDA_ENEMIGOCULO * 2;
+
+        }
     }
+
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
         movimientoCulo.aplicarKnockback(fuerza, dirX, dirY);
@@ -90,7 +94,6 @@ public class EnemigoCulo implements Enemigo {
         animacionesEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
     }
-
 
 
     @Override

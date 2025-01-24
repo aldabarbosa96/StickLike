@@ -13,12 +13,10 @@ import java.util.HashMap;
  * Facilita una única fuente para acceder a estos assets, evitando recargas repetidas y facilitando su gestión y liberación
  */
 public class GestorDeAssets {
-
     // Texturas individuales
     public static Texture stickman, enemigoCulo,enemigoCuloOjo,enemigoRegla,enemigoReglaCruzada, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableCaca, recolectableVida;
     //Texturas por lotes
     public static Array<Texture> borrones; // Lista de texturas de borrón
-
 
     // Diccionario para animaciones, indexadas por string
     public static HashMap<String, Animation<TextureRegion>> animations;

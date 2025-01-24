@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoVida;
+import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.interfaces.Enemigo;
 
@@ -18,17 +19,13 @@ import com.sticklike.core.interfaces.Enemigo;
 public class EnemigoRegla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = 95f;
+    private float vidaEnemigo = GestorConstantes.VIDA_ENEMIGOREGLA;
     private MovimientoRegla movimientoRegla;
     private OrthographicCamera orthographicCamera;
-    private float coolDownDanyo = 1.5f;
-    private float temporizadorDanyo = 0f;
+    private float coolDownDanyo = GestorConstantes.COOLDOWN_ENEMIGOREGLA;
+    private float temporizadorDanyo = GestorConstantes.TEMPORIZADOR_DANYO;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private float knockbackVelX = 0f;
-    private float knockbackVelY = 0f;
-    private float knockbackTimer = 0f;
-    private float knockbackDuration = 0.2f;
     private AnimacionesEnemigos animacionesEnemigos;
 
     /**
