@@ -58,7 +58,7 @@ public class ControladorProyectiles {
 
             // Para cada enemigo, verificamos colisión
             for (Enemigo enemigo : enemies) {
-                if (!enemigo.estaMuerto() && proyectil.isProyectilActivo() &&
+                if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
                     enemigo.esGolpeadoPorProyectil(
                         proyectil.getX(),
                         proyectil.getY(),
@@ -108,7 +108,6 @@ public class ControladorProyectiles {
 
                     // Actualiza el valor en el map
                     ultimaYTexto.put(enemigo, baseY);
-
 
 
                     // 5) Desactivar proyectil

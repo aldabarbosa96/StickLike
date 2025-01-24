@@ -61,6 +61,11 @@ public class EnemigoRegla implements Enemigo {
         movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
     }
 
+    @Override
+    public float getVida() {
+        return vidaEnemigo;
+    }
+
     /**
      * Renderiza el enemigo en pantalla, si no está muerto
      *

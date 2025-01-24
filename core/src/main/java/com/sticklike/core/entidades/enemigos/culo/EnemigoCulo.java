@@ -17,7 +17,7 @@ import com.sticklike.core.interfaces.Enemigo;
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = 15f;
+    private float vidaEnemigo = 30f;
     private MovimientoCulo movimientoCulo;
     private float coolDownDanyo = 1f;
     private float temporizadorDanyo = 0f;
@@ -142,11 +142,8 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        // Si la vida es <= 0 y ya finalizó el fade, lo consideramos muerto
         return (vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade());
     }
-
-
 
     @Override
     public void dispose() {
@@ -188,4 +185,8 @@ public class EnemigoCulo implements Enemigo {
         movimientoCulo.setVelocidadEnemigo(nuevaVelocidad);
     }
 
+    @Override
+    public float getVida() {
+        return vidaEnemigo;
+    }
 }

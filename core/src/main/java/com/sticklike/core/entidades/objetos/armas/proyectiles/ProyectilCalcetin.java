@@ -21,10 +21,9 @@ public class ProyectilCalcetin implements Proyectiles {
     private float distanciaRecorrida;
     private boolean proyectilActivo;
     private float direccionX, direccionY;
-    private float rotationSpeed = 720f;
+    private float rotationSpeed = 1080;
 
-    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY,
-                             float velocidadProyectil, float multiplicadorVelocidad) {
+    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad) {
         if (textura == null) {
             textura = GestorDeAssets.armaCalcetin;
         }

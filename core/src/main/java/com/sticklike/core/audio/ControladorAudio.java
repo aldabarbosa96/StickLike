@@ -68,7 +68,7 @@ public class ControladorAudio {
     }
     public void reproducirEfecto5() {
         if (efectoSonido5 != null) {
-            efectoSonido5.play(1f);
+            efectoSonido5.play(2f);
         }
     }
     public void reproducirEfecto6( ) {
