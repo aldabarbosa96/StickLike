@@ -1,5 +1,7 @@
 package com.sticklike.core.utilidades;
 
+import com.sticklike.core.pantallas.popUps.PopUpMejoras;
+
 /**
  * Clase para manejar de forma cómoda las constantes del juego
  */
@@ -57,6 +59,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
     public static final float TIEMPO_CARGA_REGLA = 0.75f;
+    public static final float CORRECCION_SPAWN = 50f;
 
     // Animaciones enemigos
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
@@ -68,6 +71,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TEMPORIZADOR_EMPUJE = 0f;
     public static final float DURACION_EMPUJE = 0.15f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
+    public static final float VELOCIDAD_CULO = 1.2f;
+    public static final float VELOCIDAD_REGLA = 3.8f;
 
     // Configuración del proyectil
     public static final float PROJECTILE_PIEDRA_SPEED = 250f;
@@ -78,19 +83,18 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float CALCETIN_W_SIZE = 20f;
     public static final float CALCETIN_H_SIZE = 24f;
     public static final float PROJECTILE_BASE_DAMAGE = 8f; //gestionar en un futuro
-    public static final int NUM_CALCETINES_INICIALES = 4;
-    public static final float ANGULO_SEPARACION = 90f;
-    public static final float ANGULO_INCIAL = 45f;
     public static final float TEMPORIZADOR_DISPARO = 0f;
     public static final float MAX_DISTANCIA = 350f;
     public static final float DISTANCIA_RECORRIDA = 0f;
     public static final float EMPUJE_BASE_CALCETIN = 100f;
-    public static final float EMPUJE_BASE_PIEDRA = 75f;
+    public static final float EMPUJE_BASE_PIEDRA = 50f;
 
     // Configuración TextoFlotante
     public static final float DESPLAZAMIENTOY_TEXTO = 30f;
     public static final float DESPLAZAMIENTOY_TEXTO2 = 12f;
     public static final float DURACION_TEXTO = 0.3f;
+    public static final float TEXTO_WIDTH = 0.7f;
+    public static final float TEXTO_HEIGHT = 1f;
 
     // Configuración recolectables
     public static final float DISTANCIA_ACTIVACION = 75f;
@@ -100,6 +104,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_CACA_WIDTH= 10f;
     public static final float OBJETO_CACA_HEIGHT= 10f;
 
+    // Controlador Evento
+    public static final int LVL_EVENTO1 = 3;
+    public static final int LVL_EVENTO2 = 5;
 
     // Controlador AUDIO
 

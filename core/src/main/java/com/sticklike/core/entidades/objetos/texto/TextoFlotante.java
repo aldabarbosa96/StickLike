@@ -11,14 +11,13 @@ import com.sticklike.core.utilidades.GestorConstantes;
  */
 public class TextoFlotante {
     private String texto;
-    private float x,y;
+    private float x, y;
     private float duracion;
     private BitmapFont fuente;
 
     /**
-     *
-     * @param texto valor del texto a mnostrar
-     * @param x,y coordenadas donde se mostrará
+     * @param texto    valor del texto a mnostrar
+     * @param x,y      coordenadas donde se mostrará
      * @param duracion tiempo que permanecerá visible
      */
     public TextoFlotante(String texto, float x, float y, float duracion) {
@@ -28,11 +27,12 @@ public class TextoFlotante {
         this.duracion = duracion;
 
         fuente = new BitmapFont();
-        fuente.setColor(Color.RED);
+        fuente.getData().setScale(GestorConstantes.TEXTO_WIDTH, GestorConstantes.TEXTO_HEIGHT);
     }
 
     /**
      * Comprueba si el texto ha desaparecido
+     *
      * @return devuelve true si la duración es igual o menor a 0
      */
     public boolean haDesaparecido() {
@@ -41,24 +41,42 @@ public class TextoFlotante {
 
     /**
      * Renderiza el texto en pantalla
+     *
      * @param batch SpriteBatch para dibujar el texto
      */
-    public void renderizarTextoFlotante(SpriteBatch batch){
-        fuente.draw(batch, texto,x,y);
+    public void renderizarTextoFlotante(SpriteBatch batch) {
+        dibujarReborde(batch);
+        fuente.setColor(1, 0.2f, 0.6f, 0.9f);
+        fuente.draw(batch, texto, x, y);
     }
 
     /**
      * Calcula el tiempo que el texto permanece en pantalla
      * mientras lo desplaza en el eje Y
+     *
      * @param delta frecuencia de act. de pantalla
      */
-    public void actualizarTextoFlotante(float delta){
+    public void actualizarTextoFlotante(float delta) {
         duracion -= delta;
         y += delta * GestorConstantes.DESPLAZAMIENTOY_TEXTO;
-        x += delta * GestorConstantes.DESPLAZAMIENTOY_TEXTO;
     }
+
+    private void dibujarReborde(SpriteBatch batch) {
+        float offset = 1; // Desplazamiento para el reborde
+        fuente.setColor(Color.WHITE);
+        fuente.draw(batch, texto, x - offset, y); // Izquierda
+        fuente.draw(batch, texto, x + offset, y); // Derecha
+        fuente.draw(batch, texto, x, y - offset); // Abajo
+        fuente.draw(batch, texto, x, y + offset); // Arriba
+        fuente.draw(batch, texto, x - offset, y - offset); // Esquina inferior izquierda
+        fuente.draw(batch, texto, x + offset, y - offset); // Esquina inferior derecha
+        fuente.draw(batch, texto, x - offset, y + offset); // Esquina superior izquierda
+        fuente.draw(batch, texto, x + offset, y + offset); // Esquina superior derecha
+    }
+
     public void dispose() {
         fuente.dispose();
     }
+
 }
 

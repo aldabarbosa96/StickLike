@@ -9,10 +9,6 @@ import com.sticklike.core.utilidades.GestorConstantes;
  * La clase AtaqueCalcetin maneja la lógica para disparar calcetines en todas las direcciones.
  */
 public class AtaqueCalcetin {
-
-    private final int numCalcetines = GestorConstantes.NUM_CALCETINES_INICIALES;
-    private final float anguloSeparacion = GestorConstantes.ANGULO_SEPARACION;
-    private final float anguloInicial = GestorConstantes.ANGULO_INCIAL;
     private float temporizadorDisparo = GestorConstantes.TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
 
@@ -37,19 +33,23 @@ public class AtaqueCalcetin {
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
         float startY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
 
-        // Calculamos los ángulos para los calcetines
-        for (int i = 0; i < numCalcetines; i++) {
-            float angulo = anguloInicial + i * anguloSeparacion;
+        // Ángulos para las direcciones (diagonales primero, luego cardinales)
+        float[] angulos = {45, 135, 225, 315, 0, 90, 180, 270}; // NO, NE, SO, SE, N, E, S, O
+        for (int i = 0; i < jug.getProyectilesPorDisparo() + 2; i++) { // todo --> aplicar límite de 8 proyectiles de tipo calcetín en un futuro
+            float angulo = angulos[i]; // Selecciona el ángulo según el índice
             float radianes = (float) Math.toRadians(angulo);
             float direccionX = (float) Math.cos(radianes);
             float direccionY = (float) Math.sin(radianes);
 
+            // Crear el proyectil
             ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY,
                 GestorConstantes.PROJECTILE_CALCETIN_SPEED, GestorConstantes.SPEED_MULT);
-            jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
 
+            // Añadir el proyectil al controlador del jugador
+            jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
         }
-        controladorAudio.reproducirEfecto("lanzarCalcetin",GestorConstantes.AUDIO_CALCETIN);
+
+        controladorAudio.reproducirEfecto("lanzarCalcetin", GestorConstantes.AUDIO_CALCETIN);
     }
 
     /**

@@ -50,13 +50,15 @@ public class ControladorProyectiles {
      * @param dmgText array para almacenar textos flotantes de daño
      */
     public void actualizarProyectiles(float delta, Array<Enemigo> enemies, Array<TextoFlotante> dmgText) {
+        // Revisión: No limpiamos `ultimaYTexto` a menos que sea estrictamente necesario
+        ultimaYTexto.clear();
+
         Iterator<Proyectiles> iterator = proyectiles.iterator();
 
         while (iterator.hasNext()) {
             Proyectiles proyectil = iterator.next();
             proyectil.actualizarProyectil(delta);
 
-            // Para cada enemigo, verificamos colisión
             for (Enemigo enemigo : enemies) {
                 if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
                     enemigo.esGolpeadoPorProyectil(
@@ -73,55 +75,63 @@ public class ControladorProyectiles {
                     enemigo.reducirSalud(damage);
                     enemigo.activarParpadeo(GestorConstantes.DURACION_PARPADEO_ENEMIGO);
 
-                    // CENTRO del enemigo
-                    float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                    float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
+                    // 3) Aplicar knockback
+                    aplicarKnockback(enemigo, proyectil);
 
-                    // CENTRO del proyectil (su bounding rectangle)
-                    float projCenterX = proyectil.getX() + proyectil.getRectanguloColision().width / 2f;
-                    float projCenterY = proyectil.getY() + proyectil.getRectanguloColision().height / 2f;
-
-                    // Vector de dirección (enemigo - proyectil)
-                    float difX = enemyCenterX - projCenterX;
-                    float difY = enemyCenterY - projCenterY;
-
-                    float dist = (float) Math.sqrt(difX * difX + difY * difY);
-                    if (dist != 0) {
-                        difX /= dist; // normalizamos
-                        difY /= dist;
-                    }
-
-                    float fuerza = proyectil.getKnockbackForce();
-                    enemigo.aplicarKnockback(fuerza, difX, difY);
-
+                    // 4) Generar texto flotante
                     float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                    float baseY = enemigo.getY() + enemigo.getSprite().getHeight() + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
+                    float posicionTextoY = enemigo.getY() + enemigo.getSprite().getHeight() + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
 
-                    // Si ya existe un valor en ultimaYTexto para este enemigo, incrementa
+                    // Ajustar la posición si ya existe un texto flotante para el enemigo
                     Float ultimaY = ultimaYTexto.get(enemigo);
                     if (ultimaY != null) {
-                        baseY = ultimaY + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
+                        posicionTextoY = ultimaY + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
                     }
 
-                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, baseY, GestorConstantes.DURACION_TEXTO);
+                    // Crear y añadir el texto flotante
+                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, GestorConstantes.DURACION_TEXTO);
                     dmgText.add(damageText);
 
-                    // Actualiza el valor en el map
-                    ultimaYTexto.put(enemigo, baseY);
-
+                    // Actualizar la posición en el mapa
+                    ultimaYTexto.put(enemigo, posicionTextoY);
 
                     // 5) Desactivar proyectil
+
                     proyectil.desactivarProyectil();
                     break; // Salimos del loop de enemigos
                 }
             }
 
-            // Si se desactivó el proyectil, lo eliminamos
+            // Eliminar proyectiles inactivos
             if (!proyectil.isProyectilActivo()) {
                 iterator.remove();
             }
         }
     }
+
+    /**
+     * Aplica el knockback a un enemigo basado en la posición del proyectil.
+     */
+    private void aplicarKnockback(Enemigo enemigo, Proyectiles proyectil) {
+        float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
+        float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
+
+        float projCenterX = proyectil.getX() + proyectil.getRectanguloColision().width / 2f;
+        float projCenterY = proyectil.getY() + proyectil.getRectanguloColision().height / 2f;
+
+        float difX = enemyCenterX - projCenterX;
+        float difY = enemyCenterY - projCenterY;
+
+        float dist = (float) Math.sqrt(difX * difX + difY * difY);
+        if (dist != 0) {
+            difX /= dist; // Normalizamos
+            difY /= dist;
+        }
+
+        float fuerza = proyectil.getKnockbackForce();
+        enemigo.aplicarKnockback(fuerza, difX, difY);
+    }
+
 
     /**
      * Dibuja todos los proyectiles activos en pantalla

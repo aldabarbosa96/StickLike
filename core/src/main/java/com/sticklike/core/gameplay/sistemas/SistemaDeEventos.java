@@ -5,6 +5,7 @@ import com.sticklike.core.gameplay.eventos.Evento;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
+import com.sticklike.core.utilidades.GestorConstantes;
 
 import java.util.PriorityQueue;
 
@@ -24,30 +25,31 @@ public class SistemaDeEventos {
 
     private void inicializarEventos() {
         eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles,
-            () -> eventoAumentaEnemigos1(), 3));
+            () -> eventoAumentaEnemigos1(), GestorConstantes.LVL_EVENTO1));
 
         eventos.add(new Evento("Aumenta nº enemigos2", sistemaDeNiveles,
-            () -> eventoAumentaEnemigos2(), 5));
+            () -> eventoAumentaEnemigos2(), GestorConstantes.LVL_EVENTO2));
 
         // todo --> gestionar más eventos próximamente
     }
 
     private void eventoAumentaEnemigos1() {
         controladorEnemigos.setIntervaloDeAparicion(0.5f);
-        incrementarVelocidadCulo(1.25f);
-        System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
-        System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
-        System.out.println("Velocidad enemigo aumentada un 25%");
-    }
-
-    private void eventoAumentaEnemigos2() {
-        controladorEnemigos.setIntervaloDeAparicion(0.35f);
         incrementarVelocidadCulo(1.5f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
         System.out.println("Velocidad enemigo aumentada un 50%");
+    }
+
+    private void eventoAumentaEnemigos2() {
+        controladorEnemigos.setIntervaloDeAparicion(0.35f);
+        incrementarVelocidadCulo(2f);
+        System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
+        System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
+        System.out.println("Velocidad enemigo aumentada un 100%");
 
     }
+
     private void incrementarVelocidadCulo(float factorMultiplicador) {
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo instanceof EnemigoCulo) {

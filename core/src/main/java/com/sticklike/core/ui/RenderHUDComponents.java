@@ -149,46 +149,37 @@ public class RenderHUDComponents {
      * Dibuja el texto del nivel (LVL) y el número del nivel del jugador de forma centrada en el HUD
      */
     public void renderizarTextoNivelPlayer() {
-        String levelText = "LVL :  ";
+        String levelText = "LVL:  ";
         String levelNumber = String.valueOf(sistemaDeNiveles.getNivelActual());
 
         layout.setText(fuente, levelText + levelNumber);
 
-        float textX = (VIRTUAL_WIDTH - layout.width) / 2;
+        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - 10f;
         float textY = GestorConstantes.HUD_HEIGHT - 13f + DESPLAZAMIENTO_VERTICAL_HUD;
 
         spriteBatch.begin();
 
-        // Texto Lvl
+        // Texto "LVL"
         fuente.getData().setScale(0.95f);
-        fuente.setColor(0, 0, 0, 1); // Blanco con sombreado negro
         float offset = 1f;
-        fuente.draw(spriteBatch, levelText, textX - offset, textY + offset);
-        fuente.draw(spriteBatch, levelText, textX + offset, textY + offset);
-        fuente.draw(spriteBatch, levelText, textX - offset, textY - offset);
-        fuente.draw(spriteBatch, levelText, textX + offset, textY - offset);
+        Color colorReborde = Color.BLACK; // Negro para el reborde
+        Color colorTexto = Color.WHITE; // Blanco para el texto principal
+        dibujarTextoConReborde(spriteBatch, levelText, textX, textY, offset, colorReborde, colorTexto);
 
-        fuente.setColor(1, 1, 1, 1);
-        fuente.draw(spriteBatch, levelText, textX, textY);
-
-        // Coordenadas para el número
+        // Coordenadas número
         float levelTextWidth = new GlyphLayout(fuente, levelText).width;
         float levelNumberX = textX + levelTextWidth;
         float textYNumber = GestorConstantes.HUD_HEIGHT - 8.5f + DESPLAZAMIENTO_VERTICAL_HUD;
 
-        // Texto número
+        // Texto número del nivel
         fuente.getData().setScale(1.4f);
-        fuente.setColor(0, 0, 1, 1);
-        fuente.draw(spriteBatch, levelNumber, levelNumberX - offset, textYNumber + offset);
-        fuente.draw(spriteBatch, levelNumber, levelNumberX + offset, textYNumber + offset);
-        fuente.draw(spriteBatch, levelNumber, levelNumberX - offset, textYNumber - offset);
-        fuente.draw(spriteBatch, levelNumber, levelNumberX + offset, textYNumber - offset);
-
-        fuente.setColor(1, 1, 1, 1); // Blanco/Azul
-        fuente.draw(spriteBatch, levelNumber, levelNumberX, textYNumber);
+        colorReborde = Color.BLUE; // Azul para el reborde del número
+        colorTexto = Color.WHITE; // Blanco para el número principal
+        dibujarTextoConReborde(spriteBatch, levelNumber, levelNumberX, textYNumber, offset, colorReborde, colorTexto);
 
         spriteBatch.end();
     }
+
 
     /**
      * Dibuja la barra de salud del jugador. Incluye borde, fondo y la parte que indica la cantidad de vida restante
@@ -240,15 +231,11 @@ public class RenderHUDComponents {
 
         spriteBatch.begin();
 
-        fuente.setColor(0, 0, 0, 1); // Sombra negra
         float offset = 1f;
-        fuente.draw(spriteBatch, healthText, textX - offset, textY + offset);
-        fuente.draw(spriteBatch, healthText, textX + offset, textY + offset);
-        fuente.draw(spriteBatch, healthText, textX - offset, textY - offset);
-        fuente.draw(spriteBatch, healthText, textX + offset, textY - offset);
+        Color colorReborde = Color.BLACK;
+        Color colorTexto = Color.WHITE;
+        dibujarTextoConReborde(spriteBatch, healthText, textX, textY, offset, colorReborde, colorTexto);
 
-        fuente.setColor(1, 1, 1, 1); // Texto blanco
-        fuente.draw(spriteBatch, healthText, textX, textY);
 
         spriteBatch.end();
     }
@@ -337,15 +324,11 @@ public class RenderHUDComponents {
 
         spriteBatch.begin();
 
-        fuente.setColor(0, 0, 0, 1); // Sombra negra
         float offset = 1f;
-        fuente.draw(spriteBatch, experienceText, textX - offset, textY + offset);
-        fuente.draw(spriteBatch, experienceText, textX + offset, textY + offset);
-        fuente.draw(spriteBatch, experienceText, textX - offset, textY - offset);
-        fuente.draw(spriteBatch, experienceText, textX + offset, textY - offset);
+        Color colorReborde = Color.BLACK;
+        Color colorTexto = Color.WHITE;
+        dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, offset, colorReborde, colorTexto);
 
-        fuente.setColor(1, 1, 1, 1); // Texto blanco
-        fuente.draw(spriteBatch, experienceText, textX, textY);
 
         spriteBatch.end();
     }
@@ -415,15 +398,31 @@ public class RenderHUDComponents {
         return maxWidth;
     }
 
+    private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
+        // Establecer el color del reborde
+        fuente.setColor(colorReborde);
+
+        // Dibujar en las 8 direcciones cardinales
+        fuente.draw(batch, texto, x - offset, y); // (O)
+        fuente.draw(batch, texto, x + offset, y); // (E)
+        fuente.draw(batch, texto, x, y - offset); // (S)
+        fuente.draw(batch, texto, x, y + offset); // (N)
+        fuente.draw(batch, texto, x - offset, y + offset); // (NO)
+        fuente.draw(batch, texto, x + offset, y + offset); // (NE)
+        fuente.draw(batch, texto, x - offset, y - offset); // (SO)
+        fuente.draw(batch, texto, x + offset, y - offset); // (SE)
+
+        // Establecer el color del texto principal
+        fuente.setColor(colorTexto);
+
+        // Dibujar el texto principal
+        fuente.draw(batch, texto, x, y);
+    }
 
     public void dispose() {
         if (texturaCorazonVida != null) texturaCorazonVida.dispose();
         if (texturaLapizXP != null) texturaLapizXP.dispose();
         if (fuente != null) fuente.dispose();
-    }
-
-    public float getTiempoTranscurrido() {
-        return tiempoTranscurrido;
     }
 
     public void pausarTemporizador() {

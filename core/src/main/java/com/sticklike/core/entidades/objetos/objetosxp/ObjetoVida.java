@@ -72,7 +72,7 @@ public class ObjetoVida implements ObjetosXP {
 
     @Override
     public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerVida", GestorConstantes.AUDIO_RECOLECCION_CACA);
+        controladorAudio.reproducirEfecto("recogerVida", GestorConstantes.AUDIO_RECOLECCION_VIDA);
         recolectado = true;
         sprite = null;
     }

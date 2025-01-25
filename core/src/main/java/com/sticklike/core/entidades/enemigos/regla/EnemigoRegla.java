@@ -76,7 +76,7 @@ public class EnemigoRegla implements Enemigo {
             Color originalColor = sprite.getColor().cpy();
 
             if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.aplicarParpadeo2(sprite);
+                animacionesEnemigos.aplicarParpadeo1(sprite);
             } else {
 
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());

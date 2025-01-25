@@ -28,9 +28,7 @@ public class ControladorEnemigos {
     private Jugador jugador;
     private OrthographicCamera camera;
     private float intervaloDeAparicion, temporizadorDeAparicion;
-    private float randomSpeed = 0;
-    private int spawnCounter = 0;
-    private static final float BORDER_MARGIN = GestorConstantes.BORDER_SPAWN_MARGIN;
+    private int spawnCounter = 0; // todo --> necesario en un futuro para controlar algunos eventos (según el spawn sucederá algo)
     private Array<Enemigo> enemigosAEliminar = new Array<>();
     private String[] tiposDeEnemigos = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
 
@@ -90,11 +88,11 @@ public class ControladorEnemigos {
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
-        // Calcula los límites visibles de la cámara (o un poco más, si quieres que aparezcan “fuera” de la pantalla)
-        float leftLimit = playerX - VentanaJuego.WORLD_WIDTH / 2 - 50;
-        float rightLimit = playerX + VentanaJuego.WORLD_WIDTH / 2 - 50;
-        float bottomLimit = playerY - VentanaJuego.WORLD_HEIGHT / 2 - 50;
-        float topLimit = playerY + VentanaJuego.WORLD_HEIGHT / 2 - 50;
+        // Calcula los límites visibles de la cámara menos un borde para que no aparezcan demasiado lejos de los márgenes visibles
+        float leftLimit = playerX - VentanaJuego.WORLD_WIDTH / 2 - GestorConstantes.CORRECCION_SPAWN;
+        float rightLimit = playerX + VentanaJuego.WORLD_WIDTH / 2 - GestorConstantes.CORRECCION_SPAWN;
+        float bottomLimit = playerY - VentanaJuego.WORLD_HEIGHT / 2 - GestorConstantes.CORRECCION_SPAWN;
+        float topLimit = playerY + VentanaJuego.WORLD_HEIGHT / 2 - GestorConstantes.CORRECCION_SPAWN;
 
         float x = 0, y = 0;
 
@@ -120,7 +118,7 @@ public class ControladorEnemigos {
 
         }
 
-        randomSpeed = 35f + (float) Math.random() * 45f;
+        float randomSpeed = 35f + (float) Math.random() * 45f;
         String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
         enemigos.add(fabricaEnemigos(tipoElegido, x, y, jugador, randomSpeed, camera));
     }
@@ -138,19 +136,19 @@ public class ControladorEnemigos {
     }
 
 
-    // todo --> debería aislar este método en una clase
-    public static Enemigo fabricaEnemigos(String tipo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera orthographicCamera) {
-        switch (tipo) {
+    // todo --> igual debería aislar este método en una clase
+    public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
+        switch (tipoEnemigo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad * 1.2f);
+                return new EnemigoCulo(x, y, jugador, velocidad * GestorConstantes.VELOCIDAD_CULO);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * 3.8f, orthographicCamera);
+                return new EnemigoRegla(x, y, jugador, velocidad * GestorConstantes.VELOCIDAD_REGLA, camera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/
             // todo --> añadir más enemigos próximamente
             default:
-                throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipo);
+                throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
     }
 

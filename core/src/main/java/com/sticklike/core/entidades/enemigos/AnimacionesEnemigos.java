@@ -20,11 +20,6 @@ public class AnimacionesEnemigos {
             sprite.setColor(0.8f, 0.2f, 0.6f, alphaActual);
         }
     }
-    public void aplicarParpadeo2(Sprite sprite) {
-        if (enParpadeo) {
-            sprite.setColor(1.0f, 0.5f, 0.0f, alphaActual);
-        }
-    }
 
     public void restaurarColor(Sprite sprite, Color originalColor) {
         if (enParpadeo || enFade) {
