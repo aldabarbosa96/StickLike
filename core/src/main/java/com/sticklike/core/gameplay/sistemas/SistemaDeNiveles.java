@@ -1,6 +1,5 @@
 package com.sticklike.core.gameplay.sistemas;
 
-import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 
 /**
@@ -47,7 +46,7 @@ public class SistemaDeNiveles {
     private void subirDeNivel() {
         xpActual -= xpHastaSiguienteNivel;
         nivelActual++;
-        xpHastaSiguienteNivel *= 1.55f;
+        xpHastaSiguienteNivel *= 1.5f;
         jugador.setVidaMax(jugador.getMaxVidaJugador() + 5);
         jugador.setVidaJugador(jugador.getVidaJugador() + 5);
         // Delegamos en ControladorMejoras para manejar las mejoras

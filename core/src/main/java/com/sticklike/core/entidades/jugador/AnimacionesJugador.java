@@ -3,23 +3,24 @@ package com.sticklike.core.entidades.jugador;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sticklike.core.utilidades.GestorConstantes;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
+import static com.sticklike.core.entidades.jugador.InputsJugador.Direction.*;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class AnimacionesJugador {
-    private Direction direccionActual = Direction.IDLE;
+    private Direction direccionActual = IDLE;
 
     // Animaciones
     // todo --> añadir animaciones N,S,NO,NE,SO,SE
     private final Animation<TextureRegion> animacionMovDerecha;
     private final Animation<TextureRegion> animacionMovIzquierda;
     private final Animation<TextureRegion> animacionIdle;
-    private float temporizadorAnimacion = GestorConstantes.TEMPORIZADOR_ANIMACION_MOV;
+    private float temporizadorAnimacion = TEMPORIZADOR_ANIMACION_MOV;
 
     // Estado de parpadeo
     private boolean enParpadeo = false;
-    private float tiempoParpadeoRestante = GestorConstantes.TIEMPO_PARPADEO_RESTANTE;
+    private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
 
     public AnimacionesJugador() {
         animacionIdle = GestorDeAssets.animations.get("idle");

@@ -4,9 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
-import com.sticklike.core.utilidades.GestorConstantes;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Proyectil tipo "Calcetín".
@@ -21,17 +25,19 @@ public class ProyectilCalcetin implements Proyectiles {
     private float distanciaRecorrida;
     private boolean proyectilActivo;
     private float direccionX, direccionY;
-    private float rotationSpeed = GestorConstantes.VEL_ROTACION_CALCETIN;
+    private float rotationSpeed = VEL_ROTACION_CALCETIN;
+    private Set<Enemigo> enemigosImpactados = new HashSet<>();
+
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad) {
         if (textura == null) {
-            textura = GestorDeAssets.armaCalcetin;
+            textura = armaCalcetin;
         }
-        this.distanciaMaxima = GestorConstantes.MAX_DISTANCIA;
-        this.distanciaRecorrida = GestorConstantes.DISTANCIA_RECORRIDA;
+        this.distanciaMaxima = MAX_DISTANCIA;
+        this.distanciaRecorrida = DISTANCIA_RECORRIDA;
 
         sprite = new Sprite(textura);
-        sprite.setSize(GestorConstantes.CALCETIN_W_SIZE, GestorConstantes.CALCETIN_H_SIZE);
+        sprite.setSize(CALCETIN_W_SIZE, CALCETIN_H_SIZE);
         sprite.setPosition(x, y);
         sprite.setOriginCenter();
 
@@ -98,12 +104,26 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public float getBaseDamage() {
         // daño base entre 13 y 24
-        return  13 + (float) Math.random() * 11;
+        return  6 + (float) Math.random() * 7;
     }
 
     @Override
     public float getKnockbackForce() {
         // El calcetín empuja más que la piedra de base
-        return GestorConstantes.EMPUJE_BASE_CALCETIN;
+        return EMPUJE_BASE_CALCETIN;
+    }
+
+    @Override
+    public boolean isPersistente() { // calcetín no desaparece al impactar
+        return  true;
+    }
+    @Override
+    public void registrarImpacto(Enemigo enemigo) {
+        enemigosImpactados.add(enemigo);
+    }
+
+    @Override
+    public boolean yaImpacto(Enemigo enemigo) {
+        return enemigosImpactados.contains(enemigo);
     }
 }

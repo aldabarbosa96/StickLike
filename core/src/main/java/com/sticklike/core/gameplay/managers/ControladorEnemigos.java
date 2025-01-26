@@ -10,7 +10,7 @@ import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * La clase EnemyManager se encarga de:
@@ -89,10 +89,10 @@ public class ControladorEnemigos {
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
         // Calcula los límites visibles de la cámara menos un borde para que no aparezcan demasiado lejos de los márgenes visibles
-        float leftLimit = playerX - VentanaJuego.WORLD_WIDTH / 2 - GestorConstantes.CORRECCION_SPAWN;
-        float rightLimit = playerX + VentanaJuego.WORLD_WIDTH / 2 - GestorConstantes.CORRECCION_SPAWN;
-        float bottomLimit = playerY - VentanaJuego.WORLD_HEIGHT / 2 - GestorConstantes.CORRECCION_SPAWN;
-        float topLimit = playerY + VentanaJuego.WORLD_HEIGHT / 2 - GestorConstantes.CORRECCION_SPAWN;
+        float leftLimit = playerX - VentanaJuego.worldWidth / 2 - CORRECCION_SPAWN;
+        float rightLimit = playerX + VentanaJuego.worldWidth / 2 - CORRECCION_SPAWN;
+        float bottomLimit = playerY - VentanaJuego.worldHeight / 2 - CORRECCION_SPAWN;
+        float topLimit = playerY + VentanaJuego.worldHeight / 2 - CORRECCION_SPAWN;
 
         float x = 0, y = 0;
 
@@ -140,9 +140,9 @@ public class ControladorEnemigos {
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
         switch (tipoEnemigo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad * GestorConstantes.VELOCIDAD_CULO);
+                return new EnemigoCulo(x, y, jugador, velocidad * VELOCIDAD_CULO);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * GestorConstantes.VELOCIDAD_REGLA, camera);
+                return new EnemigoRegla(x, y, jugador, velocidad * VELOCIDAD_REGLA, camera);
 
             /*case "ENEMIGO_TIPO3":
                 return new EnemigoTipo3(x, y, jugador, velocidad);*/

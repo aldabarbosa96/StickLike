@@ -3,7 +3,8 @@ package com.sticklike.core.entidades.enemigos.culo;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.enemigos.MovimientoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+
 
 /**
  * Movimiento de "Culo" basado en pausas y movimientos intermitentes hacia el jugador
@@ -56,8 +57,8 @@ public class MovimientoCulo extends MovimientoBase {
         float difY = playerPosY - enemyPosY;
 
         // Añadimos un desplazamiento aleatorio
-        float randomOffsetX = (float) Math.random() * GestorConstantes.MAX_OFFSET - GestorConstantes.AJUSTE_OFFSET_X;
-        float randomOffsetY = (float) Math.random() * GestorConstantes.MAX_OFFSET - GestorConstantes.AJUSTE_OFFSET_Y;
+        float randomOffsetX = (float) Math.random() * MAX_OFFSET - AJUSTE_OFFSET_X;
+        float randomOffsetY = (float) Math.random() * MAX_OFFSET - AJUSTE_OFFSET_Y;
         difX += randomOffsetX;
         difY += randomOffsetY;
 
@@ -74,13 +75,11 @@ public class MovimientoCulo extends MovimientoBase {
     }
 
     private void calcularDuracionPausa() {
-        duracionPausa = GestorConstantes.ENEMY_MIN_PAUSE +
-            (float) Math.random() * (GestorConstantes.ENEMY_MAX_PAUSE - GestorConstantes.ENEMY_MIN_PAUSE);
+        duracionPausa = ENEMY_MIN_PAUSE + (float) Math.random() * (ENEMY_MAX_PAUSE - ENEMY_MIN_PAUSE);
     }
 
     private void calcularDuracionMovimiento() {
-        duracionMovimiento = GestorConstantes.ENEMY_MIN_MOVE_DURATION +
-            (float) Math.random() * (GestorConstantes.ENEMY_MAX_MOVE_DURATION - GestorConstantes.ENEMY_MIN_MOVE_DURATION);
+        duracionMovimiento = ENEMY_MIN_MOVE_DURATION + (float) Math.random() * (ENEMY_MAX_MOVE_DURATION - ENEMY_MIN_MOVE_DURATION);
     }
 
     public float getVelocidadEnemigo() {

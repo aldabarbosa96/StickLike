@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.enemigos;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * Clase base para manejar movimiento de enemigos.
@@ -11,10 +11,10 @@ import com.sticklike.core.utilidades.GestorConstantes;
 public abstract class MovimientoBase {
     // Knockback
     private boolean canKnockback;
-    protected float knockbackVelX = GestorConstantes.VELOCIDAD_EMPUJE;
-    protected float knockbackVelY = GestorConstantes.VELOCIDAD_EMPUJE;
-    protected float knockbackTimer = GestorConstantes.TEMPORIZADOR_EMPUJE;
-    protected float knockbackDuration = GestorConstantes.DURACION_EMPUJE;
+    protected float knockbackVelX = VELOCIDAD_EMPUJE;
+    protected float knockbackVelY = VELOCIDAD_EMPUJE;
+    protected float knockbackTimer = TEMPORIZADOR_EMPUJE;
+    protected float knockbackDuration = DURACION_EMPUJE;
 
     public MovimientoBase(boolean canKnockback) {
         this.canKnockback = canKnockback;

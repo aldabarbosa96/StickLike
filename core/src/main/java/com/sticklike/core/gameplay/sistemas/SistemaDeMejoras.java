@@ -60,7 +60,7 @@ public class SistemaDeMejoras {
         mejorasMostradas.clear();
         // Mezclamos la lista completa
         Collections.shuffle(todasLasMejoras);
-        // Tomamos las primeras {@code numMejoras} mejoras
+        // Tomamos las primeras numMejoras
         for (int i = 0; i < Math.min(numMejoras, todasLasMejoras.size()); i++) {
             mejorasMostradas.add(todasLasMejoras.get(i));
         }

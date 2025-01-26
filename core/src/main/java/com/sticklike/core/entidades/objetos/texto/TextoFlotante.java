@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.objetos.texto;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * La clase InGameText se encarga de gestionar el renderizado, actualizado y destrucción
@@ -27,7 +27,7 @@ public class TextoFlotante {
         this.duracion = duracion;
 
         fuente = new BitmapFont();
-        fuente.getData().setScale(GestorConstantes.TEXTO_WIDTH, GestorConstantes.TEXTO_HEIGHT);
+        fuente.getData().setScale(TEXTO_WIDTH, TEXTO_HEIGHT);
     }
 
     /**
@@ -58,7 +58,7 @@ public class TextoFlotante {
      */
     public void actualizarTextoFlotante(float delta) {
         duracion -= delta;
-        y += delta * GestorConstantes.DESPLAZAMIENTOY_TEXTO;
+        y += delta * DESPLAZAMIENTOY_TEXTO;
     }
 
     private void dibujarReborde(SpriteBatch batch) {

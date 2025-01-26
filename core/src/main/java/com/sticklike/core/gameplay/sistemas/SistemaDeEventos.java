@@ -5,9 +5,11 @@ import com.sticklike.core.gameplay.eventos.Evento;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.PriorityQueue;
+
+import static com.sticklike.core.utilidades.GestorConstantes.LVL_EVENTO2;
 
 public class SistemaDeEventos {
     private PriorityQueue<Evento> eventos; // Cola de prioridad para eventos
@@ -25,10 +27,10 @@ public class SistemaDeEventos {
 
     private void inicializarEventos() {
         eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles,
-            () -> eventoAumentaEnemigos1(), GestorConstantes.LVL_EVENTO1));
+            () -> eventoAumentaEnemigos1(), LVL_EVENTO1));
 
         eventos.add(new Evento("Aumenta nº enemigos2", sistemaDeNiveles,
-            () -> eventoAumentaEnemigos2(), GestorConstantes.LVL_EVENTO2));
+            () -> eventoAumentaEnemigos2(),LVL_EVENTO2));
 
         // todo --> gestionar más eventos próximamente
     }

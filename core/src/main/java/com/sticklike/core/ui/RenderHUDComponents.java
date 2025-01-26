@@ -9,12 +9,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
-import com.sticklike.core.utilidades.GestorConstantes;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.text.DecimalFormat;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 
 public class RenderHUDComponents {
@@ -38,8 +37,8 @@ public class RenderHUDComponents {
         this.fuente = new BitmapFont();
         this.spriteBatch = spriteBatch;
         this.jugador = jugador;
-        this.texturaCorazonVida = GestorDeAssets.corazonVida;
-        this.texturaLapizXP = GestorDeAssets.iconoXP;
+        this.texturaCorazonVida = corazonVida;
+        this.texturaLapizXP = iconoXP;
         this.controladorProyectiles = jugador.getControladorProyectiles();
     }
 
@@ -59,14 +58,15 @@ public class RenderHUDComponents {
 
         // Configuramos la posición del texto
         float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + 10f);
-        float textY = VIRTUAL_HEIGHT / 2 + 285f;
+        float textY = VIRTUAL_HEIGHT / 2 + TIMER_Y_POS;
 
         spriteBatch.begin();
 
-        fuente.getData().setScale(0.8f);
-        // Dibujamos el texto principal
-        fuente.setColor(0, 0, 0, 1);
-        fuente.draw(spriteBatch, tiempoFormateado, textX, textY);
+        fuente.getData().setScale(TIMER_SCALE);
+        float offset = 1f; // Tamaño del reborde
+        Color colorReborde = Color.BLACK;
+        Color colorTexto = Color.WHITE;
+        dibujarTextoConReborde(spriteBatch, tiempoFormateado, textX, textY, offset, colorReborde, colorTexto);
         spriteBatch.end();
     }
 
@@ -77,8 +77,8 @@ public class RenderHUDComponents {
      * @return Tiempo formateado como "MM:SS"
      */
     private String formatearTiempo(float tiempoSegundos) {
-        int minutos = (int) (tiempoSegundos / 60);
-        int segundos = (int) (tiempoSegundos % 60);
+        int minutos = (int) (tiempoSegundos / TIMER_SECONDS);
+        int segundos = (int) (tiempoSegundos % TIMER_SECONDS);
         return String.format("%02d : %02d", minutos, segundos);
     }
 
@@ -87,8 +87,8 @@ public class RenderHUDComponents {
      */
     public void renderizarFondoHUD() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1.0f, 0.96f, 0.78f, 1);
-        shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
+        shapeRenderer.setColor(1.0f, 0.95f, 0.75f, 1);
+        shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
         shapeRenderer.end();
     }
 
@@ -104,27 +104,18 @@ public class RenderHUDComponents {
 
         // Dibujar REBORDE NEGRO
         shapeRenderer.setColor(0.1f, 0.1f, 0.1f, 1);
-
-        // Parte superior reborde
-        shapeRenderer.rect(-grosorSombra, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorTotalSombra, VIRTUAL_WIDTH + 2 * grosorSombra, grosorTotalSombra);
-        // Parte izquierda reborde
-        shapeRenderer.rect(-grosorSombra, -grosorSombra, grosorTotalSombra, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
-        // Parte derecha reborde
-        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, -grosorSombra, grosorTotalSombra, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
+        shapeRenderer.rect(-grosorSombra, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorTotalSombra, VIRTUAL_WIDTH + 2 * grosorSombra, grosorTotalSombra);
+        shapeRenderer.rect(-grosorSombra, -grosorSombra, grosorTotalSombra, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
+        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, -grosorSombra, grosorTotalSombra, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
 
         // Dibujar SOMBRA
         shapeRenderer.setColor(0.45f, 0.45f, 0.45f, 1);
-
-        // Parte superior sombra
-        shapeRenderer.rect(0, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorMarcoNegro, VIRTUAL_WIDTH, grosorMarcoNegro);
-        // Parte izquierda sombra
-        shapeRenderer.rect(0, 0, grosorMarcoNegro, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
-        // Parte derecha sombra
-        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, 0, grosorMarcoNegro, GestorConstantes.HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
+        shapeRenderer.rect(0, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorMarcoNegro, VIRTUAL_WIDTH, grosorMarcoNegro);
+        shapeRenderer.rect(0, 0, grosorMarcoNegro, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
+        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, 0, grosorMarcoNegro, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
 
         shapeRenderer.end();
     }
-
 
     /**
      * Dibuja una cuadrícula (grid) en la zona del HUD, utilizando shapeRenderer en modo línea (horizontal)
@@ -136,7 +127,7 @@ public class RenderHUDComponents {
         shapeRenderer.setColor(0.64f, 0.80f, 0.86f, 1);
 
         float screenWidth = VIRTUAL_WIDTH;
-        float cellSize = GestorConstantes.GRID_CELL_SIZE - 20f;
+        float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
 
         for (float y = 0; y <= alturaHUD; y += cellSize) {
             shapeRenderer.line(0, y, screenWidth, y);
@@ -155,7 +146,7 @@ public class RenderHUDComponents {
         layout.setText(fuente, levelText + levelNumber);
 
         float textX = (VIRTUAL_WIDTH - layout.width) / 2 - 10f;
-        float textY = GestorConstantes.HUD_HEIGHT - 13f + DESPLAZAMIENTO_VERTICAL_HUD;
+        float textY = HUD_HEIGHT - 13f + DESPLAZAMIENTO_VERTICAL_HUD;
 
         spriteBatch.begin();
 
@@ -169,7 +160,7 @@ public class RenderHUDComponents {
         // Coordenadas número
         float levelTextWidth = new GlyphLayout(fuente, levelText).width;
         float levelNumberX = textX + levelTextWidth;
-        float textYNumber = GestorConstantes.HUD_HEIGHT - 8.5f + DESPLAZAMIENTO_VERTICAL_HUD;
+        float textYNumber = HUD_HEIGHT - 8.5f + DESPLAZAMIENTO_VERTICAL_HUD;
 
         // Texto número del nivel
         fuente.getData().setScale(1.4f);
@@ -186,10 +177,10 @@ public class RenderHUDComponents {
      */
     public void renderizarBarraDeSalud() {
         float healthPercentage = jugador.obtenerPorcetajeVida();
-        float barWidth = GestorConstantes.HUD_BAR_WIDTH;
-        float barHeight = GestorConstantes.HUD_BAR_HEIGHT;
-        float barX = GestorConstantes.HUD_BAR_X;
-        float barY = GestorConstantes.HUD_HEIGHT - barHeight - GestorConstantes.HUD_BAR_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD + 5f;
+        float barWidth = HUD_BAR_WIDTH;
+        float barHeight = HUD_BAR_HEIGHT;
+        float barX = HUD_BAR_X;
+        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD + 5f;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -198,11 +189,11 @@ public class RenderHUDComponents {
         shapeRenderer.rect(barX - 1.8f, barY - 1.8f, barWidth + 3.6f, barHeight + 3.6f);
 
         // Fondo rojo
-        shapeRenderer.setColor(0.8f, 0.1f, 0.1f, 0.5f);
+        shapeRenderer.setColor(1f, 0f, 0.35f, 1);
         shapeRenderer.rect(barX, barY, barWidth, barHeight);
 
         // Barra de salud actual (verde según el porcentaje de vida)
-        shapeRenderer.setColor(0.1f, 0.8f, 0.1f, 0.8f);
+        shapeRenderer.setColor(0f, 0.9f, 0.25f, 1f);
         shapeRenderer.rect(barX, barY, barWidth * healthPercentage, barHeight);
 
         shapeRenderer.end();
@@ -214,10 +205,10 @@ public class RenderHUDComponents {
      * @param hudHeight altura del HUD para posicionar el texto
      */
     public void renderizarTextoSalud(float hudHeight) {
-        float barX = GestorConstantes.HUD_BAR_X;
-        float barWidth = GestorConstantes.HUD_BAR_WIDTH;
-        float barHeight = GestorConstantes.HUD_BAR_HEIGHT;
-        float barY = GestorConstantes.HUD_HEIGHT - barHeight - GestorConstantes.HUD_BAR_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD + 5f;
+        float barX = HUD_BAR_X;
+        float barWidth = HUD_BAR_WIDTH;
+        float barHeight = HUD_BAR_HEIGHT;
+        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD + 5f;
 
         String healthText = (int) jugador.getVidaJugador() + " / " + (int) jugador.getMaxVidaJugador();
 
@@ -244,9 +235,9 @@ public class RenderHUDComponents {
      * Dibuja el icono de corazón que representa la vida del jugador
      */
     public void renderizarIconoVidaJugador() {
-        float heartSize = GestorConstantes.HEART_SIZE;
-        float heartX = GestorConstantes.HEART_X;
-        float heartY = GestorConstantes.HUD_HEIGHT - heartSize - GestorConstantes.HEART_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD;
+        float heartSize = HEART_SIZE;
+        float heartX = HEART_X;
+        float heartY = HUD_HEIGHT - heartSize - HEART_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD;
 
         spriteBatch.begin();
         spriteBatch.draw(texturaCorazonVida, heartX, heartY, heartSize, heartSize);
@@ -257,10 +248,10 @@ public class RenderHUDComponents {
      * Dibuja la barra de experiencia (XP) del jugador. Incluye fondo, la parte azul según la fracción actual de XP y un icono
      */
     public void renderizarBarraXP() {
-        float barWidth = GestorConstantes.HUD_BAR_WIDTH;
-        float barHeight = GestorConstantes.HUD_BAR_HEIGHT;
-        float barX = GestorConstantes.HUD_BAR_X;
-        float barY = GestorConstantes.HUD_HEIGHT - barHeight - GestorConstantes.HUD_BAR_Y_OFFSET - 25f + DESPLAZAMIENTO_VERTICAL_HUD;
+        float barWidth = HUD_BAR_WIDTH;
+        float barHeight = HUD_BAR_HEIGHT;
+        float barX = HUD_BAR_X;
+        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET - 25f + DESPLAZAMIENTO_VERTICAL_HUD;
         float experiencePercentage = sistemaDeNiveles.getXpActual() / sistemaDeNiveles.getXpHastaSiguienteNivel();
 
         renderizarFondoBarraXP(barX, barY, barWidth, barHeight, experiencePercentage);
@@ -338,8 +329,8 @@ public class RenderHUDComponents {
      * Dibuja un icono al lado de la barra de XP como indicativo
      */
     private void renderizarIconoBarraXP(float barX, float barY, float barHeight) {
-        float iconSize = GestorConstantes.HEART_SIZE;
-        float iconX = GestorConstantes.HEART_X + (GestorConstantes.HEART_SIZE / 4);
+        float iconSize = HEART_SIZE;
+        float iconX = HEART_X + (HEART_SIZE / 4);
         float iconY = barY - 5f;
 
         spriteBatch.begin();
@@ -360,7 +351,7 @@ public class RenderHUDComponents {
         // Definimos las posiciones de renderizado (parte derecha del HUD)
         float margenDerecho = 75f;
         float statsX = VIRTUAL_WIDTH - margenDerecho;
-        float statsY = GestorConstantes.HUD_HEIGHT - 42.5f;
+        float statsY = HUD_HEIGHT - 42.5f;
         float espaciado = 18f; // Espacio entre líneas
 
         // Calculamos el ancho del texto más largo para alinear todas las líneas

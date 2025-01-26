@@ -7,6 +7,9 @@ import com.badlogic.gdx.audio.Sound;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+
+
 public class ControladorAudio {
     private Music musicaFondo;
     private Map<String, Sound> efectosSonido;
@@ -32,14 +35,14 @@ public class ControladorAudio {
     public void reproducirMusica() {
         if (musicaFondo != null) {
             musicaFondo.setLooping(true);
-            musicaFondo.setVolume(0.135f);
+            musicaFondo.setVolume(MUSICA_VOLUMEN);
             musicaFondo.play();
         }
     }
 
     public void pausarMusica() {
         if (musicaFondo != null) {
-            musicaFondo.setVolume(0.05f);
+            musicaFondo.setVolume(MUSICA_VOLUMEN_PAUSA);
         }
     }
 

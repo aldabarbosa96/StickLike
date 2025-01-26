@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
-import com.sticklike.core.utilidades.GestorConstantes;
+
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * Pantalla ** GAME OVER ** que se muestra al terminar la partida (al morir)
@@ -22,10 +23,6 @@ public class VentanaGameOver implements Screen {
     private RenderVentanaGameOver renderVentanaGameOver;
     private OrthographicCamera camera;
     private FitViewport viewport;
-
-    // Tamaño virtual de la ventana
-    private static final float VIRTUAL_WIDTH = GestorConstantes.VIRTUAL_WIDTH;
-    private static final float VIRTUAL_HEIGHT = GestorConstantes.VIRTUAL_HEIGHT;
 
     /**
      * @param game referencia a la clase principal {@link MainGame}, la cual gestiona el cambio de pantallas
@@ -60,11 +57,11 @@ public class VentanaGameOver implements Screen {
      */
     @Override
     public void render(float delta) {
-        renderVentanaGameOver.renderizarVentanaGameOver(viewport,camera,spriteBatch,layout,font);
+        renderVentanaGameOver.renderizarVentanaGameOver(viewport, camera, spriteBatch, layout, font);
     }
 
 
-    private void inputsVentanaGameOver(){
+    private void inputsVentanaGameOver() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {

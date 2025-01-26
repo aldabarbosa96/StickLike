@@ -3,13 +3,13 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * La clase AtaqueCalcetin maneja la lógica para disparar calcetines en todas las direcciones.
  */
 public class AtaqueCalcetin {
-    private float temporizadorDisparo = GestorConstantes.TEMPORIZADOR_DISPARO;
+    private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
 
     /**
@@ -35,21 +35,23 @@ public class AtaqueCalcetin {
 
         // Ángulos para las direcciones (diagonales primero, luego cardinales)
         float[] angulos = {45, 135, 225, 315, 0, 90, 180, 270}; // NO, NE, SO, SE, N, E, S, O
-        for (int i = 0; i < jug.getProyectilesPorDisparo() + 2; i++) { // todo --> aplicar límite de 8 proyectiles de tipo calcetín en un futuro
-            float angulo = angulos[i]; // Selecciona el ángulo según el índice
+        int totalProyectiles = Math.min(jug.getProyectilesPorDisparo() + 2, angulos.length);
+
+        for (int i = 0; i < totalProyectiles; i++) {
+            int index = i % angulos.length;
+            float angulo = angulos[index];
             float radianes = (float) Math.toRadians(angulo);
             float direccionX = (float) Math.cos(radianes);
             float direccionY = (float) Math.sin(radianes);
 
             // Crear el proyectil
-            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY,
-                GestorConstantes.PROJECTILE_CALCETIN_SPEED, GestorConstantes.SPEED_MULT);
+            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY, PROJECTILE_CALCETIN_SPEED, SPEED_MULT);
 
             // Añadir el proyectil al controlador del jugador
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
         }
 
-        controladorAudio.reproducirEfecto("lanzarCalcetin", GestorConstantes.AUDIO_CALCETIN);
+        controladorAudio.reproducirEfecto("lanzarCalcetin", AUDIO_CALCETIN);
     }
 
     /**

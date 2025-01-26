@@ -7,9 +7,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
-import com.sticklike.core.utilidades.GestorConstantes;
-import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.interfaces.Enemigo;
+
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
+
 
 /**
  * La clase EnemigoCulo gestiona el renderizado y actualizaciones de cada enemigo,
@@ -18,10 +20,10 @@ import com.sticklike.core.interfaces.Enemigo;
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = GestorConstantes.VIDA_ENEMIGOCULO;
+    private float vidaEnemigo = VIDA_ENEMIGOCULO;
     private MovimientoCulo movimientoCulo;
-    private float coolDownDanyo = GestorConstantes.COOLDOWN_ENEMIGOCULO;
-    private float temporizadorDanyo = GestorConstantes.TEMPORIZADOR_DANYO;
+    private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
+    private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
@@ -42,12 +44,12 @@ public class EnemigoCulo implements Enemigo {
     private void esConOjo() { // maneja la aleatoriedad de aparición de enemigoCulo con o sin ojo
         float random = (float) (Math.random() * 10);
         if (random >= 2.5f) {
-            sprite = new Sprite(GestorDeAssets.enemigoCulo);
+            sprite = new Sprite(enemigoCulo);
             sprite.setSize(32, 28);
         } else {
-            sprite = new Sprite(GestorDeAssets.enemigoCuloOjo);
+            sprite = new Sprite(enemigoCuloOjo);
             sprite.setSize(40, 34);
-            vidaEnemigo = GestorConstantes.VIDA_ENEMIGOCULO * 2;
+            vidaEnemigo = VIDA_ENEMIGOCULO * 2;
 
         }
     }
@@ -121,12 +123,11 @@ public class EnemigoCulo implements Enemigo {
         if (vidaEnemigo <= 0) {
             // En lugar de marcarlo como “muerto” final, activamos el fade
             if (!animacionesEnemigos.estaEnFade()) {
-                animacionesEnemigos.iniciarFadeMuerte(0.2f);
-                animacionesEnemigos.activarParpadeo(0.15f);
+                animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+                animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
     }
-
 
     @Override
     public boolean haSoltadoXP() {

@@ -28,4 +28,8 @@ public interface Proyectiles {
     float getBaseDamage();
 
     float getKnockbackForce();
+    boolean isPersistente();
+
+    void registrarImpacto(Enemigo enemigo);
+    boolean yaImpacto(Enemigo enemigo);
 }

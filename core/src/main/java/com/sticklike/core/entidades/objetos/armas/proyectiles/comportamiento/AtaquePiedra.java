@@ -5,7 +5,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.lang.Math;
 
@@ -17,7 +17,7 @@ import java.lang.Math;
  */
 public class AtaquePiedra {
 
-    private float temporizadorDisparo = GestorConstantes.TEMPORIZADOR_DISPARO;
+    private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
 
     /**
@@ -44,7 +44,7 @@ public class AtaquePiedra {
         // Buscamos un objetivo en rango
         Enemigo target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
-        controladorAudio.reproducirEfecto("lanzarPiedra",GestorConstantes.AUDIO_PIEDRA);
+        controladorAudio.reproducirEfecto("lanzarPiedra",AUDIO_PIEDRA);
 
         // Obtenemos coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;

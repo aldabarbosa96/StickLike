@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import static com.sticklike.core.utilidades.GestorConstantes.VIRTUAL_HEIGHT;
-import static com.sticklike.core.utilidades.GestorConstantes.VIRTUAL_WIDTH;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+
 
 public class RenderVentanaGameOver {
     public void renderizarVentanaGameOver(FitViewport viewport, OrthographicCamera camera, SpriteBatch spriteBatch, GlyphLayout layout, BitmapFont font) {

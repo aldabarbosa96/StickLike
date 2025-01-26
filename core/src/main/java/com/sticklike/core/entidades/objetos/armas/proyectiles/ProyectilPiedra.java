@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
-import com.sticklike.core.utilidades.GestorDeAssets;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * Representa un proyectil tipo "Piedra" lanzado por el jugador.
@@ -15,17 +16,17 @@ import com.sticklike.core.utilidades.GestorConstantes;
 public class ProyectilPiedra implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
-    private float velocidadProyectil = GestorConstantes.PROJECTILE_PIEDRA_SPEED;
+    private float velocidadProyectil = PROJECTILE_PIEDRA_SPEED;
     private float multiplicadorVelocidad;
     private float direccionX, direccionY;
     private boolean proyectilActivo;
 
     public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad) {
         if (textura == null) {
-            textura = GestorDeAssets.armaPiedra;
+            textura = armaPiedra;
         }
         sprite = new Sprite(textura);
-        sprite.setSize(GestorConstantes.PIEDRA_SIZE, GestorConstantes.PIEDRA_SIZE);
+        sprite.setSize(PIEDRA_SIZE, PIEDRA_SIZE);
         sprite.setPosition(x, y);
 
         this.direccionX = direccionX;
@@ -90,6 +91,19 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public float getKnockbackForce() {
-        return GestorConstantes.EMPUJE_BASE_PIEDRA;
+        return EMPUJE_BASE_PIEDRA;
+    }
+
+    @Override
+    public boolean isPersistente() { // piedra no persiste tras el impacto
+        return false;
+    }
+
+    @Override
+    public void registrarImpacto(Enemigo enemigo) {}
+
+    @Override
+    public boolean yaImpacto(Enemigo enemigo) {
+        return false;
     }
 }

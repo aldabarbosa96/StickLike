@@ -27,7 +27,7 @@ import com.sticklike.core.pantallas.gameOver.VentanaGameOver;
 import com.sticklike.core.ui.HUD;
 import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.ui.RenderHUDComponents;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.List;
@@ -47,9 +47,9 @@ import java.util.List;
  */
 public class VentanaJuego implements Screen {
 
-    public static final int WORLD_WIDTH = (int) GestorConstantes.VIRTUAL_WIDTH;
-    public static final int WORLD_HEIGHT = (int) GestorConstantes.VIRTUAL_HEIGHT;
-    private static final float CAMERA_OFFSET_Y = GestorConstantes.CAMERA_OFFSET_Y;
+    public static final int worldWidth = (int) VIRTUAL_WIDTH;
+    public static final int worldHeight = (int) VIRTUAL_HEIGHT;
+    private float cameraOffsetY = CAMERA_OFFSET_Y;
 
     // Referencia al MainGame
     private MainGame game;
@@ -113,7 +113,7 @@ public class VentanaJuego implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         camara = new OrthographicCamera();
-        viewport = new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT, camara);
+        viewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camara);
         viewport.apply();
     }
 
@@ -123,13 +123,13 @@ public class VentanaJuego implements Screen {
         colisionesJugador = new ColisionesJugador();
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
-        ataquePiedra = new AtaquePiedra(GestorConstantes.INTERVALO_DISPARO);
-        ataqueCalcetin = new AtaqueCalcetin(GestorConstantes.ATAQUE_CALCETIN_INTERVALO);
+        ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
+        ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
         controladorProyectiles = new ControladorProyectiles();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
-        float playerStartX = WORLD_WIDTH / 2f;
-        float playerStartY = WORLD_HEIGHT / 2f + 125f;
+        float playerStartX = worldWidth / 2f;
+        float playerStartY = worldHeight / 2f + 125f;
         jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, ataqueCalcetin, controladorProyectiles);
     }
 
@@ -140,14 +140,14 @@ public class VentanaJuego implements Screen {
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
 
         // Luego los controladores dependientes
-        controladorEnemigos = new ControladorEnemigos(jugador, GestorConstantes.INTERVALO_SPAWN, this);
+        controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
 
 
     private void inicializarCuadriculaYHUD() {
         // Renderizado de la cuadrícula (mapa) y el HUD
-        renderVentanaJuego = new RenderVentanaJuego((int) GestorConstantes.GRID_CELL_SIZE);
+        renderVentanaJuego = new RenderVentanaJuego((int) GRID_CELL_SIZE);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents,controladorEnemigos, sistemaDeNiveles);
@@ -265,7 +265,7 @@ public class VentanaJuego implements Screen {
      * Ajusta la cámara para que siga al jugador, con offset vertical.
      */
     public void actualizarPosCamara() {camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
-            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y, 0);
+            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY, 0);
 
         camara.update();
     }

@@ -13,7 +13,8 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * Se encarga de dibujar la ventana principal del juego (mapa) y sus elementos
@@ -22,17 +23,7 @@ public class RenderVentanaJuego {
 
     private ShapeRenderer shapeRenderer;
     private final int tamanyoCeldas;
-    private static final float MIN_DIST_SAME_TEXTURE = 1000f;
 
-    // Máximo de reintentos para colocar un borrón sin conflicto
-    private static final int MAX_ATTEMPTS = 5;
-    private static final int CANTIDAD_BORRONES = 1750; // todo --> dibujar más borrones
-
-    // Límites "mapa" para generar borrones
-    private static final float MAP_MIN_X = -10000;
-    private static final float MAP_MAX_X =  10000;
-    private static final float MAP_MIN_Y = -10000;
-    private static final float MAP_MAX_Y =  10000;
 
     // ================================
     //  Clase interna: datos borrón
@@ -52,7 +43,7 @@ public class RenderVentanaJuego {
         }
     }
 
-    private Array<Borron> borrones;
+    private Array<Borron> borronesMapa;
 
     /**
      * Crea el ShapeRenderer para la cuadrícula.
@@ -83,7 +74,7 @@ public class RenderVentanaJuego {
 
         // 3) Dibujar los borrones
         spriteBatch.begin();
-        for (Borron b : borrones) {
+        for (Borron b : borronesMapa) {
             float drawWidth  = b.textura.getWidth()  * b.scale;
             float drawHeight = b.textura.getHeight() * b.scale;
 
@@ -149,7 +140,7 @@ public class RenderVentanaJuego {
      * y evitando proximidad excesiva si la textura es la misma
      */
     private void generarBorronesRandom(int cantidad) {
-        borrones = new Array<>();
+        borronesMapa = new Array<>();
 
         for (int i = 0; i < cantidad; i++) {
             int attempts = 0;
@@ -159,7 +150,7 @@ public class RenderVentanaJuego {
                 attempts++;
 
                 // 1) Seleccionar textura aleatoria
-                Texture tex = GestorDeAssets.borrones.random();
+                Texture tex = borrones.random();
 
                 // 2) Escala y rotación aleatorias
                 float scale = MathUtils.random(0.12f, 0.3f);
@@ -186,7 +177,7 @@ public class RenderVentanaJuego {
             }
 
             if (nuevoBorron == null) {
-                Texture tex2 = GestorDeAssets.borrones.random();
+                Texture tex2 = borrones.random();
                 float scale2 = MathUtils.random(0.12f, 0.3f);
                 float rotation2 = MathUtils.random(0f, 360f);
                 float w2  = tex2.getWidth()  * scale2;
@@ -197,7 +188,7 @@ public class RenderVentanaJuego {
                 nuevoBorron = new Borron(tex2, x2, y2, scale2, rotation2);
             }
 
-            borrones.add(nuevoBorron);
+            borronesMapa.add(nuevoBorron);
         }
     }
 
@@ -210,7 +201,7 @@ public class RenderVentanaJuego {
         float bottomA = y;
         float topA    = y + height;
 
-        for (Borron b : borrones) {
+        for (Borron b : borronesMapa) {
             float bw = b.textura.getWidth() * b.scale;
             float bh = b.textura.getHeight() * b.scale;
 
@@ -236,7 +227,7 @@ public class RenderVentanaJuego {
         float cx  = x + tex.getWidth()  * scale / 2f;
         float cy  = y + tex.getHeight() * scale / 2f;
 
-        for (Borron b : borrones) {
+        for (Borron b : borronesMapa) {
             if (b.textura == tex) {
                 // Centro del borrón existente
                 float bx  = b.posX + b.textura.getWidth()  * b.scale / 2f;

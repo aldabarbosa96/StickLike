@@ -2,15 +2,16 @@ package com.sticklike.core.entidades.enemigos;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.sticklike.core.utilidades.GestorConstantes;
+
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class AnimacionesEnemigos {
     private boolean enParpadeo = false;
-    private float tiempoParpadeoRestante = GestorConstantes.TIEMPO_PARPADEO_RESTANTE;
+    private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
     private boolean enFade = false;
-    private float tiempoFadeRestante = GestorConstantes.TIEMPO_FADE_RESTANTE;
-    private float tiempoTotalFade = GestorConstantes.TIEMPO_FADE_TOTAL;
-    private float alphaActual = GestorConstantes.ALPHA_ACTUAL;
+    private float tiempoFadeRestante = TIEMPO_FADE_RESTANTE;
+    private float tiempoTotalFade = TIEMPO_FADE_TOTAL;
+    private float alphaActual = ALPHA_ACTUAL;
 
     // ================================
     // PARPADEO
@@ -52,7 +53,7 @@ public class AnimacionesEnemigos {
         enFade = true;
         tiempoTotalFade = duracion;
         tiempoFadeRestante = duracion;
-        alphaActual = GestorConstantes.ALPHA_ACTUAL;
+        alphaActual = ALPHA_ACTUAL;
     }
 
     // Actualiza el fade-out en cada frame

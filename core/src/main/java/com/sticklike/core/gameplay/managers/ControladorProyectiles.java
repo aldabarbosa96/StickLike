@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,7 +50,6 @@ public class ControladorProyectiles {
      * @param dmgText array para almacenar textos flotantes de daño
      */
     public void actualizarProyectiles(float delta, Array<Enemigo> enemies, Array<TextoFlotante> dmgText) {
-        // Revisión: No limpiamos `ultimaYTexto` a menos que sea estrictamente necesario
         ultimaYTexto.clear();
 
         Iterator<Proyectiles> iterator = proyectiles.iterator();
@@ -60,7 +59,9 @@ public class ControladorProyectiles {
             proyectil.actualizarProyectil(delta);
 
             for (Enemigo enemigo : enemies) {
+                // Verificamos si el proyectil es activo, el enemigo tiene vida y no ha sido impactado antes
                 if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
+                    !proyectil.yaImpacto(enemigo) &&
                     enemigo.esGolpeadoPorProyectil(
                         proyectil.getX(),
                         proyectil.getY(),
@@ -73,32 +74,34 @@ public class ControladorProyectiles {
 
                     // 2) Aplicar daño y parpadeo
                     enemigo.reducirSalud(damage);
-                    enemigo.activarParpadeo(GestorConstantes.DURACION_PARPADEO_ENEMIGO);
+                    enemigo.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
 
                     // 3) Aplicar knockback
                     aplicarKnockback(enemigo, proyectil);
 
                     // 4) Generar texto flotante
                     float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                    float posicionTextoY = enemigo.getY() + enemigo.getSprite().getHeight() + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
+                    float posicionTextoY = enemigo.getY() + enemigo.getSprite().getHeight() + DESPLAZAMIENTOY_TEXTO2;
 
                     // Ajustar la posición si ya existe un texto flotante para el enemigo
                     Float ultimaY = ultimaYTexto.get(enemigo);
                     if (ultimaY != null) {
-                        posicionTextoY = ultimaY + GestorConstantes.DESPLAZAMIENTOY_TEXTO2;
+                        posicionTextoY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
                     }
 
-                    // Crear y añadir el texto flotante
-                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, GestorConstantes.DURACION_TEXTO);
+                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO);
                     dmgText.add(damageText);
 
-                    // Actualizar la posición en el mapa
                     ultimaYTexto.put(enemigo, posicionTextoY);
 
-                    // 5) Desactivar proyectil
+                    // Registrar el impacto para evitar daño repetido
+                    proyectil.registrarImpacto(enemigo);
 
-                    proyectil.desactivarProyectil();
-                    break; // Salimos del loop de enemigos
+                    // Si el proyectil no es persistente, desactivarlo
+                    if (!proyectil.isPersistente()) {
+                        proyectil.desactivarProyectil();
+                        break; // Salimos del loop de enemigos
+                    }
                 }
             }
 
@@ -108,6 +111,7 @@ public class ControladorProyectiles {
             }
         }
     }
+
 
     /**
      * Aplica el knockback a un enemigo basado en la posición del proyectil.

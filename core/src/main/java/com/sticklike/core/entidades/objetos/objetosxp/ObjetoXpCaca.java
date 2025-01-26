@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
-import com.sticklike.core.utilidades.GestorConstantes;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 /**
  * La clase ObjetoXpCaca representa los objetos que sueltan los EnemigoCulo al morir y que otorgan experiencia
@@ -18,14 +18,14 @@ public class ObjetoXpCaca implements ObjetosXP {
 
     private float x, y;
 
-    private final float distanciaActivacion = GestorConstantes.DISTANCIA_ACTIVACION;
-    private final float velocidadAtraccion = GestorConstantes.VEL_ATRACCION;
+    private final float distanciaActivacion = DISTANCIA_ACTIVACION;
+    private final float velocidadAtraccion = VEL_ATRACCION;
 
 
     public ObjetoXpCaca(float x, float y) {
-        Texture texture = GestorDeAssets.recolectableCaca;
+        Texture texture = recolectableCaca;
         sprite = new Sprite(texture);
-        sprite.setSize(GestorConstantes.OBJETO_CACA_WIDTH, GestorConstantes.OBJETO_CACA_HEIGHT);
+        sprite.setSize(OBJETO_CACA_WIDTH, OBJETO_CACA_HEIGHT);
         sprite.setPosition(x, y);
 
         // Inicializa las coordenadas
@@ -76,7 +76,7 @@ public class ObjetoXpCaca implements ObjetosXP {
 
     @Override
     public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerXP",GestorConstantes.AUDIO_RECOLECCION_CACA);
+        controladorAudio.reproducirEfecto("recogerXP",AUDIO_RECOLECCION_CACA);
         recolectado = true;
         sprite = null;
     }

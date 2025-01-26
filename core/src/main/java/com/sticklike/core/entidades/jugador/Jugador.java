@@ -11,7 +11,7 @@ import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.utilidades.GestorDeAssets;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * La clase Jugador representa al personaje controlado por el jugador.
@@ -49,19 +49,19 @@ public class Jugador {
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
                    MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaqueCalcetin calcetinazo,
                    ControladorProyectiles controladorProyectiles) {
-        this.danyoAtaqueJugador = GestorConstantes.DANYO;
-        this.velocidadJugador = GestorConstantes.VEL_MOV_JUGADOR;
-        this.vidaJugador = GestorConstantes.VIDA_JUGADOR;
-        this.maxVidaJugador = GestorConstantes.VIDAMAX_JUGADOR;
-        this.rangoAtaqueJugador = GestorConstantes.RANGO_ATAQUE_JUGADOR;
-        this.intervaloDisparo = GestorConstantes.INTERVALO_DISPARO;
-        this.velocidadAtaque = GestorConstantes.VEL_ATAQUE_JUGADOR;
-        this.proyectilesPorDisparo = GestorConstantes.NUM_PROYECTILES_INICIALES;
+        this.danyoAtaqueJugador = DANYO;
+        this.velocidadJugador = VEL_MOV_JUGADOR;
+        this.vidaJugador = VIDA_JUGADOR;
+        this.maxVidaJugador = VIDAMAX_JUGADOR;
+        this.rangoAtaqueJugador = RANGO_ATAQUE_JUGADOR;
+        this.intervaloDisparo = INTERVALO_DISPARO;
+        this.velocidadAtaque = VEL_ATAQUE_JUGADOR;
+        this.proyectilesPorDisparo = NUM_PROYECTILES_INICIALES;
         this.estaVivo = true;
 
         // Inicializar el sprite del jugador
         this.sprite = new Sprite(GestorDeAssets.stickman);
-        this.sprite.setSize(GestorConstantes.WIDTH_JUGADOR, GestorConstantes.HEIGHT_JUGADOR);
+        this.sprite.setSize(WIDTH_JUGADOR, HEIGHT_JUGADOR);
         this.sprite.setPosition(startX, startY);
 
         // Inicializar controladores
@@ -143,7 +143,7 @@ public class Jugador {
 
     public void reducirIntervaloDisparo(float percentage) {
         intervaloDisparo *= (1 - percentage);
-        if (intervaloDisparo < GestorConstantes.INTERVALO_MIN_DISPARO) intervaloDisparo = GestorConstantes.INTERVALO_MIN_DISPARO;
+        if (intervaloDisparo < INTERVALO_MIN_DISPARO) intervaloDisparo = INTERVALO_MIN_DISPARO;
 
         velocidadAtaque = 1 / intervaloDisparo;
         pedrada.setIntervaloDisparo(intervaloDisparo);

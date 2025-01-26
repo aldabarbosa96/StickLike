@@ -1,14 +1,12 @@
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * Clase responsable de dibujar la información de interfaz del jugador en pantalla (vida, experiencia, nivel, etc.)
@@ -21,7 +19,7 @@ public class HUD {
     private final SpriteBatch spriteBatch;
     private final OrthographicCamera hudCamara;
     private final FillViewport hudViewport;
-    private static final float DESPLAZAMIENTO_VERTICAL_HUD = GestorConstantes.DESPLAZAMIENTO_VERTICAL_HUD;
+    private static final float desplazamientoVertHUD = DESPLAZAMIENTO_VERTICAL_HUD;
 
 
     /**
@@ -37,7 +35,7 @@ public class HUD {
 
         // Configuramos la cámara y el viewport
         this.hudCamara = new OrthographicCamera();
-        this.hudViewport = new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT, hudCamara);
+        this.hudViewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
         this.hudCamara.update();
 
     }
@@ -52,7 +50,7 @@ public class HUD {
         spriteBatch.setProjectionMatrix(hudCamara.combined);
         shapeRenderer.setProjectionMatrix(hudCamara.combined);
 
-        float hudHeight = 200f + DESPLAZAMIENTO_VERTICAL_HUD;
+        float hudHeight = 200f + desplazamientoVertHUD;
         renderHUDComponents.renderizarFondoHUD();
         renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
         renderHUDComponents.renderizarMarcoHUD();

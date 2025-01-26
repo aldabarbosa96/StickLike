@@ -16,6 +16,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración del HUD
     public static final float HUD_HEIGHT = 200f;
     public static final float GRID_CELL_SIZE = 38f;
+    public static final float GRID_CELL_SIZE_CORRECTION = 20f;
     public static final float HUD_BAR_WIDTH = 200f;
     public static final float HUD_BAR_HEIGHT = 15f;
     public static final float HUD_BAR_X = 70f;
@@ -28,6 +29,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float POPUP_HEIGHT = 350;
     public static final String POPUP_HEADER = "\n\n<< < U P G R A D E S > >> ";
     public static final String POPUP_FOOTER = "   \n";
+    public static final float TIMER_Y_POS = 285f;
+    public static final float TIMER_SCALE = 0.75f;
+    public static final float TIMER_SECONDS = 60f;
 
     // Configuración del jugador
     public static final float VEL_MOV_JUGADOR = 125.0f;
@@ -42,6 +46,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float WIDTH_JUGADOR = 13f;
     public static final float HEIGHT_JUGADOR = 38f;
+    public static final float PARPADEO_JUGADOR = 0.2f;
 
     // Configuración de los enemigos
     public static final float VIDA_ENEMIGOCULO = 30f;
@@ -64,6 +69,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Animaciones enemigos
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
     public static final float DURACION_PARPADEO_ENEMIGO = 0.15f;
+    public static final float DURACION_FADE_ENEMIGO = 0.2f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
     public static final float TIEMPO_FADE_TOTAL = 0.25f;
     public static final float ALPHA_ACTUAL = 1f;
@@ -108,10 +114,23 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO1 = 3;
     public static final int LVL_EVENTO2 = 5;
 
-    // Controlador AUDIO
+    // Configuración borrones
+    public static final float MIN_DIST_SAME_TEXTURE = 1000f;
+    public static final int MAX_ATTEMPTS = 5;
+    public static final int CANTIDAD_BORRONES = 1750; // todo --> dibujar más borrones
 
+    public static final float MAP_MIN_X = -10000;
+    public static final float MAP_MAX_X =  10000;
+    public static final float MAP_MIN_Y = -10000;
+    public static final float MAP_MAX_Y =  10000;
+
+    // Controlador AUDIO
+    public static final float MUSICA_VOLUMEN = 0.135f;
+    public static final float MUSICA_VOLUMEN_PAUSA = 0.05f;
     public static final float AUDIO_CALCETIN = 0.9f;
     public static final float AUDIO_PIEDRA = 0.7f;
     public static final float AUDIO_RECOLECCION_CACA = 1f;
     public static final float AUDIO_RECOLECCION_VIDA = 0.7f;
+    public static final float AUDIO_DANYO = 0.9f;
+    public static final float AUDIO_MUERTE = 0.7f;
 }

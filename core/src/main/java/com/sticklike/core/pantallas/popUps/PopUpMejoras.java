@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
-import com.sticklike.core.utilidades.GestorConstantes;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class PopUpMejoras {
 
     public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego ventanaJuego) {
         this.ventanaJuego = ventanaJuego;
-        uiStage = new Stage(new FillViewport(GestorConstantes.VIRTUAL_WIDTH, GestorConstantes.VIRTUAL_HEIGHT));
+        uiStage = new Stage(new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
         this.pausado = false;
         this.sistemaDeMejoras = sistemaDeMejoras;
@@ -73,13 +73,13 @@ public class PopUpMejoras {
         ventanaJuego.getRenderHUDComponents().pausarTemporizador();
 
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
-        final Window upgradeWindow = new Window(GestorConstantes.POPUP_HEADER, wStyle);
+        final Window upgradeWindow = new Window(POPUP_HEADER, wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
 
-        float w = GestorConstantes.POPUP_WIDTH;
-        float h = GestorConstantes.POPUP_HEIGHT;
+        float w = POPUP_WIDTH;
+        float h = POPUP_HEIGHT;
         upgradeWindow.setSize(w, h);
-        upgradeWindow.setPosition((GestorConstantes.VIRTUAL_WIDTH - w)  / 2f, (GestorConstantes.VIRTUAL_HEIGHT - h + 150f) / 2f);
+        upgradeWindow.setPosition((VIRTUAL_WIDTH - w)  / 2f, (VIRTUAL_HEIGHT - h + 150f) / 2f);
         upgradeWindow.padTop(75f);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
@@ -90,8 +90,7 @@ public class PopUpMejoras {
             final Mejora mejora = mejoras.get(i);
 
             TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
-            TextButton btn = new TextButton((i + 1) + ") " + mejora.getNombreMejora() + GestorConstantes.POPUP_FOOTER + mejora.getDescripcionMejora()
-                + GestorConstantes.POPUP_FOOTER, tbs);
+            TextButton btn = new TextButton((i + 1) + ") " + mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora() + POPUP_FOOTER, tbs);
 
             btn.getLabel().setWrap(true);
             btn.getLabel().setAlignment(Align.center);
