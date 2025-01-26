@@ -70,8 +70,10 @@ public class PopUpMejoras {
 
     public void mostrarPopUpMejoras(final List<Mejora> mejoras) {
         ventanaJuego.setPausado(true);
+        ventanaJuego.getMenuPause().bloquearInputs(true); // Bloquea inputs del MenuPause
         ventanaJuego.getRenderHUDComponents().pausarTemporizador();
 
+        // Configurar la ventana del pop-up
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         final Window upgradeWindow = new Window(POPUP_HEADER, wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
@@ -79,7 +81,7 @@ public class PopUpMejoras {
         float w = POPUP_WIDTH;
         float h = POPUP_HEIGHT;
         upgradeWindow.setSize(w, h);
-        upgradeWindow.setPosition((VIRTUAL_WIDTH - w)  / 2f, (VIRTUAL_HEIGHT - h + 150f) / 2f);
+        upgradeWindow.setPosition((VIRTUAL_WIDTH - w) / 2f, (VIRTUAL_HEIGHT - h + 150f) / 2f);
         upgradeWindow.padTop(75f);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
@@ -100,7 +102,7 @@ public class PopUpMejoras {
             upgradeWindow.add(btn).width(350).pad(7);
         }
 
-        // Listener de teclado para 1,2,3
+        // Listener de teclado para 1, 2, 3
         upgradeWindow.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
@@ -126,7 +128,6 @@ public class PopUpMejoras {
         // Stage recibe el input
         InputMultiplexer im = new InputMultiplexer(uiStage);
         Gdx.input.setInputProcessor(im);
-
     }
 
     private void seleccionarMejora(int index, List<Mejora> mejoras, Window upgradeWindow) {
@@ -135,8 +136,10 @@ public class PopUpMejoras {
         upgradeWindow.remove();
         ventanaJuego.setPausado(false);
         ventanaJuego.getRenderHUDComponents().reanudarTemporizador();
+        ventanaJuego.getMenuPause().bloquearInputs(false); // Reanuda inputs del MenuPause
         Gdx.input.setInputProcessor(null);
     }
+
 
 
     public Stage getUiStage() {

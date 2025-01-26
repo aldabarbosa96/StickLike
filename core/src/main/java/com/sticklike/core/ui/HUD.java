@@ -78,6 +78,7 @@ public class HUD {
         spriteBatch.dispose();
     }
 
+
     public RenderHUDComponents getRenderHUDComponents() {
         return renderHUDComponents;
     }

@@ -26,8 +26,11 @@ import com.sticklike.core.pantallas.popUps.PopUpMejoras;
 import com.sticklike.core.pantallas.gameOver.VentanaGameOver;
 import com.sticklike.core.ui.HUD;
 import com.sticklike.core.gameplay.mejoras.Mejora;
+import com.sticklike.core.ui.MenuPause;
 import com.sticklike.core.ui.RenderHUDComponents;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.List;
@@ -75,6 +78,8 @@ public class VentanaJuego implements Screen {
     private ControladorProyectiles controladorProyectiles;
     private ControladorAudio controladorAudio;
     private PopUpMejoras popUpMejoras;
+    private MenuPause menuPause;
+
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
@@ -100,7 +105,6 @@ public class VentanaJuego implements Screen {
         inicializarSistemasYControladores();
         inicializarCuadriculaYHUD();
         inicializarListas();
-
 
 
         // Ajustamos posición de la cámara siguiendo al jugador
@@ -150,7 +154,9 @@ public class VentanaJuego implements Screen {
         renderVentanaJuego = new RenderVentanaJuego((int) GRID_CELL_SIZE);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
-        sistemaDeEventos = new SistemaDeEventos(renderHUDComponents,controladorEnemigos, sistemaDeNiveles);
+        sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
+
+        menuPause = new MenuPause(4, 12f, 4, 22, 15, 55,this);
 
     }
 
@@ -170,32 +176,38 @@ public class VentanaJuego implements Screen {
 
     @Override
     public void render(float delta) {
+        menuPause.handleInput();
         // Si el jugador muere, pasamos a la pantalla de GameOver
         if (jugador.estaVivo()) { // este boleano está invertido todo --> mejorar en un futuro para mayor claridad
             game.setScreen(new VentanaGameOver(game));
             return;
         }
-        if (!pausado) {
+        if (!pausado && !menuPause.isPaused()) {
             actualizarLogica(delta, controladorAudio);
             reproducirMusica();
 
         } else pausarMusica();
 
+
         // Renderizado de los componentes principales de la ventana
         renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
+
+        menuPause.render(shapeRenderer, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
         // Stage de la UI (pop-up de upgrades)
         popUpMejoras.getUiStage().act(delta);
         popUpMejoras.getUiStage().draw();
     }
-    private void reproducirMusica(){
+
+    private void reproducirMusica() {
         controladorAudio.reproducirMusica();
         efectoSonidoPopUpReproducido = false;
     }
-    private void pausarMusica(){ // genera además un efecto de sonido "wow"
+
+    private void pausarMusica() { // genera además un efecto de sonido "wow"
         controladorAudio.pausarMusica();
         if (!efectoSonidoPopUpReproducido) {
-            controladorAudio.reproducirEfecto("upgrade",0.5f);
+            controladorAudio.reproducirEfecto("upgrade", 0.5f);
             efectoSonidoPopUpReproducido = true;
         }
     }
@@ -264,7 +276,8 @@ public class VentanaJuego implements Screen {
     /**
      * Ajusta la cámara para que siga al jugador, con offset vertical.
      */
-    public void actualizarPosCamara() {camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
+    public void actualizarPosCamara() {
+        camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
             jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY, 0);
 
         camara.update();
@@ -339,6 +352,18 @@ public class VentanaJuego implements Screen {
 
     public void setPausado(boolean pausa) {
         this.pausado = pausa;
+
+        if (pausa) {
+            controladorAudio.pausarMusica(); // Pausar música (atenúa la música)
+            renderHUDComponents.pausarTemporizador(); // Pausar temporizador
+        } else {
+            controladorAudio.reproducirMusica(); // Reanudar música
+            renderHUDComponents.reanudarTemporizador(); // Reanudar temporizador
+        }
+    }
+
+    public MenuPause getMenuPause() {
+        return menuPause;
     }
 
     public RenderHUDComponents getRenderHUDComponents() {

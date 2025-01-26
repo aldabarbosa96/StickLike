@@ -99,8 +99,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DESPLAZAMIENTOY_TEXTO = 30f;
     public static final float DESPLAZAMIENTOY_TEXTO2 = 12f;
     public static final float DURACION_TEXTO = 0.3f;
-    public static final float TEXTO_WIDTH = 0.7f;
-    public static final float TEXTO_HEIGHT = 1f;
+    public static final float TEXTO_WIDTH = 0.75f;
+    public static final float TEXTO_HEIGHT = 1.1f;
 
     // Configuración recolectables
     public static final float DISTANCIA_ACTIVACION = 75f;
