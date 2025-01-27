@@ -109,7 +109,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_VIDA_HEIGHT= 14f;
     public static final float OBJETO_CACA_WIDTH= 10f;
     public static final float OBJETO_CACA_HEIGHT= 10f;
-    public static final float OBJETO_LEFA_WIDTH= 12f;
+    public static final float OBJETO_LEFA_WIDTH= 10f;
     public static final float OBJETO_LEFA_HEIGHT= 12f;
 
     // Controlador Evento
