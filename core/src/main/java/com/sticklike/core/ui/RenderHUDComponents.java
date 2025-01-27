@@ -346,7 +346,7 @@ public class RenderHUDComponents {
         String rangoJugador = "Rango Disparo   " + df.format(jugador.getRangoAtaqueJugador());
         String velocidadAtaque = "Vel. Ataque   " + df.format(jugador.getVelocidadAtaque());
         String fuerzaAtaque = "Fuerza   " + df.format(jugador.getDanyoAtaqueJugador());
-        String numProyectiles = "Núm. Proyectiles   " + df.format(jugador.getProyectilesPorDisparo());
+        String numProyectiles = "Núm. Proyectiles   +" + df.format(jugador.getProyectilesPorDisparo());
 
         // Definimos las posiciones de renderizado (parte derecha del HUD)
         float margenDerecho = 75f;

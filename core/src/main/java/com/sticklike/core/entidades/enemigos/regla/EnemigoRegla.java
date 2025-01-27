@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.objetosxp.ObjetoVida;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpVida;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import com.sticklike.core.interfaces.Enemigo;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
@@ -34,7 +35,9 @@ public class EnemigoRegla implements Enemigo {
      * @param velocidadEnemigo velocidad de movimiento del enemigo
      */
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
-        esCruzada();
+        //esCruzada();
+        sprite = new Sprite(enemigoReglaCruzada);
+        sprite.setSize(32, 32);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, false);
@@ -42,13 +45,17 @@ public class EnemigoRegla implements Enemigo {
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void esCruzada() { // todo --> declarar números mágicos como constantes (revisar método)
+    private void esCruzada() { // todo --> revisar si se necesitan los diferentes tipos de reglas al inicio
         float random = (float) (Math.random() * 10);
-        if (random >= 5) {
-            sprite = new Sprite(GestorDeAssets.enemigoReglaCruzada);
+        if (random >= 3) {
+            sprite = new Sprite(enemigoReglaCruzada);
+            sprite.setSize(32, 32);
+        }
+        if (random <= 4 && random >=7) {
+            sprite = new Sprite(enemigoReglaCasiEsvastica);
             sprite.setSize(32, 32);
         } else {
-            sprite = new Sprite(GestorDeAssets.enemigoRegla);
+            sprite = new Sprite(enemigoRegla);
             sprite.setSize(6, 32);
         }
     }
@@ -102,11 +109,11 @@ public class EnemigoRegla implements Enemigo {
     }
 
     @Override
-    public ObjetoVida sueltaObjetoXP() {
+    public ObjetoXpVida sueltaObjetoXP() {
         float corazonONo = (float) (Math.random());
         if (!haSoltadoXP && corazonONo < 0.25f) { // 25% de probabilidades de que suelte vida
             haSoltadoXP = true;
-            return new ObjetoVida(this.getX(), this.getY());
+            return new ObjetoXpVida(this.getX(), this.getY());
         }
         return null;
     }

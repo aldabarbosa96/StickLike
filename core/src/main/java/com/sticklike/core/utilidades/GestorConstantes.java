@@ -1,7 +1,5 @@
 package com.sticklike.core.utilidades;
 
-import com.sticklike.core.pantallas.popUps.PopUpMejoras;
-
 /**
  * Clase para manejar de forma cómoda las constantes del juego
  */
@@ -51,8 +49,10 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración de los enemigos
     public static final float VIDA_ENEMIGOCULO = 30f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
+    public static final float VEL_BASE_CULO = 50f;
     public static final float VIDA_ENEMIGOREGLA = 90f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
+    public static final float VIDA_ENEMIGO_POLLA = 8f;
     public static final float TEMPORIZADOR_DANYO = 0f;
     public static final float ENEMY_MAX_PAUSE = 0.75f;
     public static final float ENEMY_MIN_PAUSE = 0.25f;
@@ -77,8 +77,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TEMPORIZADOR_EMPUJE = 0f;
     public static final float DURACION_EMPUJE = 0.15f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
-    public static final float VELOCIDAD_CULO = 1.2f;
-    public static final float VELOCIDAD_REGLA = 3.8f;
+    public static final float MULT_VELOCIDAD_CULO = 1.2f;
+    public static final float MULT_VELOCIDAD_REGLA = 3.8f;
 
     // Configuración del proyectil
     public static final float PROJECTILE_PIEDRA_SPEED = 250f;
@@ -109,10 +109,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_VIDA_HEIGHT= 14f;
     public static final float OBJETO_CACA_WIDTH= 10f;
     public static final float OBJETO_CACA_HEIGHT= 10f;
+    public static final float OBJETO_LEFA_WIDTH= 12f;
+    public static final float OBJETO_LEFA_HEIGHT= 12f;
 
     // Controlador Evento
     public static final int LVL_EVENTO1 = 3;
     public static final int LVL_EVENTO2 = 5;
+    public static final int LVL_EVENTO3 = 7;
 
     // Configuración borrones
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;

@@ -9,7 +9,7 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
-public class ObjetoVida implements ObjetosXP {
+public class ObjetoXpVida implements ObjetosXP {
     private Sprite sprite;
     private boolean recolectado = false;
 
@@ -18,7 +18,7 @@ public class ObjetoVida implements ObjetosXP {
     private final float distanciaActivacion = DISTANCIA_ACTIVACION;
     private final float velocidadAtraccion = VEL_ATRACCION;
 
-    public ObjetoVida(float x, float y) {
+    public ObjetoXpVida(float x, float y) {
         Texture corazon = recolectableVida;
         sprite = new Sprite(corazon);
         sprite.setSize(OBJETO_VIDA_WIDTH, OBJETO_VIDA_HEIGHT);

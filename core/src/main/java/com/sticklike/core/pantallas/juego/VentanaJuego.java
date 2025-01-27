@@ -11,7 +11,8 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
-import com.sticklike.core.entidades.objetos.objetosxp.ObjetoVida;
+import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpLefa;
+import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpVida;
 import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.Enemigo;
@@ -250,9 +251,9 @@ public class VentanaJuego implements Screen {
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
                 xp.recolectar(controladorAudio);
                 objetosXP.removeIndex(i);
-                if (xp instanceof ObjetoXpCaca) {
+                if (xp instanceof ObjetoXpCaca || xp instanceof ObjetoXpLefa) {
                     sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
-                } else if (xp instanceof ObjetoVida) {
+                } else if (xp instanceof ObjetoXpVida) {
                     jugador.setVidaJugador(jugador.getVidaJugador() + (float) Math.random() * (12 - 3 + 1) + 3);
                     if (jugador.getVidaJugador() >= jugador.getMaxVidaJugador()) {
                         jugador.setVidaJugador(jugador.getMaxVidaJugador());

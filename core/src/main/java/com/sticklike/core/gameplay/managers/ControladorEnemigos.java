@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.enemigos.polla.EnemigoPolla;
 import com.sticklike.core.entidades.enemigos.regla.EnemigoRegla;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
@@ -30,7 +31,7 @@ public class ControladorEnemigos {
     private float intervaloDeAparicion, temporizadorDeAparicion;
     private int spawnCounter = 0; // todo --> necesario en un futuro para controlar algunos eventos (según el spawn sucederá algo)
     private Array<Enemigo> enemigosAEliminar = new Array<>();
-    private String[] tiposDeEnemigos = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+    private String[] tiposDeEnemigos = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
 
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego ventanaJuego) {
@@ -140,12 +141,11 @@ public class ControladorEnemigos {
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
         switch (tipoEnemigo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad * VELOCIDAD_CULO);
+                return new EnemigoCulo(x, y, jugador, velocidad * MULT_VELOCIDAD_CULO);
             case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * VELOCIDAD_REGLA, camera);
-
-            /*case "ENEMIGO_TIPO3":
-                return new EnemigoTipo3(x, y, jugador, velocidad);*/
+                return new EnemigoRegla(x, y, jugador, velocidad * MULT_VELOCIDAD_REGLA, camera);
+            case "POLLA":
+                return new EnemigoPolla(x, y, jugador, velocidad * 1.75f);
             // todo --> añadir más enemigos próximamente
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);

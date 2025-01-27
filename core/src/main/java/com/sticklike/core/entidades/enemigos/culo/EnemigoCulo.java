@@ -24,6 +24,7 @@ public class EnemigoCulo implements Enemigo {
     private MovimientoCulo movimientoCulo;
     private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
+    private static float velocidadBase = VEL_BASE_CULO;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
@@ -37,7 +38,7 @@ public class EnemigoCulo implements Enemigo {
         esConOjo();
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoCulo = new MovimientoCulo(velocidadEnemigo, true);
+        this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
@@ -95,6 +96,14 @@ public class EnemigoCulo implements Enemigo {
         animacionesEnemigos.actualizarParpadeo(delta);
         animacionesEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
+
+        // Verificar si el sprite necesita ser volteado
+        boolean estaALaIzquierda = !(sprite.getX() + sprite.getWidth() / 2 < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2);
+
+        // Si el sprite no está volteado y debería estarlo, o viceversa
+        if ((estaALaIzquierda && !sprite.isFlipX()) || (!estaALaIzquierda && sprite.isFlipX())) {
+            sprite.flip(true, false);
+        }
     }
 
 
@@ -192,5 +201,12 @@ public class EnemigoCulo implements Enemigo {
     @Override
     public float getVida() {
         return vidaEnemigo;
+    }
+    public static void setVelocidadBase(float nuevaVelocidadBase) {
+        velocidadBase = nuevaVelocidadBase;
+    }
+
+    public static float getVelocidadBase() {
+        return velocidadBase;
     }
 }

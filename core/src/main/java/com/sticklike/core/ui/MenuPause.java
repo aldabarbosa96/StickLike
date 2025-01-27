@@ -79,7 +79,7 @@ public class MenuPause { // todo --> habrá que convertir esta clase en un scene
         // Mostrar texto "PAUSA" si el juego está pausado
         if (isPaused) {
             spriteBatch.begin();
-            font.getData().setScale(2.5f); // Escala del texto
+            font.getData().setScale(2.5f);
             String text = "P A U S A";
 
             // Calcula la posición del texto
@@ -88,17 +88,17 @@ public class MenuPause { // todo --> habrá que convertir esta clase en un scene
 
             // Dibuja el reborde negro del texto
             font.setColor(Color.BLACK);
-            font.draw(spriteBatch, text, textX - 1, textY); // Izquierda
-            font.draw(spriteBatch, text, textX + 1, textY); // Derecha
-            font.draw(spriteBatch, text, textX, textY - 1); // Abajo
-            font.draw(spriteBatch, text, textX, textY + 1); // Arriba
-            font.draw(spriteBatch, text, textX - 1, textY - 1); // Esquina inferior izquierda
-            font.draw(spriteBatch, text, textX + 1, textY - 1); // Esquina inferior derecha
-            font.draw(spriteBatch, text, textX - 1, textY + 1); // Esquina superior izquierda
-            font.draw(spriteBatch, text, textX + 1, textY + 1); // Esquina superior derecha
+            font.draw(spriteBatch, text, textX - 1, textY);
+            font.draw(spriteBatch, text, textX + 1, textY);
+            font.draw(spriteBatch, text, textX, textY - 1);
+            font.draw(spriteBatch, text, textX, textY + 1);
+            font.draw(spriteBatch, text, textX - 1, textY - 1);
+            font.draw(spriteBatch, text, textX + 1, textY - 1);
+            font.draw(spriteBatch, text, textX - 1, textY + 1);
+            font.draw(spriteBatch, text, textX + 1, textY + 1);
 
             // Dibuja el texto principal en blanco encima
-            font.setColor(Color.WHITE);
+            font.setColor(0.9f,0.9f,0.9f,1f);
             font.draw(spriteBatch, text, textX, textY);
 
             spriteBatch.end();

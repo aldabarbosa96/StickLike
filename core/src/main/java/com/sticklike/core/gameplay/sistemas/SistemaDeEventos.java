@@ -29,30 +29,36 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles,
             () -> eventoAumentaEnemigos1(), LVL_EVENTO1));
 
-        eventos.add(new Evento("Aumenta nº enemigos2", sistemaDeNiveles,
+        eventos.add(new Evento("Aumenta nº enemigos 2", sistemaDeNiveles,
             () -> eventoAumentaEnemigos2(),LVL_EVENTO2));
+
+        eventos.add(new Evento("Aparecen las pollas", sistemaDeNiveles,
+            () -> entraEnemigoPolla(),LVL_EVENTO3));
 
         // todo --> gestionar más eventos próximamente
     }
 
     private void eventoAumentaEnemigos1() {
         controladorEnemigos.setIntervaloDeAparicion(0.5f);
-        incrementarVelocidadCulo(1.5f);
+        incrementarVelocidadCulo(1.3f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
-        System.out.println("Velocidad enemigo aumentada un 50%");
+        System.out.println("Velocidad enemigo aumentada un 30%");
     }
 
     private void eventoAumentaEnemigos2() {
-        controladorEnemigos.setIntervaloDeAparicion(0.35f);
-        incrementarVelocidadCulo(2f);
+        controladorEnemigos.setIntervaloDeAparicion(0.25f);
+        incrementarVelocidadCulo(1.6f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
-        System.out.println("Velocidad enemigo aumentada un 100%");
+        System.out.println("Velocidad enemigo aumentada un 60%%");
 
     }
 
     private void incrementarVelocidadCulo(float factorMultiplicador) {
+        float nuevaVelocidadBase = EnemigoCulo.getVelocidadBase() * factorMultiplicador;
+        EnemigoCulo.setVelocidadBase(nuevaVelocidadBase);
+
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo instanceof EnemigoCulo) {
                 EnemigoCulo culo = (EnemigoCulo) enemigo;
@@ -60,6 +66,12 @@ public class SistemaDeEventos {
                 culo.setVelocidad(velocidadActual * factorMultiplicador);
             }
         }
+    }
+    private void entraEnemigoPolla(){
+        String[] pollas = {"POLLA"};
+        controladorEnemigos.setTiposDeEnemigos(pollas);
+        controladorEnemigos.setIntervaloDeAparicion(0.1f);
+        System.out.println("Enemigo polla aparece");
     }
 
     public void actualizar() {

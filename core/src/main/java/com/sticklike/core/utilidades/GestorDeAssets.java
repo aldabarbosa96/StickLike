@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,7 +13,9 @@ import java.util.HashMap;
  */
 public class GestorDeAssets {
     // Texturas individuales
-    public static Texture stickman, enemigoCulo,enemigoCuloOjo,enemigoRegla,enemigoReglaCruzada, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableCaca, recolectableVida;
+    public static Texture stickman, enemigoCulo,enemigoCuloOjo,enemigoRegla,enemigoReglaCruzada,enemigoReglaCasiEsvastica, enemigoPolla,
+        enemigoPolla2, enemigoPolla3, enemigoPolla4, enemigoPolla5, enemigoPolla6,enemigoPolla7, corazonVida, armaPiedra,armaCalcetin, iconoXP,
+        recolectableCaca, recolectableVida, recolectableLefa;
     //Texturas por lotes
     public static Array<Texture> borrones; // Lista de texturas de borrón
 
@@ -43,14 +44,24 @@ public class GestorDeAssets {
         stickman = new Texture("jugador/01stickman.png");
         enemigoCulo = new Texture("enemigos/01culo.png");
         enemigoCuloOjo = new Texture("enemigos/04culoOjo.png");
-        enemigoRegla = new Texture("enemigos/02regla.png");
+        //enemigoRegla = new Texture("enemigos/02regla.png");
         enemigoReglaCruzada = new Texture("enemigos/03reglaCruzada.png");
+        //enemigoReglaCasiEsvastica = new Texture("enemigos/06reglaEsvastica.png");
+        enemigoPolla = new Texture("enemigos/05polla.png");
+        enemigoPolla2 = new Texture("enemigos/05polla2.png");
+        enemigoPolla3 = new Texture("enemigos/05polla3.png");
+        enemigoPolla4 = new Texture("enemigos/05polla4.png");
+        enemigoPolla5 = new Texture("enemigos/05polla5.png");
+        enemigoPolla6 = new Texture("enemigos/05polla6.png");
+        enemigoPolla7 = new Texture("enemigos/05polla7.png");
         corazonVida = new Texture("hud/life.png");
         armaPiedra = new Texture("armas/01piedra.png");
         armaCalcetin = new Texture("armas/02calcetin.png");
         iconoXP = new Texture("hud/xp.png");
         recolectableCaca = new Texture("drops/caca.png");
         recolectableVida = new Texture("hud/life.png");
+        recolectableLefa = new Texture("drops/lefa.png");
+
 
         borrones = new Array<>();
 
