@@ -31,6 +31,7 @@ import com.sticklike.core.ui.MenuPause;
 import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -251,7 +252,15 @@ public class VentanaJuego implements Screen {
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
                 xp.recolectar(controladorAudio);
                 objetosXP.removeIndex(i);
-                if (xp instanceof ObjetoXpCaca || xp instanceof ObjetoXpLefa) {
+
+                if (xp instanceof ObjetoXpCaca caca) {
+                    // Aquí verificamos si la caca es dorada usando isEsCacaDorada()
+                    if (caca.isEsCacaDorada()) {
+                        sistemaDeNiveles.agregarXP(50f + (float) (Math.random() * (100f - 30.5f))); // de 50 a 99.5
+                    } else {
+                        sistemaDeNiveles.agregarXP(10f + (float) (Math.random() * (25.5f - 15.75f))); // de 10 a 24.75
+                    }
+                } else if (xp instanceof ObjetoXpLefa) {
                     sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
                 } else if (xp instanceof ObjetoXpVida) {
                     jugador.setVidaJugador(jugador.getVidaJugador() + (float) Math.random() * (12 - 3 + 1) + 3);

@@ -15,7 +15,7 @@ public class GestorDeAssets {
     // Texturas individuales
     public static Texture stickman, enemigoCulo,enemigoCuloOjo,enemigoRegla,enemigoReglaCruzada,enemigoReglaCasiEsvastica, enemigoPolla,
         enemigoPolla2, enemigoPolla3, enemigoPolla4, enemigoPolla5, enemigoPolla6,enemigoPolla7, corazonVida, armaPiedra,armaCalcetin, iconoXP,
-        recolectableCaca, recolectableVida, recolectableLefa;
+        recolectableCaca,recolectableCaca2, recolectableVida, recolectableLefa,recolectableLefa2;
     //Texturas por lotes
     public static Array<Texture> borrones; // Lista de texturas de borrón
 
@@ -59,8 +59,10 @@ public class GestorDeAssets {
         armaCalcetin = new Texture("armas/02calcetin.png");
         iconoXP = new Texture("hud/xp.png");
         recolectableCaca = new Texture("drops/caca.png");
+        recolectableCaca2 = new Texture("drops/caca2.png");
         recolectableVida = new Texture("hud/life.png");
         recolectableLefa = new Texture("drops/lefa.png");
+        recolectableLefa2 = new Texture("drops/lefa2.png");
 
 
         borrones = new Array<>();
