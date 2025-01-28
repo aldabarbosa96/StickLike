@@ -129,7 +129,7 @@ public class VentanaJuego implements Screen {
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
         ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
-        ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
+        //ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
         controladorProyectiles = new ControladorProyectiles();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs

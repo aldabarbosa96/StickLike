@@ -52,6 +52,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_CULO = 50f;
     public static final float VIDA_ENEMIGOREGLA = 90f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
+    public static final float VEL_BASE_POLLA = 65f;
     public static final float VIDA_ENEMIGO_POLLA = 8f;
     public static final float TEMPORIZADOR_DANYO = 0f;
     public static final float ENEMY_MAX_PAUSE = 0.75f;
@@ -116,6 +117,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO1 = 3;
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
+    public static final int LVL_EVENTO4 = 10;
 
     // Configuración borrones
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;

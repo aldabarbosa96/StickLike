@@ -31,7 +31,7 @@ public class ControladorEnemigos {
     private float intervaloDeAparicion, temporizadorDeAparicion;
     private int spawnCounter = 0; // todo --> necesario en un futuro para controlar algunos eventos (según el spawn sucederá algo)
     private Array<Enemigo> enemigosAEliminar = new Array<>();
-    private String[] tiposDeEnemigos = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+    private String[] tiposDeEnemigos = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
 
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego ventanaJuego) {

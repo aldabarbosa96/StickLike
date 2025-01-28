@@ -7,6 +7,8 @@ public class Mejora {
     private final String nombreMejora;
     private final String descripcionMejora;
     private final Runnable efectoMejora;
+    private int usosRestantes;
+
 
     /**
      * Inicializa un nueva mejora
@@ -14,10 +16,11 @@ public class Mejora {
      * @param descripcionMejora Descripcion que queramos darle a la mejora
      * @param efectoMejora Efecto que provoca la mejora
      */
-    public Mejora(String nombreMejora, String descripcionMejora, Runnable efectoMejora) {
+    public Mejora(String nombreMejora, String descripcionMejora, Runnable efectoMejora, int usosMaximos) {
         this.nombreMejora = nombreMejora;
         this.descripcionMejora = descripcionMejora;
         this.efectoMejora = efectoMejora;
+        this.usosRestantes = usosMaximos;
     }
 
     public String getNombreMejora() {
@@ -31,8 +34,15 @@ public class Mejora {
     /**
      * Aplica el efecto de mejora ejecutando el objeto Runnable
      */
-    public void apply(){
-        efectoMejora.run();
-        System.out.println(descripcionMejora);
+    public void apply() {
+        if (usosRestantes > 0) {
+            efectoMejora.run();
+            usosRestantes--;
+        } else {
+            throw new IllegalStateException("Esta mejora ya no está disponible.");
+        }
+    }
+    public boolean estaDisponible() {
+        return usosRestantes > 0;
     }
 }

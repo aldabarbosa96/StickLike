@@ -1,6 +1,7 @@
 package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.enemigos.culo.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.polla.EnemigoPolla;
 import com.sticklike.core.gameplay.eventos.Evento;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
@@ -34,6 +35,7 @@ public class SistemaDeEventos {
 
         eventos.add(new Evento("Aparecen las pollas", sistemaDeNiveles,
             () -> entraEnemigoPolla(),LVL_EVENTO3));
+        eventos.add(new Evento("Futuro BOSS (por ahora te mueres inevitablemente)",sistemaDeNiveles, () -> futuroBOSS(3),LVL_EVENTO4));
 
         // todo --> gestionar más eventos próximamente
     }
@@ -73,6 +75,21 @@ public class SistemaDeEventos {
         controladorEnemigos.setIntervaloDeAparicion(0.1f);
         System.out.println("Enemigo polla aparece");
     }
+    private void futuroBOSS(float factorMultiplicador) {
+        // Modificar la velocidad base de todos los enemigos Polla
+        float nuevaVelocidadBase = EnemigoPolla.getVelocidadBase() * factorMultiplicador;
+        EnemigoPolla.setVelocidadBase(nuevaVelocidadBase);
+
+        // Ajustar la velocidad de cada instancia existente de EnemigoPolla
+        for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
+            if (enemigo instanceof EnemigoPolla) {
+                EnemigoPolla polla = (EnemigoPolla) enemigo;
+                float velocidadActual = EnemigoPolla.getVelocidadBase();
+                polla.setVelocidad(velocidadActual * factorMultiplicador);
+            }
+        }
+    }
+
 
     public void actualizar() {
         if (!eventos.isEmpty()) {

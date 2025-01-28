@@ -22,6 +22,7 @@ public class EnemigoPolla implements Enemigo {
     private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private MovimientoPolla movimientoPolla;
+    private static float velocidadBase = VEL_BASE_POLLA; // Velocidad base para todos los enemigos de este tipo
 
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
@@ -32,7 +33,7 @@ public class EnemigoPolla implements Enemigo {
         sprite.setSize(30f, 30f);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoPolla = new MovimientoPolla(velocidadEnemigo, 0.75f, 25f, true);
+        this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
@@ -176,5 +177,16 @@ public class EnemigoPolla implements Enemigo {
     @Override
     public float getVida() {
         return vidaEnemigo;
+    }
+    public static void setVelocidadBase(float nuevaVelocidadBase) {
+        velocidadBase = nuevaVelocidadBase;
+    }
+
+    public static float getVelocidadBase() {
+        return velocidadBase;
+    }
+
+    public void setVelocidad(float nuevaVelocidad) {
+        movimientoPolla.setVelocidadEnemigo(nuevaVelocidad);
     }
 }

@@ -70,7 +70,7 @@ public class Jugador {
         this.colisionesJugador = colisionesJugador;
         this.movimientoJugador = movimientoJugador;
         this.pedrada = ataquePiedra;
-        this.calcetinazo = calcetinazo;
+        this.calcetinazo = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
     }
@@ -84,7 +84,9 @@ public class Jugador {
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
             pedrada.manejarDisparo(delta, this, controladorAudio);
-            calcetinazo.manejarDisparo(delta, this, controladorAudio);
+            if (calcetinazo != null) {
+                calcetinazo.manejarDisparo(delta, this, controladorAudio);
+            }
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
             direccionActual = Direction.IDLE;
@@ -216,6 +218,10 @@ public class Jugador {
         this.controladorEnemigos = controladorEnemigos;
     }
 
+    public void setCalcetinazo(AtaqueCalcetin calcetinazo) {
+        this.calcetinazo = calcetinazo;
+    }
+
     public void setDireccionActual(Direction direccionActual) {
         this.direccionActual = direccionActual;
     }
@@ -230,5 +236,9 @@ public class Jugador {
 
     public float getVelocidadAtaque() {
         return velocidadAtaque;
+    }
+
+    public float getIntervaloDisparo() {
+        return intervaloDisparo;
     }
 }

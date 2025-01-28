@@ -1,6 +1,7 @@
 package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.gameplay.mejoras.Mejora;
 import com.sticklike.core.MainGame;
 
@@ -41,11 +42,14 @@ public class SistemaDeMejoras {
      * Se añaden a la lista {@code todasLasMejoras}
      */
     private void inicializarMejoras() {
-        todasLasMejoras.add(new Mejora("PIES VELOCES", "Aumenta la velocidad de movimiento un 15%", () -> jugador.aumentarVelocidad(0.15f)));
-        todasLasMejoras.add(new Mejora("BRAZOS LARGOS", "Aumenta el rango de ataque un 10%", () -> jugador.aumentarRangoAtaque(0.10f)));
-        todasLasMejoras.add(new Mejora("MANOS RÁPIDAS", "Aumenta la velocidad de ataque un 13%", () -> jugador.reducirIntervaloDisparo(0.12f)));
-        todasLasMejoras.add(new Mejora("PUÑO DURO", "Aumenta el daño del Ataque Básico un 6%", () -> jugador.aumentarDanyo(1.06f)));
-        todasLasMejoras.add(new Mejora("MULTI PROYECTIL", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1)));
+        todasLasMejoras.add(new Mejora("PIES VELOCES", "Aumenta la velocidad de movimiento un 15%", () -> jugador.aumentarVelocidad(0.15f), 5));
+        todasLasMejoras.add(new Mejora("BRAZOS LARGOS", "Aumenta el rango de ataque un 10%", () -> jugador.aumentarRangoAtaque(0.10f), 5));
+        todasLasMejoras.add(new Mejora("MANOS RÁPIDAS", "Aumenta la velocidad de ataque un 13%", () -> jugador.reducirIntervaloDisparo(0.12f), 5));
+        todasLasMejoras.add(new Mejora("PUÑO DURO", "Aumenta el daño del Ataque Básico un 6%", () -> jugador.aumentarDanyo(1.06f), 5));
+        todasLasMejoras.add(new Mejora("MULTI PROYECTIL", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
+        todasLasMejoras.add(new Mejora("ATAQUE CALCETÍN", "Desbloquea el ataque especial de calcetines", () ->
+            jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
+
         //todasLasMejoras.add(new Mejora("CALCETÍN LEFADO","Añade un nuevo proyectil. Un calcetín acartonado que daña a todos los enemigos a su paso", () ->jugador.obtieneCalcetines()));
         // todo --> implementar AtaqueCalcetin como una posible mejora
     }
@@ -58,14 +62,24 @@ public class SistemaDeMejoras {
      */
     public List<Mejora> generarOpcionesDeMejora(int numMejoras) {
         mejorasMostradas.clear();
-        // Mezclamos la lista completa
-        Collections.shuffle(todasLasMejoras);
-        // Tomamos las primeras numMejoras
-        for (int i = 0; i < Math.min(numMejoras, todasLasMejoras.size()); i++) {
-            mejorasMostradas.add(todasLasMejoras.get(i));
+
+        // Filtrar mejoras disponibles
+        List<Mejora> mejorasDisponibles = new ArrayList<>();
+        for (Mejora mejora : todasLasMejoras) {
+            if (mejora.estaDisponible()) {
+                mejorasDisponibles.add(mejora);
+            }
         }
-        return new ArrayList<>(mejorasMostradas); // Devolvemos una copia para no exponer la lista interna
+
+        // Mezclar y tomar las primeras disponibles
+        Collections.shuffle(mejorasDisponibles);
+        for (int i = 0; i < Math.min(numMejoras, mejorasDisponibles.size()); i++) {
+            mejorasMostradas.add(mejorasDisponibles.get(i));
+        }
+
+        return new ArrayList<>(mejorasMostradas); // Devolver una copia
     }
+
 
     /**
      * Llamado cuando el Jugador sube de nivel
@@ -87,11 +101,13 @@ public class SistemaDeMejoras {
         if (!mejorasMostradas.contains(mejoraSeleccionada)) { // No debería llegar nunca a este punto
             throw new IllegalArgumentException("La mejora seleccionada no es válida.");
         }
+        if (!mejoraSeleccionada.estaDisponible()) {
+            throw new IllegalStateException("La mejora seleccionada ya no está disponible.");
+        }
 
         System.out.println("Mejora aplicada: " + mejoraSeleccionada.getNombreMejora());
+
         mejoraSeleccionada.apply();
-
-
         mejorasMostradas.clear();
     }
 }
