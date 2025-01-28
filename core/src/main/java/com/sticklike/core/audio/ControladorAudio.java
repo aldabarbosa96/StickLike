@@ -41,6 +41,7 @@ public class ControladorAudio {
         efectosSonido.put("recogerXP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerObjetoXPCaca.wav")));
         efectosSonido.put("recogerVida", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerCorazon.wav")));
         efectosSonido.put("upgrade", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoUpgrade.wav")));
+        efectosSonido.put("pausa", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPausa.wav")));
     }
 
     /**
@@ -100,4 +101,6 @@ public class ControladorAudio {
         }
         efectosSonido.clear(); // Limpia el mapa para liberar memoria
     }
+
+
 }

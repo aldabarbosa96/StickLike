@@ -129,7 +129,8 @@ public class VentanaJuego implements Screen {
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
         ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
-        //ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
+        // ataqueCalcetin está comentado; descomenta si es necesario
+        ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
         controladorProyectiles = new ControladorProyectiles();
 
         // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
@@ -179,7 +180,7 @@ public class VentanaJuego implements Screen {
     public void render(float delta) {
         menuPause.handleInput();
         // Si el jugador muere, pasamos a la pantalla de GameOver
-        if (jugador.estaVivo()) { // este boleano está invertido todo --> mejorar en un futuro para mayor claridad
+        if (jugador.estaVivo()) { // este booleano está invertido todo --> mejorar en un futuro para mayor claridad
             game.setScreen(new VentanaGameOver(game));
             return;
         }
@@ -205,12 +206,8 @@ public class VentanaJuego implements Screen {
         efectoSonidoPopUpReproducido = false;
     }
 
-    private void pausarMusica() { // genera además un efecto de sonido "wow"
+    private void pausarMusica() {
         controladorAudio.pausarMusica();
-        if (!efectoSonidoPopUpReproducido) {
-            controladorAudio.reproducirEfecto("upgrade", 0.5f);
-            efectoSonidoPopUpReproducido = true;
-        }
     }
 
     private void actualizarLogica(float delta, ControladorAudio controladorAudio) {
@@ -220,8 +217,6 @@ public class VentanaJuego implements Screen {
         actualizarRecogidaXP(delta);
         actualizarTextoFlotante(delta);
         sistemaDeEventos.actualizar();
-
-
     }
 
     private void actualizarEnemigos() {
@@ -310,6 +305,12 @@ public class VentanaJuego implements Screen {
      */
     public void mostrarPopUpDeMejoras(final List<Mejora> mejoras) {
         popUpMejoras.mostrarPopUpMejoras(mejoras);
+
+        // Pausar el juego
+        setPausado(true);
+
+        // Reproducir sonido de upgrade al mostrar el pop-up
+        reproducirSonidoUpgrade();
     }
 
     /**
@@ -372,12 +373,19 @@ public class VentanaJuego implements Screen {
         return camara;
     }
 
+    /**
+     * Configura el estado de pausa del juego.
+     *
+     * @param pausa {@code true} para pausar, {@code false} para reanudar.
+     */
     public void setPausado(boolean pausa) {
         this.pausado = pausa;
 
         if (pausa) {
             controladorAudio.pausarMusica(); // Pausar música (atenúa la música)
             renderHUDComponents.pausarTemporizador(); // Pausar temporizador
+
+            // No reproducir sonido de pausa aquí
         } else {
             controladorAudio.reproducirMusica(); // Reanudar música
             renderHUDComponents.reanudarTemporizador(); // Reanudar temporizador
@@ -390,5 +398,19 @@ public class VentanaJuego implements Screen {
 
     public RenderHUDComponents getRenderHUDComponents() {
         return renderHUDComponents;
+    }
+
+    /**
+     * Reproduce el sonido de pausa.
+     */
+    public void reproducirSonidoPausa() {
+        controladorAudio.reproducirEfecto("pausa", 0.4f);
+    }
+
+    /**
+     * Reproduce el sonido de upgrade.
+     */
+    public void reproducirSonidoUpgrade() {
+        controladorAudio.reproducirEfecto("upgrade", 0.5f);
     }
 }

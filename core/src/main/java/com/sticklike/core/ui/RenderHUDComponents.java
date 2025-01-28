@@ -293,11 +293,11 @@ public class RenderHUDComponents {
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
 
         // Posiciones
-        float margenDerecho = 930f;
+        float margenDerecho = 935f;
         float statsX = VIRTUAL_WIDTH - margenDerecho;
         float statsY = HUD_HEIGHT - 45;
         float espaciado = 18f; // Espacio entre líneas
-        float anchoDescripcion = 110; // Ancho fijo para la descripción
+        float anchoDescripcion = 115f; // Ancho fijo para la descripción
 
         // Arreglo de descripciones y valores
         String[] descripciones = {velocidadJugador, rangoJugador, velocidadAtaque, fuerzaAtaque, numProyectiles};
@@ -328,11 +328,11 @@ public class RenderHUDComponents {
         String valorCritico = df.format(0 ) + "%";
 
         // Posiciones
-        float margenDerecho = 770f;
+        float margenDerecho = 775f;
         float statsX = VIRTUAL_WIDTH - margenDerecho;
         float statsY = HUD_HEIGHT - 45;
         float espaciado = 18f;
-        float anchoDescripcion = 110;
+        float anchoDescripcion = 100f;
 
         // Arreglo de descripciones y valores
         String[] descripciones = {vidaMaxima, regeneracionVida, poderAtaque, resistencia, critico};

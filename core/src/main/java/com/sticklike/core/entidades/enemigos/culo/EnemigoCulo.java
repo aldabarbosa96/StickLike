@@ -27,7 +27,7 @@ public class EnemigoCulo implements Enemigo {
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
-    private float damageAmount = 2.0f;
+    private float damageAmount = DANYO_CULO;
 
     /**
      * Constructor para crear una instancia de EnemigoCulo.

@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
 
-public class MenuPause { // todo --> habrá que convertir esta clase en un scene2D para poder implementar botones reales
+public class MenuPause { // TODO: Convertir esta clase en un Scene2D para implementar botones reales
     private float pauseWidth;
     private float pauseHeight;
     private float pauseSpacing;
@@ -123,6 +123,11 @@ public class MenuPause { // todo --> habrá que convertir esta clase en un scene
         // Alternar el estado de pausa
         isPaused = !isPaused;
         ventanaJuego.setPausado(isPaused);
+
+        if (isPaused) {
+            // Reproducir sonido de pausa solo cuando se pausa desde el menú de pausa
+            ventanaJuego.reproducirSonidoPausa();
+        }
     }
 
     public boolean isPaused() {

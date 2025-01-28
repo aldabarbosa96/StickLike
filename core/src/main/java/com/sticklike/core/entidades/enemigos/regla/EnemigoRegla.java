@@ -24,7 +24,7 @@ public class EnemigoRegla implements Enemigo {
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
-    private float damageAmount = 3.5f;
+    private float damageAmount = DANYO_REGLA;
 
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         //esCruzada();

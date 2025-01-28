@@ -27,7 +27,7 @@ public class EnemigoPolla implements Enemigo {
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
-    private float damageAmount = 1.25f;
+    private float damageAmount = DANYO_POLLA;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         escogerPolla();
