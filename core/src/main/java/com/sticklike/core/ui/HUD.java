@@ -54,10 +54,10 @@ public class HUD {
         renderHUDComponents.renderizarFondoHUD();
         renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
         renderHUDComponents.renderizarMarcoHUD();
-        renderHUDComponents.renderizarBarraDeSalud();
+        //renderHUDComponents.renderizarBarraDeSalud();
         renderHUDComponents.renderizarBarraXP();
-        renderHUDComponents.renderizarTextoSalud(hudHeight);
-        renderHUDComponents.renderizarIconoVidaJugador();
+        //renderHUDComponents.renderizarTextoSalud(hudHeight);
+        //renderHUDComponents.renderizarIconoVidaJugador();
         renderHUDComponents.renderizarTextoNivelPlayer();
         renderHUDComponents.renderizarTemporizador(delta);
         renderHUDComponents.renderizarStatsJugador();

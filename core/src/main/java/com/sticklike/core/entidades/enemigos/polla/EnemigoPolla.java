@@ -29,7 +29,7 @@ public class EnemigoPolla implements Enemigo {
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         escogerPolla();
-        sprite.setSize(35f, 35f);
+        sprite.setSize(30f, 30f);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoPolla = new MovimientoPolla(velocidadEnemigo, 0.75f, 25f, true);

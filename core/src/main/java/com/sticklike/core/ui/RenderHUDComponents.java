@@ -14,8 +14,6 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.text.DecimalFormat;
 
-
-
 public class RenderHUDComponents {
     private ShapeRenderer shapeRenderer;
     private GlyphLayout layout;
@@ -173,38 +171,11 @@ public class RenderHUDComponents {
 
 
     /**
-     * Dibuja la barra de salud del jugador. Incluye borde, fondo y la parte que indica la cantidad de vida restante
-     */
-    public void renderizarBarraDeSalud() {
-        float healthPercentage = jugador.obtenerPorcetajeVida();
-        float barWidth = HUD_BAR_WIDTH;
-        float barHeight = HUD_BAR_HEIGHT;
-        float barX = HUD_BAR_X;
-        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD + 5f;
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-        // Borde negro
-        shapeRenderer.setColor(0, 0, 0, 1f);
-        shapeRenderer.rect(barX - 1.8f, barY - 1.8f, barWidth + 3.6f, barHeight + 3.6f);
-
-        // Fondo rojo
-        shapeRenderer.setColor(1f, 0f, 0.35f, 1);
-        shapeRenderer.rect(barX, barY, barWidth, barHeight);
-
-        // Barra de salud actual (verde según el porcentaje de vida)
-        shapeRenderer.setColor(0f, 0.9f, 0.25f, 1f);
-        shapeRenderer.rect(barX, barY, barWidth * healthPercentage, barHeight);
-
-        shapeRenderer.end();
-    }
-
-    /**
      * Muestra el texto numérico de la vida del jugador (ej. "45/50") dentro de la barra de salud.
      *
      * @param hudHeight altura del HUD para posicionar el texto
      */
-    public void renderizarTextoSalud(float hudHeight) {
+  /*  public void renderizarTextoSalud(float hudHeight) {
         float barX = HUD_BAR_X;
         float barWidth = HUD_BAR_WIDTH;
         float barHeight = HUD_BAR_HEIGHT;
@@ -231,9 +202,7 @@ public class RenderHUDComponents {
         spriteBatch.end();
     }
 
-    /**
-     * Dibuja el icono de corazón que representa la vida del jugador
-     */
+
     public void renderizarIconoVidaJugador() {
         float heartSize = HEART_SIZE;
         float heartX = HEART_X;
@@ -242,7 +211,7 @@ public class RenderHUDComponents {
         spriteBatch.begin();
         spriteBatch.draw(texturaCorazonVida, heartX, heartY, heartSize, heartSize);
         spriteBatch.end();
-    }
+    }*/
 
     /**
      * Dibuja la barra de experiencia (XP) del jugador. Incluye fondo, la parte azul según la fracción actual de XP y un icono
@@ -271,14 +240,14 @@ public class RenderHUDComponents {
 
         // Borde negro
         shapeRenderer.setColor(0, 0, 0, 1f);
-        shapeRenderer.rect(barX - 1.8f, barY - 1.8f, barWidth + 3.6f, barHeight + 3.6f);
+        shapeRenderer.rect(barX - 1.5f, barY - 1.5f, barWidth + 3f, barHeight + 3f);
 
         // Fondo gris claro
         shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 0.5f);
         shapeRenderer.rect(barX, barY, barWidth, barHeight);
 
         // Barra azul con la fracción de XP
-        shapeRenderer.setColor(0.1f, 0.6f, 0.9f, 0.8f);
+        shapeRenderer.setColor(0f, 0.5f, 1f, 1f);
         shapeRenderer.rect(barX, barY, barWidth * experiencePercentage, barHeight);
 
         shapeRenderer.end();
@@ -311,11 +280,11 @@ public class RenderHUDComponents {
 
         // Centramos el texto dentro de la barra
         float textX = barX + (barWidth - textWidth) / 2;
-        float textY = barY + (barHeight + textHeight) / 2 + 1.5f;
+        float textY = barY + (barHeight + textHeight) / 2 + 1.75f;
 
         spriteBatch.begin();
 
-        float offset = 1f;
+        float offset = 0.8f;
         Color colorReborde = Color.BLACK;
         Color colorTexto = Color.WHITE;
         dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, offset, colorReborde, colorTexto);
@@ -330,11 +299,11 @@ public class RenderHUDComponents {
      */
     private void renderizarIconoBarraXP(float barX, float barY, float barHeight) {
         float iconSize = HEART_SIZE;
-        float iconX = HEART_X + (HEART_SIZE / 4);
-        float iconY = barY - 5f;
+        float iconX = HEART_X;
+        float iconY = barY - HEART_Y_OFFSET;
 
         spriteBatch.begin();
-        spriteBatch.draw(texturaLapizXP, iconX, iconY, iconSize - 10, iconSize);
+        spriteBatch.draw(texturaLapizXP, iconX, iconY, iconSize, iconSize);
         spriteBatch.end();
     }
 
@@ -342,51 +311,48 @@ public class RenderHUDComponents {
         DecimalFormat df = new DecimalFormat("#.##");
 
         // Definimos los textos de las estadísticas
-        String velocidadJugador = "Vel. Movimiento   " + df.format(jugador.getVelocidadJugador());
-        String rangoJugador = "Rango Disparo   " + df.format(jugador.getRangoAtaqueJugador());
-        String velocidadAtaque = "Vel. Ataque   " + df.format(jugador.getVelocidadAtaque());
-        String fuerzaAtaque = "Fuerza   " + df.format(jugador.getDanyoAtaqueJugador());
-        String numProyectiles = "Núm. Proyectiles   +" + df.format(jugador.getProyectilesPorDisparo());
+        String velocidadJugador = "Vel. Movimiento";
+        String rangoJugador = "Rango Disparo";
+        String velocidadAtaque = "Vel. Ataque";
+        String fuerzaAtaque = "Fuerza";
+        String numProyectiles = "Núm. Proyectiles";
 
-        // Definimos las posiciones de renderizado (parte derecha del HUD)
-        float margenDerecho = 75f;
+        // Valores de las estadísticas
+        String valorVelocidad = df.format(jugador.getVelocidadJugador());
+        String valorRango = df.format(jugador.getRangoAtaqueJugador());
+        String valorVelAtaque = df.format(jugador.getVelocidadAtaque());
+        String valorFuerza = df.format(jugador.getDanyoAtaqueJugador());
+        String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
+
+        // Posiciones
+        float margenDerecho = 920f;
         float statsX = VIRTUAL_WIDTH - margenDerecho;
-        float statsY = HUD_HEIGHT - 42.5f;
+        float statsY = HUD_HEIGHT - 42f;
         float espaciado = 18f; // Espacio entre líneas
-
-        // Calculamos el ancho del texto más largo para alinear todas las líneas
-        float maxWidth = calcularAnchoMaximoTexto(velocidadJugador, rangoJugador, velocidadAtaque, fuerzaAtaque);
+        float anchoDescripcion = 125f; // Ancho fijo para la descripción
 
         spriteBatch.begin();
 
         fuente.getData().setScale(0.8f);
-        fuente.setColor(Color.BLACK);
+        fuente.setColor(Color.BLUE);
 
-        // Renderizamos cada línea de estadísticas alineadas a la derecha
-        fuente.draw(spriteBatch, fuerzaAtaque, statsX - maxWidth, statsY);
-        fuente.draw(spriteBatch, velocidadAtaque, statsX - maxWidth, statsY - espaciado);
-        fuente.draw(spriteBatch, velocidadJugador, statsX - maxWidth, statsY - 2 * espaciado);
-        fuente.draw(spriteBatch, rangoJugador, statsX - maxWidth, statsY - 3 * espaciado);
-        fuente.draw(spriteBatch, numProyectiles, statsX - maxWidth, statsY - 4 * espaciado);
+        // Renderizamos las descripciones y los valores alineados
+        fuente.draw(spriteBatch, velocidadJugador, statsX - anchoDescripcion, statsY);
+        fuente.draw(spriteBatch, valorVelocidad, statsX, statsY);
+
+        fuente.draw(spriteBatch, rangoJugador, statsX - anchoDescripcion, statsY - espaciado);
+        fuente.draw(spriteBatch, valorRango, statsX, statsY - espaciado);
+
+        fuente.draw(spriteBatch, velocidadAtaque, statsX - anchoDescripcion, statsY - 2 * espaciado);
+        fuente.draw(spriteBatch, valorVelAtaque, statsX, statsY - 2 * espaciado);
+
+        fuente.draw(spriteBatch, fuerzaAtaque, statsX - anchoDescripcion, statsY - 3 * espaciado);
+        fuente.draw(spriteBatch, valorFuerza, statsX, statsY - 3 * espaciado);
+
+        fuente.draw(spriteBatch, numProyectiles, statsX - anchoDescripcion, statsY - 4 * espaciado);
+        fuente.draw(spriteBatch, valorProyectiles, statsX, statsY - 4 * espaciado);
 
         spriteBatch.end();
-    }
-
-    /**
-     * Calcula el ancho máximo entre varias líneas de texto.
-     *
-     * @param textos Varias líneas de texto.
-     * @return El ancho máximo entre las líneas.
-     */
-    private float calcularAnchoMaximoTexto(String... textos) {
-        float maxWidth = 0f;
-        for (String texto : textos) {
-            layout.setText(fuente, texto);
-            if (layout.width > maxWidth) {
-                maxWidth = layout.width;
-            }
-        }
-        return maxWidth;
     }
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {

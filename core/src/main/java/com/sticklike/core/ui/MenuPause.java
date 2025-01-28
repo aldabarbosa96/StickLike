@@ -83,8 +83,8 @@ public class MenuPause { // todo --> habrá que convertir esta clase en un scene
             String text = "P A U S A";
 
             // Calcula la posición del texto
-            float textX = viewportWidth / 2 + 187.5f;
-            float textY = viewportHeight / 2 + 300f;
+            float textX = viewportWidth / 2 + 345f;
+            float textY = viewportHeight / 2 + 450f;
 
             // Dibuja el reborde negro del texto
             font.setColor(Color.BLACK);

@@ -16,12 +16,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float GRID_CELL_SIZE = 38f;
     public static final float GRID_CELL_SIZE_CORRECTION = 20f;
     public static final float HUD_BAR_WIDTH = 200f;
-    public static final float HUD_BAR_HEIGHT = 15f;
-    public static final float HUD_BAR_X = 70f;
-    public static final float HUD_BAR_Y_OFFSET = 20f;
-    public static final float HEART_SIZE = 22f;
-    public static final float HEART_X = 40f;
-    public static final float HEART_Y_OFFSET = 10f;
+    public static final float HUD_BAR_HEIGHT = 12.5f;
+    public static final float HUD_BAR_X = 435f;
+    public static final float HUD_BAR_Y_OFFSET = 10f;
+    public static final float HEART_SIZE = 20f;
+    public static final float HEART_X = 410f;
+    public static final float HEART_Y_OFFSET = 2.5f;
     public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f; // Mueve el HUD completo 30 píxeles hacia abajo
     public static final float POPUP_WIDTH = 400;
     public static final float POPUP_HEIGHT = 350;
@@ -42,8 +42,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float INTERVALO_MIN_DISPARO = 0.1f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
     public static final int NUM_PROYECTILES_INICIALES = 2;
-    public static final float WIDTH_JUGADOR = 13f;
-    public static final float HEIGHT_JUGADOR = 38f;
+    public static final float WIDTH_JUGADOR = 12f;
+    public static final float HEIGHT_JUGADOR = 35f;
     public static final float PARPADEO_JUGADOR = 0.2f;
 
     // Configuración de los enemigos
@@ -77,7 +77,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TEMPORIZADOR_EMPUJE = 0f;
     public static final float DURACION_EMPUJE = 0.15f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
-    public static final float MULT_VELOCIDAD_CULO = 1.2f;
+    public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
 
     // Configuración del proyectil
@@ -93,24 +93,24 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float MAX_DISTANCIA = 350f;
     public static final float DISTANCIA_RECORRIDA = 0f;
     public static final float EMPUJE_BASE_CALCETIN = 100f;
-    public static final float EMPUJE_BASE_PIEDRA = 50f;
+    public static final float EMPUJE_BASE_PIEDRA = 75f;
 
     // Configuración TextoFlotante
     public static final float DESPLAZAMIENTOY_TEXTO = 30f;
     public static final float DESPLAZAMIENTOY_TEXTO2 = 12f;
-    public static final float DURACION_TEXTO = 0.3f;
+    public static final float DURACION_TEXTO = 0.4f;
     public static final float TEXTO_WIDTH = 0.75f;
-    public static final float TEXTO_HEIGHT = 1.1f;
+    public static final float TEXTO_HEIGHT = 1.3f;
 
     // Configuración recolectables
     public static final float DISTANCIA_ACTIVACION = 75f;
     public static final float VEL_ATRACCION = 250f;
-    public static final float OBJETO_VIDA_WIDTH= 14f;
-    public static final float OBJETO_VIDA_HEIGHT= 14f;
-    public static final float OBJETO_CACA_WIDTH= 10f;
-    public static final float OBJETO_CACA_HEIGHT= 10f;
-    public static final float OBJETO_LEFA_WIDTH= 10f;
-    public static final float OBJETO_LEFA_HEIGHT= 12f;
+    public static final float OBJETO_VIDA_WIDTH= 12f;
+    public static final float OBJETO_VIDA_HEIGHT= 12f;
+    public static final float OBJETO1_XP_WIDTH = 10f;
+    public static final float OBJETO1_XP_HEIGHT = 10.5f;
+    //public static final float OBJETO_LEFA_WIDTH= 8.5f;
+    //public static final float OBJETO_LEFA_HEIGHT= 10.5f;
 
     // Controlador Evento
     public static final int LVL_EVENTO1 = 3;

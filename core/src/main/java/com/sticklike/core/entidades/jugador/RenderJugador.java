@@ -3,12 +3,13 @@ package com.sticklike.core.entidades.jugador;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import static com.sticklike.core.entidades.jugador.InputsJugador.Direction.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class AnimacionesJugador {
+public class RenderJugador {
     private Direction direccionActual = IDLE;
 
     // Animaciones
@@ -22,7 +23,7 @@ public class AnimacionesJugador {
     private boolean enParpadeo = false;
     private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
 
-    public AnimacionesJugador() {
+    public RenderJugador() {
         animacionIdle = GestorDeAssets.animations.get("idle");
         animacionMovDerecha = GestorDeAssets.animations.get("moveRight");
         animacionMovIzquierda = GestorDeAssets.animations.get("moveLeft");
@@ -56,6 +57,38 @@ public class AnimacionesJugador {
             batch.setColor(1, 1, 1, 1); // Restauramos el color original
         }
     }
+    public void renderizarBarraDeSalud(ShapeRenderer shapeRenderer, Jugador jugador) {
+        float healthPercentage = jugador.obtenerPorcetajeVida();
+        float barWidth = 20f; // Ancho reducido
+        float barHeight = 2.5f; // Alto reducido
+
+        // Calcula la posición de la barra en función de la posición del jugador
+        float barX = jugador.getSprite().getX() + (jugador.getSprite().getWidth() - barWidth) / 2f;
+        float barY = jugador.getSprite().getY() - barHeight - 2.5f; // margen inferior
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        if (enParpadeo) {
+            // Si el jugador está en parpadeo, la barra entera se pone blanca
+            shapeRenderer.setColor(0.85f, 0.85f, 0.85f, 0.5f);
+            shapeRenderer.rect(barX - 0.5f, barY - 0.5f, barWidth + 1f, barHeight + 1f); // Borde blanco
+            shapeRenderer.rect(barX, barY, barWidth * healthPercentage, barHeight); // Fondo blanco
+        } else {
+            // Borde negro
+            shapeRenderer.setColor(0, 0, 0, 1f);
+            shapeRenderer.rect(barX - 0.5f, barY - 0.5f, barWidth + 1f, barHeight + 1f);
+
+            // fondo negro
+            shapeRenderer.setColor(0f, 0f, 0.15f, 0.5f);
+            shapeRenderer.rect(barX, barY, barWidth, barHeight);
+
+            // barra actual roja
+            shapeRenderer.setColor(1f, 0f, 0.15f, 1f);
+            shapeRenderer.rect(barX, barY, barWidth * healthPercentage, barHeight);
+        }
+
+        shapeRenderer.end();
+    }
 
     public void actualizarAnimacion(float delta) {
         temporizadorAnimacion += delta;
@@ -75,5 +108,9 @@ public class AnimacionesJugador {
 
     public void setDireccionActual(Direction direccion) {
         this.direccionActual = direccion;
+    }
+
+    public boolean isEnParpadeo() {
+        return enParpadeo;
     }
 }

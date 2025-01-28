@@ -15,7 +15,7 @@ public class GestorDeAssets {
     // Texturas individuales
     public static Texture stickman, enemigoCulo,enemigoCuloOjo,enemigoRegla,enemigoReglaCruzada,enemigoReglaCasiEsvastica, enemigoPolla,
         enemigoPolla2, enemigoPolla3, enemigoPolla4, enemigoPolla5, enemigoPolla6,enemigoPolla7, corazonVida, armaPiedra,armaCalcetin, iconoXP,
-        recolectableCaca,recolectableCaca2, recolectableVida, recolectableLefa,recolectableLefa2;
+        recolectableXP, recolectableCacaOro, recolectableVida;
     //Texturas por lotes
     public static Array<Texture> borrones; // Lista de texturas de borrón
 
@@ -46,7 +46,6 @@ public class GestorDeAssets {
         enemigoCuloOjo = new Texture("enemigos/04culoOjo.png");
         //enemigoRegla = new Texture("enemigos/02regla.png");
         enemigoReglaCruzada = new Texture("enemigos/03reglaCruzada.png");
-        //enemigoReglaCasiEsvastica = new Texture("enemigos/06reglaEsvastica.png");
         enemigoPolla = new Texture("enemigos/05polla.png");
         enemigoPolla2 = new Texture("enemigos/05polla2.png");
         enemigoPolla3 = new Texture("enemigos/05polla3.png");
@@ -58,11 +57,9 @@ public class GestorDeAssets {
         armaPiedra = new Texture("armas/01piedra.png");
         armaCalcetin = new Texture("armas/02calcetin.png");
         iconoXP = new Texture("hud/xp.png");
-        recolectableCaca = new Texture("drops/caca.png");
-        recolectableCaca2 = new Texture("drops/caca2.png");
+        recolectableXP = new Texture("drops/xp1.png");
+        recolectableCacaOro = new Texture("drops/xp2.png");
         recolectableVida = new Texture("hud/life.png");
-        recolectableLefa = new Texture("drops/lefa.png");
-        recolectableLefa2 = new Texture("drops/lefa2.png");
 
 
         borrones = new Array<>();
@@ -115,7 +112,7 @@ public class GestorDeAssets {
         if (armaPiedra != null) armaPiedra.dispose();
         if (armaCalcetin != null) armaCalcetin.dispose();
         if (iconoXP != null) iconoXP.dispose();
-        if (recolectableCaca != null) recolectableCaca.dispose();
+        if (recolectableXP != null) recolectableXP.dispose();
         if (borrones != null) {
             for (Texture t : borrones) {
                 if (t != null) t.dispose();

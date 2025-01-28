@@ -40,18 +40,18 @@ public class SistemaDeEventos {
 
     private void eventoAumentaEnemigos1() {
         controladorEnemigos.setIntervaloDeAparicion(0.5f);
-        incrementarVelocidadCulo(1.3f);
+        incrementarVelocidadCulo(1.15f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
-        System.out.println("Velocidad enemigo aumentada un 30%");
+        System.out.println("Velocidad enemigo aumentada un 15%");
     }
 
     private void eventoAumentaEnemigos2() {
         controladorEnemigos.setIntervaloDeAparicion(0.25f);
-        incrementarVelocidadCulo(1.6f);
+        incrementarVelocidadCulo(1.35f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
-        System.out.println("Velocidad enemigo aumentada un 60%%");
+        System.out.println("Velocidad enemigo aumentada un 30%%");
 
     }
 

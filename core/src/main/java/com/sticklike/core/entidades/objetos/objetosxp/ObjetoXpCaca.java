@@ -1,41 +1,36 @@
 package com.sticklike.core.entidades.objetos.objetosxp;
 
 import com.badlogic.gdx.graphics.Texture;
-
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 public class ObjetoXpCaca extends ObjetoXpBase {
 
-    private boolean esCacaDorada = false;
+    private final boolean esXPGorda;
 
     public ObjetoXpCaca(float x, float y) {
         super(x, y);
+        float randomCaca = (float) (Math.random() * 100f);
+        esXPGorda = randomCaca >= 95f;
+        setSpriteTexture(getTexture()); // Sincroniza el sprite con la textura
     }
 
     @Override
     public Texture getTexture() {
-        esCacaDorada = false; // Reseteamos antes de asignar
-        float randomCaca = (float) (Math.random() * 100f);
-        if (!esCacaDorada && randomCaca < 80f) {
-            return recolectableCaca; // Caca normal
-        } else {
-            esCacaDorada = true; // Caca dorada
-            return recolectableCaca2;
-        }
+        return esXPGorda ? recolectableCacaOro : recolectableXP;
     }
 
-    public boolean isEsCacaDorada() {
-        return esCacaDorada;
+    public boolean isEsXPGorda() {
+        return esXPGorda;
     }
 
     @Override
     protected float getWidth() {
-        return OBJETO_CACA_WIDTH;
+        return OBJETO1_XP_WIDTH;
     }
 
     @Override
     protected float getHeight() {
-        return OBJETO_CACA_HEIGHT;
+        return OBJETO1_XP_HEIGHT;
     }
 }

@@ -13,6 +13,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
+
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
@@ -75,10 +76,10 @@ public class RenderVentanaJuego {
         // 3) Dibujar los borrones
         spriteBatch.begin();
         for (Borron b : borronesMapa) {
-            float drawWidth  = b.textura.getWidth()  * b.scale;
+            float drawWidth = b.textura.getWidth() * b.scale;
             float drawHeight = b.textura.getHeight() * b.scale;
 
-            float originX = drawWidth  / 2f;
+            float originX = drawWidth / 2f;
             float originY = drawHeight / 2f;
 
             spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f,
@@ -92,19 +93,17 @@ public class RenderVentanaJuego {
 
         // 5) Dibujo de entidades (jugador, enemigos, proyectiles, etc.)
         spriteBatch.begin();
-        jugador.aplicarRenderizadoAlJugador(spriteBatch);
-        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
-
-
         for (ObjetosXP xp : objetosXP) {
-            xp.renderizarObjetoXP(spriteBatch);
+            xp.renderizarObjetoXP(spriteBatch); // Dibuja objetos XP primero
         }
-        controladorEnemigos.renderizarEnemigos(spriteBatch);
-
+        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch); // Dibuja proyectiles después de los objetos XP
+        jugador.aplicarRenderizadoAlJugador(spriteBatch,shapeRenderer); // Dibuja al jugador
+        controladorEnemigos.renderizarEnemigos(spriteBatch); // Dibuja enemigos
         for (TextoFlotante txt : textosDanyo) {
-            txt.renderizarTextoFlotante(spriteBatch);
+            txt.renderizarTextoFlotante(spriteBatch); // Dibuja textos flotantes
         }
         spriteBatch.end();
+
 
         // 6) Renderizar HUD
         hud.renderizarHUD(delta);
@@ -119,9 +118,9 @@ public class RenderVentanaJuego {
         shapeRenderer.setColor(0.64f, 0.80f, 0.86f, 1);
 
         float startX = camera.position.x - camera.viewportWidth / 2;
-        float endX   = camera.position.x + camera.viewportWidth / 2;
+        float endX = camera.position.x + camera.viewportWidth / 2;
         float startY = camera.position.y - camera.viewportHeight / 2;
-        float endY   = camera.position.y + camera.viewportHeight / 2;
+        float endY = camera.position.y + camera.viewportHeight / 2;
 
         // Líneas verticales
         for (float x = startX - (startX % tamanyoCeldas); x <= endX; x += tamanyoCeldas) {
@@ -157,7 +156,7 @@ public class RenderVentanaJuego {
                 float rotation = MathUtils.random(0f, 360f);
 
                 // 3) Tamaño escalado
-                float borrWidth  = tex.getWidth()  * scale;
+                float borrWidth = tex.getWidth() * scale;
                 float borrHeight = tex.getHeight() * scale;
 
                 // 4) Posición aleatoria
@@ -180,8 +179,8 @@ public class RenderVentanaJuego {
                 Texture tex2 = borrones.random();
                 float scale2 = MathUtils.random(0.12f, 0.3f);
                 float rotation2 = MathUtils.random(0f, 360f);
-                float w2  = tex2.getWidth()  * scale2;
-                float h2  = tex2.getHeight() * scale2;
+                float w2 = tex2.getWidth() * scale2;
+                float h2 = tex2.getHeight() * scale2;
                 float x2 = MathUtils.random(MAP_MIN_X, MAP_MAX_X - w2);
                 float y2 = MathUtils.random(MAP_MIN_Y, MAP_MAX_Y - h2);
 
@@ -196,19 +195,19 @@ public class RenderVentanaJuego {
      * Comprueba si un rectángulo (x, y, width, height) se solapa con algún borrón ya existente en la lista (usando bounding box)
      */
     private boolean seSolapaConOtroBorron(float x, float y, float width, float height) {
-        float leftA   = x;
-        float rightA  = x + width;
+        float leftA = x;
+        float rightA = x + width;
         float bottomA = y;
-        float topA    = y + height;
+        float topA = y + height;
 
         for (Borron b : borronesMapa) {
             float bw = b.textura.getWidth() * b.scale;
             float bh = b.textura.getHeight() * b.scale;
 
-            float leftB   = b.posX;
-            float rightB  = b.posX + bw;
+            float leftB = b.posX;
+            float rightB = b.posX + bw;
             float bottomB = b.posY;
-            float topB    = b.posY + bh;
+            float topB = b.posY + bh;
 
             // Comprobación de overlap entre dos rectángulos A y B
             if (!(rightA < leftB || leftA > rightB || topA < bottomB || bottomA > topB)) {
@@ -224,14 +223,14 @@ public class RenderVentanaJuego {
      */
     private boolean estaDemasiadoCercaMismoBorron(Texture tex, float x, float y, float scale) {
         // Centro del borrón candidate
-        float cx  = x + tex.getWidth()  * scale / 2f;
-        float cy  = y + tex.getHeight() * scale / 2f;
+        float cx = x + tex.getWidth() * scale / 2f;
+        float cy = y + tex.getHeight() * scale / 2f;
 
         for (Borron b : borronesMapa) {
             if (b.textura == tex) {
                 // Centro del borrón existente
-                float bx  = b.posX + b.textura.getWidth()  * b.scale / 2f;
-                float by  = b.posY + b.textura.getHeight() * b.scale / 2f;
+                float bx = b.posX + b.textura.getWidth() * b.scale / 2f;
+                float by = b.posY + b.textura.getHeight() * b.scale / 2f;
 
                 float distX = bx - cx;
                 float distY = by - cy;
@@ -244,6 +243,7 @@ public class RenderVentanaJuego {
         }
         return false;
     }
+
     public void dispose() {
         shapeRenderer.dispose();
     }

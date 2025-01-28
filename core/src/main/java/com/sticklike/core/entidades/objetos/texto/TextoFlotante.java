@@ -46,7 +46,7 @@ public class TextoFlotante {
      */
     public void renderizarTextoFlotante(SpriteBatch batch) {
         dibujarReborde(batch);
-        fuente.setColor(1, 0.2f, 0.6f, 0.9f);
+        fuente.setColor(1f, 1f, 1f, 1f);
         fuente.draw(batch, texto, x, y);
     }
 
@@ -63,7 +63,7 @@ public class TextoFlotante {
 
     private void dibujarReborde(SpriteBatch batch) {
         float offset = 1; // Desplazamiento para el reborde
-        fuente.setColor(Color.WHITE);
+        fuente.setColor(0.1f,0.1f,0.1f,1f);
         fuente.draw(batch, texto, x - offset, y); // Izquierda
         fuente.draw(batch, texto, x + offset, y); // Derecha
         fuente.draw(batch, texto, x, y - offset); // Abajo

@@ -2,6 +2,7 @@ package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
@@ -20,7 +21,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
  * - Movimiento en {@link MovimientoJugador}
  * - Ataque en {@link AtaquePiedra}
  * - Colisiones en {@link ColisionesJugador}
- * - Renderizado en {@link AnimacionesJugador}
+ * - Renderizado en {@link RenderJugador}
  */
 public class Jugador {
 
@@ -32,7 +33,7 @@ public class Jugador {
     private AtaqueCalcetin calcetinazo;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
-    private AnimacionesJugador animacionesJugador;
+    private RenderJugador renderJugador;
 
     // Atributos de stats
     private float velocidadJugador;
@@ -71,7 +72,7 @@ public class Jugador {
         this.pedrada = ataquePiedra;
         this.calcetinazo = calcetinazo;
         this.controladorProyectiles = controladorProyectiles;
-        this.animacionesJugador = new AnimacionesJugador();
+        this.renderJugador = new RenderJugador();
     }
 
     /**
@@ -88,7 +89,7 @@ public class Jugador {
         } else {
             direccionActual = Direction.IDLE;
         }
-        animacionesJugador.actualizarAnimacion(delta);
+        renderJugador.actualizarAnimacion(delta);
         controladorProyectiles.actualizarProyectiles(delta, (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
     }
 
@@ -97,10 +98,18 @@ public class Jugador {
      *
      * @param batch sprite que representa al jugador
      */
-    public void aplicarRenderizadoAlJugador(SpriteBatch batch) {
-        animacionesJugador.setDireccionActual(direccionActual);
-        animacionesJugador.renderizarJugador(batch, this);
+    public void aplicarRenderizadoAlJugador(SpriteBatch batch, ShapeRenderer shapeRenderer) {
+        // Renderizar animaciones del jugador
+        renderJugador.setDireccionActual(direccionActual);
+        renderJugador.renderizarJugador(batch, this);
+        batch.end();
+
+        renderJugador.renderizarBarraDeSalud(shapeRenderer,this);
+        // Vuelve a comenzar el SpriteBatch para el resto de las texturas
+        batch.begin();
     }
+
+
 
     public void muere() {
         estaVivo = false;
@@ -215,8 +224,8 @@ public class Jugador {
         this.maxVidaJugador = maxVidaJugador;
     }
 
-    public AnimacionesJugador getAnimacionesJugador() {
-        return animacionesJugador;
+    public RenderJugador getAnimacionesJugador() {
+        return renderJugador;
     }
 
     public float getVelocidadAtaque() {

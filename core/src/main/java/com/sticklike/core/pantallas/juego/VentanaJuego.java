@@ -31,7 +31,6 @@ import com.sticklike.core.ui.MenuPause;
 import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -158,7 +157,7 @@ public class VentanaJuego implements Screen {
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
 
-        menuPause = new MenuPause(4, 12f, 4, 22, 15, 55,this);
+        menuPause = new MenuPause(4, 12f, 4, 22, 15, 55, this);
 
     }
 
@@ -254,23 +253,36 @@ public class VentanaJuego implements Screen {
                 objetosXP.removeIndex(i);
 
                 if (xp instanceof ObjetoXpCaca caca) {
-                    // Aquí verificamos si la caca es dorada usando isEsCacaDorada()
-                    if (caca.isEsCacaDorada()) {
-                        sistemaDeNiveles.agregarXP(50f + (float) (Math.random() * (100f - 30.5f))); // de 50 a 99.5
+                    if (caca.isEsXPGorda()) {
+                        float xpOtorgada = 50f + (float) (Math.random() * 50f);
+                        sistemaDeNiveles.agregarXP(xpOtorgada); // de 50 a 100
                     } else {
-                        sistemaDeNiveles.agregarXP(10f + (float) (Math.random() * (25.5f - 15.75f))); // de 10 a 24.75
+                        float xpOtorgada = 10f + (float) (Math.random() * 15f);
+                        sistemaDeNiveles.agregarXP(xpOtorgada); // de 10 a 25
                     }
-                } else if (xp instanceof ObjetoXpLefa) {
-                    sistemaDeNiveles.agregarXP(15f + (float) (Math.random() * (25.5f - 15.75f)));
+                } else if (xp instanceof ObjetoXpLefa objetoXpLefa) {
+                    if (objetoXpLefa.isEsXpGorda()) {
+                        float xpOtorgada = 75f + (float) (Math.random() * 50f);
+                        sistemaDeNiveles.agregarXP(xpOtorgada); // de 75 a 125
+                    } else {
+                        float xpOtorgada = 15f + (float) (Math.random() * 15f);
+                        sistemaDeNiveles.agregarXP(xpOtorgada); // de 15 a 30
+
+                    }
                 } else if (xp instanceof ObjetoXpVida) {
-                    jugador.setVidaJugador(jugador.getVidaJugador() + (float) Math.random() * (12 - 3 + 1) + 3);
+                    float vidaExtra = 3f + (float) (Math.random() * 10f); // de 3 a 13
+                    jugador.setVidaJugador(jugador.getVidaJugador() + vidaExtra);
                     if (jugador.getVidaJugador() >= jugador.getMaxVidaJugador()) {
                         jugador.setVidaJugador(jugador.getMaxVidaJugador());
                     }
+
+                    // Mensaje de depuración para ObjetoXpVida
+                    Gdx.app.log("RecogidaXP", "ObjetoXpVida recolectado. Vida extra otorgada: " + vidaExtra);
                 }
             }
         }
     }
+
 
     private void actualizarTextoFlotante(float delta) {
         // Textos flotantes (daño)

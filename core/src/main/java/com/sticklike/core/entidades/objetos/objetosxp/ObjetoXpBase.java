@@ -80,6 +80,12 @@ public abstract class ObjetoXpBase implements ObjetosXP {
     public void dispose() {
         sprite = null;
     }
+    protected void setSpriteTexture(Texture texture) {
+        if (sprite != null) {
+            sprite.setTexture(texture); // Actualiza la textura del sprite
+        }
+    }
+
     protected abstract Texture getTexture();
     protected abstract float getWidth();
     protected abstract float getHeight();

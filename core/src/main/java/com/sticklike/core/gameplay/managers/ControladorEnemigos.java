@@ -145,7 +145,7 @@ public class ControladorEnemigos {
             case "REGLA":
                 return new EnemigoRegla(x, y, jugador, velocidad * MULT_VELOCIDAD_REGLA, camera);
             case "POLLA":
-                return new EnemigoPolla(x, y, jugador, velocidad * 1.75f);
+                return new EnemigoPolla(x, y, jugador, velocidad * 1.5f);
             // todo --> añadir más enemigos próximamente
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
