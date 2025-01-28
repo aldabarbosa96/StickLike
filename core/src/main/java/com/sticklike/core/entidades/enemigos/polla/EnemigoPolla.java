@@ -27,6 +27,7 @@ public class EnemigoPolla implements Enemigo {
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
+    private float damageAmount = 1.25f;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         escogerPolla();
@@ -66,13 +67,11 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        // 1) Comprobamos si seguimos “vivo” o en fade
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
 
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
 
-            // 2) Aplicar parpadeo rojo si procede
             if (animacionesEnemigos.estaEnParpadeo()) {
                 animacionesEnemigos.aplicarParpadeo1(sprite);
             } else {
@@ -80,10 +79,8 @@ public class EnemigoPolla implements Enemigo {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());
             }
 
-            // 3) Dibujar
             sprite.draw(batch);
 
-            // 4) Restaurar color
             animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
@@ -92,7 +89,6 @@ public class EnemigoPolla implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // En lugar de marcarlo como “muerto” final, activamos el fade
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
@@ -178,6 +174,15 @@ public class EnemigoPolla implements Enemigo {
     public float getVida() {
         return vidaEnemigo;
     }
+
+    @Override
+    public float getDamageAmount() {
+        return damageAmount;
+    }
+    public void setDamageAmount(float damage){
+        this.damageAmount = damage;
+    }
+
     public static void setVelocidadBase(float nuevaVelocidadBase) {
         velocidadBase = nuevaVelocidadBase;
     }

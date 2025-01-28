@@ -170,40 +170,8 @@ public class RenderHUDComponents {
     }
 
 
-    /**
-     * Muestra el texto numérico de la vida del jugador (ej. "45/50") dentro de la barra de salud.
-     *
-     * @param hudHeight altura del HUD para posicionar el texto
-     */
-  /*  public void renderizarTextoSalud(float hudHeight) {
-        float barX = HUD_BAR_X;
-        float barWidth = HUD_BAR_WIDTH;
-        float barHeight = HUD_BAR_HEIGHT;
-        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD + 5f;
 
-        String healthText = (int) jugador.getVidaJugador() + " / " + (int) jugador.getMaxVidaJugador();
-
-        layout.setText(fuente, healthText);
-        float textWidth = layout.width;
-        float textHeight = layout.height + 1.5f;
-
-        // Centramos el texto dentro de la barra
-        float textX = barX + (barWidth - textWidth) / 2;
-        float textY = barY + (barHeight + textHeight) / 2;
-
-        spriteBatch.begin();
-
-        float offset = 1f;
-        Color colorReborde = Color.BLACK;
-        Color colorTexto = Color.WHITE;
-        dibujarTextoConReborde(spriteBatch, healthText, textX, textY, offset, colorReborde, colorTexto);
-
-
-        spriteBatch.end();
-    }
-
-
-    public void renderizarIconoVidaJugador() {
+   /* public void renderizarIconoVidaJugador() { todo --> se usará próximamente
         float heartSize = HEART_SIZE;
         float heartX = HEART_X;
         float heartY = HUD_HEIGHT - heartSize - HEART_Y_OFFSET + DESPLAZAMIENTO_VERTICAL_HUD;
@@ -325,35 +293,90 @@ public class RenderHUDComponents {
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
 
         // Posiciones
-        float margenDerecho = 920f;
+        float margenDerecho = 930f;
         float statsX = VIRTUAL_WIDTH - margenDerecho;
-        float statsY = HUD_HEIGHT - 42f;
+        float statsY = HUD_HEIGHT - 45;
         float espaciado = 18f; // Espacio entre líneas
-        float anchoDescripcion = 125f; // Ancho fijo para la descripción
+        float anchoDescripcion = 110; // Ancho fijo para la descripción
 
+        // Arreglo de descripciones y valores
+        String[] descripciones = {velocidadJugador, rangoJugador, velocidadAtaque, fuerzaAtaque, numProyectiles};
+        String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
+
+        // Renderizar el bloque de estadísticas utilizando el método reutilizable
+        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK, Color.BLUE);
+    }
+
+    /**
+     * Renderiza un bloque adicional de estadísticas del jugador, mostrando información como vida máxima, regeneración de vida, etc.
+     */
+    public void renderizarMasStatsJugador() {
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        // Definimos los textos de las estadísticas adicionales
+        String vidaMaxima = "Vida Máxima";
+        String regeneracionVida = "Reg. Vida";
+        String poderAtaque = "Poder Ataque";
+        String resistencia = "Resistencia";
+        String critico = "Crítico";
+
+        // Valores de las estadísticas adicionales
+        String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + jugador.getMaxVidaJugador();
+        String valorRegeneracionVida = df.format(0);
+        String valorPoderAtaque = df.format(0);
+        String valorResistencia = df.format(0);
+        String valorCritico = df.format(0 ) + "%";
+
+        // Posiciones
+        float margenDerecho = 770f;
+        float statsX = VIRTUAL_WIDTH - margenDerecho;
+        float statsY = HUD_HEIGHT - 45;
+        float espaciado = 18f;
+        float anchoDescripcion = 110;
+
+        // Arreglo de descripciones y valores
+        String[] descripciones = {vidaMaxima, regeneracionVida, poderAtaque, resistencia, critico};
+        String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
+
+        // Renderizar el bloque adicional de estadísticas utilizando el método reutilizable
+        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK, Color.BLUE);
+    }
+
+    /**
+     * Método reutilizable para renderizar un bloque de estadísticas.
+     *
+     * @param descripciones    Arreglo de descripciones de las estadísticas.
+     * @param valores          Arreglo de valores correspondientes a las descripciones.
+     * @param statsX           Posición X inicial del bloque de estadísticas.
+     * @param statsY           Posición Y inicial del bloque de estadísticas.
+     * @param espaciado        Espacio entre cada línea de estadísticas.
+     * @param anchoDescripcion Ancho fijo para las descripciones.
+     * @param colorDescripcion Color de las descripciones.
+     * @param colorValor        Color de los valores.
+     */
+    private void renderizarBloqueStats(String[] descripciones, String[] valores, float statsX, float statsY, float espaciado, float anchoDescripcion, Color colorDescripcion, Color colorValor) {
         spriteBatch.begin();
 
-        fuente.getData().setScale(0.8f);
-        fuente.setColor(Color.BLUE);
+        fuente.getData().setScale(0.7f);
 
-        // Renderizamos las descripciones y los valores alineados
-        fuente.draw(spriteBatch, velocidadJugador, statsX - anchoDescripcion, statsY);
-        fuente.draw(spriteBatch, valorVelocidad, statsX, statsY);
+        // Renderizamos las descripciones y los valores
+        for (int i = 0; i < descripciones.length; i++) {
+            // Calculamos la posición Y de cada línea
+            float posicionY = statsY - i * espaciado;
 
-        fuente.draw(spriteBatch, rangoJugador, statsX - anchoDescripcion, statsY - espaciado);
-        fuente.draw(spriteBatch, valorRango, statsX, statsY - espaciado);
+            // descripción en el color especificado
+            fuente.setColor(colorDescripcion);
+            fuente.draw(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY);
 
-        fuente.draw(spriteBatch, velocidadAtaque, statsX - anchoDescripcion, statsY - 2 * espaciado);
-        fuente.draw(spriteBatch, valorVelAtaque, statsX, statsY - 2 * espaciado);
-
-        fuente.draw(spriteBatch, fuerzaAtaque, statsX - anchoDescripcion, statsY - 3 * espaciado);
-        fuente.draw(spriteBatch, valorFuerza, statsX, statsY - 3 * espaciado);
-
-        fuente.draw(spriteBatch, numProyectiles, statsX - anchoDescripcion, statsY - 4 * espaciado);
-        fuente.draw(spriteBatch, valorProyectiles, statsX, statsY - 4 * espaciado);
+            // valor en el color especificado
+            fuente.setColor(colorValor);
+            fuente.draw(spriteBatch, valores[i], statsX, posicionY);
+        }
 
         spriteBatch.end();
     }
+
+
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         // Establecer el color del reborde

@@ -6,9 +6,6 @@ import com.sticklike.core.entidades.enemigos.MovimientoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * Movimiento de "Regla": rota constantemente y realiza una fase de carga antes de dispararse en línea recta en la dirección del jugador
- */
 public class MovimientoRegla extends MovimientoBase {
     private final float velocidadEnFaseDisparo;
     private final float velocidadRotacion;

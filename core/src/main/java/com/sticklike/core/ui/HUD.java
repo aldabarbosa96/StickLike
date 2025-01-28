@@ -61,6 +61,7 @@ public class HUD {
         renderHUDComponents.renderizarTextoNivelPlayer();
         renderHUDComponents.renderizarTemporizador(delta);
         renderHUDComponents.renderizarStatsJugador();
+        renderHUDComponents.renderizarMasStatsJugador();
     }
 
 

@@ -5,10 +5,6 @@ import com.sticklike.core.entidades.enemigos.MovimientoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-
-/**
- * Movimiento de "Culo" basado en pausas y movimientos intermitentes hacia el jugador
- */
 public class MovimientoCulo extends MovimientoBase {
     private float velocidadEnemigo;
     private float tempMovimiento;

@@ -22,4 +22,5 @@ public interface Enemigo {
     void dispose();
     void aplicarKnockback(float fuerza, float dirX, float dirY);
     float getVida();
+    float getDamageAmount();
 }

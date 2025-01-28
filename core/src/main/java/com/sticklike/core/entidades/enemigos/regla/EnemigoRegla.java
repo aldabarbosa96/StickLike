@@ -13,10 +13,6 @@ import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * La clase EnemigoRegla gestiona el renderizado y actualizaciones de este enemigo,
- * además de su estado y comportamiento específico.
- */
 public class EnemigoRegla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
@@ -28,12 +24,8 @@ public class EnemigoRegla implements Enemigo {
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
+    private float damageAmount = 3.5f;
 
-    /**
-     * @param x,y              coordenadas gestionan el spawn de los enemigos
-     * @param jugador          necesitamos acceder para calcular distancias y movimiento
-     * @param velocidadEnemigo velocidad de movimiento del enemigo
-     */
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         //esCruzada();
         sprite = new Sprite(enemigoReglaCruzada);
@@ -70,11 +62,14 @@ public class EnemigoRegla implements Enemigo {
         return vidaEnemigo;
     }
 
-    /**
-     * Renderiza el enemigo en pantalla, si no está muerto
-     *
-     * @param batch SpriteBatch para dibujar el sprite del enemigo
-     */
+    @Override
+    public float getDamageAmount() {
+        return damageAmount;
+    }
+    public void setDamageAmount(float damage){
+        this.damageAmount = damage;
+    }
+
     @Override
     public void renderizar(SpriteBatch batch) {
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
@@ -123,7 +118,7 @@ public class EnemigoRegla implements Enemigo {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
             if (!animacionesEnemigos.estaEnFade()) {
-                //animacionesEnemigos.iniciarFadeMuerte(0.2f); no queda tan bien el fade-out en la regla
+                //animacionesEnemigos.iniciarFadeMuerte(0.2f); no queda tan bien el fade-out en la regla todo --> crear efecto de muerte
                 animacionesEnemigos.activarParpadeo(0.15f);
             }
         }

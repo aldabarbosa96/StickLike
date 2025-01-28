@@ -12,10 +12,9 @@ import com.sticklike.core.interfaces.Enemigo;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
-
 /**
- * La clase EnemigoCulo gestiona el renderizado y actualizaciones de cada enemigo,
- * además de su estado y variables.
+ * Clase que representa al enemigo "EnemigoCulo" en el juego.
+ * Implementa la interfaz {@link Enemigo} y maneja el comportamiento específico de este tipo de enemigo.
  */
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
@@ -28,21 +27,29 @@ public class EnemigoCulo implements Enemigo {
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
+    private float damageAmount = 2.0f;
 
     /**
-     * @param x,y              Coordenadas que gestionan el spawn de los enemigos.
-     * @param jugador          Necesitamos acceder para calcular distancias y movimiento.
-     * @param velocidadEnemigo Velocidad de movimiento del enemigo.
+     * Constructor para crear una instancia de EnemigoCulo.
+     *
+     * @param x                Posición X inicial del enemigo.
+     * @param y                Posición Y inicial del enemigo.
+     * @param jugador          Referencia al jugador para seguir su posición.
+     * @param velocidadEnemigo Velocidad inicial del enemigo.
      */
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
-        esConOjo();
+        esConOjo(); // Determina si el enemigo tiene ojo o no al crearse.
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void esConOjo() { // maneja la aleatoriedad de aparición de enemigoCulo con o sin ojo
+    /**
+     * Método que decide aleatoriamente si el enemigo tendrá un ojo o no.
+     * Ajusta las propiedades del sprite y la vida en consecuencia.
+     */
+    private void esConOjo() {
         float random = (float) (Math.random() * 10);
         if (random >= 2.5f) {
             sprite = new Sprite(enemigoCulo);
@@ -50,8 +57,7 @@ public class EnemigoCulo implements Enemigo {
         } else {
             sprite = new Sprite(enemigoCuloOjo);
             sprite.setSize(36, 30);
-            vidaEnemigo = VIDA_ENEMIGOCULO * 2;
-
+            vidaEnemigo = VIDA_ENEMIGOCULO * 2; // Incrementa la vida si tiene ojo.
         }
     }
 
@@ -60,36 +66,28 @@ public class EnemigoCulo implements Enemigo {
         movimientoCulo.aplicarKnockback(fuerza, dirX, dirY);
     }
 
-
-    /**
-     * Renderiza el enemigo en pantalla, si no está muerto.
-     *
-     * @param batch SpriteBatch para dibujar el sprite del enemigo.
-     */
     @Override
     public void renderizar(SpriteBatch batch) {
-        // 1) Comprobamos si seguimos “vivo” o en fade
+        // Comprobamos si el enemigo sigue "vivo" o está en proceso de desvanecimiento (fade)
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
 
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
 
-            // 2) Aplicar parpadeo rojo si procede
+            // Aplicar efecto de parpadeo rojo si está activo
             if (animacionesEnemigos.estaEnParpadeo()) {
                 animacionesEnemigos.aplicarParpadeo1(sprite);
             } else {
-
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());
             }
 
-            // 3) Dibujar
+            // Dibujar el sprite en pantalla
             sprite.draw(batch);
 
-            // 4) Restaurar color
+            // Restaurar el color original del sprite después de dibujar
             animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
-
 
     @Override
     public void actualizar(float delta) {
@@ -97,15 +95,14 @@ public class EnemigoCulo implements Enemigo {
         animacionesEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
 
-        // Verificar si el sprite necesita ser volteado
+        // Verificar si el sprite necesita ser volteado para enfrentar al jugador
         boolean estaALaIzquierda = !(sprite.getX() + sprite.getWidth() / 2 < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2);
 
-        // Si el sprite no está volteado y debería estarlo, o viceversa
+        // Voltear el sprite horizontalmente si la dirección ha cambiado
         if ((estaALaIzquierda && !sprite.isFlipX()) || (!estaALaIzquierda && sprite.isFlipX())) {
             sprite.flip(true, false);
         }
     }
-
 
     @Override
     public void activarParpadeo(float duracion) {
@@ -130,7 +127,7 @@ public class EnemigoCulo implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // En lugar de marcarlo como “muerto” final, activamos el fade
+            // Inicia el proceso de desvanecimiento y parpadeo al morir
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
@@ -160,7 +157,7 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public void dispose() {
-        sprite = null;
+        sprite = null; // Liberar recursos del sprite
     }
 
     @Override
@@ -188,8 +185,6 @@ public class EnemigoCulo implements Enemigo {
         this.procesado = procesado;
     }
 
-    // En EnemigoCulo:
-
     public float getVelocidad() {
         return movimientoCulo.getVelocidadEnemigo();
     }
@@ -202,6 +197,16 @@ public class EnemigoCulo implements Enemigo {
     public float getVida() {
         return vidaEnemigo;
     }
+
+    @Override
+    public float getDamageAmount() {
+        return damageAmount;
+    }
+
+    public void setDamageAmount(float damageAmount) {
+        this.damageAmount = damageAmount;
+    }
+
     public static void setVelocidadBase(float nuevaVelocidadBase) {
         velocidadBase = nuevaVelocidadBase;
     }

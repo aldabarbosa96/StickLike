@@ -47,8 +47,9 @@ public class SistemaDeNiveles {
         xpActual -= xpHastaSiguienteNivel;
         nivelActual++;
         xpHastaSiguienteNivel *= 1.5f;
-        jugador.setVidaMax(jugador.getMaxVidaJugador() + 5);
-        jugador.setVidaJugador(jugador.getVidaJugador() + 5);
+        //jugador.setVidaMax(jugador.getMaxVidaJugador() + 5);
+        jugador.setVidaJugador(jugador.getVidaJugador() + 2);
+
         // Delegamos en ControladorMejoras para manejar las mejoras
         if (sistemaDeMejoras != null) {
             sistemaDeMejoras.anyadirMejorasAlPopUp();

@@ -47,8 +47,10 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("MANOS RÁPIDAS", "Aumenta la velocidad de ataque un 13%", () -> jugador.reducirIntervaloDisparo(0.12f), 5));
         todasLasMejoras.add(new Mejora("PUÑO DURO", "Aumenta el daño del Ataque Básico un 6%", () -> jugador.aumentarDanyo(1.06f), 5));
         todasLasMejoras.add(new Mejora("MULTI PROYECTIL", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
-        todasLasMejoras.add(new Mejora("ATAQUE CALCETÍN", "Desbloquea el ataque especial de calcetines", () ->
-            jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
+        todasLasMejoras.add(new Mejora("CALCETÍN ACARTONADO", "Desbloquea ataque calcetines lefados", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
+        todasLasMejoras.add(new Mejora("CORAZÓN GORDO", "Aumenta la salud máxima en 15 puntos", () -> {
+            jugador.setVidaMax(jugador.getMaxVidaJugador()+15);
+            jugador.setVidaJugador(jugador.getVidaJugador()+15);},10));
 
         //todasLasMejoras.add(new Mejora("CALCETÍN LEFADO","Añade un nuevo proyectil. Un calcetín acartonado que daña a todos los enemigos a su paso", () ->jugador.obtieneCalcetines()));
         // todo --> implementar AtaqueCalcetin como una posible mejora

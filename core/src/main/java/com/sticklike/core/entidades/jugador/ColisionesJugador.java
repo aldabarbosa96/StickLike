@@ -14,7 +14,8 @@ public class ColisionesJugador {
         if (controladorEnemigos != null) {
             for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
                 if (enColision(enemigo, jugador) && enemigo.puedeAplicarDanyo()) {
-                    recibeDanyo(2,jugador,controladorAudio);
+                    float damage = enemigo.getDamageAmount();
+                    recibeDanyo(damage, jugador, controladorAudio);
                     enemigo.reseteaTemporizadorDanyo();
                 }
             }
