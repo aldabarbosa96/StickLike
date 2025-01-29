@@ -53,10 +53,10 @@ public class EnemigoCulo implements Enemigo {
         float random = (float) (Math.random() * 10);
         if (random >= 2.5f) {
             sprite = new Sprite(enemigoCulo);
-            sprite.setSize(28, 24);
+            sprite.setSize(27, 23);
         } else {
             sprite = new Sprite(enemigoCuloOjo);
-            sprite.setSize(36, 30);
+            sprite.setSize(32, 28);
             vidaEnemigo = VIDA_ENEMIGOCULO * 2; // Incrementa la vida si tiene ojo.
         }
     }

@@ -29,7 +29,7 @@ public class EnemigoRegla implements Enemigo {
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         //esCruzada();
         sprite = new Sprite(enemigoReglaCruzada);
-        sprite.setSize(25, 25);
+        sprite.setSize(23, 23);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoRegla = new MovimientoReglaEnemigos(velocidadEnemigo, 666, orthographicCamera, false);
