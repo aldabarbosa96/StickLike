@@ -2,7 +2,7 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
-import com.sticklike.core.gameplay.mejoras.Mejora;
+import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
 
 import java.util.ArrayList;
@@ -42,9 +42,9 @@ public class SistemaDeMejoras {
      * Se añaden a la lista {@code todasLasMejoras}
      */
     private void inicializarMejoras() {
-        todasLasMejoras.add(new Mejora("PIES VELOCES", "Aumenta la velocidad de movimiento un 15%", () -> jugador.aumentarVelocidad(0.15f), 5));
-        todasLasMejoras.add(new Mejora("BRAZOS LARGOS", "Aumenta el rango de ataque un 10%", () -> jugador.aumentarRangoAtaque(0.10f), 5));
-        todasLasMejoras.add(new Mejora("MANOS RÁPIDAS", "Aumenta la velocidad de ataque un 13%", () -> jugador.reducirIntervaloDisparo(0.12f), 5));
+        todasLasMejoras.add(new Mejora("PIES VELOCES", "Aumenta la velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5));
+        todasLasMejoras.add(new Mejora("BRAZOS LARGOS", "Aumenta el rango de ataque un 20%", () -> jugador.aumentarRangoAtaque(0.20f), 5));
+        todasLasMejoras.add(new Mejora("MANOS RÁPIDAS", "Aumenta la velocidad de ataque un 14%", () -> jugador.reducirIntervaloDisparo(0.125f), 5));
         todasLasMejoras.add(new Mejora("PUÑO DURO", "Aumenta el daño del Ataque Básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5));
         todasLasMejoras.add(new Mejora("MULTI PROYECTIL", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
         todasLasMejoras.add(new Mejora("CALCETÍN ACARTONADO", "Desbloquea ataque calcetines lefados", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
@@ -90,7 +90,6 @@ public class SistemaDeMejoras {
     public void anyadirMejorasAlPopUp() {
         List<Mejora> options = generarOpcionesDeMejora(3);
         game.ventanaJuego.mostrarPopUpDeMejoras(options);
-
     }
 
     /**
@@ -111,5 +110,9 @@ public class SistemaDeMejoras {
 
         mejoraSeleccionada.apply();
         mejorasMostradas.clear();
+    }
+
+    public List<Mejora> getMejorasMostradas() {
+        return mejorasMostradas;
     }
 }

@@ -44,6 +44,8 @@ public class Jugador {
     private float velocidadAtaque;
     private float intervaloDisparo;
     private int proyectilesPorDisparo;
+    private float resistenciaJugador;
+    private float criticoJugador;
     private boolean estaVivo;
     private Direction direccionActual = Direction.IDLE;
 
@@ -54,10 +56,12 @@ public class Jugador {
         this.velocidadJugador = VEL_MOV_JUGADOR;
         this.vidaJugador = VIDA_JUGADOR;
         this.maxVidaJugador = VIDAMAX_JUGADOR;
-        this.rangoAtaqueJugador = RANGO_ATAQUE_JUGADOR;
+        this.rangoAtaqueJugador = RANGO_ATAQUE;
         this.intervaloDisparo = INTERVALO_DISPARO;
         this.velocidadAtaque = VEL_ATAQUE_JUGADOR;
         this.proyectilesPorDisparo = NUM_PROYECTILES_INICIALES;
+        this.resistenciaJugador = RESISTENCIA;
+        this.criticoJugador = CRITICO;
         this.estaVivo = true;
 
         // Inicializar el sprite del jugador
@@ -240,5 +244,21 @@ public class Jugador {
 
     public float getIntervaloDisparo() {
         return intervaloDisparo;
+    }
+
+    public float getResistenciaJugador() {
+        return resistenciaJugador;
+    }
+
+    public void setResistenciaJugador(float resistenciaJugador) {
+        this.resistenciaJugador = resistenciaJugador;
+    }
+
+    public float getCriticoJugador() {
+        return criticoJugador;
+    }
+
+    public void setCriticoJugador(float criticoJugador) {
+        this.criticoJugador = criticoJugador;
     }
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -288,7 +289,7 @@ public class RenderHUDComponents {
         // Valores de las estadísticas
         String valorVelocidad = df.format(jugador.getVelocidadJugador());
         String valorRango = df.format(jugador.getRangoAtaqueJugador());
-        String valorVelAtaque = df.format(jugador.getVelocidadAtaque());
+        String valorVelAtaque = df.format(jugador.getVelocidadAtaque()) + " %";
         String valorFuerza = df.format(jugador.getDanyoAtaqueJugador());
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
 
@@ -303,13 +304,10 @@ public class RenderHUDComponents {
         String[] descripciones = {velocidadJugador, rangoJugador, velocidadAtaque, fuerzaAtaque, numProyectiles};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
 
-        // Renderizar el bloque de estadísticas utilizando el método reutilizable
-        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK, Color.BLUE);
+        // Renderizar el bloque de estadísticas utilizando el método reutilizable con reborde solo en valores
+        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK);
     }
 
-    /**
-     * Renderiza un bloque adicional de estadísticas del jugador, mostrando información como vida máxima, regeneración de vida, etc.
-     */
     public void renderizarMasStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");
 
@@ -322,10 +320,10 @@ public class RenderHUDComponents {
 
         // Valores de las estadísticas adicionales
         String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + jugador.getMaxVidaJugador();
-        String valorRegeneracionVida = df.format(0);
+        String valorRegeneracionVida = df.format(0) + " %";
         String valorPoderAtaque = df.format(0);
-        String valorResistencia = df.format(0);
-        String valorCritico = df.format(0 ) + "%";
+        String valorResistencia = df.format(jugador.getResistenciaJugador() * 100) + " %";
+        String valorCritico = df.format(jugador.getCriticoJugador() * 100) + " %";
 
         // Posiciones
         float margenDerecho = 775f;
@@ -338,23 +336,12 @@ public class RenderHUDComponents {
         String[] descripciones = {vidaMaxima, regeneracionVida, poderAtaque, resistencia, critico};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
 
-        // Renderizar el bloque adicional de estadísticas utilizando el método reutilizable
-        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK, Color.BLUE);
+        // Renderizar el bloque adicional de estadísticas utilizando el método reutilizable con reborde solo en valores
+        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK);
     }
 
-    /**
-     * Método reutilizable para renderizar un bloque de estadísticas.
-     *
-     * @param descripciones    Arreglo de descripciones de las estadísticas.
-     * @param valores          Arreglo de valores correspondientes a las descripciones.
-     * @param statsX           Posición X inicial del bloque de estadísticas.
-     * @param statsY           Posición Y inicial del bloque de estadísticas.
-     * @param espaciado        Espacio entre cada línea de estadísticas.
-     * @param anchoDescripcion Ancho fijo para las descripciones.
-     * @param colorDescripcion Color de las descripciones.
-     * @param colorValor        Color de los valores.
-     */
-    private void renderizarBloqueStats(String[] descripciones, String[] valores, float statsX, float statsY, float espaciado, float anchoDescripcion, Color colorDescripcion, Color colorValor) {
+
+    private void renderizarBloqueStats(String[] descripciones, String[] valores, float statsX, float statsY, float espaciado, float anchoDescripcion, Color colorTexto) {
         spriteBatch.begin();
 
         fuente.getData().setScale(0.7f);
@@ -364,18 +351,16 @@ public class RenderHUDComponents {
             // Calculamos la posición Y de cada línea
             float posicionY = statsY - i * espaciado;
 
-            // descripción en el color especificado
-            fuente.setColor(colorDescripcion);
+            // Renderizar descripción sin reborde
+            fuente.setColor(colorTexto);
             fuente.draw(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY);
 
-            // valor en el color especificado
-            fuente.setColor(colorValor);
-            fuente.draw(spriteBatch, valores[i], statsX, posicionY);
+            // Renderizar valor con reborde
+            dibujarTextoConReborde(spriteBatch, valores[i], statsX, posicionY, 1f, Color.GRAY, Color.WHITE);
         }
 
         spriteBatch.end();
     }
-
 
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {

@@ -1,12 +1,12 @@
-package com.sticklike.core.entidades.enemigos.regla;
+package com.sticklike.core.entidades.enemigos.tipos.regla;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.sticklike.core.entidades.enemigos.MovimientoBase;
+import com.sticklike.core.entidades.enemigos.animacion.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class MovimientoRegla extends MovimientoBase {
+public class MovimientoReglaEnemigos extends MovimientoBaseEnemigos {
     private final float velocidadEnFaseDisparo;
     private final float velocidadRotacion;
     private float tiempoCarga;
@@ -18,7 +18,7 @@ public class MovimientoRegla extends MovimientoBase {
     private boolean direccionCalculada;
     private OrthographicCamera camara;
 
-    public MovimientoRegla(float velocidadEnFaseDisparo, float velocidadRotacion, OrthographicCamera camara, boolean canKnockback) {
+    public MovimientoReglaEnemigos(float velocidadEnFaseDisparo, float velocidadRotacion, OrthographicCamera camara, boolean canKnockback) {
         super(canKnockback);
         this.velocidadEnFaseDisparo = velocidadEnFaseDisparo;
         this.velocidadRotacion = velocidadRotacion;

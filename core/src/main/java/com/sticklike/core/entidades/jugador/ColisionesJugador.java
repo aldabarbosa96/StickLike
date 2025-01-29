@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.jugador;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 
@@ -28,12 +29,12 @@ public class ColisionesJugador {
 
     public void recibeDanyo(float cantidad, Jugador jugador, ControladorAudio controladorAudio) {
         if (jugador.estaVivo()) return;
-        jugador.restarVidaJugador(cantidad);
+        jugador.restarVidaJugador(cantidad * (1 - jugador.getResistenciaJugador()));
         controladorAudio.reproducirEfecto("recibeDanyo", AUDIO_DANYO);
 
 
         if (jugador.getVidaJugador() <= 0) {
-            controladorAudio.reproducirEfecto("muerteJugador",AUDIO_MUERTE);
+            controladorAudio.reproducirEfecto("muerteJugador", AUDIO_MUERTE);
             jugador.setVidaJugador(0);
             jugador.muere();
 

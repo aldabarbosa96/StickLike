@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.objetosxp;
+package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -6,11 +6,11 @@ import com.sticklike.core.audio.ControladorAudio;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
-public class ObjetoXpVida extends ObjetoXpBase {
+public class ObjetoVida extends ObjetoBase {
     private Sprite sprite;
     private boolean recolectado = false;
 
-    public ObjetoXpVida(float x, float y) {
+    public ObjetoVida(float x, float y) {
         super(x,y);
     }
 

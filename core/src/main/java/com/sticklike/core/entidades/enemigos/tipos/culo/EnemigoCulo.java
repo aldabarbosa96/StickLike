@@ -1,12 +1,12 @@
-package com.sticklike.core.entidades.enemigos.culo;
+package com.sticklike.core.entidades.enemigos.tipos.culo;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpCaca;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -20,7 +20,7 @@ public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGOCULO;
-    private MovimientoCulo movimientoCulo;
+    private MovimientoCuloEnemigos movimientoCulo;
     private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private static float velocidadBase = VEL_BASE_CULO;
@@ -41,7 +41,7 @@ public class EnemigoCulo implements Enemigo {
         esConOjo(); // Determina si el enemigo tiene ojo o no al crearse.
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
+        this.movimientoCulo = new MovimientoCuloEnemigos(velocidadBase, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
@@ -115,10 +115,10 @@ public class EnemigoCulo implements Enemigo {
     }
 
     @Override
-    public ObjetoXpCaca sueltaObjetoXP() {
+    public ObjetoXp sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
-            return new ObjetoXpCaca(this.getX(), this.getY());
+            return new ObjetoXp(this.getX(), this.getY());
         }
         return null;
     }

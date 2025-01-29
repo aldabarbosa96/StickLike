@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.objetosxp;
+package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -8,14 +8,14 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public abstract class ObjetoXpBase implements ObjetosXP {
+public abstract class ObjetoBase implements ObjetosXP {
     private Sprite sprite;
     private boolean recolectado = false;
     private final float distanciaActivacion = DISTANCIA_ACTIVACION;
     private final float velocidadAtraccion = VEL_ATRACCION;
     private float x, y;
 
-    public ObjetoXpBase(float x, float y) {
+    public ObjetoBase(float x, float y) {
         this.sprite = new Sprite(getTexture());
         this.sprite.setSize(getWidth(), getHeight());
         this.sprite.setPosition(x, y);

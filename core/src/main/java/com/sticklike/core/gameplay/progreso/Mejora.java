@@ -1,4 +1,4 @@
-package com.sticklike.core.gameplay.mejoras;
+package com.sticklike.core.gameplay.progreso;
 
 /**
  * Clase base de las mejoras. Se definen y se aplica su efecto

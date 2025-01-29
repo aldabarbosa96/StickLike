@@ -1,12 +1,12 @@
-package com.sticklike.core.entidades.enemigos.polla;
+package com.sticklike.core.entidades.enemigos.tipos.polla;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpLefa;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
@@ -21,7 +21,7 @@ public class EnemigoPolla implements Enemigo {
     private float vidaEnemigo = VIDA_ENEMIGO_POLLA; // todo --> revisar variables de clase
     private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
-    private MovimientoPolla movimientoPolla;
+    private MovimientoPollaEnemigos movimientoPolla;
     private static float velocidadBase = VEL_BASE_POLLA; // Velocidad base para todos los enemigos de este tipo
 
     private boolean haSoltadoXP = false;
@@ -30,15 +30,15 @@ public class EnemigoPolla implements Enemigo {
     private float damageAmount = DANYO_POLLA;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
-        escogerPolla();
+        sprite = new Sprite(enemigoPolla2);
         sprite.setSize(30f, 30f);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
+        this.movimientoPolla = new MovimientoPollaEnemigos(velocidadBase, 0.75f, 25f, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void escogerPolla() {
+    /*private void escogerPolla() {
         float pollaRandom = (float) (Math.random() * 140f);
 
         if (pollaRandom <= 20) sprite = new Sprite(enemigoPolla);
@@ -48,7 +48,7 @@ public class EnemigoPolla implements Enemigo {
         else if (pollaRandom <= 100) sprite = new Sprite(enemigoPolla5);
         else if (pollaRandom <= 120) sprite = new Sprite(enemigoPolla6);
         else sprite = new Sprite(enemigoPolla7);
-    }
+    }*/
 
 
     @Override
@@ -117,10 +117,10 @@ public class EnemigoPolla implements Enemigo {
     }
 
     @Override
-    public ObjetoXpLefa sueltaObjetoXP() {
+    public ObjetoXp sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
-            return new ObjetoXpLefa(this.getX(), this.getY());
+            return new ObjetoXp(this.getX(), this.getY());
         }
         return null;
     }

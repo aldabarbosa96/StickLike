@@ -25,7 +25,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f; // Mueve el HUD completo 30 píxeles hacia abajo
     public static final float POPUP_WIDTH = 400;
     public static final float POPUP_HEIGHT = 350;
-    public static final String POPUP_HEADER = "\n\n<< < U P G R A D E S > >> ";
+    public static final String POPUP_HEADER = "\n\n<< < M E J O R A S > >> ";
     public static final String POPUP_FOOTER = "   \n";
     public static final float TIMER_Y_POS = 285f;
     public static final float TIMER_SCALE = 0.75f;
@@ -37,11 +37,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
     public static final float VIDA_JUGADOR = 50f;
     public static final float VIDAMAX_JUGADOR = 50f;
-    public static final float RANGO_ATAQUE_JUGADOR = 175.0f;
+    public static final float RANGO_ATAQUE = 175.0f;
     public static final float INTERVALO_DISPARO = 1.35f;
     public static final float INTERVALO_MIN_DISPARO = 0.1f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
     public static final int NUM_PROYECTILES_INICIALES = 2;
+    public static final float RESISTENCIA = 0.06f;
+    public static final float CRITICO = 0.02f;
     public static final float WIDTH_JUGADOR = 12f;
     public static final float HEIGHT_JUGADOR = 35f;
     public static final float PARPADEO_JUGADOR = 0.2f;

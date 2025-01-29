@@ -1,13 +1,13 @@
-package com.sticklike.core.entidades.enemigos.regla;
+package com.sticklike.core.entidades.enemigos.tipos.regla;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.objetosxp.ObjetoXpVida;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import com.sticklike.core.interfaces.Enemigo;
 
@@ -17,7 +17,7 @@ public class EnemigoRegla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGOREGLA;
-    private MovimientoRegla movimientoRegla;
+    private MovimientoReglaEnemigos movimientoRegla;
     private OrthographicCamera orthographicCamera;
     private float coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
@@ -32,7 +32,7 @@ public class EnemigoRegla implements Enemigo {
         sprite.setSize(25, 25);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, false);
+        this.movimientoRegla = new MovimientoReglaEnemigos(velocidadEnemigo, 666, orthographicCamera, false);
         this.orthographicCamera = orthographicCamera;
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
@@ -104,11 +104,11 @@ public class EnemigoRegla implements Enemigo {
     }
 
     @Override
-    public ObjetoXpVida sueltaObjetoXP() {
+    public ObjetoVida sueltaObjetoXP() {
         float corazonONo = (float) (Math.random());
         if (!haSoltadoXP && corazonONo < 0.25f) { // 25% de probabilidades de que suelte vida
             haSoltadoXP = true;
-            return new ObjetoXpVida(this.getX(), this.getY());
+            return new ObjetoVida(this.getX(), this.getY());
         }
         return null;
     }

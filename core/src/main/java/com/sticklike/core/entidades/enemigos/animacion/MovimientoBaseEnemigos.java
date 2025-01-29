@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos;
+package com.sticklike.core.entidades.enemigos.animacion;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -8,7 +8,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
  * Clase base para manejar movimiento de enemigos
  * Incluye lógica de knockback opcional y un método abstracto para la IA específica de cada enemigo
  */
-public abstract class MovimientoBase {
+public abstract class MovimientoBaseEnemigos {
     // Knockback
     private boolean canKnockback;
     protected float knockbackVelX = VELOCIDAD_EMPUJE;
@@ -16,7 +16,7 @@ public abstract class MovimientoBase {
     protected float knockbackTimer = TEMPORIZADOR_EMPUJE;
     protected float knockbackDuration = DURACION_EMPUJE;
 
-    public MovimientoBase(boolean canKnockback) {
+    public MovimientoBaseEnemigos(boolean canKnockback) {
         this.canKnockback = canKnockback;
     }
 

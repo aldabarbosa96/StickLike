@@ -1,17 +1,17 @@
-package com.sticklike.core.entidades.objetos.objetosxp;
+package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
-public class ObjetoXpCaca extends ObjetoXpBase {
+public class ObjetoXp extends ObjetoBase {
 
     private final boolean esXPGorda;
 
-    public ObjetoXpCaca(float x, float y) {
+    public ObjetoXp(float x, float y) {
         super(x, y);
-        float randomCaca = (float) (Math.random() * 100f);
-        esXPGorda = randomCaca >= 95f;
+        float randomXP = (float) (Math.random() * 100f);
+        esXPGorda = randomXP >= 95f;
         setSpriteTexture(getTexture()); // Sincroniza el sprite con la textura
     }
 

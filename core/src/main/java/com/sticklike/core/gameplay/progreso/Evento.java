@@ -1,4 +1,4 @@
-package com.sticklike.core.gameplay.eventos;
+package com.sticklike.core.gameplay.progreso;
 
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 
