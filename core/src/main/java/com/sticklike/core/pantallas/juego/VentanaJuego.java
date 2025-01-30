@@ -36,25 +36,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.List;
 
 /**
- * GameScreen (VentanaJuego) es la pantalla principal del juego.
- * Gestiona la lógica de:
- * <ul>
- *   <li>El jugador (movimiento, acciones, colisiones)</li>
- *   <li>Los enemigos y su spawn (a través de EnemyManager)</li>
- *   <li>El HUD (vida, experiencia, nivel, etc.)</li>
- *   <li>La cámara y renderizado de las entidades</li>
- *   <li>La aparición de un pop-up para upgrades cuando el jugador sube de nivel</li>
- * </ul>
+ * GameScreen (VentanaJuego) es la pantalla principal del juego
  * <p>
- * Implementa la interfaz {@link com.badlogic.gdx.Screen} propia de libGDX.
+ * Implementa la interfaz {@link Screen} de libGDX para implementar el renderizado en pantalla
  */
 public class VentanaJuego implements Screen {
-
     public static final int worldWidth = (int) VIRTUAL_WIDTH;
     public static final int worldHeight = (int) VIRTUAL_HEIGHT;
     private float cameraOffsetY = CAMERA_OFFSET_Y;
-
-    // Referencia al MainGame
     private MainGame game;
 
     // Render básico
@@ -64,6 +53,7 @@ public class VentanaJuego implements Screen {
     private Viewport viewport;
     private RenderVentanaJuego renderVentanaJuego;
     private RenderHUDComponents renderHUDComponents;
+
     // Jugador y sistemas
     private Jugador jugador;
     private ControladorEnemigos controladorEnemigos;
@@ -80,20 +70,16 @@ public class VentanaJuego implements Screen {
     private PopUpMejoras popUpMejoras;
     private MenuPause menuPause;
 
-
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
     private Array<ObjetosXP> objetosXP;
     private Array<Enemigo> enemigosAEliminar;
 
-    // Control de pausa
     private boolean pausado = false;
-    private boolean efectoSonidoPopUpReproducido = false;
 
 
     /**
-     * Construye la ventana principal del juego, inicializando la cámara,
-     * el jugador (con su controlador de inputs), los sistemas, el HUD, etc.
+     * Construye la ventana principal del juego, inicializando la cámara, el jugador (con su controlador de inputs), los sistemas, el HUD, etc.
      *
      * @param game referencia a {@link MainGame}, que maneja el ciclo de vida
      */
@@ -105,7 +91,6 @@ public class VentanaJuego implements Screen {
         inicializarSistemasYControladores();
         inicializarCuadriculaYHUD();
         inicializarListas();
-
 
         // Ajustamos posición de la cámara siguiendo al jugador
         actualizarPosCamara();
@@ -128,23 +113,22 @@ public class VentanaJuego implements Screen {
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
         ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
-        // ataqueCalcetin está comentado; descomenta si es necesario
         ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
         controladorProyectiles = new ControladorProyectiles();
 
-        // Creamos al jugador en el centro aproximado del mapa, pasando el controlador de inputs
+        // Creamos al jugador en el centro aproximado del mapa pasando el controlador de inputs
         float playerStartX = worldWidth / 2f;
-        float playerStartY = worldHeight / 2f + 125f;
+        float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
         jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, ataqueCalcetin, controladorProyectiles);
     }
 
     private void inicializarSistemasYControladores() {
-        // Primero inicializa los sistemas base
+        // Primero inicializamos los sistemas base
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
         this.popUpMejoras = new PopUpMejoras(sistemaDeMejoras, this);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
 
-        // Luego los controladores dependientes
+        // Después los controladores dependientes
         controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
     }
@@ -162,7 +146,6 @@ public class VentanaJuego implements Screen {
     }
 
     private void inicializarListas() {
-        // Listas de texto daño, objetos XP y enemigos a eliminar
         textosDanyo = new Array<>();
         objetosXP = new Array<>();
         enemigosAEliminar = new Array<>();
@@ -202,7 +185,6 @@ public class VentanaJuego implements Screen {
 
     private void reproducirMusica() {
         controladorAudio.reproducirMusica();
-        efectoSonidoPopUpReproducido = false;
     }
 
     private void pausarMusica() {
@@ -219,7 +201,7 @@ public class VentanaJuego implements Screen {
     }
 
     private void actualizarEnemigos() {
-        // Manejo de enemigos muertos => suelta objeto XP
+        // Manejo de enemigos muertos ==> suelta objeto XP
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo.estaMuerto() && !enemigo.haSoltadoXP()) {
                 ObjetosXP xp = enemigo.sueltaObjetoXP();
@@ -240,7 +222,7 @@ public class VentanaJuego implements Screen {
         // Recoger XP
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
-            xp.actualizarObjetoXP(delta, jugador, controladorAudio); // Efecto de recogida
+            xp.actualizarObjetoXP(delta, jugador, controladorAudio);
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
                 xp.recolectar(controladorAudio);
@@ -263,13 +245,11 @@ public class VentanaJuego implements Screen {
                         jugador.setVidaJugador(jugador.getMaxVidaJugador());
                     }
 
-                    // Mensaje de depuración para ObjetoXpVida
                     Gdx.app.log("Recolección", "ObjetoVida recolectado. Vida extra otorgada: " + vidaExtra);
                 }
             }
         }
     }
-
 
     private void actualizarTextoFlotante(float delta) {
         // Textos flotantes (daño)
@@ -282,9 +262,6 @@ public class VentanaJuego implements Screen {
         }
     }
 
-    /**
-     * Ajusta la cámara para que siga al jugador, con offset vertical.
-     */
     public void actualizarPosCamara() {
         camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
             jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY, 0);
@@ -292,22 +269,12 @@ public class VentanaJuego implements Screen {
         camara.update();
     }
 
-    /**
-     * Muestra un pop-up de upgrades, pausando el juego hasta que se elija una.
-     */
     public void mostrarPopUpDeMejoras(final List<Mejora> mejoras) {
         popUpMejoras.mostrarPopUpMejoras(mejoras);
-
-        // Pausar el juego
         setPausado(true);
-
-        // Reproducir sonido de upgrade al mostrar el pop-up
         reproducirSonidoUpgrade();
     }
 
-    /**
-     * Añade un ObjetoXP al array de objetosXP.
-     */
     public void addXPObject(ObjetosXP xpObject) {
         objetosXP.add(xpObject);
     }
@@ -331,9 +298,6 @@ public class VentanaJuego implements Screen {
     public void hide() {
     }
 
-    /**
-     * Libera los recursos usados por esta pantalla.
-     */
     @Override
     public void dispose() {
         spriteBatch.dispose();
@@ -365,22 +329,17 @@ public class VentanaJuego implements Screen {
         return camara;
     }
 
-    /**
-     * Configura el estado de pausa del juego.
-     *
-     * @param pausa {@code true} para pausar, {@code false} para reanudar.
-     */
     public void setPausado(boolean pausa) {
         this.pausado = pausa;
 
         if (pausa) {
-            controladorAudio.pausarMusica(); // Pausar música (atenúa la música)
-            renderHUDComponents.pausarTemporizador(); // Pausar temporizador
+            controladorAudio.pausarMusica(); // atenúa la música
+            renderHUDComponents.pausarTemporizador();
 
             // No reproducir sonido de pausa aquí
         } else {
-            controladorAudio.reproducirMusica(); // Reanudar música
-            renderHUDComponents.reanudarTemporizador(); // Reanudar temporizador
+            controladorAudio.reproducirMusica(); // reanuda la música
+            renderHUDComponents.reanudarTemporizador();
         }
     }
 
@@ -392,17 +351,11 @@ public class VentanaJuego implements Screen {
         return renderHUDComponents;
     }
 
-    /**
-     * Reproduce el sonido de pausa.
-     */
     public void reproducirSonidoPausa() {
-        controladorAudio.reproducirEfecto("pausa", 0.4f);
+        controladorAudio.reproducirEfecto("pausa", AUDIO_PAUSA);
     }
 
-    /**
-     * Reproduce el sonido de upgrade.
-     */
     public void reproducirSonidoUpgrade() {
-        controladorAudio.reproducirEfecto("upgrade", 0.5f);
+        controladorAudio.reproducirEfecto("upgrade", AUDIO_UPGRADE);
     }
 }

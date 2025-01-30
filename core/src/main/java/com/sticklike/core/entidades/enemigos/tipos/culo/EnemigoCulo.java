@@ -97,7 +97,11 @@ public class EnemigoCulo implements Enemigo {
         animacionesEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
 
-        // Verificar si el sprite necesita ser volteado para enfrentar al jugador
+        if (temporizadorDanyo > 0) { // reseteamos el temporizador para que pueda aplicar daño más de 1 vez
+            temporizadorDanyo -= delta;
+        }
+
+        // Verificar si el sprite debe voltearse
         boolean estaALaIzquierda = !(sprite.getX() + sprite.getWidth() / 2 < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2);
 
         // Voltear el sprite horizontalmente si la dirección ha cambiado
@@ -129,7 +133,7 @@ public class EnemigoCulo implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // Inicia el proceso de desvanecimiento y parpadeo al morir
+            // el enemigo inicia el proceso de desvanecimiento y parpadeo al morir
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
@@ -159,7 +163,7 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public void dispose() {
-        sprite = null; // Liberar recursos del sprite
+        sprite = null;
     }
 
     @Override

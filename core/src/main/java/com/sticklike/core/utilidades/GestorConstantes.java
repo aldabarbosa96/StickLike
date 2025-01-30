@@ -10,6 +10,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
 
     // Configuración de la cámara
     public static final float CAMERA_OFFSET_Y = -65f;
+    public static final float CAMERA_JUGADOR_OFFSET_Y = 125f;
 
     // Configuración del HUD
     public static final float HUD_HEIGHT = 200f;
@@ -22,14 +23,74 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float HEART_SIZE = 20f;
     public static final float HEART_X = 410f;
     public static final float HEART_Y_OFFSET = 2.5f;
-    public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f; // Mueve el HUD completo 30 píxeles hacia abajo
-    public static final float POPUP_WIDTH = 400;
-    public static final float POPUP_HEIGHT = 350;
+    public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f;
+
+    //Pop_up
+    public static final float POPUP_WIDTH = 400f;
+    public static final float POPUP_HEIGHT = 350f;
+    public static final float POPUP_HEADER_PADDING = 75f;
+    public static final float POPUP_ROW_PADDING = 5f;
+    public static final float LABEL_WIDTH = 5f;
+    public static final float BUTTON_WIDTH = 300f;
+    public static final float BUTTON_PADDING = 5f;
+    public static final float POPUP_POSITION_CORRECTION = 150f;
+    public static final String[] POPUP_BUTTON_LABELS = {"X","Y","B","A"};
+
+    // timer
+    public static final float TIMER_Y_POS = 290f;
+    public static final float TIMER_SCALE = 0.7f;
+    public static final float TIMER_SECONDS = 60f;
+    public static final float TIMER_Y_CORRECTION = 10f;
+    public static final float TEXT_X_CORRECTION = 10f;
+    public static final float TEXT_Y_CORRECTION = 13f;
+    public static final float NUMBER_Y_CORRECTION = 8.5f;
+    public static final float XPBAR_Y_CORRECTION = 25f;
+    public static final float BASIC_OFFSET = 1f;
+    public static final float UNDER_OFFSET = 0.8f;
+    public static final float GROSOR_MARCO = 0.9f;
+    public static final float GROSOR_SOMBRA = 0.7f;
+    public static final float BORDER_NEGATIVE = 1.5f;
+    public static final float BORDER_POSITIVE = 3f;
+    public static final float BORDER_CORRECTION = 2f;
+    public static final float XPTEXT_Y_CORRECTION = 1.75f;
+    public static final float STATS_X_CORRECTION = 960f;
+    public static final float STATS_X_CORRECTION2 = 780;
+    public static final float STATS_Y_CORRECTION = 45f;
+    public static final float ESPACIADO = 18f;
+    public static final float ANCHO_DESC1 = 75f;
+    public static final float ANCHO_DESC2 = 75f;
+    public static final float STATS_ICON_SIZE = 16f;
+    public static final float ICON_Y_CORRECTION = 2f;
+    public static final float ESPACIADO_LATERAL = 22.5f;
+
+    // Texto HUD
+    public static final String TEXTO_LVL = "LVL:  ";
     public static final String POPUP_HEADER = "\n\n<< < M E J O R A S > >> ";
     public static final String POPUP_FOOTER = "   \n";
-    public static final float TIMER_Y_POS = 285f;
-    public static final float TIMER_SCALE = 0.75f;
-    public static final float TIMER_SECONDS = 60f;
+    public static final String VEL_MOV = "Velocidad";
+    public static final String RANGO = "Rango";
+    public static final String VEL_ATAQUE = "Vel. Ataque";
+    public static final String FUERZA = "Fuerza";
+    public static final String NUM_PROYECTILES = "Munición";
+    public static final String VIDA_MAX = "Vida Máx.";
+    public static final String REG_VIDA = "Reg. Vida";
+    public static final String PODER = "Poder";
+    public static final String RESIST = "Resistencia";
+    public static final String CRITIC = "Crítico";
+    public static final String START = "START";
+
+    // Texto GameOver
+    public static final String GAMEOVER = "G A M E  O V E R";
+    public static final String GAMEOVER_TEXT = "Pulsa R para Restart o Q para Quit";
+    public static final float GAMEOVER_TEXT_Y = 60f;
+
+    // ManuPausa
+    public static final int BUTTON_START = 6; // todo --> comprobar funcionamiento con mando PS
+    public static final float BUTTON_PAUSE_Y_CORRECTION = 25f;
+    public static final float START_TEXT_X = 802.5f;
+    public static final float START_TEXT_Y = 295f;
+    public static final float PAUSE_TEXT_X = 345;
+    public static final float PAUSE_TEXT_Y = 450;
 
     // Configuración del jugador
     public static final float VEL_MOV_JUGADOR = 125.0f;
@@ -94,7 +155,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float PIEDRA_SIZE = 8f;
     public static final float CALCETIN_W_SIZE = 20f;
     public static final float CALCETIN_H_SIZE = 24f;
-    public static final float PROJECTILE_BASE_DAMAGE = 8f; //gestionar en un futuro
+    public static final float PROJECTILE_BASE_DAMAGE = 8f; //todo --> gestionar en un futuro
     public static final float TEMPORIZADOR_DISPARO = 0f;
     public static final float MAX_DISTANCIA = 350f;
     public static final float DISTANCIA_RECORRIDA = 0f;
@@ -115,8 +176,6 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_VIDA_HEIGHT= 12f;
     public static final float OBJETO1_XP_WIDTH = 10f;
     public static final float OBJETO1_XP_HEIGHT = 10.5f;
-    //public static final float OBJETO_LEFA_WIDTH= 8.5f;
-    //public static final float OBJETO_LEFA_HEIGHT= 10.5f;
 
     // Controlador Evento
     public static final int LVL_EVENTO1 = 3;
@@ -143,4 +202,6 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_RECOLECCION_VIDA = 0.7f;
     public static final float AUDIO_DANYO = 0.9f;
     public static final float AUDIO_MUERTE = 0.7f;
+    public static final float AUDIO_UPGRADE = 0.5f;
+    public static final float AUDIO_PAUSA = 0.4f;
 }

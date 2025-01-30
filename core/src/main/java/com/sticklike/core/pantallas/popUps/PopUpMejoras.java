@@ -28,20 +28,24 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.List;
 
+/**
+ * Clase que gestiona la creación y dibujado del Pop-Up de mejoras y maneja sus inputs
+ * todo --> separar lógica de inputs en una clase a parte
+ */
 public class PopUpMejoras {
     private Stage uiStage;
     private Skin uiSkin;
     private SistemaDeMejoras sistemaDeMejoras;
     private VentanaJuego ventanaJuego;
     private Window upgradeWindow;
-    private GameInputHandler inputHandler; // Maneja inputs de teclado y mando
+    private GameInputHandler inputHandler;
 
     public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego ventanaJuego) {
         this.ventanaJuego = ventanaJuego;
         uiStage = new Stage(new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
         this.sistemaDeMejoras = sistemaDeMejoras;
-        this.inputHandler = new GameInputHandler(); // Se crea un solo handler de input
+        this.inputHandler = new GameInputHandler();
     }
 
     public Skin crearAspectoUI() {
@@ -75,7 +79,6 @@ public class PopUpMejoras {
         return skin;
     }
 
-
     public void mostrarPopUpMejoras(final List<Mejora> mejoras) {
         ventanaJuego.setPausado(true);
         ventanaJuego.getMenuPause().bloquearInputs(true);
@@ -88,13 +91,13 @@ public class PopUpMejoras {
         float w = POPUP_WIDTH;
         float h = POPUP_HEIGHT;
         upgradeWindow.setSize(w, h);
-        upgradeWindow.setPosition((VIRTUAL_WIDTH - w) / 2f, (VIRTUAL_HEIGHT - h + 150f) / 2f);
-        upgradeWindow.padTop(75f);
+        upgradeWindow.setPosition((VIRTUAL_WIDTH - w) / 2f, (VIRTUAL_HEIGHT - h + POPUP_POSITION_CORRECTION) / 2f);
+        upgradeWindow.padTop(POPUP_HEADER_PADDING);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
 
         // array de etiquetas para hasta 4 mejoras
-        String[] botonLabels = {"X", "Y", "B", "A"};
+        String[] botonLabels = POPUP_BUTTON_LABELS;
 
         // Recorremos la lista de mejoras y creamos filas en la tabla
         for (int i = 0; i < mejoras.size(); i++) {
@@ -115,9 +118,9 @@ public class PopUpMejoras {
             btn.getLabel().setColor(Color.BLACK);
 
             // Añade una nueva fila en la tabla y mete primero el label, luego el botón
-            upgradeWindow.row().pad(5); // pad representa el espaciado vertical entre filas
-            upgradeWindow.add(labelBoton).width(10).left(); // ancho fijo para la col del label
-            upgradeWindow.add(btn).width(300).pad(5);             // ancho para el botón
+            upgradeWindow.row().pad(POPUP_ROW_PADDING); // pad representa el espaciado vertical entre filas
+            upgradeWindow.add(labelBoton).width(LABEL_WIDTH).left(); // ancho fijo para la col del label
+            upgradeWindow.add(btn).width(BUTTON_WIDTH).pad(BUTTON_PADDING);             // ancho para el botón
 
             // Listener para la selección con click/touch
             btn.addListener(new InputListener() {
@@ -132,13 +135,11 @@ public class PopUpMejoras {
         uiStage.addActor(upgradeWindow);
         uiStage.setKeyboardFocus(upgradeWindow);
 
-        // Asegura que inputHandler reciba los eventos de teclado antes que uiStage
+        // con InputMultiplexer aseguramos que inputHandler reciba los eventos de teclado antes que uiStage
         InputMultiplexer im = new InputMultiplexer(inputHandler, uiStage);
         Gdx.input.setInputProcessor(im);
         Controllers.addListener(inputHandler);
     }
-
-
 
     private void onSelectMejora(int index, List<Mejora> mejoras) {
         if (index < 0 || index >= mejoras.size()) return;
@@ -161,10 +162,7 @@ public class PopUpMejoras {
         return uiSkin;
     }
 
-    /**
-     * **Unificamos el manejo de inputs de teclado y mando**
-     */
-    private class GameInputHandler extends ControllerAdapter implements InputProcessor {
+    private class GameInputHandler extends ControllerAdapter implements InputProcessor { // todo --> mover a una clase dedicada en un futuro
         @Override
         public boolean keyDown(int keycode) {
             switch (keycode) {

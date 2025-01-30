@@ -30,7 +30,7 @@ public class EnemigoPolla implements Enemigo {
     private float damageAmount = DANYO_POLLA;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
-        sprite = new Sprite(enemigoPolla2);
+        sprite = new Sprite(enemigoPolla);
         sprite.setSize(28f, 28f);
         sprite.setPosition(x, y);
         this.jugador = jugador;

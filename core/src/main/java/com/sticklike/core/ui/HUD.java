@@ -10,7 +10,6 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * Clase responsable de dibujar la información de interfaz del jugador en pantalla (vida, experiencia, nivel, etc.)
- * <p>
  * El renderizado de los elementos del HUD se encapsula a través de RenderHUDComponents
  */
 public class HUD {
@@ -21,56 +20,34 @@ public class HUD {
     private final FillViewport hudViewport;
     private static final float desplazamientoVertHUD = DESPLAZAMIENTO_VERTICAL_HUD;
 
-
-    /**
-     * @param jugador          referencia al jugador, para consultar su vida
-     * @param sistemaDeNiveles referencia al sistema que maneja la XP y el nivel del jugador
-     * @param shapeRenderer    usado para dibujar rectángulos y líneas (barras, grids)
-     * @param spriteBatch      usado para renderizar texturas e iconos
-     */
     public HUD(Jugador jugador, SistemaDeNiveles sistemaDeNiveles, ShapeRenderer shapeRenderer, SpriteBatch spriteBatch) {
         this.renderHUDComponents = new RenderHUDComponents(shapeRenderer, spriteBatch, jugador, sistemaDeNiveles); // Clase encargada de renderizar los componentes del HUD
         this.shapeRenderer = shapeRenderer;
         this.spriteBatch = spriteBatch;
-
-        // Configuramos la cámara y el viewport
         this.hudCamara = new OrthographicCamera();
         this.hudViewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
         this.hudCamara.update();
 
     }
 
-    /**
-     * Dibuja el HUD estático en la parte inferior de la pantalla:
-     * fondo, barras de salud y XP, iconos, texto de nivel, etc. desde la clase RenderHUDComponents
-     * todo -- > falta implementar elementos en el HUD (iconos stats player, mejoras obtenidas...)
-     */
+     //todo -- > falta implementar elementos en el HUD (iconos stats player, mejoras obtenidas...)
     public void renderizarHUD(float delta) {
         hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamara.combined);
         shapeRenderer.setProjectionMatrix(hudCamara.combined);
 
-        float hudHeight = 200f + desplazamientoVertHUD;
+        float hudHeight = HUD_HEIGHT + desplazamientoVertHUD;
         renderHUDComponents.renderizarFondoHUD();
         renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
         renderHUDComponents.renderizarMarcoHUD();
-        //renderHUDComponents.renderizarBarraDeSalud();
         renderHUDComponents.renderizarBarraXP();
-        //renderHUDComponents.renderizarTextoSalud(hudHeight);
-        //renderHUDComponents.renderizarIconoVidaJugador();
         renderHUDComponents.renderizarTextoNivelPlayer();
         renderHUDComponents.renderizarTemporizador(delta);
         renderHUDComponents.renderizarStatsJugador();
         renderHUDComponents.renderizarMasStatsJugador();
     }
 
-
-    /**
-     * Ajusta el viewport del HUD al redimensionar la ventana
-     *
-     * @param width,height nuevo ancho, alto
-     */
-    public void resize(int width, int height) {
+    public void resize(int width, int height) { // ajusta el viewport al redimensionar la ventana
         hudViewport.update(width, height, true);
     }
     public void dispose() {
@@ -78,7 +55,6 @@ public class HUD {
         shapeRenderer.dispose();
         spriteBatch.dispose();
     }
-
 
     public RenderHUDComponents getRenderHUDComponents() {
         return renderHUDComponents;

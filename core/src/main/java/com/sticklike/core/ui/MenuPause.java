@@ -11,8 +11,13 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class MenuPause extends ControllerAdapter {  // todo --> corregir valores mágicos
+/**
+ * Gestiona el dibujado en pantalla del botón y texto PAUSA, además de gestionar sus inputs
+ * todo--> los inputs deberán moverse a una clase separada
+ */
+public class MenuPause extends ControllerAdapter {
     private float pauseWidth;
     private float pauseHeight;
     private float pauseSpacing;
@@ -24,9 +29,6 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
     private VentanaJuego ventanaJuego;
     private boolean inputsBloqueados = false;
     private SpriteBatch spriteBatch;
-
-    // Índice del botón "Start" en mando Xbox todo --> comprobar funcionamiento con mando PS
-    private static final int BUTTON_START = 6;
 
     public MenuPause(
         float pauseWidth, float pauseHeight, float pauseSpacing,
@@ -44,13 +46,10 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
         this.font = new BitmapFont();
         this.spriteBatch = new SpriteBatch();
 
-        // Nos registramos como listener global de mando
+        // Nos registramos como listener global de mando para recibir cualquier input en esta clase
         Controllers.addListener(this);
     }
 
-    /**
-     * Renderiza el botón de pausa y, si está activo, el texto de "PAUSA".
-     */
     public void render(ShapeRenderer shapeRenderer, float viewportWidth, float viewportHeight) {
         // Habilitar blending para transparencias
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -59,7 +58,7 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         float pauseButtonX = viewportWidth - marginRight - menuWidth;
-        float pauseButtonY = viewportHeight - marginTop - menuWidth - 25f;
+        float pauseButtonY = viewportHeight - marginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION;
 
         // Fondo cuadrado del botón
         shapeRenderer.setColor(new Color(0.2f, 0.2f, 0.2f, 0.65f));
@@ -71,15 +70,12 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
 
         // Reborde
         shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.65f);
-        shapeRenderer.rect(pauseX - 1.5f, pauseY - 1.5f, pauseWidth + 3f, pauseHeight + 3f);
-        shapeRenderer.rect(pauseX + pauseWidth + pauseSpacing - 1.5f, pauseY - 1.5f, pauseWidth + 3f, pauseHeight + 3f);
+        shapeRenderer.rect(pauseX - BORDER_NEGATIVE, pauseY - BORDER_NEGATIVE, pauseWidth + BORDER_POSITIVE, pauseHeight + BORDER_POSITIVE);
+        shapeRenderer.rect(pauseX + pauseWidth + pauseSpacing - BORDER_NEGATIVE, pauseY - BORDER_NEGATIVE, pauseWidth + BORDER_POSITIVE, pauseHeight + BORDER_POSITIVE);
 
-        // **Rectángulos de pausa**: si está en pausa --> rojo, si no, blanco
-        if (isPaused) {
-            shapeRenderer.setColor(Color.BLACK);
-        } else {
-            shapeRenderer.setColor(Color.WHITE);
-        }
+        if (isPaused) shapeRenderer.setColor(Color.RED);
+         else shapeRenderer.setColor(Color.WHITE);
+
         shapeRenderer.rect(pauseX, pauseY, pauseWidth, pauseHeight);
         shapeRenderer.rect(pauseX + pauseWidth + pauseSpacing, pauseY, pauseWidth, pauseHeight);
 
@@ -92,9 +88,9 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
         font.setColor(Color.BLACK);
         font.getData().setScale(0.9f);
 
-        float startTextX = pauseX + 802.5f;
-        float startTextY = pauseY + 295;
-        font.draw(spriteBatch, "START", startTextX, startTextY);
+        float startTextX = pauseX + START_TEXT_X;
+        float startTextY = pauseY + START_TEXT_Y;
+        font.draw(spriteBatch, START, startTextX, startTextY);
 
         spriteBatch.end();
 
@@ -104,15 +100,15 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
             font.getData().setScale(2.5f);
 
             String text = "P A U S A";
-            float textX = viewportWidth / 2 + 345f;
-            float textY = viewportHeight / 2 + 450f;
+            float textX = viewportWidth / 2 + PAUSE_TEXT_X;
+            float textY = viewportHeight / 2 + PAUSE_TEXT_Y;
 
             // Sombra / Reborde negro
             font.setColor(Color.BLACK);
-            font.draw(spriteBatch, text, textX - 1, textY);
-            font.draw(spriteBatch, text, textX + 1, textY);
-            font.draw(spriteBatch, text, textX, textY - 1);
-            font.draw(spriteBatch, text, textX, textY + 1);
+            font.draw(spriteBatch, text, textX - BASIC_OFFSET, textY);
+            font.draw(spriteBatch, text, textX + BASIC_OFFSET, textY);
+            font.draw(spriteBatch, text, textX, textY - BASIC_OFFSET);
+            font.draw(spriteBatch, text, textX, textY + BASIC_OFFSET);
 
             // Texto principal en blanco
             font.setColor(0.9f, 0.9f, 0.9f, 1f);
@@ -122,31 +118,20 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
         }
     }
 
-
-    /**
-     * Lógica de entrada para pausar con teclado.
-     */
     public void handleInput() {
         if (inputsBloqueados) return;
 
-        // Barra espaciadora o tecla "P"
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) ||
             Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            togglePause();
+            alternarPausa();
         }
     }
 
-    /**
-     * Bloquea/desbloquea inputs (mando y teclado).
-     */
     public void bloquearInputs(boolean bloquear) {
         inputsBloqueados = bloquear;
     }
 
-    /**
-     * Alterna el estado de pausa.
-     */
-    private void togglePause() {
+    private void alternarPausa() {
         isPaused = !isPaused;
         ventanaJuego.setPausado(isPaused);
 
@@ -163,14 +148,12 @@ public class MenuPause extends ControllerAdapter {  // todo --> corregir valores
     public boolean buttonDown(Controller controller, int buttonIndex) {
         if (inputsBloqueados) return false;
 
-        // Comprobamos si se ha pulsado el botón START (6)
         if (buttonIndex == BUTTON_START) {
-            togglePause();
+            alternarPausa();
             return true;
         }
         return false;
     }
-
 
     public void dispose() {
         Controllers.removeListener(this);

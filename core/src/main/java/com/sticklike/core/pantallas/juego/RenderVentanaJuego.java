@@ -24,12 +24,10 @@ public class RenderVentanaJuego {
 
     private ShapeRenderer shapeRenderer;
     private final int tamanyoCeldas;
+    private Array<Borron> borronesMapa;
 
-
-    // ================================
-    //  Clase interna: datos borrón
-    // ================================
-    private static class Borron {
+    // Clase interna que gestiona los borrones del mapa
+    private static class Borron { // todo --> manejar en una clase separada en un futuro
         Texture textura;
         float posX, posY;
         float scale;
@@ -44,14 +42,6 @@ public class RenderVentanaJuego {
         }
     }
 
-    private Array<Borron> borronesMapa;
-
-    /**
-     * Crea el ShapeRenderer para la cuadrícula.
-     * Genera borrones aleatorios sin que se solapen y sin que la misma textura esté demasiado cerca
-     *
-     * @param tamanyoCeldas Tamaño de las celdas de la cuadrícula.
-     */
     public RenderVentanaJuego(int tamanyoCeldas) {
         this.shapeRenderer = new ShapeRenderer();
         this.tamanyoCeldas = tamanyoCeldas;
@@ -60,10 +50,6 @@ public class RenderVentanaJuego {
         generarBorronesRandom(CANTIDAD_BORRONES);
     }
 
-
-    /**
-     * Render principal de la ventana de juego
-     */
     public void renderizarVentana(float delta, VentanaJuego ventanaJuego, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
         // 1) Limpiamos la pantalla
@@ -73,7 +59,7 @@ public class RenderVentanaJuego {
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
         spriteBatch.setProjectionMatrix(camara.combined);
 
-        // 3) Dibujar borrones
+        // 3) Dibujamos borrones
         spriteBatch.begin();
         for (Borron b : borronesMapa) {
             float drawWidth = b.textura.getWidth() * b.scale;
@@ -81,17 +67,17 @@ public class RenderVentanaJuego {
             float originX = drawWidth / 2f;
             float originY = drawHeight / 2f;
 
-            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY,
-                drawWidth, drawHeight, 1f, 1f, b.rotation,
+            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation,
                 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
         }
+
         spriteBatch.end();
 
-        // 4) Renderizar la cuadrícula (usando ShapeRenderer)
+        // 4) Renderizamos la cuadrícula
         ventanaJuego.actualizarPosCamara();
         renderizarLineasCuadricula(camara);
 
-        // 5) Dibujar sombras de los enemigos (ShapeRenderer)
+        // 5) Dibujar sombras de los enemigos
         shapeRenderer.setProjectionMatrix(camara.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         controladorEnemigos.dibujarSombrasEnemigos(shapeRenderer);
@@ -100,9 +86,7 @@ public class RenderVentanaJuego {
         // 6) Dibujo de entidades (usando SpriteBatch)
         spriteBatch.begin();
         // Objetos XP
-        for (ObjetosXP xp : objetosXP) {
-            xp.renderizarObjetoXP(spriteBatch);
-        }
+        for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
         // Proyectiles
         jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         // Jugador
@@ -110,19 +94,14 @@ public class RenderVentanaJuego {
         // Enemigos
         controladorEnemigos.renderizarEnemigos(spriteBatch);
         // Textos flotantes
-        for (TextoFlotante txt : textosDanyo) {
-            txt.renderizarTextoFlotante(spriteBatch);
-        }
+        for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
+
         spriteBatch.end();
 
         // 7) Renderizar HUD
         hud.renderizarHUD(delta);
     }
 
-
-    /**
-     * Renderiza las líneas de la cuadrícula en base a la posición de la cámara
-     */
     public void renderizarLineasCuadricula(OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -202,9 +181,6 @@ public class RenderVentanaJuego {
         }
     }
 
-    /**
-     * Comprueba si un rectángulo (x, y, width, height) se solapa con algún borrón ya existente en la lista (usando bounding box)
-     */
     private boolean seSolapaConOtroBorron(float x, float y, float width, float height) {
         float leftA = x;
         float rightA = x + width;
@@ -229,9 +205,6 @@ public class RenderVentanaJuego {
         return false;
     }
 
-    /**
-     * Comprueba si ya existe un borrón con la misma textura a menos de MIN_DIST_SAME_TEXTURE, considerando la escala y posición
-     */
     private boolean estaDemasiadoCercaMismoBorron(Texture tex, float x, float y, float scale) {
         // Centro del borrón candidate
         float cx = x + tex.getWidth() * scale / 2f;

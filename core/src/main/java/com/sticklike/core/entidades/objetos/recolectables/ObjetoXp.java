@@ -17,7 +17,7 @@ public class ObjetoXp extends ObjetoBase {
 
     @Override
     public Texture getTexture() {
-        return esXPGorda ? recolectableCacaOro : recolectableXP;
+        return esXPGorda ? recolectableXP2 : recolectableXP;
     }
 
     public boolean isEsXPGorda() {

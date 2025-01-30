@@ -24,17 +24,10 @@ public class VentanaGameOver implements Screen {
     private OrthographicCamera camera;
     private FitViewport viewport;
 
-    /**
-     * @param game referencia a la clase principal {@link MainGame}, la cual gestiona el cambio de pantallas
-     */
     public VentanaGameOver(MainGame game) {
         this.game = game;
     }
 
-    /**
-     * Llamado cuando se muestra esta pantalla por primera vez
-     * Configura las variables de render y un {@link InputProcessor} para capturar teclas: R para reiniciar, Q para salir
-     */
     @Override
     public void show() {
         game.controladorAudio.detenerMusica();
@@ -50,18 +43,12 @@ public class VentanaGameOver implements Screen {
 
     }
 
-    /**
-     * Método principal de renderizado. Dibuja el texto de Game Over y las instrucciones para reiniciar o salir
-     *
-     * @param delta tiempo transcurrido desde el último frame
-     */
     @Override
     public void render(float delta) {
         renderVentanaGameOver.renderizarVentanaGameOver(viewport, camera, spriteBatch, layout, font);
     }
 
-
-    private void inputsVentanaGameOver() {
+    private void inputsVentanaGameOver() { // todo --> manejar en una clase dedicada (añadir además inputs de mando)
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
@@ -75,20 +62,13 @@ public class VentanaGameOver implements Screen {
         });
     }
 
-    /**
-     * Llamado al pulsar la tecla R. Reinicia el juego creando una nueva instancia
-     * de la pantalla principal (VentanaJuego) y asignándola como pantalla actual
-     */
     private void reiniciarJuego() {
         game.ventanaJuego.dispose();
-        game.ventanaJuego = new VentanaJuego(game); // Crear una nueva instancia de GameScreen
+        game.ventanaJuego = new VentanaJuego(game); // creamos una nueva instancia de GameScreen
         game.setScreen(game.ventanaJuego);
         game.controladorAudio.reproducirMusica();
     }
 
-    /**
-     * Llamado al pulsar la tecla Q. Cierra la aplicación
-     */
     private void cerrarJuego() {
         Gdx.app.exit();
     }
@@ -106,11 +86,8 @@ public class VentanaGameOver implements Screen {
     public void resume() {
     }
 
-    /**
-     * Se llama cuando se oculta la pantalla. Liberamos recursos para no malgastar memoria
-     */
     @Override
-    public void hide() {
+    public void hide() { // se llama cuando se oculta la pantalla, iberamos recursos para no malgastar memoria
         spriteBatch.dispose();
         font.dispose();
 

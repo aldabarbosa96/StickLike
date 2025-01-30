@@ -29,7 +29,7 @@ public class RenderVentanaGameOver {
 
     private void dibujarTextoVentanaGameOver(GlyphLayout layout, BitmapFont font, SpriteBatch spriteBatch) {
         font.getData().setScale(2f);
-        String gameOverText = "G A M E  O V E R";
+        String gameOverText = GAMEOVER;
         layout.setText(font, gameOverText);
         float textWidth = layout.width;
         float textHeight = layout.height;
@@ -39,14 +39,13 @@ public class RenderVentanaGameOver {
         font.draw(spriteBatch, gameOverText, textX, textY);
 
         font.getData().setScale(1f);
-        String optionsText = "Pulsa R para Restart o Q para Quit";
+        String optionsText = GAMEOVER_TEXT;
         layout.setText(font, optionsText);
 
         textWidth = layout.width;
-        textHeight = layout.height;
 
         textX = (VIRTUAL_WIDTH - textWidth) / 2f;
-        textY -= 60; // Posicionamos el texto debajo de "GAME OVER"
+        textY -= GAMEOVER_TEXT_Y; // Posicionamos el texto debajo de "GAME OVER"
         font.draw(spriteBatch, optionsText, textX, textY);
     }
 }

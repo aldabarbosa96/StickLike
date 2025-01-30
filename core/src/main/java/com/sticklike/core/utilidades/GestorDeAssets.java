@@ -9,17 +9,12 @@ import java.util.HashMap;
 
 /**
  * Clase encargada de cargar y liberar los recursos gráficos usados en el juego (texturas y animaciones)
- * Facilita una única fuente para acceder a estos assets, evitando recargas repetidas y facilitando su gestión y liberación
  */
 public class GestorDeAssets {
-    // Texturas individuales
-    public static Texture stickman, enemigoCulo,enemigoCuloOjo,enemigoRegla,enemigoReglaCruzada,enemigoReglaCasiEsvastica, enemigoPolla,
-        enemigoPolla2, corazonVida, armaPiedra,armaCalcetin, iconoXP, recolectableXP, recolectableCacaOro, recolectableVida, iconoVelMov, iconoPoder,
-    iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion;
-    //Texturas por lotes
-    public static Array<Texture> borrones; // Lista de texturas de borrón
-
-    // Diccionario para animaciones, indexadas por string
+    public static Texture stickman, enemigoCulo, enemigoCuloOjo, enemigoRegla, enemigoReglaCruzada, enemigoReglaCasiEsvastica,
+        enemigoPolla, corazonVida, armaPiedra, armaCalcetin, iconoXP, recolectableXP, recolectableXP2, recolectableVida, iconoVelMov, iconoPoder,
+        iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion;
+    public static Array<Texture> borrones;
     public static HashMap<String, Animation<TextureRegion>> animations;
 
     public static void cargarRecursos() {
@@ -27,11 +22,7 @@ public class GestorDeAssets {
         cargarAnimaciones();
     }
 
-    /**
-     * Crea y almacena animaciones en el HashMap animations
-     * Cada animación se genera a partir de una carpeta base, un número de frames y una duración por frame
-     */
-    public static void cargarAnimaciones() {
+    public static void cargarAnimaciones() { // todo --> gestionar animaciones enemigos en un futuro
 
         animations = new HashMap<>();
 
@@ -41,24 +32,18 @@ public class GestorDeAssets {
     }
 
     public static void cargarTexturas() {
+        // texturas
         stickman = new Texture("jugador/01stickman.png");
         enemigoCulo = new Texture("enemigos/01culo.png");
         enemigoCuloOjo = new Texture("enemigos/04culoOjo.png");
-        //enemigoRegla = new Texture("enemigos/02regla.png");
         enemigoReglaCruzada = new Texture("enemigos/03reglaCruzada.png");
-        //enemigoPolla = new Texture("enemigos/05polla.png");
-        enemigoPolla2 = new Texture("enemigos/05polla2.png");
-        //enemigoPolla3 = new Texture("enemigos/05polla3.png");
-        //enemigoPolla4 = new Texture("enemigos/05polla4.png");
-        //enemigoPolla5 = new Texture("enemigos/05polla5.png");
-        //enemigoPolla6 = new Texture("enemigos/05polla6.png");
-        //enemigoPolla7 = new Texture("enemigos/05polla7.png");
+        enemigoPolla = new Texture("enemigos/05polla2.png");
         corazonVida = new Texture("hud/life.png");
         armaPiedra = new Texture("armas/01piedra.png");
         armaCalcetin = new Texture("armas/02calcetin.png");
         iconoXP = new Texture("hud/xp.png");
         recolectableXP = new Texture("drops/xp1.png");
-        recolectableCacaOro = new Texture("drops/xp2.png");
+        recolectableXP2 = new Texture("drops/xp2.png");
         recolectableVida = new Texture("hud/life.png");
         iconoVelMov = new Texture("hud/vel_mov.png");
         iconoFuerza = new Texture("hud/fuerza.png");
@@ -67,9 +52,8 @@ public class GestorDeAssets {
         iconoProyectiles = new Texture("hud/proyectiles.png");
         iconoRegeneracion = new Texture("hud/regeneracion_vida.png");
 
-
+        // borrones del mapa
         borrones = new Array<>();
-
         borrones.add(new Texture("fondo/borronPolla.png"));
         borrones.add(new Texture("fondo/borronPolla2.png"));
         borrones.add(new Texture("fondo/borronPezpolla.png"));
@@ -88,16 +72,6 @@ public class GestorDeAssets {
 
     }
 
-
-    /**
-     * Crea una animación a partir de un conjunto de archivos con path base,
-     * leyendo en número de contadorFrames imágenes y asignándoles un duracionContador
-     *
-     * @param ruta             ruta base de los archivos de animación (ej.: "actions/movement/stickman_idle")
-     * @param contadorFrames   número de frames (imágenes) a cargar
-     * @param duracionContador duración de cada frame en segundos
-     * @return la animación construida con esas imágenes
-     */
     private static Animation<TextureRegion> crearAnimacion(String ruta, int contadorFrames, float duracionContador) {
         TextureRegion[] frames = new TextureRegion[contadorFrames];
         for (int i = 0; i < contadorFrames; i++) {
@@ -106,10 +80,6 @@ public class GestorDeAssets {
         return new Animation<>(duracionContador, frames);
     }
 
-    /**
-     * Libera todos los recursos gráficos que haya cargado (texturas y animaciones)
-     * Debe llamarse al cerrar el juego para evitar pérdidas de memoria, en {@link com.sticklike.core.MainGame#dispose()}
-     */
     public static void dispose() {
         if (stickman != null) stickman.dispose();
         if (enemigoCulo != null) enemigoCulo.dispose();
