@@ -6,6 +6,7 @@ import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.PriorityQueue;
@@ -31,17 +32,17 @@ public class SistemaDeEventos {
             () -> eventoAumentaEnemigos1(), LVL_EVENTO1));
 
         eventos.add(new Evento("Aumenta nº enemigos 2", sistemaDeNiveles,
-            () -> eventoAumentaEnemigos2(),LVL_EVENTO2));
+            () -> eventoAumentaEnemigos2(), LVL_EVENTO2));
 
         eventos.add(new Evento("Aparecen las pollas", sistemaDeNiveles,
-            () -> entraEnemigoPolla(),LVL_EVENTO3));
-        eventos.add(new Evento("Futuro BOSS (por ahora te mueres inevitablemente)",sistemaDeNiveles, () -> futuroBOSS(3),LVL_EVENTO4));
+            () -> entraEnemigoPolla(), LVL_EVENTO3));
+        eventos.add(new Evento("Futuro BOSS (por ahora te mueres inevitablemente)", sistemaDeNiveles, () -> futuroBOSS(3), LVL_EVENTO4));
 
         // todo --> gestionar más eventos próximamente
     }
 
     private void eventoAumentaEnemigos1() {
-        controladorEnemigos.setIntervaloDeAparicion(0.5f);
+        controladorEnemigos.setIntervaloDeAparicion(0.4f);
         incrementarVelocidadCulo(1.15f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
@@ -49,7 +50,7 @@ public class SistemaDeEventos {
     }
 
     private void eventoAumentaEnemigos2() {
-        controladorEnemigos.setIntervaloDeAparicion(0.25f);
+        controladorEnemigos.setIntervaloDeAparicion(0.2f);
         incrementarVelocidadCulo(1.35f);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
@@ -69,12 +70,14 @@ public class SistemaDeEventos {
             }
         }
     }
-    private void entraEnemigoPolla(){
+
+    private void entraEnemigoPolla() {
         String[] pollas = {"POLLA"};
         controladorEnemigos.setTiposDeEnemigos(pollas);
-        controladorEnemigos.setIntervaloDeAparicion(0.1f);
+        controladorEnemigos.setIntervaloDeAparicion(0.125f);
         System.out.println("Enemigo polla aparece");
     }
+
     private void futuroBOSS(float factorMultiplicador) {
         // Modificar la velocidad base de todos los enemigos Polla
         float nuevaVelocidadBase = EnemigoPolla.getVelocidadBase() * factorMultiplicador;
