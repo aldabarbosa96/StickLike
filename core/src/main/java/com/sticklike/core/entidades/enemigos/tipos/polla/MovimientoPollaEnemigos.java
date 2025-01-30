@@ -9,6 +9,7 @@ public class MovimientoPollaEnemigos extends MovimientoBaseEnemigos {
     private float tiempo; // Tiempo acumulado para el zigzag
     private float amplitudZigzag; // Amplitud del zigzag
     private float frecuenciaZigzag; // Frecuencia del zigzag
+    private float currentOffset;
 
     public MovimientoPollaEnemigos(float velocidadEnemigo, float amplitudZigzag, float frecuenciaZigzag, boolean puedeEmpujar) {
         super(puedeEmpujar);
@@ -22,34 +23,34 @@ public class MovimientoPollaEnemigos extends MovimientoBaseEnemigos {
     protected void actualizarMovimientoEspecifico(float delta, Sprite sprite, Jugador jugador) {
         tiempo += delta;
 
-        // Posición actual del enemigo
+        // Posición actual
         float enemyPosX = sprite.getX();
         float enemyPosY = sprite.getY();
 
-        // Posición del jugador
+        // Posición objetivo (jugador)
         float playerPosX = jugador.getSprite().getX();
         float playerPosY = jugador.getSprite().getY();
 
-        // Diferencia en las posiciones
+        // Vector hacia el jugador (normalizado)
         float difX = playerPosX - enemyPosX;
         float difY = playerPosY - enemyPosY;
-
-        // Normaliza el vector hacia el jugador
         float distancia = (float) Math.sqrt(difX * difX + difY * difY);
         if (distancia != 0) {
             difX /= distancia;
             difY /= distancia;
         }
 
-        // Agregar zigzag vertical al movimiento
-        float zigzagOffset = (float) Math.sin(tiempo * frecuenciaZigzag) * amplitudZigzag;
+        currentOffset = (float) Math.sin(tiempo * frecuenciaZigzag) * amplitudZigzag;
 
-        // Movimiento final (con zigzag aplicado al eje Y)
+        // Movimiento total
         float movimientoX = difX * velocidadEnemigo * delta;
-        float movimientoY = (difY * velocidadEnemigo * delta) + zigzagOffset;
+        float movimientoY = (difY * velocidadEnemigo * delta) + currentOffset;
 
-        // Mover el sprite
         sprite.translate(movimientoX, movimientoY);
+    }
+
+    public float getCurrentOffset() {
+        return currentOffset;
     }
 
     public float getVelocidadEnemigo() {
@@ -58,5 +59,9 @@ public class MovimientoPollaEnemigos extends MovimientoBaseEnemigos {
 
     public void setVelocidadEnemigo(float velocidadEnemigo) {
         this.velocidadEnemigo = velocidadEnemigo;
+    }
+
+    public float getAmplitudZigzag() {
+        return amplitudZigzag;
     }
 }

@@ -279,88 +279,116 @@ public class RenderHUDComponents {
     public void renderizarStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");
 
-        // Definimos los textos de las estadísticas
+        // Descripciones
         String velocidadJugador = "Vel. Movimiento";
         String rangoJugador = "Rango Disparo";
         String velocidadAtaque = "Vel. Ataque";
         String fuerzaAtaque = "Fuerza";
         String numProyectiles = "Núm. Proyectiles";
 
-        // Valores de las estadísticas
+        // Valores
         String valorVelocidad = df.format(jugador.getVelocidadJugador());
         String valorRango = df.format(jugador.getRangoAtaqueJugador());
         String valorVelAtaque = df.format(jugador.getVelocidadAtaque()) + " %";
         String valorFuerza = df.format(jugador.getDanyoAtaqueJugador());
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
 
-        // Posiciones
-        float margenDerecho = 935f;
-        float statsX = VIRTUAL_WIDTH - margenDerecho;
-        float statsY = HUD_HEIGHT - 45;
-        float espaciado = 18f; // Espacio entre líneas
-        float anchoDescripcion = 115f; // Ancho fijo para la descripción
-
-        // Arreglo de descripciones y valores
+        // Arrays de descripciones y valores
         String[] descripciones = {velocidadJugador, rangoJugador, velocidadAtaque, fuerzaAtaque, numProyectiles};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
 
-        // Renderizar el bloque de estadísticas utilizando el método reutilizable con reborde solo en valores
-        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK);
+        // NUEVO: Array de iconos (uno por stat; ajusta a tus variables de GestorDeAssets)
+        Texture[] iconos = {
+            iconoVelMov,   // p.ej. GestorDeAssets.iconoVelocidad
+            iconoFuerza,
+            iconoFuerza,
+            iconoFuerza,
+            iconoProyectiles,
+        };
+
+        float statsX = VIRTUAL_WIDTH - 950f;
+        float statsY = HUD_HEIGHT - 45;
+        float espaciado = 18f;
+        float anchoDescripcion = 100f;
+
+        // NUEVO: Usamos el método con iconos
+        renderizarBloqueStatsConIconos(descripciones, iconos, valores,
+            statsX, statsY, espaciado, anchoDescripcion, Color.BLACK);
     }
 
     public void renderizarMasStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");
 
-        // Definimos los textos de las estadísticas adicionales
+        // Descripciones
         String vidaMaxima = "Vida Máxima";
         String regeneracionVida = "Reg. Vida";
         String poderAtaque = "Poder Ataque";
         String resistencia = "Resistencia";
         String critico = "Crítico";
 
-        // Valores de las estadísticas adicionales
+        // Valores
         String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + jugador.getMaxVidaJugador();
         String valorRegeneracionVida = df.format(0) + " %";
         String valorPoderAtaque = df.format(0);
         String valorResistencia = df.format(jugador.getResistenciaJugador() * 100) + " %";
         String valorCritico = df.format(jugador.getCriticoJugador() * 100) + " %";
 
-        // Posiciones
-        float margenDerecho = 775f;
-        float statsX = VIRTUAL_WIDTH - margenDerecho;
-        float statsY = HUD_HEIGHT - 45;
-        float espaciado = 18f;
-        float anchoDescripcion = 100f;
-
-        // Arreglo de descripciones y valores
         String[] descripciones = {vidaMaxima, regeneracionVida, poderAtaque, resistencia, critico};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
 
-        // Renderizar el bloque adicional de estadísticas utilizando el método reutilizable con reborde solo en valores
-        renderizarBloqueStats(descripciones, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK);
+        // NUEVO: Array de iconos para cada stat adicional
+        Texture[] iconos = {
+            iconoResistencia,
+            iconoRegeneracion,
+            iconoPoder,
+            iconoResistencia,
+            iconoResistencia
+        };
+
+        float statsX = VIRTUAL_WIDTH - 770f;
+        float statsY = HUD_HEIGHT - 45;
+        float espaciado = 18f;
+        float anchoDescripcion = 90f;
+
+        renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, espaciado, anchoDescripcion, Color.BLACK);
     }
 
 
-    private void renderizarBloqueStats(String[] descripciones, String[] valores, float statsX, float statsY, float espaciado, float anchoDescripcion, Color colorTexto) {
-        spriteBatch.begin();
+    /**
+     * NUEVO MÉTODO:
+     * Dibuja por filas: [Descripción] [icono opcional] [Valor]
+     */
+    private void renderizarBloqueStatsConIconos(String[] descripciones, Texture[] iconos, String[] valores,
+        float statsX, float statsY, float espaciado, float anchoDescripcion, Color colorTexto) {
 
+        spriteBatch.begin();
         fuente.getData().setScale(0.7f);
 
-        // Renderizamos las descripciones y los valores
         for (int i = 0; i < descripciones.length; i++) {
-            // Calculamos la posición Y de cada línea
             float posicionY = statsY - i * espaciado;
 
-            // Renderizar descripción sin reborde
+            // Descripción a la izquierda
             fuente.setColor(colorTexto);
             fuente.draw(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY);
 
-            // Renderizar valor con reborde
-            dibujarTextoConReborde(spriteBatch, valores[i], statsX, posicionY, 1f, Color.GRAY, Color.WHITE);
+            // Icono en medio
+            if (iconos != null && i < iconos.length && iconos[i] != null) {
+                Texture icono = iconos[i];
+                float iconSize = 16.5f;
+                float iconX = statsX - (iconSize * 0.5f);
+                float iconY = posicionY - iconSize / 2f - 2f;
+
+                spriteBatch.draw(icono, iconX, iconY, iconSize, iconSize);
+            }
+
+            // Valor a la derecha
+            float valorOffsetX = 25f; // deja algo de espacio tras el icono
+            dibujarTextoConReborde(spriteBatch, valores[i], statsX + valorOffsetX, posicionY, 1f, Color.GRAY, Color.WHITE);
         }
 
         spriteBatch.end();
     }
+
 
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {

@@ -194,4 +194,12 @@ public class EnemigoPolla implements Enemigo {
     public void setVelocidad(float nuevaVelocidad) {
         movimientoPolla.setVelocidadEnemigo(nuevaVelocidad);
     }
+
+    public MovimientoPollaEnemigos getMovimientoPolla() {
+        return movimientoPolla;
+    }
+    public float getFadeAlpha() {
+        return animacionesEnemigos.getAlphaActual();
+    }
+
 }

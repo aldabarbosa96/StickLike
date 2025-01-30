@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.enemigos.tipos.culo;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -88,6 +89,7 @@ public class EnemigoCulo implements Enemigo {
             animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
+
 
     @Override
     public void actualizar(float delta) {
@@ -214,4 +216,8 @@ public class EnemigoCulo implements Enemigo {
     public static float getVelocidadBase() {
         return velocidadBase;
     }
+    public float getFadeAlpha() {
+        return animacionesEnemigos.getAlphaActual();
+    }
+
 }

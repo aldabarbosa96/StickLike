@@ -66,48 +66,59 @@ public class RenderVentanaJuego {
      */
     public void renderizarVentana(float delta, VentanaJuego ventanaJuego, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
-        // 1) Limpiamos la pantalla con un color gris claro
+        // 1) Limpiamos la pantalla
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
         spriteBatch.setProjectionMatrix(camara.combined);
 
-        // 3) Dibujar los borrones
+        // 3) Dibujar borrones
         spriteBatch.begin();
         for (Borron b : borronesMapa) {
             float drawWidth = b.textura.getWidth() * b.scale;
             float drawHeight = b.textura.getHeight() * b.scale;
-
             float originX = drawWidth / 2f;
             float originY = drawHeight / 2f;
 
-            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f,
-                b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
+            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY,
+                drawWidth, drawHeight, 1f, 1f, b.rotation,
+                0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
         }
         spriteBatch.end();
 
-        // 4) Renderizar la cuadrícula
+        // 4) Renderizar la cuadrícula (usando ShapeRenderer)
         ventanaJuego.actualizarPosCamara();
-        this.renderizarLineasCuadricula(camara);
+        renderizarLineasCuadricula(camara);
 
-        // 5) Dibujo de entidades (jugador, enemigos, proyectiles, etc.)
+        // 5) Dibujar sombras de los enemigos (ShapeRenderer)
+        shapeRenderer.setProjectionMatrix(camara.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        controladorEnemigos.dibujarSombrasEnemigos(shapeRenderer);
+        shapeRenderer.end();
+
+        // 6) Dibujo de entidades (usando SpriteBatch)
         spriteBatch.begin();
+        // Objetos XP
         for (ObjetosXP xp : objetosXP) {
-            xp.renderizarObjetoXP(spriteBatch); // Dibuja objetos XP primero
+            xp.renderizarObjetoXP(spriteBatch);
         }
-        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch); // Dibuja proyectiles después de los objetos XP
-        jugador.aplicarRenderizadoAlJugador(spriteBatch,shapeRenderer); // Dibuja al jugador
-        controladorEnemigos.renderizarEnemigos(spriteBatch); // Dibuja enemigos
+        // Proyectiles
+        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
+        // Jugador
+        jugador.aplicarRenderizadoAlJugador(spriteBatch, shapeRenderer);
+        // Enemigos
+        controladorEnemigos.renderizarEnemigos(spriteBatch);
+        // Textos flotantes
         for (TextoFlotante txt : textosDanyo) {
-            txt.renderizarTextoFlotante(spriteBatch); // Dibuja textos flotantes
+            txt.renderizarTextoFlotante(spriteBatch);
         }
         spriteBatch.end();
 
-
-        // 6) Renderizar HUD
+        // 7) Renderizar HUD
         hud.renderizarHUD(delta);
     }
+
 
     /**
      * Renderiza las líneas de la cuadrícula en base a la posición de la cámara
