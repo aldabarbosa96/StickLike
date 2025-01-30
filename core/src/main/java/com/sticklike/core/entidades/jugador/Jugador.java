@@ -124,9 +124,6 @@ public class Jugador {
 
     }
 
-    /**
-     * Libera los recursos usados por el jugador.
-     */
     public void dispose() {
         if (sprite != null && sprite.getTexture() != null) {
             sprite.getTexture().dispose();

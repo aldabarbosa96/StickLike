@@ -182,7 +182,6 @@ public class PopUpMejoras {
             return false; // Importante: si no lo manejamos, devolver false
         }
 
-
         @Override
         public boolean buttonDown(Controller controller, int buttonIndex) {
             switch (buttonIndex) {

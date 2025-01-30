@@ -1,7 +1,6 @@
-package com.sticklike.core.entidades.enemigos.tipos.culo;
+package com.sticklike.core.entidades.enemigos.movimiento;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.sticklike.core.entidades.enemigos.animacion.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 

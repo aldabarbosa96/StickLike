@@ -1,10 +1,11 @@
 package com.sticklike.core.gameplay.sistemas;
 
-import com.sticklike.core.entidades.enemigos.tipos.culo.EnemigoCulo;
-import com.sticklike.core.entidades.enemigos.tipos.polla.EnemigoPolla;
+import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
+import com.sticklike.core.pantallas.juego.VentanaJuego;
 import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -26,15 +27,10 @@ public class SistemaDeEventos {
     }
 
     private void inicializarEventos() {
-        eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles,
-            () -> eventoAumentaEnemigos1(), LVL_EVENTO1));
-
-        eventos.add(new Evento("Aumenta nº enemigos 2", sistemaDeNiveles,
-            () -> eventoAumentaEnemigos2(), LVL_EVENTO2));
-
-        eventos.add(new Evento("Aparecen las pollas", sistemaDeNiveles,
-            () -> entraEnemigoPolla(), LVL_EVENTO3));
-        eventos.add(new Evento("Futuro BOSS (por ahora te mueres inevitablemente)", sistemaDeNiveles, () -> futuroBOSS(3), LVL_EVENTO4));
+        eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles, this::spawnPrimerBoss, LVL_EVENTO1));
+        eventos.add(new Evento("Aumenta nº enemigos 2", sistemaDeNiveles, this::eventoAumentaEnemigos2, LVL_EVENTO2));
+        eventos.add(new Evento("Aparecen las pollas", sistemaDeNiveles, this::entraEnemigoPolla, LVL_EVENTO3));
+        eventos.add(new Evento("BOSSPOLLA Aparece", sistemaDeNiveles, this::spawnPrimerBoss, LVL_EVENTO4));
 
         // todo --> gestionar más eventos próximamente (nuevos enemigos, bosses y algún otro evento diferente)
     }
@@ -61,8 +57,7 @@ public class SistemaDeEventos {
         EnemigoCulo.setVelocidadBase(nuevaVelocidadBase);
 
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
-            if (enemigo instanceof EnemigoCulo) {
-                EnemigoCulo culo = (EnemigoCulo) enemigo;
+            if (enemigo instanceof EnemigoCulo culo) {
                 float velocidadActual = culo.getVelocidad();
                 culo.setVelocidad(velocidadActual * factorMultiplicador);
             }
@@ -75,8 +70,8 @@ public class SistemaDeEventos {
         System.out.println("Enemigo polla aparece");
     }
 
-    // todo --> modificar para que el evento sea el primer BOSS
-    private void futuroBOSS(float factorMultiplicador) { // por ahora solamente hace que el jugador muera al aumentar mucho la velocidad de todas las pollas
+    /* todo --> se usará en un futuro
+    private void pollasLocas(float factorMultiplicador) { // por ahora solamente hace que el jugador muera al aumentar mucho la velocidad de todas las pollas
         // Modificamos la velocidad base de todos los enemigos Polla
         float nuevaVelocidadBase = EnemigoPolla.getVelocidadBase() * factorMultiplicador;
         EnemigoPolla.setVelocidadBase(nuevaVelocidadBase);
@@ -88,7 +83,13 @@ public class SistemaDeEventos {
                 polla.setVelocidad(velocidadActual * factorMultiplicador);
             }
         }
+    }*/
+
+    private void spawnPrimerBoss() {
+       controladorEnemigos.setTiposDeEnemigos(LISTA_BOSSPOLLA);
+        System.out.println("¡Ha aparecido el PollaBOSS en el nivel 10!");
     }
+
 
     public void actualizar() {
         if (!eventos.isEmpty()) {
@@ -96,6 +97,7 @@ public class SistemaDeEventos {
             Evento siguiente = eventos.peek();
             if (sistemaDeNiveles.getNivelActual() >= siguiente.getNivelRequerido()) {
                 Evento evento = eventos.poll();
+                assert evento != null;
                 System.out.println("Activando evento: " + evento.getNombreEvento() + " [nivel requerido: " + evento.getNivelRequerido() + "]");
                 evento.applyEvento();
             }

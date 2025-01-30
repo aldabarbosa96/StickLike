@@ -50,10 +50,10 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float POPUP_WIDTH = 400f;
     public static final float POPUP_HEIGHT = 350f;
     public static final float POPUP_HEADER_PADDING = 75f;
-    public static final float POPUP_ROW_PADDING = 5f;
-    public static final float LABEL_WIDTH = 5f;
-    public static final float BUTTON_WIDTH = 300f;
-    public static final float BUTTON_PADDING = 5f;
+    public static final float POPUP_ROW_PADDING = 6f;
+    public static final float LABEL_WIDTH = 6f;
+    public static final float BUTTON_WIDTH = 315f;
+    public static final float BUTTON_PADDING = 6f;
     public static final float POPUP_POSITION_CORRECTION = 150f;
     public static final String[] POPUP_BUTTON_LABELS = {"X","Y","B","A"};
 
@@ -138,8 +138,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
 
     // Sombras enemigos
-    public static final float SHADOW_WIDTH_CULO = 0.85f;
-    public static final float SHADOW_HEIGHT_CULO = 0.28f;
+    public static final float SHADOW_WIDTH_CULO = 0.9f;
+    public static final float SHADOW_HEIGHT_CULO = 0.3f;
     public static final float SHADOW_OFFSET = 2f;
 
     // Animaciones enemigos
@@ -196,6 +196,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO2_SPAWN_RATE = 0.2f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
+    public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA"};
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.125f;
 
     // Configuración borrones
