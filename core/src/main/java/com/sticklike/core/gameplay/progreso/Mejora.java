@@ -9,13 +9,6 @@ public class Mejora {
     private final Runnable efectoMejora;
     private int usosRestantes;
 
-
-    /**
-     * Inicializa un nueva mejora
-     * @param nombreMejora Nombre que queramos darle a la mejora
-     * @param descripcionMejora Descripcion que queramos darle a la mejora
-     * @param efectoMejora Efecto que provoca la mejora
-     */
     public Mejora(String nombreMejora, String descripcionMejora, Runnable efectoMejora, int usosMaximos) {
         this.nombreMejora = nombreMejora;
         this.descripcionMejora = descripcionMejora;
@@ -31,10 +24,7 @@ public class Mejora {
         return descripcionMejora;
     }
 
-    /**
-     * Aplica el efecto de mejora ejecutando el objeto Runnable
-     */
-    public void apply() {
+    public void apply() { // aplica el efecto de la mejora ejecutando el objeto Runnable
         if (usosRestantes > 0) {
             efectoMejora.run();
             usosRestantes--;

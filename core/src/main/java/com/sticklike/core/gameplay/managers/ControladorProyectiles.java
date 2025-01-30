@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.HashMap;
@@ -17,21 +18,17 @@ import java.util.Map;
 /**
  * La clase ProjectileManager gestiona todos los proyectiles disparados por el jugador (o potencialmente por enemigos en el futuro)
  * Se encarga de:
- * <p>
  * Añadir proyectiles nuevos con dirección y objetivo definidos
  * Actualizar su posición y verificar colisiones con enemigos
  * Aplicar el daño y generar textos flotantes (daño) al impactar
  * Renderizarlos y liberar recursos al morir
+ * todo --> valorar refactorización en un futuro
  */
 public class ControladorProyectiles {
     private ArrayList<Proyectiles> proyectiles;
-    private float multiplicadorDeDanyo = 1.0f;
+    private float multiplicadorDeDanyo = MULT_DANYO;
     private Map<Enemigo, Float> ultimaYTexto = new HashMap<>();
 
-
-    /**
-     * Inicializamos una lista de proyectiles vacía en el constructor
-     */
     public ControladorProyectiles() {
         proyectiles = new ArrayList<>();
     }
@@ -40,15 +37,6 @@ public class ControladorProyectiles {
         proyectiles.add(proyectil);
     }
 
-    /**
-     * Actualiza la posición de cada proyectil y verifica si impacta en un enemigo
-     * Cuando un proyectil impacta, se calcula el daño y se genera un texto flotante
-     * Los proyectiles inactivos se eliminan de la lista
-     *
-     * @param delta   tiempo transcurrido desde el último frame
-     * @param enemies lista de enemigos activos
-     * @param dmgText array para almacenar textos flotantes de daño
-     */
     public void actualizarProyectiles(float delta, Array<Enemigo> enemies, Array<TextoFlotante> dmgText) {
         ultimaYTexto.clear();
 
@@ -112,10 +100,6 @@ public class ControladorProyectiles {
         }
     }
 
-
-    /**
-     * Aplica el knockback a un enemigo basado en la posición del proyectil.
-     */
     private void aplicarKnockback(Enemigo enemigo, Proyectiles proyectil) {
         float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
         float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
@@ -128,7 +112,7 @@ public class ControladorProyectiles {
 
         float dist = (float) Math.sqrt(difX * difX + difY * difY);
         if (dist != 0) {
-            difX /= dist; // Normalizamos
+            difX /= dist;
             difY /= dist;
         }
 
@@ -136,23 +120,12 @@ public class ControladorProyectiles {
         enemigo.aplicarKnockback(fuerza, difX, difY);
     }
 
-
-    /**
-     * Dibuja todos los proyectiles activos en pantalla
-     *
-     * @param batch SpriteBatch para dibujar
-     */
     public void renderizarProyectiles(SpriteBatch batch) {
         for (Proyectiles proyectil : proyectiles) {
             proyectil.renderizarProyectil(batch);
         }
     }
 
-    /**
-     * Aumenta el factor de daño (multiplicadorDeDanyo) en el valor indicado, por ejemplo al obtener una mejora de daño
-     *
-     * @param multiplier valor a sumar al multiplicador de daño
-     */
     public void aumentarDanyoProyectil(float multiplier) {
         multiplicadorDeDanyo *= multiplier;
         System.out.println("Multiplicador de daño actualizado a: " + multiplicadorDeDanyo);

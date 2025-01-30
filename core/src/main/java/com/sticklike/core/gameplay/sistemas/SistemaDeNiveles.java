@@ -13,24 +13,11 @@ public class SistemaDeNiveles {
     private float xpHastaSiguienteNivel = 100f;
     private int nivelActual = 1;
 
-    /**
-     * Crea un nuevo SistemaDeNiveles, asociando un {@link Jugador} y un {@link SistemaDeMejoras}
-     * para manejar las subidas de nivel y las mejoras a ofrecer
-     *
-     * @param jugador          jugador cuyo nivel y experiencia se gestionan
-     * @param sistemaDeMejoras controlador de mejoras, para mostrar las mejoras al subir de nivel
-     */
     public SistemaDeNiveles(Jugador jugador, SistemaDeMejoras sistemaDeMejoras) {
         this.jugador = jugador;
         this.sistemaDeMejoras = sistemaDeMejoras;
     }
 
-    /**
-     * Añade la cantidad de experiencia especificada al jugador
-     * Si la XP acumulada supera la requerida para el siguiente nivel, llama a subirDeNivel()
-     *
-     * @param amount cantidad de experiencia a sumar
-     */
     public void agregarXP(float amount ) {
         xpActual += amount;
         if (xpActual >= xpHastaSiguienteNivel) {
@@ -39,15 +26,11 @@ public class SistemaDeNiveles {
         }
     }
 
-    /**
-     * Lógica de subida de nivel. Incrementa el nivel en 1, aumenta la XP requerida para el siguiente nivel en un 50%
-     * y delega en {@link SistemaDeMejoras} para mostrar nuevas mejoras
-     */
     private void subirDeNivel() {
         xpActual -= xpHastaSiguienteNivel;
         nivelActual++;
         xpHastaSiguienteNivel *= 1.5f;
-        //jugador.setVidaMax(jugador.getMaxVidaJugador() + 5);
+        //jugador.setVidaMax(jugador.getMaxVidaJugador() + 5); todo --> valorar si se le incrementa también la vida máxima
         if (!(jugador.getVidaJugador() >= jugador.getMaxVidaJugador())) {
             jugador.setVidaJugador(jugador.getVidaJugador() + 2);
         }

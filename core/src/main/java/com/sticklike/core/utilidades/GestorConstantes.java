@@ -24,23 +24,6 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float HEART_X = 410f;
     public static final float HEART_Y_OFFSET = 2.5f;
     public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f;
-
-    //Pop_up
-    public static final float POPUP_WIDTH = 400f;
-    public static final float POPUP_HEIGHT = 350f;
-    public static final float POPUP_HEADER_PADDING = 75f;
-    public static final float POPUP_ROW_PADDING = 5f;
-    public static final float LABEL_WIDTH = 5f;
-    public static final float BUTTON_WIDTH = 300f;
-    public static final float BUTTON_PADDING = 5f;
-    public static final float POPUP_POSITION_CORRECTION = 150f;
-    public static final String[] POPUP_BUTTON_LABELS = {"X","Y","B","A"};
-
-    // timer
-    public static final float TIMER_Y_POS = 290f;
-    public static final float TIMER_SCALE = 0.7f;
-    public static final float TIMER_SECONDS = 60f;
-    public static final float TIMER_Y_CORRECTION = 10f;
     public static final float TEXT_X_CORRECTION = 10f;
     public static final float TEXT_Y_CORRECTION = 13f;
     public static final float NUMBER_Y_CORRECTION = 8.5f;
@@ -62,6 +45,23 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float STATS_ICON_SIZE = 16f;
     public static final float ICON_Y_CORRECTION = 2f;
     public static final float ESPACIADO_LATERAL = 22.5f;
+
+    // Pop_up
+    public static final float POPUP_WIDTH = 400f;
+    public static final float POPUP_HEIGHT = 350f;
+    public static final float POPUP_HEADER_PADDING = 75f;
+    public static final float POPUP_ROW_PADDING = 5f;
+    public static final float LABEL_WIDTH = 5f;
+    public static final float BUTTON_WIDTH = 300f;
+    public static final float BUTTON_PADDING = 5f;
+    public static final float POPUP_POSITION_CORRECTION = 150f;
+    public static final String[] POPUP_BUTTON_LABELS = {"X","Y","B","A"};
+
+    // Timer
+    public static final float TIMER_Y_POS = 290f;
+    public static final float TIMER_SCALE = 0.7f;
+    public static final float TIMER_SECONDS = 60f;
+    public static final float TIMER_Y_CORRECTION = 10f;
 
     // Texto HUD
     public static final String TEXTO_LVL = "LVL:  ";
@@ -120,6 +120,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_POLLA = 65f;
     public static final float VIDA_ENEMIGO_POLLA = 8f;
     public static final float DANYO_POLLA = 1.25f;
+    public static final float MULT_VELOCIDAD_CULO = 0.85f;
+    public static final float MULT_VELOCIDAD_REGLA = 3.8f;
+    public static final float MULT_VELOCIDAD_POLLA = 1.5f;
     public static final float TEMPORIZADOR_DANYO = 0f;
     public static final float ENEMY_MAX_PAUSE = 0.75f;
     public static final float ENEMY_MIN_PAUSE = 0.25f;
@@ -132,6 +135,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AJUSTE_OFFSET_Y = 50f;
     public static final float TIEMPO_CARGA_REGLA = 0.75f;
     public static final float CORRECCION_SPAWN = 50f;
+    public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+
+    // Sombras enemigos
+    public static final float SHADOW_WIDTH_CULO = 0.85f;
+    public static final float SHADOW_HEIGHT_CULO = 0.28f;
+    public static final float SHADOW_OFFSET = 2f;
 
     // Animaciones enemigos
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
@@ -144,8 +153,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TEMPORIZADOR_EMPUJE = 0f;
     public static final float DURACION_EMPUJE = 0.15f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
-    public static final float MULT_VELOCIDAD_CULO = 0.85f;
-    public static final float MULT_VELOCIDAD_REGLA = 3.8f;
+
 
     // Configuración del proyectil
     public static final float PROJECTILE_PIEDRA_SPEED = 250f;
@@ -161,6 +169,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DISTANCIA_RECORRIDA = 0f;
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
+    public static final float MULT_DANYO = 1f;
 
     // Configuración TextoFlotante
     public static final float DESPLAZAMIENTOY_TEXTO = 30f;
@@ -182,6 +191,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 10;
+    public static final float EVENTO1_SPAWN_RATE = 0.4f;
+    public static final float EVENTO1_SPEED_MULT = 1.15f;
+    public static final float EVENTO2_SPAWN_RATE = 0.2f;
+    public static final float EVENTO2_SPEED_MULT = 1.35f;
+    public static final String[] LISTA_POLLAS = {"POLLA"};
+    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.125f;
 
     // Configuración borrones
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;

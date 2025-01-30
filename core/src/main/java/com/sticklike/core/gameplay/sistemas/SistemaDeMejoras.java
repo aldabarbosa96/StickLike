@@ -22,13 +22,6 @@ public class SistemaDeMejoras {
     private final List<Mejora> mejorasMostradas;
     private final MainGame game;
 
-    /**
-     * Inicializa las listas de mejoras y define sus efectos
-     *
-     * @param jugador referencia al {@link Jugador}, necesario para aplicar los efectos
-     * @param game    referencia a la clase principal {@link MainGame},
-     *                que gestiona la comunicación con la pantalla de juego
-     */
     public SistemaDeMejoras(Jugador jugador, MainGame game) {
         this.jugador = jugador;
         this.game = game;
@@ -37,10 +30,6 @@ public class SistemaDeMejoras {
         inicializarMejoras();
     }
 
-    /**
-     * Define todas las mejoras del juego y sus efectos sobre el jugador
-     * Se añaden a la lista {@code todasLasMejoras}
-     */
     private void inicializarMejoras() {
         todasLasMejoras.add(new Mejora("PIES VELOCES", "Aumenta la velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5));
         todasLasMejoras.add(new Mejora("BRAZOS LARGOS", "Aumenta el rango de ataque un 20%", () -> jugador.aumentarRangoAtaque(0.20f), 5));
@@ -49,23 +38,14 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("MULTI PROYECTIL", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
         todasLasMejoras.add(new Mejora("CALCETÍN ACARTONADO", "Desbloquea ataque calcetines lefados", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
         todasLasMejoras.add(new Mejora("CORAZÓN GORDO", "Aumenta la salud máxima en 15 puntos", () -> {
-            jugador.setVidaMax(jugador.getMaxVidaJugador()+15);
-            jugador.setVidaJugador(jugador.getVidaJugador()+15);},10));
-
-        //todasLasMejoras.add(new Mejora("CALCETÍN LEFADO","Añade un nuevo proyectil. Un calcetín acartonado que daña a todos los enemigos a su paso", () ->jugador.obtieneCalcetines()));
-        // todo --> implementar AtaqueCalcetin como una posible mejora
+            jugador.setVidaMax(jugador.getMaxVidaJugador()+15);jugador.setVidaJugador(jugador.getVidaJugador()+15);},10));
+        // todo --> implementar nuevas mejoras de habilidades y stats restantes
     }
 
-    /**
-     * Selecciona un conjunto aleatorio de upgrades de la lista total
-     *
-     * @param numMejoras número de mejoras que se generarán
-     * @return la lista de upgrades seleccionadas
-     */
-    public List<Mejora> generarOpcionesDeMejora(int numMejoras) {
+    public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {
         mejorasMostradas.clear();
 
-        // Filtrar mejoras disponibles
+        // filtramos las mejoras disponibles
         List<Mejora> mejorasDisponibles = new ArrayList<>();
         for (Mejora mejora : todasLasMejoras) {
             if (mejora.estaDisponible()) {
@@ -73,31 +53,21 @@ public class SistemaDeMejoras {
             }
         }
 
-        // Mezclar y tomar las primeras disponibles
+        // Mezclamos y cogemos las primeras disponibles
         Collections.shuffle(mejorasDisponibles);
         for (int i = 0; i < Math.min(numMejoras, mejorasDisponibles.size()); i++) {
             mejorasMostradas.add(mejorasDisponibles.get(i));
         }
 
-        return new ArrayList<>(mejorasMostradas); // Devolver una copia
+        return new ArrayList<>(mejorasMostradas); // devolvemos una nueva copia cada vez
     }
 
 
-    /**
-     * Llamado cuando el Jugador sube de nivel
-     * Genera 3 mejoras aleatorias y muestra el pop-up para que el Jugador escoja
-     */
     public void anyadirMejorasAlPopUp() {
-        List<Mejora> options = generarOpcionesDeMejora(3);
+        List<Mejora> options = generarOpcionesDeMejoraAleatorias(3);
         game.ventanaJuego.mostrarPopUpDeMejoras(options);
     }
 
-    /**
-     * Aplica la mejora elegida por el jugador, ejecutando su efecto
-     * Si la mejora no está en {@code mejorasMostradas}, lanzamos excepción
-     *
-     * @param mejoraSeleccionada la mejora seleccionada
-     */
     public void aplicarMejora(Mejora mejoraSeleccionada) {
         if (!mejorasMostradas.contains(mejoraSeleccionada)) { // No debería llegar nunca a este punto
             throw new IllegalArgumentException("La mejora seleccionada no es válida.");

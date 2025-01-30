@@ -17,13 +17,12 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * La clase ControladorEnemigos se encarga de:
- * <p>
  * - Generar enemigos periódicamente en posiciones aleatorias
  * - Actualizar la lógica de cada Enemigo (movimiento, muerte, etc.)
  * - Renderizar los enemigos en el SpriteBatch
  * - Gestionar la liberación de recursos al final
- * <p>
  * Interactúa con el Jugador para evitar spawnear enemigos demasiado cerca de él y también para comprobar si el jugador ha muerto
+ * todo --> refactorizar en un futuro para separar dependencias (solamente debe encargarse del spawn y eliminación de los enemigos)
  */
 public class ControladorEnemigos {
     private VentanaJuego ventanaJuego;
@@ -31,9 +30,9 @@ public class ControladorEnemigos {
     private Jugador jugador;
     private OrthographicCamera camera;
     private float intervaloDeAparicion, temporizadorDeAparicion;
-    private int spawnCounter = 0; // todo --> en un futuro controlar eventos
+    private int spawnCounter = 0; // todo --> para en un futuro controlar eventos
     private Array<Enemigo> enemigosAEliminar = new Array<>();
-    private String[] tiposDeEnemigos = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+    private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego ventanaJuego) {
         this.enemigos = new Array<>();
@@ -48,8 +47,8 @@ public class ControladorEnemigos {
      * Actualiza el spawn de enemigos y la lógica de cada uno.
      */
     public void actualizarSpawnEnemigos(float delta) {
-        // Si el jugador está vivo, no spawneamos ni actualizamos nada.
-        if (jugador.estaVivo()) {
+        // Si el jugador no está vivo, no spawneamos ni actualizamos nada.
+        if (jugador.estaVivo()) { // el booleano está invertido, significa que está muerto
             return;
         }
 
@@ -82,9 +81,6 @@ public class ControladorEnemigos {
         enemigosAEliminar.clear();
     }
 
-    /**
-     * Dibuja las sombras de los enemigos que las necesiten utilizando ShapeRenderer, antes de dibujar los sprites.
-     */
     public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer) {
         // Ordenar enemigos si quieres conservar el z-order
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
@@ -96,27 +92,20 @@ public class ControladorEnemigos {
         }
     }
 
-    /**
-     * Dibuja los sprites de los enemigos con SpriteBatch.
-     */
     public void renderizarEnemigos(SpriteBatch batch) {
         // Si el jugador no está vivo, mostramos los enemigos
-        if (jugador.estaVivo()) {
+        if (jugador.estaVivo()) { // booleano invertido
             return;
         }
 
-        // Ordenar enemigos para el z-order (Y descendente)
+        // Ordenamos enemigos para el z-order (Y descendente)
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
 
-        // Dibujamos el sprite de cada enemigo
         for (Enemigo enemigo : enemigos) {
             enemigo.renderizar(batch);
         }
     }
 
-    /**
-     * Lógica para dibujar la sombra de un enemigo como elipse, con tamaño dinámico según la "altura" del zig-zag.
-     */
     private void dibujarSombraEnemigo(Enemigo enemigo, ShapeRenderer shapeRenderer) {
 
         if (enemigo instanceof EnemigoCulo) {
@@ -126,25 +115,24 @@ public class ControladorEnemigos {
             float h = enemigo.getSprite().getHeight();
 
             float centerX = x + w / 2f;
-            float shadowWidth = w * 0.85f;
-            float shadowHeight = h * 0.28f;
+            float shadowWidth = w * SHADOW_WIDTH_CULO;
+            float shadowHeight = h * SHADOW_HEIGHT_CULO;
             float shadowX = centerX - (shadowWidth / 2f);
-            float shadowY = y - 2f;
+            float shadowY = y - SHADOW_OFFSET;
 
             shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.5f);
             shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
 
             return;
         }
-        if (enemigo instanceof EnemigoPolla) {
-            EnemigoPolla polla = (EnemigoPolla) enemigo;
+        if (enemigo instanceof EnemigoPolla polla) {
             float offset = polla.getMovimientoPolla().getCurrentOffset();
 
             float x = polla.getX();
             float y = polla.getY();
             float w = polla.getSprite().getWidth();
             float h = polla.getSprite().getHeight();
-            float centerX = x + w / 2f;
+            float centerX = x + w / SHADOW_OFFSET;
 
             float baseShadowWidth = w * 0.9f;
             float baseShadowHeight = h * 0.28f;
@@ -192,11 +180,7 @@ public class ControladorEnemigos {
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
-
-    /**
-     * Crea un nuevo enemigo y lo añade al array de enemigos.
-     */
-    private void spawnEnemigo() {
+    private void spawnEnemigo() { // Crea un nuevo enemigo y lo añade al array de fabricaEnemigos
         spawnCounter++;
         // Centro del jugador
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
@@ -235,9 +219,7 @@ public class ControladorEnemigos {
         enemigos.add(fabricaEnemigos(tipoElegido, x, y, jugador, randomSpeed, camera));
     }
 
-    /**
-     * Fábrica de enemigos, para crear diferentes tipos según la cadena 'tipoEnemigo'
-     */
+    // fábrica de enemigos, para crear diferentes tipos según la cadena tipoEnemigo
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador,
                                           float velocidad, OrthographicCamera camera) {
         switch (tipoEnemigo) {
@@ -246,7 +228,7 @@ public class ControladorEnemigos {
             case "REGLA":
                 return new EnemigoRegla(x, y, jugador, velocidad * MULT_VELOCIDAD_REGLA, camera);
             case "POLLA":
-                return new EnemigoPolla(x, y, jugador, velocidad * 1.5f);
+                return new EnemigoPolla(x, y, jugador, velocidad * MULT_VELOCIDAD_POLLA);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
@@ -272,10 +254,7 @@ public class ControladorEnemigos {
         this.intervaloDeAparicion = intervaloDeAparicion;
     }
 
-    /**
-     * Permite cambiar el tipo de enemigos que se spawnean en tiempo de ejecución.
-     */
-    public void setTiposDeEnemigos(String[] nuevosTipos) {
+    public void setTiposDeEnemigos(String[] nuevosTipos) { // permite cambiar el tipo de enemigos que se spawnean en tiempo de ejecución
         this.tiposDeEnemigos = nuevosTipos;
     }
 }
