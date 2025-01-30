@@ -1,11 +1,9 @@
 package com.sticklike.core.gameplay.sistemas;
 
-import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
-import com.sticklike.core.pantallas.juego.VentanaJuego;
 import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -27,7 +25,7 @@ public class SistemaDeEventos {
     }
 
     private void inicializarEventos() {
-        eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles, this::spawnPrimerBoss, LVL_EVENTO1));
+        eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles, this::eventoAumentaEnemigos1, LVL_EVENTO1));
         eventos.add(new Evento("Aumenta nº enemigos 2", sistemaDeNiveles, this::eventoAumentaEnemigos2, LVL_EVENTO2));
         eventos.add(new Evento("Aparecen las pollas", sistemaDeNiveles, this::entraEnemigoPolla, LVL_EVENTO3));
         eventos.add(new Evento("BOSSPOLLA Aparece", sistemaDeNiveles, this::spawnPrimerBoss, LVL_EVENTO4));
@@ -70,26 +68,10 @@ public class SistemaDeEventos {
         System.out.println("Enemigo polla aparece");
     }
 
-    /* todo --> se usará en un futuro
-    private void pollasLocas(float factorMultiplicador) { // por ahora solamente hace que el jugador muera al aumentar mucho la velocidad de todas las pollas
-        // Modificamos la velocidad base de todos los enemigos Polla
-        float nuevaVelocidadBase = EnemigoPolla.getVelocidadBase() * factorMultiplicador;
-        EnemigoPolla.setVelocidadBase(nuevaVelocidadBase);
-
-        // Ajustamos la velocidad de cada instancia existente de EnemigoPolla
-        for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
-            if (enemigo instanceof EnemigoPolla polla) {
-                float velocidadActual = EnemigoPolla.getVelocidadBase();
-                polla.setVelocidad(velocidadActual * factorMultiplicador);
-            }
-        }
-    }*/
-
     private void spawnPrimerBoss() {
        controladorEnemigos.setTiposDeEnemigos(LISTA_BOSSPOLLA);
         System.out.println("¡Ha aparecido el PollaBOSS en el nivel 10!");
     }
-
 
     public void actualizar() {
         if (!eventos.isEmpty()) {
@@ -103,4 +85,21 @@ public class SistemaDeEventos {
             }
         }
     }
+
+
+
+        /* todo --> se usará en un futuro
+    private void pollasLocas(float factorMultiplicador) { // por ahora solamente hace que el jugador muera al aumentar mucho la velocidad de todas las pollas
+        // Modificamos la velocidad base de todos los enemigos Polla
+        float nuevaVelocidadBase = EnemigoPolla.getVelocidadBase() * factorMultiplicador;
+        EnemigoPolla.setVelocidadBase(nuevaVelocidadBase);
+
+        // Ajustamos la velocidad de cada instancia existente de EnemigoPolla
+        for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
+            if (enemigo instanceof EnemigoPolla polla) {
+                float velocidadActual = EnemigoPolla.getVelocidadBase();
+                polla.setVelocidad(velocidadActual * factorMultiplicador);
+            }
+        }
+    }*/
 }
