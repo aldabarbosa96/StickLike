@@ -3,20 +3,10 @@ package com.sticklike.core.entidades.jugador;
 import com.sticklike.core.entidades.jugador.InputsJugador.ResultadoInput;
 
 /**
- * {@code MovimientoJugador} se encarga de la lógica de movimiento
- * del jugador: normalizar diagonales, aplicar velocidad y
+ * Esta clase se encarga de la lógica de movimiento del jugador: normalizar diagonales, aplicar velocidad y
  * modificar la posición del sprite.
  */
 public class MovimientoJugador {
-
-    /**
-     * Método principal que calcula y aplica el movimiento del jugador, en base al input y a la velocidad.
-     * Se encarga también de la normalización al moverse en diagonal
-     *
-     * @param jugador   referencia al Jugador, para acceder a su velocidad y sprite
-     * @param resInput  resultado del input (movX, movY, etc.)
-     * @param delta     tiempo transcurrido desde el último frame
-     */
     public void mover(Jugador jugador, ResultadoInput resInput, float delta) {
         // Tomamos el movX, movY tal como los da la clase interna ResultadoInput
         float movX = resInput.movX;

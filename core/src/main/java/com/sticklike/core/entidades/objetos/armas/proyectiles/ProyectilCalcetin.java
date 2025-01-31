@@ -12,10 +12,6 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Proyectil tipo "Calcetín".
- * Define su propio daño base y fuerza de empuje (mayor que la piedra).
- */
 public class ProyectilCalcetin implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
@@ -109,7 +105,6 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public float getKnockbackForce() {
-        // El calcetín empuja más que la piedra de base
         return EMPUJE_BASE_CALCETIN;
     }
 

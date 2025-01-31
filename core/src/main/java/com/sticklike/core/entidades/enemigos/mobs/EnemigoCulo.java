@@ -13,10 +13,6 @@ import com.sticklike.core.interfaces.Enemigo;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
-/**
- * Clase que representa al enemigo "EnemigoCulo" en el juego.
- * Implementa la interfaz {@link Enemigo} y maneja el comportamiento específico de este tipo de enemigo.
- */
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
@@ -30,14 +26,6 @@ public class EnemigoCulo implements Enemigo {
     private AnimacionesEnemigos animacionesEnemigos;
     private float damageAmount = DANYO_CULO;
 
-    /**
-     * Constructor para crear una instancia de EnemigoCulo.
-     *
-     * @param x                Posición X inicial del enemigo.
-     * @param y                Posición Y inicial del enemigo.
-     * @param jugador          Referencia al jugador para seguir su posición.
-     * @param velocidadEnemigo Velocidad inicial del enemigo.
-     */
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         esConOjo(); // Determina si el enemigo tiene ojo o no al crearse.
         sprite.setPosition(x, y);
@@ -46,10 +34,6 @@ public class EnemigoCulo implements Enemigo {
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    /**
-     * Método que decide aleatoriamente si el enemigo tendrá un ojo o no.
-     * Ajusta las propiedades del sprite y la vida en consecuencia.
-     */
     private void esConOjo() {
         float random = (float) (Math.random() * 10);
         if (random >= 2.5f) {

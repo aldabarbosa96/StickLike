@@ -8,7 +8,7 @@ import com.badlogic.gdx.controllers.Controllers;
 
 /**
  * Clase que gestiona la entrada de teclas y mando para controlar el movimiento del jugador.
- * Detecta entradas del teclado y de un gamepad, permitiendo su uso simultáneo.
+ * Detecta entradas del teclado y de un gamepad, permitiendo su uso simultáneo
  */
 public class InputsJugador extends ControllerAdapter {
     private float movX = 0;
@@ -16,10 +16,6 @@ public class InputsJugador extends ControllerAdapter {
     private Direction direction = Direction.IDLE;
     private Controller mando; // Referencia al mando conectado
 
-    /**
-     * Constructor de InputsJugador.
-     * Si hay un mando conectado, se asigna y se registra como listener.
-     */
     public InputsJugador() {
         if (!Controllers.getControllers().isEmpty()) {
             mando = Controllers.getControllers().first();
@@ -27,12 +23,6 @@ public class InputsJugador extends ControllerAdapter {
         }
     }
 
-    /**
-     * Procesa la entrada del jugador desde teclado y mando, permitiendo su uso simultáneo.
-     *
-     * @param delta tiempo transcurrido desde el último frame
-     * @return un objeto {@link ResultadoInput} con los valores de movimiento (x, y) y la dirección horizontal
-     */
     public ResultadoInput procesarInput(float delta) {
         float tecladoX = procesarInputTecladoX();
         float tecladoY = procesarInputTecladoY();
@@ -61,9 +51,6 @@ public class InputsJugador extends ControllerAdapter {
         return new ResultadoInput(movX, movY, direction);
     }
 
-    /**
-     * Procesa la entrada del teclado (movimiento horizontal).
-     */
     private float procesarInputTecladoX() {
         boolean pressLeft = Gdx.input.isKeyPressed(Input.Keys.A);
         boolean pressRight = Gdx.input.isKeyPressed(Input.Keys.D);
@@ -73,9 +60,6 @@ public class InputsJugador extends ControllerAdapter {
         return 0;
     }
 
-    /**
-     * Procesa la entrada del teclado (movimiento vertical).
-     */
     private float procesarInputTecladoY() {
         boolean pressUp = Gdx.input.isKeyPressed(Input.Keys.W);
         boolean pressDown = Gdx.input.isKeyPressed(Input.Keys.S);
@@ -85,9 +69,7 @@ public class InputsJugador extends ControllerAdapter {
         return 0;
     }
 
-    /**
-     * Procesa la entrada del mando (movimiento horizontal).
-     */
+
     private float procesarInputMandoX() {
         if (mando == null) return 0;
         float axisX = mando.getAxis(0); // Stick izquierdo horizontal
@@ -97,9 +79,6 @@ public class InputsJugador extends ControllerAdapter {
         return 0;
     }
 
-    /**
-     * Procesa la entrada del mando (movimiento vertical).
-     */
     private float procesarInputMandoY() {
         if (mando == null) return 0;
         float axisY = mando.getAxis(1); // Stick izquierdo vertical
@@ -111,22 +90,15 @@ public class InputsJugador extends ControllerAdapter {
 
     @Override
     public boolean buttonDown(Controller controller, int buttonIndex) {
-        // Aquí puedes agregar acciones específicas de los botones del mando
         return true;
     }
 
-    /**
-     * Método que gestiona el input y movimiento del jugador en cada frame.
-     *
-     * @param delta tiempo transcurrido desde el último frame
-     * @param movimientoJugador instancia de MovimientoJugador para actualizar la posición
-     * @param jugador instancia del jugador que recibe la actualización del movimiento
-     */
     public void procesarInputYMovimiento(float delta, MovimientoJugador movimientoJugador, Jugador jugador) {
         ResultadoInput result = this.procesarInput(delta);
         movimientoJugador.mover(jugador, result, delta);
         jugador.setDireccionActual(result.direction);
     }
+
 
     /**
      * Enum para indicar la dirección horizontal: LEFT, RIGHT o IDLE.

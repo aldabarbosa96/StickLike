@@ -5,36 +5,22 @@ import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
 
 public class MovimientoBossPolla extends MovimientoBaseEnemigos {
-
-    // --- Parámetros de velocidad y distancias ---
-    private float velocidadAproximacion;  // aprox. al jugador
-    private float distanciaOrbita;        // radio para orbitar
-
-    private float velocidadOrbital;       // velocidad de giro
-    private float velocidadCarga;         // velocidad de la embestida
-
-    private float tiempoOrbita;           // tiempo orbitando antes de cargar
-    private float tiempoCarga;            // tiempo de la embestida
-
-    // --- Control de tiempos y fases ---
+    private float velocidadAproximacion;
+    private float distanciaOrbita;
+    private float velocidadOrbital;
+    private float velocidadCarga;
+    private float tiempoOrbita;
+    private float tiempoCarga;
     private float temporizador;
     private boolean enOrbita;
     private boolean haAlcanzadoDistanciaOrbita;
-
-    // --- Centro y ángulo de la órbita ---
     private float centroX, centroY;
     private float angulo;
-
-    // --- Dirección de la embestida ---
     private float chargeDirX, chargeDirY;
-
-    // --- Sentido de giro (true = horario, false = antihorario) ---
     private boolean sentidoHorario;
 
     public MovimientoBossPolla(boolean puedeEmpujar) {
         super(puedeEmpujar);
-
-        // Ajusta los valores a tu gusto
         this.velocidadAproximacion = 50f;
         this.distanciaOrbita = 175f;
         this.velocidadOrbital = 100f;
@@ -43,16 +29,16 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         this.tiempoCarga = 1.5f;
 
         // Estados iniciales
-        this.haAlcanzadoDistanciaOrbita = false; // No está aún en zona de órbita
-        this.enOrbita = true;                    // Al entrar en órbita la primera vez
+        this.haAlcanzadoDistanciaOrbita = false;
+        this.enOrbita = true;
         this.temporizador = 0;
         this.angulo = 0;
 
-        // Dirección inicial de la embestida (se calculará cada vez)
+        // Dirección inicial de la embestida (se recalcula cada vez)
         this.chargeDirX = 0;
         this.chargeDirY = 0;
 
-        // Sentido de giro: por defecto, elijamos uno al azar
+        // Sentido de giro aleatorio
         this.sentidoHorario = MathUtils.randomBoolean();
     }
 
@@ -158,10 +144,6 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         }
     }
 
-    /**
-     * Órbita usando el ángulo actual.
-     * Incrementamos o decrementamos según 'sentidoHorario'.
-     */
     private void orbitar(float delta, Sprite sprite) {
         float ajusteAngulo = velocidadOrbital * delta;
         angulo += sentidoHorario ? ajusteAngulo : -ajusteAngulo;
@@ -178,9 +160,6 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         sprite.setPosition(posX - sprite.getWidth() / 2f, posY - sprite.getHeight() / 2f);
     }
 
-    /**
-     * Embestida recta en dirección (chargeDirX, chargeDirY) calculada al iniciar la carga.
-     */
     private void cargar(float delta, Sprite sprite) {
         float moveX = chargeDirX * velocidadCarga * delta;
         float moveY = chargeDirY * velocidadCarga * delta;

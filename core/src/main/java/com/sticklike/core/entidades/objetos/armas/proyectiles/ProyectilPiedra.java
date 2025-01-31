@@ -9,10 +9,6 @@ import com.sticklike.core.interfaces.Proyectiles;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * Representa un proyectil tipo "Piedra" lanzado por el jugador.
- * Define su propio daño base y fuerza de empuje.
- */
 public class ProyectilPiedra implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
@@ -54,7 +50,6 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public void dispose() {
-        // No liberamos la textura globalmente, se podría manejar de otra forma
         textura = null;
     }
 

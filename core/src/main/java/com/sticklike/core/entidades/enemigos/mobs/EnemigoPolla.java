@@ -23,7 +23,7 @@ public class EnemigoPolla implements Enemigo {
     private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private MovimientoPollaEnemigos movimientoPolla;
-    private static float velocidadBase = VEL_BASE_POLLA; // Velocidad base para todos los enemigos de este tipo
+    private static float velocidadBase = VEL_BASE_POLLA;
 
     private boolean haSoltadoXP = false;
     private boolean procesado = false;

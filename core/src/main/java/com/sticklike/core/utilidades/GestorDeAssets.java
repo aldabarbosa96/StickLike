@@ -11,9 +11,9 @@ import java.util.HashMap;
  * Clase encargada de cargar y liberar los recursos gráficos usados en el juego (texturas y animaciones)
  */
 public class GestorDeAssets {
-    public static Texture stickman, enemigoCulo, enemigoCuloOjo, enemigoRegla, enemigoReglaCruzada, enemigoReglaCasiEsvastica,
-        enemigoPolla, corazonVida, armaPiedra, armaCalcetin, iconoXP, recolectableXP, recolectableXP2, recolectableVida, iconoVelMov, iconoPoder,
-        iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion, bossPolla;
+    public static Texture stickman, enemigoCulo, enemigoCuloOjo, enemigoRegla, enemigoReglaCruzada, enemigoPolla, corazonVida,
+        armaPiedra, armaCalcetin, iconoXP, recolectableXP, recolectableXP2, recolectableVida, iconoVelMov, iconoPoder,
+        iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion, iconoRango, iconoVelAt,iconoCritico, iconoVida,bossPolla;
     public static Array<Texture> borrones;
     public static HashMap<String, Animation<TextureRegion>> animations;
 
@@ -48,9 +48,13 @@ public class GestorDeAssets {
         iconoVelMov = new Texture("hud/vel_mov.png");
         iconoFuerza = new Texture("hud/fuerza.png");
         iconoPoder = new Texture("hud/poder_ataque.png");
-        iconoResistencia = new Texture("hud/resistencia.png");
+        iconoResistencia = new Texture("hud/resistencia2.png");
         iconoProyectiles = new Texture("hud/proyectiles.png");
         iconoRegeneracion = new Texture("hud/regeneracion_vida.png");
+        iconoRango = new Texture("hud/rango_disparo.png");
+        iconoVelAt = new Texture("hud/vel_ataque.png");
+        iconoCritico = new Texture("hud/critico.png");
+        iconoVida = new Texture("hud/vida.png");
         bossPolla = new Texture("enemigos/bossPolla.png");
 
         // borrones del mapa

@@ -154,7 +154,7 @@ public class RenderHUDComponents {
 
         renderizarFondoBarraXP(barX, barY, barWidth, barHeight, experiencePercentage);
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
-        renderizarIconoBarraXP(barX, barY, barHeight);
+        //renderizarIconoBarraXP(barX, barY, barHeight);
     }
 
     private void renderizarFondoBarraXP(float barX, float barY, float barWidth, float barHeight, float experiencePercentage) {
@@ -203,14 +203,14 @@ public class RenderHUDComponents {
         spriteBatch.end();
     }
 
-    private void renderizarIconoBarraXP(float barX, float barY, float barHeight) {
+    /*private void renderizarIconoBarraXP(float barX, float barY, float barHeight) {
         float iconSize = HEART_SIZE;
         float iconY = barY - HEART_Y_OFFSET;
 
         spriteBatch.begin();
         spriteBatch.draw(texturaLapizXP, HEART_X, iconY, iconSize, iconSize);
         spriteBatch.end();
-    }
+    }*/
 
     public void renderizarStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");
@@ -225,7 +225,7 @@ public class RenderHUDComponents {
         // Arrays de descripciones, valores e iconos
         String[] descripciones = {VEL_MOV, RANGO, VEL_ATAQUE, FUERZA, NUM_PROYECTILES};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
-        Texture[] iconos = {iconoVelMov, iconoFuerza, iconoFuerza, iconoFuerza, iconoProyectiles,};
+        Texture[] iconos = {iconoVelMov, iconoRango, iconoVelAt, iconoFuerza, iconoProyectiles,};
 
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION;
         float statsY = HUD_HEIGHT - STATS_Y_CORRECTION;
@@ -245,7 +245,7 @@ public class RenderHUDComponents {
 
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
-        Texture[] iconos = {iconoResistencia, iconoRegeneracion, iconoPoder, iconoResistencia, iconoResistencia};
+        Texture[] iconos = {iconoVida, iconoRegeneracion, iconoPoder, iconoResistencia, iconoCritico};
 
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2;
         float statsY = HUD_HEIGHT - STATS_Y_CORRECTION;

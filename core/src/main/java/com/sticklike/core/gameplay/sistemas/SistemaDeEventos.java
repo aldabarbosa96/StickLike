@@ -10,6 +10,9 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.PriorityQueue;
 
+/**
+ * Clase que permite crear y gestionar los eventos de la partida
+ */
 public class SistemaDeEventos {
     private PriorityQueue<Evento> eventos; // Cola de prioridad para eventos
     private RenderHUDComponents renderHUDComponents; // todo --> lo necesitaré en un futuro para gestionar algún evento basándome en el timer

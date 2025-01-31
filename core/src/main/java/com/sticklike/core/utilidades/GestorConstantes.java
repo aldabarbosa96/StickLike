@@ -93,7 +93,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float PAUSE_TEXT_Y = 450;
 
     // Configuración del jugador
-    public static final float VEL_MOV_JUGADOR = 125.0f;
+    public static final float VEL_MOV_JUGADOR = 120.0f;
     public static final float DANYO = 25f;
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
     public static final float VIDA_JUGADOR = 50f;
@@ -180,7 +180,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
 
     // Configuración recolectables
     public static final float DISTANCIA_ACTIVACION = 75f;
-    public static final float VEL_ATRACCION = 250f;
+    public static final float VEL_ATRACCION = 275f;
     public static final float OBJETO_VIDA_WIDTH= 12f;
     public static final float OBJETO_VIDA_HEIGHT= 12f;
     public static final float OBJETO1_XP_WIDTH = 10f;

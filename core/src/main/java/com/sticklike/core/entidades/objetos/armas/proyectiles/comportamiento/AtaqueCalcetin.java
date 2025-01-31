@@ -6,28 +6,15 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
- * La clase AtaqueCalcetin maneja la lógica para disparar calcetines en todas las direcciones.
+ * La clase AtaqueCalcetin maneja la lógica para disparar calcetines (4 inicialmente) en todas las direcciones
  */
 public class AtaqueCalcetin {
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
 
-    /**
-     * Constructor de AtaqueCalcetin.
-     * Permite configurar el intervalo de disparo.
-     *
-     * @param intervaloDisparoInicial Intervalo inicial entre disparos en segundos.
-     */
     public AtaqueCalcetin(float intervaloDisparoInicial) {
         this.intervaloDisparo = intervaloDisparoInicial;
     }
-
-    /**
-     * Procesa el ataque especial del jugador, generando 3 calcetines en todas las direcciones.
-     *
-     * @param jug              referencia al {@link Jugador} que ataca
-     * @param controladorAudio referencia al {@link ControladorAudio} para reproducir sonidos
-     */
     public void procesarAtaque(Jugador jug, ControladorAudio controladorAudio) {
         // Obtenemos coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
@@ -54,13 +41,6 @@ public class AtaqueCalcetin {
         controladorAudio.reproducirEfecto("lanzarCalcetin", AUDIO_CALCETIN);
     }
 
-    /**
-     * Maneja el disparo del ataque especial y actualiza el temporizador de disparo.
-     *
-     * @param delta            Tiempo transcurrido desde el último frame.
-     * @param jugador          Referencia al jugador.
-     * @param controladorAudio Referencia al controlador de audio.
-     */
     public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
         temporizadorDisparo += delta;
 

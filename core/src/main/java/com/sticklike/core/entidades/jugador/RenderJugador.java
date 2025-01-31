@@ -12,14 +12,11 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 public class RenderJugador {
     private Direction direccionActual = IDLE;
 
-    // Animaciones
     // todo --> añadir animaciones N,S,NO,NE,SO,SE
     private final Animation<TextureRegion> animacionMovDerecha;
     private final Animation<TextureRegion> animacionMovIzquierda;
     private final Animation<TextureRegion> animacionIdle;
     private float temporizadorAnimacion = TEMPORIZADOR_ANIMACION_MOV;
-
-    // Estado de parpadeo
     private boolean enParpadeo = false;
     private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
 
@@ -59,8 +56,8 @@ public class RenderJugador {
     }
     public void renderizarBarraDeSalud(ShapeRenderer shapeRenderer, Jugador jugador) {
         float healthPercentage = jugador.obtenerPorcetajeVida();
-        float barWidth = 20f; // Ancho reducido
-        float barHeight = 2.5f; // Alto reducido
+        float barWidth = 20f;
+        float barHeight = 2.5f;
 
         // Calcula la posición de la barra en función de la posición del jugador
         float barX = jugador.getSprite().getX() + (jugador.getSprite().getWidth() - barWidth) / 2f;

@@ -5,12 +5,13 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.managers.ControladorProyectiles;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.lang.Math;
 
 /**
- * {@code AtaquePiedra} maneja la lógica de ataque automático del jugador:
+ * AtaquePiedra es la clase que maneja la lógica de ataque automático del jugador:
  * - Encontrar el enemigo más cercano en el rango
  * - Calcular la dirección de disparo
  * - Crear los proyectiles y asignarlos al {@link ControladorProyectiles}
@@ -20,31 +21,18 @@ public class AtaquePiedra {
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
 
-    /**
-     * Constructor de AtaquePiedra.
-     * Permite configurar el intervalo de disparo.
-     *
-     * @param intervaloDisparoInicial Intervalo inicial entre disparos en segundos.
-     */
     public AtaquePiedra(float intervaloDisparoInicial) {
         this.intervaloDisparo = intervaloDisparoInicial;
     }
 
-    /**
-     * Procesa el ataque automático del jugador, si hay un enemigo en rango,
-     * genera los proyectiles correspondientes.
-     *
-     * @param jug referencia al {@link Jugador} que ataca
-     */
     public void procesarAtaque(Jugador jug, ControladorAudio controladorAudio) {
-
         // Si no hay enemigos controlados, no hacemos nada
         if (jug.getControladorEnemigos() == null) return;
 
         // Buscamos un objetivo en rango
         Enemigo target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
-        controladorAudio.reproducirEfecto("lanzarPiedra",AUDIO_PIEDRA);
+        controladorAudio.reproducirEfecto("lanzarPiedra", AUDIO_PIEDRA);
 
         // Obtenemos coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
@@ -76,12 +64,6 @@ public class AtaquePiedra {
         }
     }
 
-    /**
-     * Busca el enemigo más cercano dentro del rango de ataque del jugador.
-     *
-     * @param jug el {@link Jugador} cuyo rango de ataque se utilizará
-     * @return el enemigo más cercano, o null si no hay enemigos en rango
-     */
     private Enemigo encontrarEnemigoMasCercano(Jugador jug) {
         float closestDist = Float.MAX_VALUE;
         Enemigo closest = null;
@@ -101,11 +83,6 @@ public class AtaquePiedra {
         return closest;
     }
 
-    /**
-     * Calcula la dirección normalizada entre (sx, sy) y (tx, ty).
-     *
-     * @return array de 2 floats {dx, dy} representando la dirección.
-     */
     private float[] calcularDireccionNormalizada(float sx, float sy, float tx, float ty) {
         float dx = tx - sx;
         float dy = ty - sy;
@@ -114,9 +91,6 @@ public class AtaquePiedra {
         return new float[]{dx / dist, dy / dist};
     }
 
-    /**
-     * Maneja el disparo del jugador y actualiza el temporizador de disparo
-     */
     public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
         temporizadorDisparo += delta;
 
@@ -126,11 +100,6 @@ public class AtaquePiedra {
         }
     }
 
-    /**
-     * Permite ajustar el intervalo de disparo después de la inicialización.
-     *
-     * @param nuevoIntervaloNuevo Intervalo en segundos.
-     */
     public void setIntervaloDisparo(float nuevoIntervaloNuevo) {
         this.intervaloDisparo = nuevoIntervaloNuevo;
     }

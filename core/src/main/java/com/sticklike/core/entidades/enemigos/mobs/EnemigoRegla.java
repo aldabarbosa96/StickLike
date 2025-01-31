@@ -38,7 +38,7 @@ public class EnemigoRegla implements Enemigo {
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
-    private void esCruzada() { // todo --> revisar si se necesitan los diferentes tipos de reglas al inicio
+    /*private void esCruzada() { // todo --> revisar si se necesitan los diferentes tipos de reglas al inicio
         float random = (float) (Math.random() * 10);
         if (random >= 3) {
             sprite = new Sprite(enemigoReglaCruzada);
@@ -51,7 +51,7 @@ public class EnemigoRegla implements Enemigo {
             sprite = new Sprite(enemigoRegla);
             sprite.setSize(6, 32);
         }
-    }
+    }*/
 
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {

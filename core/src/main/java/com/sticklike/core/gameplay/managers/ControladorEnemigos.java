@@ -2,9 +2,10 @@ package com.sticklike.core.gameplay.managers;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.sticklike.core.entidades.enemigos.animacion.RenderSombrasEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
@@ -16,31 +17,24 @@ import com.sticklike.core.pantallas.juego.VentanaJuego;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * La clase ControladorEnemigos se encarga de:
- * - Generar enemigos periódicamente en posiciones aleatorias
- * - Actualizar la lógica de cada Enemigo (movimiento, muerte, etc.)
- * - Renderizar los enemigos en el SpriteBatch
- * - Gestionar la liberación de recursos al final.
- *
- * Interactúa con el Jugador para evitar spawnear enemigos demasiado cerca de él y también para comprobar si el jugador ha muerto
- */
 public class ControladorEnemigos {
-    private VentanaJuego ventanaJuego;
-    private Array<Enemigo> enemigos;
-    private Jugador jugador;
-    private OrthographicCamera camera;
+
+    private final VentanaJuego ventanaJuego;
+    private final Array<Enemigo> enemigos;
+    private final Jugador jugador;
+    private final OrthographicCamera camera;
 
     private float intervaloDeAparicion;
     private float temporizadorDeAparicion;
 
-    private int spawnCounter = 0; // todo --> para en un futuro controlar eventos
+    private int spawnCounter = 0; // para en un futuro controlar eventos
 
-    private Array<Enemigo> enemigosAEliminar = new Array<>();
+    private final Array<Enemigo> enemigosAEliminar = new Array<>();
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
 
     // Flag para asegurar que el Boss solo aparezca UNA vez
     private boolean bossSpawned = false;
+    private final RenderSombrasEnemigos renderSombrasEnemigos;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego ventanaJuego) {
         this.enemigos = new Array<>();
@@ -49,10 +43,11 @@ public class ControladorEnemigos {
         this.temporizadorDeAparicion = 0;
         this.ventanaJuego = ventanaJuego;
         this.camera = ventanaJuego.getOrtographicCamera();
+        this.renderSombrasEnemigos = new RenderSombrasEnemigos();
     }
 
     public void actualizarSpawnEnemigos(float delta) {
-        // Si el jugador no está vivo, no spawneamos ni actualizamos nada (booleano invertido)
+        // Si el jugador está vivo, no actualizamos nada (lógica invertida típica de tu proyecto)
         if (jugador.estaVivo()) {
             return;
         }
@@ -68,7 +63,7 @@ public class ControladorEnemigos {
         for (Enemigo enemigo : enemigos) {
             enemigo.actualizar(delta);
 
-            // Si ha muerto y aún no está procesado (para soltar XP o similares)
+            // Si ha muerto y aún no está procesado (para soltar XP)
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
                 ObjetosXP xpObject = enemigo.sueltaObjetoXP();
                 if (xpObject != null) {
@@ -79,47 +74,36 @@ public class ControladorEnemigos {
             }
         }
 
-        // Eliminamos de la lista aquellos que ya murieron y fueron procesados
+        // Eliminamos de la lista aquellos que ya murieron y se han procesado
         for (Enemigo enemigo : enemigosAEliminar) {
             enemigos.removeValue(enemigo, true);
         }
         enemigosAEliminar.clear();
     }
 
-    public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer) {
-        // Ordenar enemigos por Y (descendente) para manejar un Z-order más coherente
-        enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
-
-        for (Enemigo enemigo : enemigos) {
-            if (enemigo instanceof BossPolla) {
-                dibujarSombraBossPolla(enemigo, shapeRenderer);
-            }
-            else if (enemigo instanceof EnemigoCulo) {
-                dibujarSombraCulo(enemigo, shapeRenderer);
-            }
-            else if (enemigo instanceof EnemigoPolla) {
-                dibujarSombraPolla((EnemigoPolla) enemigo, shapeRenderer);
-            }
-            else {
-                dibujarSombraDefault(enemigo, shapeRenderer);
-            }
-        }
-    }
-
-    /**
-     * Renderiza todos los enemigos en el SpriteBatch.
-     */
     public void renderizarEnemigos(SpriteBatch batch) {
-        // Si el jugador no está vivo, mostramos los enemigos (lógica de “booleano invertido”)
+        // Si el jugador está vivo, no se dibujan enemigos (booleano invertido)
         if (jugador.estaVivo()) {
             return;
         }
 
+        // Ordenar para dibujar en orden (Z-order)
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
 
         for (Enemigo enemigo : enemigos) {
             enemigo.renderizar(batch);
         }
+    }
+
+    public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer) {
+        if (jugador.estaVivo()) {
+            return;
+        }
+
+        // Ordenamos según la Y para que el sombreado coincida con el orden de sprites
+        enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
+
+        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos);
     }
 
     private void spawnEnemigo() {
@@ -130,10 +114,10 @@ public class ControladorEnemigos {
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
         // Límites de la cámara (margen extra para que aparezcan fuera de pantalla).
-        float leftLimit = playerX - (float) VentanaJuego.worldWidth / 2 - CORRECCION_SPAWN;
-        float rightLimit = playerX + (float) VentanaJuego.worldWidth / 2 - CORRECCION_SPAWN;
-        float bottomLimit = playerY - (float) VentanaJuego.worldHeight / 2 - CORRECCION_SPAWN;
-        float topLimit = playerY + (float) VentanaJuego.worldHeight / 2 - CORRECCION_SPAWN;
+        float leftLimit = playerX - (VentanaJuego.worldWidth / 2f) - CORRECCION_SPAWN;
+        float rightLimit = playerX + (VentanaJuego.worldWidth / 2f) - CORRECCION_SPAWN;
+        float bottomLimit = playerY - (VentanaJuego.worldHeight / 2f) - CORRECCION_SPAWN;
+        float topLimit = playerY + (VentanaJuego.worldHeight / 2f) - CORRECCION_SPAWN;
 
         float x = 0, y = 0;
 
@@ -165,7 +149,6 @@ public class ControladorEnemigos {
         if ("BOSSPOLLA".equals(tipoElegido) && bossSpawned) {
             return;
         }
-
         // Si es BOSSPOLLA por primera vez, marcamos que ya se ha spawneado
         if ("BOSSPOLLA".equals(tipoElegido)) {
             bossSpawned = true;
@@ -175,12 +158,7 @@ public class ControladorEnemigos {
         enemigos.add(fabricaEnemigos(tipoElegido, x, y, jugador, randomSpeed, camera));
     }
 
-    /**
-     * Fábrica genérica de enemigos. Añadimos el caso BOSSPOLLA para el Boss.
-     */
-    public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y,
-                                          Jugador jugador, float velocidad, OrthographicCamera camera)
-    {
+    public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
         switch (tipoEnemigo) {
             case "CULO":
                 return new EnemigoCulo(x, y, jugador, velocidad * MULT_VELOCIDAD_CULO);
@@ -195,88 +173,6 @@ public class ControladorEnemigos {
         }
     }
 
-    private void dibujarSombraBossPolla(Enemigo enemigo, ShapeRenderer shapeRenderer) {
-        float x = enemigo.getX();
-        float y = enemigo.getY();
-        float w = enemigo.getSprite().getWidth();
-        float h = enemigo.getSprite().getHeight();
-
-        float centerX = x + w / 2f;
-
-        float shadowWidth = w;
-        float shadowHeight = h * 0.2f;
-        float shadowX = centerX - (shadowWidth / 2f);
-        float shadowY = y - 8f;
-
-        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.5f);
-        shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
-    }
-
-    private void dibujarSombraCulo(Enemigo enemigo, ShapeRenderer shapeRenderer) {
-        float x = enemigo.getX();
-        float y = enemigo.getY();
-        float w = enemigo.getSprite().getWidth();
-        float h = enemigo.getSprite().getHeight();
-
-        float centerX = x + w / 2f;
-        float shadowWidth = w * SHADOW_WIDTH_CULO;
-        float shadowHeight = h * SHADOW_HEIGHT_CULO;
-        float shadowX = centerX - (shadowWidth / 2f);
-        float shadowY = y - SHADOW_OFFSET;
-
-        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.5f);
-        shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
-    }
-
-    private void dibujarSombraPolla(EnemigoPolla polla, ShapeRenderer shapeRenderer) {
-        float offset = polla.getMovimientoPolla().getCurrentOffset();
-
-        float x = polla.getX();
-        float y = polla.getY();
-        float w = polla.getSprite().getWidth();
-        float h = polla.getSprite().getHeight();
-
-        float centerX = x + w / SHADOW_OFFSET;
-
-        float baseShadowWidth = w * 0.9f;
-        float baseShadowHeight = h * 0.3f;
-        float baseShadowY = y - 2.5f;
-
-        float maxZigzag = polla.getMovimientoPolla().getAmplitudZigzag();
-
-        // Normalizamos offset en [-1, 1].
-        float normalizado = offset / maxZigzag;
-        if (normalizado > 1) normalizado = 1;
-        if (normalizado < -1) normalizado = -1;
-
-        float topScale = 0.2f;
-        float bottomScale = 0.6f;
-        float factor = bottomScale + (topScale - bottomScale) * ((normalizado + 1f) / 2f);
-
-        float finalShadowWidth = baseShadowWidth * factor;
-        float finalShadowHeight = baseShadowHeight * factor;
-        float finalShadowX = centerX - finalShadowWidth / 2f;
-
-        shapeRenderer.setColor(0.3f, 0.3f, 0.1f, 0.5f);
-        shapeRenderer.ellipse(finalShadowX, baseShadowY, finalShadowWidth, finalShadowHeight);
-    }
-
-    private void dibujarSombraDefault(Enemigo enemigo, ShapeRenderer shapeRenderer) {
-        float x = enemigo.getX();
-        float y = enemigo.getY();
-        float w = enemigo.getSprite().getWidth();
-        float h = enemigo.getSprite().getHeight();
-
-        float centerX = x + w / 2f;
-        float shadowWidth = w * 0.75f;
-        float shadowHeight = h * 0.3f;
-        float shadowX = centerX - (shadowWidth / 2f);
-        float shadowY = y - 2.5f;
-
-        shapeRenderer.setColor(0.35f, 0.35f, 0.35f, 0.5f);
-        shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
-    }
-
     public void dispose() {
         for (Enemigo enemigo : enemigos) {
             if (enemigo != null) {
@@ -284,7 +180,6 @@ public class ControladorEnemigos {
             }
         }
     }
-
 
     public Array<Enemigo> getEnemigos() {
         return enemigos;
@@ -298,9 +193,6 @@ public class ControladorEnemigos {
         this.intervaloDeAparicion = intervaloDeAparicion;
     }
 
-    /**
-     * Permite modificar los tipos de enemigos que se spawnean (por ejemplo, para introducir BOSSPOLLA en una fase concreta)
-     */
     public void setTiposDeEnemigos(String[] nuevosTipos) {
         this.tiposDeEnemigos = nuevosTipos;
     }

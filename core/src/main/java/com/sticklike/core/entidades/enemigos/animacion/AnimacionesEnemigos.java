@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Clase que gestiona las animaciones de parpadeo y fade-out de los enemigos
+ */
 public class AnimacionesEnemigos {
     private boolean enParpadeo = false;
     private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
@@ -18,7 +21,7 @@ public class AnimacionesEnemigos {
     // ================================
     public void aplicarParpadeo1(Sprite sprite) {
         if (enParpadeo) {
-            sprite.setColor(0.8f, 0.2f, 0.6f, alphaActual);
+            sprite.setColor(0.8f, 0.2f, 0.6f, alphaActual); // color morado/rojizo
         }
     }
 

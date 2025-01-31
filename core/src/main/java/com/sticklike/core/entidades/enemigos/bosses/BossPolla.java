@@ -20,15 +20,14 @@ public class BossPolla implements Enemigo {
     private AnimacionesEnemigos animaciones;
     private MovimientoBossPolla movimientoBoss;
 
-    private float vida = 1000;       // Ejemplo de vida para un boss
+    private float vida = 1000;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private float damageAmount = 15; // Daño que hace el boss al jugador
+    private float damageAmount = 12.5f;
     private float coolDownDanyo = 1.2f;
     private float temporizadorDanyo = 0f;
 
     public BossPolla(Jugador jugador, float x, float y) {
-        // Usa una textura distinta (un sprite distinto), o la que prefieras
         sprite = new Sprite(bossPolla);
         sprite.setSize(90, 125);
         sprite.setPosition(x, y);
@@ -40,19 +39,15 @@ public class BossPolla implements Enemigo {
 
     @Override
     public void actualizar(float delta) {
-        // Animaciones
         animaciones.actualizarParpadeo(delta);
         animaciones.actualizarFade(delta);
 
-        // Movimiento
         movimientoBoss.actualizarMovimiento(delta, sprite, jugador);
 
-        // Temporizador de daño
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
 
-        // Flip del sprite si está a la izquierda/derecha del jugador
         float bossCenterX = sprite.getX() + sprite.getWidth()/2f;
         float playerCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth()/2f;
         boolean estaALaIzquierda = bossCenterX < playerCenterX;
@@ -91,7 +86,6 @@ public class BossPolla implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        // Muerto cuando su vida <= 0 y terminó el fade
         return (vida <= 0 && !animaciones.estaEnFade());
     }
 

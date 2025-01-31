@@ -7,11 +7,11 @@ import com.sticklike.core.gameplay.managers.ControladorEnemigos;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-
+/**
+ * Clase controladora de las colisiones del jugador. Verifica la colisión con escala ligeramente reducida y aplica el daño si procede
+ */
 public class ColisionesJugador {
-    /**
-     * Verifica colisiones con los enemigos y aplica daño si es necesario.
-     */
+
     public void verificarColisionesConEnemigos(ControladorEnemigos controladorEnemigos, Jugador jugador, ControladorAudio controladorAudio) {
         if (controladorEnemigos != null) {
             for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
