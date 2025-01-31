@@ -11,8 +11,8 @@ public class ObjetoXp extends ObjetoBase {
     public ObjetoXp(float x, float y) {
         super(x, y);
         float randomXP = (float) (Math.random() * 100f);
-        esXPGorda = randomXP >= 95f;
-        setSpriteTexture(getTexture()); // Sincroniza el sprite con la textura
+        esXPGorda = randomXP >= 95f;  // Aprox 5% de que sea gorda
+        setSpriteTexture(getTexture());
     }
 
     @Override

@@ -47,10 +47,11 @@ public class Jugador {
     private float resistenciaJugador;
     private float criticoJugador;
     private boolean estaVivo;
+    private float oroGanado;
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaqueCalcetin calcetinazo,
+                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra,
                    ControladorProyectiles controladorProyectiles) {
         this.danyoAtaqueJugador = DANYO;
         this.velocidadJugador = VEL_MOV_JUGADOR;
@@ -63,6 +64,7 @@ public class Jugador {
         this.resistenciaJugador = RESISTENCIA;
         this.criticoJugador = CRITICO;
         this.estaVivo = true;
+        this.oroGanado = 0;
 
         // Inicializar el sprite del jugador
         this.sprite = new Sprite(GestorDeAssets.stickman);
@@ -257,5 +259,13 @@ public class Jugador {
 
     public void setCriticoJugador(float criticoJugador) {
         this.criticoJugador = criticoJugador;
+    }
+
+    public float getOroGanado() {
+        return oroGanado;
+    }
+
+    public void setOroGanado(float oroGanado) {
+        this.oroGanado = oroGanado;
     }
 }

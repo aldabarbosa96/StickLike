@@ -154,6 +154,7 @@ public class RenderHUDComponents {
 
         renderizarFondoBarraXP(barX, barY, barWidth, barHeight, experiencePercentage);
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
+        renderizarCacaDorada(jugador.getOroGanado());
         //renderizarIconoBarraXP(barX, barY, barHeight);
     }
 
@@ -203,15 +204,28 @@ public class RenderHUDComponents {
         spriteBatch.end();
     }
 
-    /*private void renderizarIconoBarraXP(float barX, float barY, float barHeight) {
-        float iconSize = HEART_SIZE;
-        float iconY = barY - HEART_Y_OFFSET;
+    public void renderizarCacaDorada(float oroAcumulado) {
+        float iconSize = 15f;
+        float posX = HUD_BAR_X + 10f; // Margen izquierdo de la barra de XP
+        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 73.5f; // Debajo de la barra
 
         spriteBatch.begin();
-        spriteBatch.draw(texturaLapizXP, HEART_X, iconY, iconSize, iconSize);
-        spriteBatch.end();
-    }*/
 
+        // 1. Dibujar icono de caca
+        spriteBatch.draw(recolectableCacaDorada, posX, posY, iconSize, iconSize);
+
+        // 2. Dibujar contador numérico al lado
+        DecimalFormat df = new DecimalFormat("#");
+        String cantidad = df.format(oroAcumulado);
+
+        fuente.getData().setScale(0.8f);
+        float textX = posX + iconSize + 4f; // Padding entre icono y texto
+        float textY = posY + iconSize/2 + 5f;
+
+        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY,Color.GOLD);
+
+        spriteBatch.end();
+    }
     public void renderizarStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");
 

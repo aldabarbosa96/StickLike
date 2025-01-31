@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class GestorDeAssets {
     public static Texture stickman, enemigoCulo, enemigoCuloOjo, enemigoRegla, enemigoReglaCruzada, enemigoPolla, corazonVida,
-        armaPiedra, armaCalcetin, iconoXP, recolectableXP, recolectableXP2, recolectableVida, iconoVelMov, iconoPoder,
+        armaPiedra, armaCalcetin, iconoXP, recolectableXP, recolectableXP2, recolectableVida,recolectableCacaDorada, iconoVelMov, iconoPoder,
         iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion, iconoRango, iconoVelAt,iconoCritico, iconoVida,bossPolla;
     public static Array<Texture> borrones;
     public static HashMap<String, Animation<TextureRegion>> animations;
@@ -45,6 +45,7 @@ public class GestorDeAssets {
         recolectableXP = new Texture("drops/xp1.png");
         recolectableXP2 = new Texture("drops/xp2.png");
         recolectableVida = new Texture("hud/life.png");
+        recolectableCacaDorada = new Texture("drops/cacaDorada.png");
         iconoVelMov = new Texture("hud/vel_mov.png");
         iconoFuerza = new Texture("hud/fuerza.png");
         iconoPoder = new Texture("hud/poder_ataque.png");

@@ -185,6 +185,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_VIDA_HEIGHT= 12f;
     public static final float OBJETO1_XP_WIDTH = 10f;
     public static final float OBJETO1_XP_HEIGHT = 10.5f;
+    public static final float OBJETO_ORO_WIDTH = 10.5f;
+    public static final float OBJETO_ORO_HEIGHT = 10.5f;
 
     // Controlador Evento
     public static final int LVL_EVENTO1 = 3;

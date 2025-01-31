@@ -11,6 +11,7 @@ import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
@@ -47,7 +48,7 @@ public class ControladorEnemigos {
     }
 
     public void actualizarSpawnEnemigos(float delta) {
-        // Si el jugador está vivo, no actualizamos nada (lógica invertida típica de tu proyecto)
+        // Si el jugador está vivo, no actualizamos nada (lógica booleano invertida)
         if (jugador.estaVivo()) {
             return;
         }
@@ -63,12 +64,21 @@ public class ControladorEnemigos {
         for (Enemigo enemigo : enemigos) {
             enemigo.actualizar(delta);
 
-            // Si ha muerto y aún no está procesado (para soltar XP)
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
-                ObjetosXP xpObject = enemigo.sueltaObjetoXP();
-                if (xpObject != null) {
-                    ventanaJuego.addXPObject(xpObject);
+                float random = MathUtils.random(0f, 100f);
+
+                // 1º - Comprobamos si suelta Caca Dorada (2.5% de probabilidad)
+                if (random < 2f) {
+                    ventanaJuego.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
                 }
+                // 2º - Si NO suelta Caca Dorada, suelta XP normal (si el enemigo lo tiene)
+                else {
+                    ObjetosXP xpObject = enemigo.sueltaObjetoXP();
+                    if (xpObject != null) {
+                        ventanaJuego.addXPObject(xpObject);
+                    }
+                }
+
                 enemigo.setProcesado(true);
                 enemigosAEliminar.add(enemigo);
             }
