@@ -46,7 +46,7 @@ public class ProyectilTazo implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
 
-        rotacionSprite += 1000 * delta;
+        rotacionSprite += 720f * delta;
 
         // Calcula el ángulo actual sumando el ángulo global con el offset fijo de cada nube
         float currentAngle = ataqueTazo.getGlobalAngle() + offsetAngle;

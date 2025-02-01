@@ -21,7 +21,7 @@ public class AnimacionesEnemigos {
     // ================================
     public void aplicarParpadeo1(Sprite sprite) {
         if (enParpadeo) {
-            sprite.setColor(0.8f, 0.2f, 0.6f, alphaActual); // color morado/rojizo
+            sprite.setColor(0.8f, 0.2f, 0.5f, alphaActual); // color morado/rojizo
         }
     }
 

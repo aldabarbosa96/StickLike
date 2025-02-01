@@ -8,7 +8,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 public class AtaqueTazo {
     private float temporizador;
     private int nubesActivas;
-    private float radio = 45f;
+    private float radio = 35f;
     private float globalAngle = 0f;
     private final float velocidadRotacion = 360f;
 
