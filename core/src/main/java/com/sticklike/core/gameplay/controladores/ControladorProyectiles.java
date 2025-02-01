@@ -1,10 +1,12 @@
-package com.sticklike.core.gameplay.managers;
+package com.sticklike.core.gameplay.controladores;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPedo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
@@ -47,14 +49,17 @@ public class ControladorProyectiles {
             proyectil.actualizarProyectil(delta);
 
             for (Enemigo enemigo : enemies) {
-                // Verificamos si el proyectil es activo, el enemigo tiene vida y no ha sido impactado antes
-                if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
-                    !proyectil.yaImpacto(enemigo) &&
+                boolean esNubePedo = proyectil instanceof ProyectilPedo;
+                boolean colision = esNubePedo ?
+                    estaEnRadio(enemigo, proyectil) :
                     enemigo.esGolpeadoPorProyectil(
                         proyectil.getX(),
                         proyectil.getY(),
                         proyectil.getRectanguloColision().width,
-                        proyectil.getRectanguloColision().height)) {
+                        proyectil.getRectanguloColision().height);
+
+                if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
+                    !proyectil.yaImpacto(enemigo) && colision) {
 
                     // 1) Calcular daño
                     float baseDamage = proyectil.getBaseDamage();
@@ -63,15 +68,14 @@ public class ControladorProyectiles {
                     // 2) Aplicar daño y parpadeo
                     enemigo.reducirSalud(damage);
                     enemigo.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
-
-                    // 3) Aplicar knockback
                     aplicarKnockback(enemigo, proyectil);
+
 
                     // 4) Generar texto flotante
                     float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
                     float posicionTextoY = enemigo.getY() + enemigo.getSprite().getHeight() + DESPLAZAMIENTOY_TEXTO2;
 
-                    // Ajustar la posición si ya existe un texto flotante para el enemigo
+                    // Ajustar posición vertical si hay múltiples textos
                     Float ultimaY = ultimaYTexto.get(enemigo);
                     if (ultimaY != null) {
                         posicionTextoY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
@@ -82,20 +86,23 @@ public class ControladorProyectiles {
 
                     ultimaYTexto.put(enemigo, posicionTextoY);
 
-                    // Registrar el impacto para evitar daño repetido
+                    // Registrar impacto (especialmente importante para nubes)
                     proyectil.registrarImpacto(enemigo);
 
-                    // Si el proyectil no es persistente, desactivarlo
+                    // Desactivar solo proyectiles no persistentes y no nubes
                     if (!proyectil.isPersistente()) {
                         proyectil.desactivarProyectil();
-                        break; // Salimos del loop de enemigos
+                        break;
                     }
                 }
             }
 
-            // Eliminar proyectiles inactivos
+            // Eliminar proyectiles inactivos (las nubes se eliminan automáticamente cuando tiempoVida <= 0)
             if (!proyectil.isProyectilActivo()) {
                 iterator.remove();
+                if (proyectil instanceof ProyectilPedo) {
+                    ((ProyectilPedo) proyectil).getAtaquePedo().reducirNubesActivas();
+                }
             }
         }
     }
@@ -129,6 +136,24 @@ public class ControladorProyectiles {
     public void aumentarDanyoProyectil(float multiplier) {
         multiplicadorDeDanyo *= multiplier;
         System.out.println("Multiplicador de daño actualizado a: " + multiplicadorDeDanyo);
+    }
+    private boolean estaEnRadio(Enemigo enemigo, Proyectiles proyectil) {
+        if (!(proyectil instanceof ProyectilPedo)) return false;
+
+        float enemigoX = enemigo.getX() + enemigo.getSprite().getWidth()/2;
+        float enemigoY = enemigo.getY() + enemigo.getSprite().getHeight()/2;
+
+        Rectangle areaNube = proyectil.getRectanguloColision();
+        float centroNubeX = areaNube.x + areaNube.width/2;
+        float centroNubeY = areaNube.y + areaNube.height/2;
+
+        // Distancia entre centros
+        float distancia = (float) Math.sqrt(
+            Math.pow(enemigoX - centroNubeX, 2) +
+                Math.pow(enemigoY - centroNubeY, 2)
+        );
+
+        return distancia <= areaNube.width/2;
     }
 
     public void reset() { // Reseteamos de proyectiles para evitar interferencias y poder gestionar el nuevo estado de estos

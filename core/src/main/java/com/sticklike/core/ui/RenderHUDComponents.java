@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.gameplay.managers.ControladorProyectiles;
+import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;

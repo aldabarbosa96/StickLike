@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.jugador;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.interfaces.Enemigo;
-import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 

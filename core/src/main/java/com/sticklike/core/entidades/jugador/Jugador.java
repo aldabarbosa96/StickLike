@@ -6,23 +6,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePedo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
-import com.sticklike.core.gameplay.managers.ControladorEnemigos;
-import com.sticklike.core.gameplay.managers.ControladorProyectiles;
+import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
+import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.utilidades.GestorDeAssets;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * La clase Jugador representa al personaje controlado por el jugador.
- * Delegamos:
- * - Input en {@link InputsJugador}
- * - Movimiento en {@link MovimientoJugador}
- * - Ataque en {@link AtaquePiedra}
- * - Colisiones en {@link ColisionesJugador}
- * - Renderizado en {@link RenderJugador}
- */
 public class Jugador {
 
     private Sprite sprite;
@@ -31,6 +23,7 @@ public class Jugador {
     private InputsJugador inputController;
     private AtaquePiedra pedrada;
     private AtaqueCalcetin calcetinazo;
+    private AtaquePedo ataquePedo;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
@@ -51,7 +44,7 @@ public class Jugador {
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra,
+                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaquePedo ataquePedo,
                    ControladorProyectiles controladorProyectiles) {
         this.danyoAtaqueJugador = DANYO;
         this.velocidadJugador = VEL_MOV_JUGADOR;
@@ -77,21 +70,24 @@ public class Jugador {
         this.movimientoJugador = movimientoJugador;
         this.pedrada = ataquePiedra;
         this.calcetinazo = null;
+        this.ataquePedo = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
     }
 
-    /**
-     * Actualiza la lógica del jugador: movimiento, disparo, colisiones
-     */
+
     public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText, ControladorAudio controladorAudio) {
         if (!estaVivo) return;
 
         if (!paused) {
             inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
             pedrada.manejarDisparo(delta, this, controladorAudio);
+
             if (calcetinazo != null) {
                 calcetinazo.manejarDisparo(delta, this, controladorAudio);
+            }
+            if (ataquePedo != null) {
+                ataquePedo.actualizar(delta, this);
             }
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
@@ -101,11 +97,7 @@ public class Jugador {
         controladorProyectiles.actualizarProyectiles(delta, (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
     }
 
-    /**
-     * Aplica el renderizado de las animaciones al jugador
-     *
-     * @param batch sprite que representa al jugador
-     */
+
     public void aplicarRenderizadoAlJugador(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         // Renderizar animaciones del jugador
         renderJugador.setDireccionActual(direccionActual);
@@ -224,6 +216,9 @@ public class Jugador {
     public void setCalcetinazo(AtaqueCalcetin calcetinazo) {
         this.calcetinazo = calcetinazo;
     }
+    public void setPedo(AtaquePedo pedo) {
+        this.ataquePedo = pedo;
+    }
 
     public void setDireccionActual(Direction direccionActual) {
         this.direccionActual = direccionActual;
@@ -267,5 +262,9 @@ public class Jugador {
 
     public void setOroGanado(float oroGanado) {
         this.oroGanado = oroGanado;
+    }
+
+    public AtaquePedo getAtaquePedo() {
+        return ataquePedo;
     }
 }

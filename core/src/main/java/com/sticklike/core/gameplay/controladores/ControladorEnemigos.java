@@ -1,4 +1,4 @@
-package com.sticklike.core.gameplay.managers;
+package com.sticklike.core.gameplay.controladores;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

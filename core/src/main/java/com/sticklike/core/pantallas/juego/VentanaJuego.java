@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePedo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -19,9 +20,9 @@ import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
-import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
-import com.sticklike.core.gameplay.managers.ControladorProyectiles;
+import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.pantallas.popUps.PopUpMejoras;
 import com.sticklike.core.pantallas.gameOver.VentanaGameOver;
@@ -63,6 +64,7 @@ public class VentanaJuego implements Screen {
     private MovimientoJugador movimientoJugador;
     private AtaquePiedra ataquePiedra;
     private AtaqueCalcetin ataqueCalcetin;
+    private AtaquePedo ataquePedo;
     private ControladorProyectiles controladorProyectiles;
     private ControladorAudio controladorAudio;
     private PopUpMejoras popUpMejoras;
@@ -103,13 +105,14 @@ public class VentanaJuego implements Screen {
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
         ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
-        ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
+        //ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
+        //ataquePedo = new AtaquePedo();
         controladorProyectiles = new ControladorProyectiles();
 
         float playerStartX = worldWidth / 2f;
         float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
         jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador,
-            movimientoJugador, ataquePiedra, controladorProyectiles);
+            movimientoJugador, ataquePiedra,ataquePedo, controladorProyectiles);
     }
 
     private void inicializarSistemasYControladores() {

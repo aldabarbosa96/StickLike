@@ -2,7 +2,7 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.gameplay.progreso.Evento;
-import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
 

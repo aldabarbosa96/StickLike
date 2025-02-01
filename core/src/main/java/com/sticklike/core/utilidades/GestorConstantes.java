@@ -170,6 +170,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
     public static final float MULT_DANYO = 1f;
+    public static final float NUBE_PEDO_SIZE = 24f;
+    public static final float DURACION_NUBE_PEDO = 8f;
+    public static final float RADIO_NUBE_PEDO = 50f;
+    public static final float INTERVALO_NUBE = 0.3f;
+    public static final float DANYO_NUBE_PEDO = 10f;
+    public static final int MAX_NUBES_PEDO = 4;
+    public static final float INTERVALO_DANYO_NUBE = 0.5f;
 
     // Configuración TextoFlotante
     public static final float DESPLAZAMIENTOY_TEXTO = 30f;

@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
-import com.sticklike.core.gameplay.managers.ControladorEnemigos;
+import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
 
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
@@ -87,12 +87,12 @@ public class RenderVentanaJuego {
         spriteBatch.begin();
         // Objetos XP
         for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
-        // Proyectiles
-        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         // Jugador
         jugador.aplicarRenderizadoAlJugador(spriteBatch, shapeRenderer);
         // Enemigos
         controladorEnemigos.renderizarEnemigos(spriteBatch);
+        // Proyectiles
+        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         // Textos flotantes
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
 
