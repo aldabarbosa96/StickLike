@@ -14,7 +14,7 @@ public class ObjetoOro extends ObjetoBase {
 
     @Override
     public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerOro", AUDIO_RECOLECCION_CACA);
+        controladorAudio.reproducirEfecto("recogerOro", AUDIO_RECOLECCION_ORO);
         super.recolectar(controladorAudio);
     }
 

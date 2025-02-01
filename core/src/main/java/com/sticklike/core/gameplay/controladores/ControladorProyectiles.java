@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPedo;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
@@ -49,7 +49,7 @@ public class ControladorProyectiles {
             proyectil.actualizarProyectil(delta);
 
             for (Enemigo enemigo : enemies) {
-                boolean esNubePedo = proyectil instanceof ProyectilPedo;
+                boolean esNubePedo = proyectil instanceof ProyectilTazo;
                 boolean colision = esNubePedo ?
                     estaEnRadio(enemigo, proyectil) :
                     enemigo.esGolpeadoPorProyectil(
@@ -100,8 +100,8 @@ public class ControladorProyectiles {
             // Eliminar proyectiles inactivos (las nubes se eliminan automáticamente cuando tiempoVida <= 0)
             if (!proyectil.isProyectilActivo()) {
                 iterator.remove();
-                if (proyectil instanceof ProyectilPedo) {
-                    ((ProyectilPedo) proyectil).getAtaquePedo().reducirNubesActivas();
+                if (proyectil instanceof ProyectilTazo) {
+                    ((ProyectilTazo) proyectil).getAtaquePedo().reducirNubesActivas();
                 }
             }
         }
@@ -138,7 +138,7 @@ public class ControladorProyectiles {
         System.out.println("Multiplicador de daño actualizado a: " + multiplicadorDeDanyo);
     }
     private boolean estaEnRadio(Enemigo enemigo, Proyectiles proyectil) {
-        if (!(proyectil instanceof ProyectilPedo)) return false;
+        if (!(proyectil instanceof ProyectilTazo)) return false;
 
         float enemigoX = enemigo.getX() + enemigo.getSprite().getWidth()/2;
         float enemigoY = enemigo.getY() + enemigo.getSprite().getHeight()/2;

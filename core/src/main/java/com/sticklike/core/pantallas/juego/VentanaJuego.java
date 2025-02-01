@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePedo;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -64,7 +64,7 @@ public class VentanaJuego implements Screen {
     private MovimientoJugador movimientoJugador;
     private AtaquePiedra ataquePiedra;
     private AtaqueCalcetin ataqueCalcetin;
-    private AtaquePedo ataquePedo;
+    private AtaqueTazo ataqueTazo;
     private ControladorProyectiles controladorProyectiles;
     private ControladorAudio controladorAudio;
     private PopUpMejoras popUpMejoras;
@@ -112,7 +112,7 @@ public class VentanaJuego implements Screen {
         float playerStartX = worldWidth / 2f;
         float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
         jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador,
-            movimientoJugador, ataquePiedra,ataquePedo, controladorProyectiles);
+            movimientoJugador, ataquePiedra, ataqueTazo, controladorProyectiles);
     }
 
     private void inicializarSistemasYControladores() {

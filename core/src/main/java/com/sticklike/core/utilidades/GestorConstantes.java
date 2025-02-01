@@ -160,9 +160,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float PROJECTILE_CALCETIN_SPEED = 185f;
     public static final int VEL_ROTACION_CALCETIN = 1080;
     public static final float SPEED_MULT = 1.8f;
-    public static final float PIEDRA_SIZE = 8f;
-    public static final float CALCETIN_W_SIZE = 20f;
-    public static final float CALCETIN_H_SIZE = 24f;
+    public static final float PIEDRA_SIZE = 6f;
+    public static final float CALCETIN_W_SIZE = 18f;
+    public static final float CALCETIN_H_SIZE = 22f;
     public static final float PROJECTILE_BASE_DAMAGE = 8f; //todo --> gestionar en un futuro
     public static final float TEMPORIZADOR_DISPARO = 0f;
     public static final float MAX_DISTANCIA = 350f;
@@ -170,13 +170,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
     public static final float MULT_DANYO = 1f;
-    public static final float NUBE_PEDO_SIZE = 24f;
+    public static final float TAZO_SIZE = 16f;
     public static final float DURACION_NUBE_PEDO = 8f;
-    public static final float RADIO_NUBE_PEDO = 50f;
-    public static final float INTERVALO_NUBE = 0.3f;
-    public static final float DANYO_NUBE_PEDO = 10f;
-    public static final int MAX_NUBES_PEDO = 4;
-    public static final float INTERVALO_DANYO_NUBE = 0.5f;
+    public static final float RADIO_TAZOS = 52.5f;
+    public static final float INTERVALO_TAZOS = 0.1f;
+    public static final float DANYO_TAZOS = 2.5f;
+    public static final int NUM_TAZOS = 3;
+    public static final float INTERVALO_DANYO_TAZOS = 0.5f;
 
     // Configuración TextoFlotante
     public static final float DESPLAZAMIENTOY_TEXTO = 30f;
@@ -192,8 +192,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_VIDA_HEIGHT= 12f;
     public static final float OBJETO1_XP_WIDTH = 10f;
     public static final float OBJETO1_XP_HEIGHT = 10.5f;
-    public static final float OBJETO_ORO_WIDTH = 10.5f;
-    public static final float OBJETO_ORO_HEIGHT = 10.5f;
+    public static final float OBJETO_ORO_WIDTH = 10f;
+    public static final float OBJETO_ORO_HEIGHT = 10f;
 
     // Controlador Evento
     public static final int LVL_EVENTO1 = 3;
@@ -225,6 +225,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_PIEDRA = 0.7f;
     public static final float AUDIO_RECOLECCION_CACA = 1f;
     public static final float AUDIO_RECOLECCION_VIDA = 0.7f;
+    public static final float AUDIO_RECOLECCION_ORO = 0.6f;
     public static final float AUDIO_DANYO = 0.9f;
     public static final float AUDIO_MUERTE = 0.7f;
     public static final float AUDIO_UPGRADE = 0.5f;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePedo;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -14,30 +14,30 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProyectilPedo implements Proyectiles {
+public class ProyectilTazo implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
     private boolean proyectilActivo;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float temporizadorDano = 0;
     private Jugador jugador;
-    private AtaquePedo ataquePedo;
+    private AtaqueTazo ataqueTazo;
     private float radioColision;
     private float offsetAngle;
     private float radio;
     private float rotacionSprite = 0f;
 
-    public ProyectilPedo(Jugador jugador, AtaquePedo ataquePedo, float offsetAngle, float radio) {
+    public ProyectilTazo(Jugador jugador, AtaqueTazo ataqueTazo, float offsetAngle, float radio) {
         if (textura == null) {
-            textura = armaPedo;
+            textura = armaTazos;
         }
         this.jugador = jugador;
         this.sprite = new Sprite(textura);
-        this.sprite.setSize(NUBE_PEDO_SIZE, NUBE_PEDO_SIZE);
+        this.sprite.setSize(TAZO_SIZE, TAZO_SIZE);
         this.sprite.setOriginCenter();
         this.proyectilActivo = true;
-        this.radioColision = RADIO_NUBE_PEDO;
-        this.ataquePedo = ataquePedo;
+        this.radioColision = RADIO_TAZOS;
+        this.ataqueTazo = ataqueTazo;
         this.offsetAngle = offsetAngle;
         this.radio = radio;
     }
@@ -46,10 +46,10 @@ public class ProyectilPedo implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
 
-        rotacionSprite += 360 * delta;
+        rotacionSprite += 1000 * delta;
 
         // Calcula el ángulo actual sumando el ángulo global con el offset fijo de cada nube
-        float currentAngle = ataquePedo.getGlobalAngle() + offsetAngle;
+        float currentAngle = ataqueTazo.getGlobalAngle() + offsetAngle;
         float radianes = (float) Math.toRadians(currentAngle);
         float offsetX = (float) (Math.cos(radianes) * radio);
         float offsetY = (float) (Math.sin(radianes) * radio);
@@ -63,7 +63,7 @@ public class ProyectilPedo implements Proyectiles {
 
 
         temporizadorDano += delta;
-        if (temporizadorDano >= INTERVALO_NUBE) {
+        if (temporizadorDano >= INTERVALO_TAZOS) {
             enemigosImpactados.clear();
             temporizadorDano = 0;
         }
@@ -101,10 +101,10 @@ public class ProyectilPedo implements Proyectiles {
     public void desactivarProyectil() { proyectilActivo = false; }
 
     @Override
-    public float getBaseDamage() { return DANYO_NUBE_PEDO; }
+    public float getBaseDamage() { return DANYO_TAZOS; }
 
     @Override
-    public float getKnockbackForce() { return 40f; }
+    public float getKnockbackForce() { return 100f; }
 
     @Override
     public boolean isPersistente() { return true; }
@@ -115,7 +115,7 @@ public class ProyectilPedo implements Proyectiles {
     @Override
     public boolean yaImpacto(Enemigo enemigo) { return enemigosImpactados.contains(enemigo); }
 
-    public AtaquePedo getAtaquePedo() {
-        return ataquePedo;
+    public AtaqueTazo getAtaquePedo() {
+        return ataqueTazo;
     }
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePedo;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
@@ -23,7 +23,7 @@ public class Jugador {
     private InputsJugador inputController;
     private AtaquePiedra pedrada;
     private AtaqueCalcetin calcetinazo;
-    private AtaquePedo ataquePedo;
+    private AtaqueTazo ataqueTazo;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
@@ -44,7 +44,7 @@ public class Jugador {
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaquePedo ataquePedo,
+                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaqueTazo ataqueTazo,
                    ControladorProyectiles controladorProyectiles) {
         this.danyoAtaqueJugador = DANYO;
         this.velocidadJugador = VEL_MOV_JUGADOR;
@@ -70,7 +70,7 @@ public class Jugador {
         this.movimientoJugador = movimientoJugador;
         this.pedrada = ataquePiedra;
         this.calcetinazo = null;
-        this.ataquePedo = null;
+        this.ataqueTazo = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
     }
@@ -86,8 +86,8 @@ public class Jugador {
             if (calcetinazo != null) {
                 calcetinazo.manejarDisparo(delta, this, controladorAudio);
             }
-            if (ataquePedo != null) {
-                ataquePedo.actualizar(delta, this);
+            if (ataqueTazo != null) {
+                ataqueTazo.actualizar(delta, this);
             }
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
@@ -216,8 +216,8 @@ public class Jugador {
     public void setCalcetinazo(AtaqueCalcetin calcetinazo) {
         this.calcetinazo = calcetinazo;
     }
-    public void setPedo(AtaquePedo pedo) {
-        this.ataquePedo = pedo;
+    public void setPedo(AtaqueTazo pedo) {
+        this.ataqueTazo = pedo;
     }
 
     public void setDireccionActual(Direction direccionActual) {
@@ -264,7 +264,7 @@ public class Jugador {
         this.oroGanado = oroGanado;
     }
 
-    public AtaquePedo getAtaquePedo() {
-        return ataquePedo;
+    public AtaqueTazo getAtaquePedo() {
+        return ataqueTazo;
     }
 }
