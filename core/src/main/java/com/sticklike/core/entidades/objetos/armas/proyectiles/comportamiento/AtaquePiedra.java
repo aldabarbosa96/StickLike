@@ -5,65 +5,87 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
-
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-import java.lang.Math;
-
-/**
- * AtaquePiedra es la clase que maneja la lógica de ataque automático del jugador:
- * - Encontrar el enemigo más cercano en el rango
- * - Calcular la dirección de disparo
- * - Crear los proyectiles y asignarlos al {@link ControladorProyectiles}
- */
 public class AtaquePiedra {
 
+    // Temporizador para disparar ataques completos
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
+
+    // Variables para disparar las "balas" de forma secuencial
+    private int proyectilesPendientes = 0;
+    private float temporizadorEntreBalas = 0f;
+    private final float intervaloEntreBalas = 0.1f; // Retardo entre cada bala en segundos
+
+    // Almacenamos el objetivo (enemigo) encontrado al iniciar el ataque
+    private Enemigo target;
 
     public AtaquePiedra(float intervaloDisparoInicial) {
         this.intervaloDisparo = intervaloDisparoInicial;
     }
 
-    public void procesarAtaque(Jugador jug, ControladorAudio controladorAudio) {
-        // Si no hay enemigos controlados, no hacemos nada
+    /**
+     * Busca al enemigo más cercano y prepara el ataque.
+     * Se calcula el objetivo y se almacena en la variable 'target' para que cada proyectil
+     * se dispare utilizando la posición actual del jugador y la posición actual del objetivo.
+     */
+    public void iniciarAtaque(Jugador jug, ControladorAudio controladorAudio) {
         if (jug.getControladorEnemigos() == null) return;
 
-        // Buscamos un objetivo en rango
-        Enemigo target = encontrarEnemigoMasCercano(jug);
+        target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
+
+        // Reproducir sonido de disparo
         controladorAudio.reproducirEfecto("lanzarPiedra", AUDIO_PIEDRA);
 
-        // Obtenemos coordenadas del centro del jugador
-        float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
-        float startY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
+        // Establecer el número de proyectiles a disparar (todos se dispararán hacia el objetivo)
+        proyectilesPendientes = jug.getProyectilesPorDisparo();
+        temporizadorEntreBalas = 0f;
+    }
 
-        // Coordenadas del centro del enemigo
-        float targetX = target.getX() + target.getSprite().getWidth() / 2f;
-        float targetY = target.getY() + target.getSprite().getHeight() / 2f;
+    /**
+     * Este método se llama cada frame para gestionar el disparo.
+     * Cuando se cumple el intervalo de disparo y no hay ráfaga en curso se inicia el ataque;
+     * luego, se disparan los proyectiles uno a uno, recalculando para cada uno la dirección
+     * en función de las posiciones actuales del jugador y del enemigo.
+     */
+    public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
+        temporizadorDisparo += delta;
 
-        // Calculamos dirección normalizada (dx, dy)
-        float[] dir = calcularDireccionNormalizada(startX, startY, targetX, targetY);
+        // Si se cumple el intervalo de disparo y no hay una ráfaga en curso, iniciamos el ataque
+        if (temporizadorDisparo >= intervaloDisparo && proyectilesPendientes == 0) {
+            iniciarAtaque(jugador, controladorAudio);
+            temporizadorDisparo = 0; // Reiniciar el temporizador de disparo completo
+        }
 
+        // Si ya se ha iniciado un ataque (hay proyectiles pendientes)
+        if (proyectilesPendientes > 0 && target != null && !target.estaMuerto()) {
+            temporizadorEntreBalas += delta;
+            if (temporizadorEntreBalas >= intervaloEntreBalas) {
+                // Calcular la posición actual del centro del jugador
+                float spawnX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
+                float spawnY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
 
-        // Disparamos tantos proyectiles como indique "proyectilesPorDisparo"
-        for (int i = 0; i < jug.getProyectilesPorDisparo(); i++) {
-            // separamos un poco los proyectiles por ángulo
-            float angleOffset = (i - (jug.getProyectilesPorDisparo() - 1) / 2f) * 5f;
-            float adjustedX = (float) (dir[0] * Math.cos(Math.toRadians(angleOffset))
-                - dir[1] * Math.sin(Math.toRadians(angleOffset)));
-            float adjustedY = (float) (dir[0] * Math.sin(Math.toRadians(angleOffset))
-                + dir[1] * Math.cos(Math.toRadians(angleOffset)));
+                // Calcular la dirección actual usando el centro del jugador y el centro actual del target
+                float targetX = target.getX() + target.getSprite().getWidth() / 2f;
+                float targetY = target.getY() + target.getSprite().getHeight() / 2f;
+                float[] dir = calcularDireccionNormalizada(spawnX, spawnY, targetX, targetY);
 
-            float velocidadAleatoria = 0.8f + (float) Math.random() * (1.2f - 0.8f);
+                // Generar el proyectil con la dirección actual
+                float velocidadAleatoria = 0.8f + (float) Math.random() * (1.2f - 0.8f);
+                ProyectilPiedra piedra = new ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria);
+                jugador.getControladorProyectiles().anyadirNuevoProyectil(piedra);
 
-            ProyectilPiedra piedra = new ProyectilPiedra(startX, startY, adjustedX, adjustedY, velocidadAleatoria);
-            // Añadimos el nuevo proyectil al ControladorProyectiles
-            jug.getControladorProyectiles().anyadirNuevoProyectil(piedra);
-
+                proyectilesPendientes--;
+                temporizadorEntreBalas = 0;
+            }
         }
     }
 
+    /**
+     * Busca al enemigo más cercano dentro del rango de ataque del jugador.
+     */
     private Enemigo encontrarEnemigoMasCercano(Jugador jug) {
         float closestDist = Float.MAX_VALUE;
         Enemigo closest = null;
@@ -83,21 +105,15 @@ public class AtaquePiedra {
         return closest;
     }
 
+    /**
+     * Calcula y devuelve la dirección normalizada (vector unitario) entre dos puntos.
+     */
     private float[] calcularDireccionNormalizada(float sx, float sy, float tx, float ty) {
         float dx = tx - sx;
         float dy = ty - sy;
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
         if (dist == 0) dist = 1f;
         return new float[]{dx / dist, dy / dist};
-    }
-
-    public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
-        temporizadorDisparo += delta;
-
-        if (temporizadorDisparo >= intervaloDisparo) {
-            temporizadorDisparo = 0;
-            procesarAtaque(jugador, controladorAudio);
-        }
     }
 
     public void setIntervaloDisparo(float nuevoIntervaloNuevo) {

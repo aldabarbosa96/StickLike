@@ -178,7 +178,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_ROTACION = 360f;
     public static final float INTERVALO_TAZOS = 0.1f;
     public static final float DANYO_TAZOS = 1.5f;
-    public static final int NUM_TAZOS = 3;
+    public static final int NUM_TAZOS = 1;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
     public static final float DANYO_PEDO = 0.5f;
 
