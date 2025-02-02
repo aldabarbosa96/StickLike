@@ -178,6 +178,9 @@ public class Jugador {
     public int getProyectilesPorDisparo() {
         return proyectilesPorDisparo;
     }
+    public void aumentarRegVida(float percentage){
+        this.regVidaJugador += (percentage * maxVidaJugador) / 100;
+    }
 
     public float getVelocidadJugador() {
         return velocidadJugador;

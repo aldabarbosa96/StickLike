@@ -31,7 +31,7 @@ public class NubePedo implements Proyectiles {
 
     // Duraciones de las fases de vibración
     private static final float VIBRATE1_DURATION = 0.3f; // Primera vibración
-    private static final float PAUSE_DURATION    = 0.4f; // Pausa entre vibraciones
+    private static final float PAUSE_DURATION    = 0.25f; // Pausa entre vibraciones
     private static final float VIBRATE2_DURATION = 0.3f; // Segunda vibración
 
     // Duración de la fase de COOLDOWN (pausa entre ciclos)
@@ -41,14 +41,14 @@ public class NubePedo implements Proyectiles {
     private static final float MAX_SCALE    = 1.35f;  // Escala máxima (tamaño completo)
     private static final float MIN_ALPHA    = 0.1f;  // Opacidad mínima
     private static final float MAX_ALPHA    = 0.75f; // Opacidad máxima
-    private static final float VIBRATE_RANGE = 5f;    // Rango de oscilación (en píxeles) durante la vibración
+    private static final float VIBRATE_RANGE = 8f;    // Rango de oscilación (en píxeles) durante la vibración
     private static final float KNOCKBACK_FORCE = 100f; // Fuerza de knockback a aplicar
-    private static final float ROTATION_SPEED  = 1500;// Velocidad de rotación (grados por segundo)
+    private static final float ROTATION_SPEED  = 2500f;// Velocidad de rotación (grados por segundo)
 
     public NubePedo(Jugador jugador) {
         this.texture = armaNubePedo;
         this.sprite = new Sprite(texture);
-        sprite.setSize(52.5f, 52.5f);
+        sprite.setSize(50f, 50f);
         sprite.setOriginCenter();
         this.jugador = jugador;
         this.proyectilActivo = true;
@@ -93,13 +93,13 @@ public class NubePedo implements Proyectiles {
 
             case VIBRATE1:
                 // Primera vibración: se aplica el efecto (audio, vibración y knockback)
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.125f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.2f);
                 enemigosImpactados.clear();
 
                 float offsetX1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 float offsetY1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 sprite.setScale(MAX_SCALE);
-                sprite.setColor(0.6f, 0.5f, 0.2f, MAX_ALPHA);
+                sprite.setColor(0.7f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX1, jugadorCenterY + offsetY1);
 
                 if (phaseTimer >= VIBRATE1_DURATION) {
@@ -122,13 +122,13 @@ public class NubePedo implements Proyectiles {
 
             case VIBRATE2:
                 // Segunda vibración, similar a la primera
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.15f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.2f);
                 enemigosImpactados.clear();
 
                 float offsetX2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 float offsetY2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 sprite.setScale(MAX_SCALE);
-                sprite.setColor(0.6f, 0.5f, 0.2f, MAX_ALPHA);
+                sprite.setColor(0.7f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX2, jugadorCenterY + offsetY2);
 
                 if (phaseTimer >= VIBRATE2_DURATION) {
