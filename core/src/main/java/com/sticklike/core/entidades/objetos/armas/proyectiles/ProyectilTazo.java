@@ -8,6 +8,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -56,7 +57,7 @@ public class ProyectilTazo implements Proyectiles {
 
         // Posición relativa al centro del jugador
         float jugadorCentroX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
-        float jugadorCentroY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
+        float jugadorCentroY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2 - 5f;
 
         sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2, jugadorCentroY + offsetY - sprite.getHeight() / 2);
         sprite.setRotation(rotacionSprite);
@@ -89,31 +90,49 @@ public class ProyectilTazo implements Proyectiles {
     }
 
     @Override
-    public float getX() { return sprite.getX(); }
+    public float getX() {
+        return sprite.getX();
+    }
 
     @Override
-    public float getY() { return sprite.getY(); }
+    public float getY() {
+        return sprite.getY();
+    }
 
     @Override
-    public boolean isProyectilActivo() { return proyectilActivo; }
+    public boolean isProyectilActivo() {
+        return proyectilActivo;
+    }
 
     @Override
-    public void desactivarProyectil() { proyectilActivo = false; }
+    public void desactivarProyectil() {
+        proyectilActivo = false;
+    }
 
     @Override
-    public float getBaseDamage() { return DANYO_TAZOS; }
+    public float getBaseDamage() {
+        return (float) (DANYO_TAZOS + Math.random() * 3.5f);
+    }
 
     @Override
-    public float getKnockbackForce() { return 100f; }
+    public float getKnockbackForce() {
+        return EMPUJE_BASE_CALCETIN;
+    }
 
     @Override
-    public boolean isPersistente() { return true; }
+    public boolean isPersistente() {
+        return true;
+    }
 
     @Override
-    public void registrarImpacto(Enemigo enemigo) { enemigosImpactados.add(enemigo); }
+    public void registrarImpacto(Enemigo enemigo) {
+        enemigosImpactados.add(enemigo);
+    }
 
     @Override
-    public boolean yaImpacto(Enemigo enemigo) { return enemigosImpactados.contains(enemigo); }
+    public boolean yaImpacto(Enemigo enemigo) {
+        return enemigosImpactados.contains(enemigo);
+    }
 
     public AtaqueTazo getAtaquePedo() {
         return ataqueTazo;

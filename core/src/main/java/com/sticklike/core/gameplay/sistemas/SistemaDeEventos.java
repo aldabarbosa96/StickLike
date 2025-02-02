@@ -38,6 +38,7 @@ public class SistemaDeEventos {
 
     private void eventoAumentaEnemigos1() {
         controladorEnemigos.setIntervaloDeAparicion(EVENTO1_SPAWN_RATE);
+        controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS2);
         incrementarVelocidadCulo(EVENTO1_SPEED_MULT);
         System.out.println("¡Se ha reducido el intervalo de aparición de enemigos!");
         System.out.println("Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());

@@ -51,12 +51,12 @@ public class RenderJugador {
             jugador.getSprite().getWidth(), jugador.getSprite().getHeight());
 
         if (enParpadeo) {
-            batch.setColor(1, 1, 1, 1); // Restauramos el color original
+            batch.setColor(1, 1, 1, 1);
         }
     }
     public void renderizarBarraDeSalud(ShapeRenderer shapeRenderer, Jugador jugador) {
         float healthPercentage = jugador.obtenerPorcetajeVida();
-        float barWidth = 20f;
+        float barWidth = 17f;
         float barHeight = 2.5f;
 
         // Calcula la posición de la barra en función de la posición del jugador

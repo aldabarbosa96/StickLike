@@ -8,16 +8,16 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 public class AtaqueTazo {
     private float temporizador;
     private int nubesActivas;
-    private float radio = 35f;
+    private float radio = RADIO_TAZOS_JUGADOR;
     private float globalAngle = 0f;
-    private final float velocidadRotacion = 360f;
+    private final float velocidadRotacion = VEL_ROTACION;
 
     public void actualizar(float delta, Jugador jugador) {
         temporizador += delta;
         // Actualizamos el ángulo global
         globalAngle += velocidadRotacion * delta;
 
-        // Si se cumple el intervalo para generar daño y aun no se han creado todas las nubes generamos nube
+        // Si se cumple el intervalo para generar daño y aún no se han creado todas las nubes generamos nube
         if (temporizador >= INTERVALO_DANYO_TAZOS && nubesActivas < NUM_TAZOS) {
             generarTazo(jugador);
             temporizador = 0;

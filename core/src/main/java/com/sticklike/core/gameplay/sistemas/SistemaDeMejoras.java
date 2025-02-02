@@ -2,6 +2,7 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
@@ -38,7 +39,8 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta el daño del Ataque Básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5));
         todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Desbloquea ataque calcetines lefados", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
-        todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Desbloquea ataque tazos giratorios", () -> jugador.setPedo(new AtaqueTazo()), 1));
+        todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Desbloquea ataque tazos giratorios", () -> jugador.setTazo(new AtaqueTazo()), 1));
+        todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Desbloquea ataque nube de pedo", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
             jugador.setVidaMax(jugador.getMaxVidaJugador()+15);jugador.setVidaJugador(jugador.getVidaJugador()+15);},10));
         // todo --> implementar nuevas mejoras de habilidades y stats restantes

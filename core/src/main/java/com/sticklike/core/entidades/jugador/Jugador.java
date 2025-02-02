@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
@@ -24,6 +25,7 @@ public class Jugador {
     private AtaquePiedra pedrada;
     private AtaqueCalcetin calcetinazo;
     private AtaqueTazo ataqueTazo;
+    private AtaqueNubePedo ataqueNubePedo;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
@@ -71,6 +73,7 @@ public class Jugador {
         this.pedrada = ataquePiedra;
         this.calcetinazo = null;
         this.ataqueTazo = null;
+        this.ataqueNubePedo = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
     }
@@ -88,6 +91,9 @@ public class Jugador {
             }
             if (ataqueTazo != null) {
                 ataqueTazo.actualizar(delta, this);
+            }
+            if (ataqueNubePedo != null) {
+                ataqueNubePedo.procesarAtaque(delta);
             }
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
         } else {
@@ -216,8 +222,9 @@ public class Jugador {
     public void setCalcetinazo(AtaqueCalcetin calcetinazo) {
         this.calcetinazo = calcetinazo;
     }
-    public void setPedo(AtaqueTazo pedo) {
-        this.ataqueTazo = pedo;
+
+    public void setTazo(AtaqueTazo tazo) {
+        this.ataqueTazo = tazo;
     }
 
     public void setDireccionActual(Direction direccionActual) {
@@ -264,7 +271,7 @@ public class Jugador {
         this.oroGanado = oroGanado;
     }
 
-    public AtaqueTazo getAtaquePedo() {
-        return ataqueTazo;
+    public void setAtaqueNubePedo(AtaqueNubePedo ataqueNubePedo) {
+        this.ataqueNubePedo = ataqueNubePedo;
     }
 }

@@ -86,7 +86,6 @@ public class ControladorProyectiles {
 
                     ultimaYTexto.put(enemigo, posicionTextoY);
 
-                    // Registrar impacto (especialmente importante para nubes)
                     proyectil.registrarImpacto(enemigo);
 
                     // Desactivar solo proyectiles no persistentes y no nubes

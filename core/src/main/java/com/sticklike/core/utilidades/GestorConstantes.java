@@ -105,8 +105,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float RESISTENCIA = 0.06f;
     public static final float CRITICO = 0.02f;
-    public static final float WIDTH_JUGADOR = 12f;
-    public static final float HEIGHT_JUGADOR = 35f;
+    public static final float WIDTH_JUGADOR = 11f;
+    public static final float HEIGHT_JUGADOR = 33.5f;
     public static final float PARPADEO_JUGADOR = 0.2f;
 
     // Configuración de los enemigos
@@ -114,7 +114,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_CULO = 2f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
     public static final float VEL_BASE_CULO = 50f;
-    public static final float VIDA_ENEMIGOREGLA = 90f;
+    public static final float VIDA_ENEMIGOREGLA = 75f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
     public static final float VEL_BASE_POLLA = 65f;
@@ -135,7 +135,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AJUSTE_OFFSET_Y = 50f;
     public static final float TIEMPO_CARGA_REGLA = 0.75f;
     public static final float CORRECCION_SPAWN = 50f;
-    public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO","CULO","CULO","CULO","CULO"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"POLLA", "CULO","CULO","CULO","CULO","CULO","REGLA"};
 
     // Sombras enemigos
     public static final float SHADOW_WIDTH_CULO = 0.9f;
@@ -173,15 +174,19 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TAZO_SIZE = 16f;
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 52.5f;
+    public static final float RADIO_TAZOS_JUGADOR = 45f;
+    public static final float VEL_ROTACION = 360f;
     public static final float INTERVALO_TAZOS = 0.1f;
-    public static final float DANYO_TAZOS = 2.5f;
+    public static final float DANYO_TAZOS = 1.5f;
     public static final int NUM_TAZOS = 3;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
+    public static final float DANYO_PEDO = 0.5f;
 
     // Configuración TextoFlotante
-    public static final float DESPLAZAMIENTOY_TEXTO = 30f;
-    public static final float DESPLAZAMIENTOY_TEXTO2 = 12f;
-    public static final float DURACION_TEXTO = 0.4f;
+    public static final float DESPLAZAMIENTOY_TEXTO = 5f;
+    public static final float DESPLAZAMIENTOX_TEXTO = 5f;
+    public static final float DESPLAZAMIENTOY_TEXTO2 = 5f;
+    public static final float DURACION_TEXTO = 0.3f;
     public static final float TEXTO_WIDTH = 0.75f;
     public static final float TEXTO_HEIGHT = 1.3f;
 
@@ -200,13 +205,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 10;
-    public static final float EVENTO1_SPAWN_RATE = 0.4f;
+    public static final float EVENTO1_SPAWN_RATE = 0.3f;
     public static final float EVENTO1_SPEED_MULT = 1.15f;
-    public static final float EVENTO2_SPAWN_RATE = 0.2f;
+    public static final float EVENTO2_SPAWN_RATE = 0.1f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA"};
-    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.125f;
+    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.1f;
 
     // Configuración borrones
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;
