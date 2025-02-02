@@ -1,7 +1,7 @@
 package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -13,9 +13,9 @@ public class ObjetoOro extends ObjetoBase {
     }
 
     @Override
-    public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerOro", AUDIO_RECOLECCION_ORO);
-        super.recolectar(controladorAudio);
+    public void recolectar(GestorDeAudio gestorDeAudio) {
+        gestorDeAudio.reproducirEfecto("recogerOro", AUDIO_RECOLECCION_ORO);
+        super.recolectar(gestorDeAudio);
     }
 
     @Override

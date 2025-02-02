@@ -44,6 +44,13 @@ public class AnimacionesEnemigos {
             }
         }
     }
+    public void aplicarParpadeoRojo(Sprite sprite) {
+        if (enParpadeo) {
+            // En este ejemplo se usa un color rojo intenso con el alpha actual
+            sprite.setColor(0.9f, 0f, 0f, alphaActual);
+        }
+    }
+
 
     public boolean estaEnParpadeo() {
         return enParpadeo;

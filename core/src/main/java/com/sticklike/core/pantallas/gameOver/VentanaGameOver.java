@@ -30,7 +30,7 @@ public class VentanaGameOver implements Screen {
 
     @Override
     public void show() {
-        game.controladorAudio.detenerMusica();
+        game.gestorDeAudio.detenerMusica();
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
         layout = new GlyphLayout();
@@ -66,7 +66,7 @@ public class VentanaGameOver implements Screen {
         game.ventanaJuego.dispose();
         game.ventanaJuego = new VentanaJuego(game); // creamos una nueva instancia de GameScreen
         game.setScreen(game.ventanaJuego);
-        game.controladorAudio.reproducirMusica();
+        game.gestorDeAudio.reproducirMusica();
     }
 
     private void cerrarJuego() {

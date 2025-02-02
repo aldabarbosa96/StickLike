@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -16,8 +16,8 @@ public class ObjetoVida extends ObjetoBase {
 
 
     @Override
-    public void recolectar(ControladorAudio controladorAudio) {
-        controladorAudio.reproducirEfecto("recogerVida", AUDIO_RECOLECCION_VIDA);
+    public void recolectar(GestorDeAudio gestorDeAudio) {
+        gestorDeAudio.reproducirEfecto("recogerVida", AUDIO_RECOLECCION_VIDA);
         recolectado = true;
         sprite = null;
     }

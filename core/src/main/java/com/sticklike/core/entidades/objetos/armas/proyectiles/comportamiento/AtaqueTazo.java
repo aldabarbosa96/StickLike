@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
+import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
@@ -12,19 +13,19 @@ public class AtaqueTazo {
     private float globalAngle = 0f;
     private final float velocidadRotacion = VEL_ROTACION;
 
-    public void actualizar(float delta, Jugador jugador) {
+    public void actualizar(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         temporizador += delta;
         // Actualizamos el ángulo global
         globalAngle += velocidadRotacion * delta;
 
         // Si se cumple el intervalo para generar daño y aún no se han creado todas las nubes generamos nube
         if (temporizador >= INTERVALO_DANYO_TAZOS && nubesActivas < NUM_TAZOS) {
-            generarTazo(jugador);
+            generarTazo(jugador, gestorDeAudio);
             temporizador = 0;
         }
     }
 
-    private void generarTazo(Jugador jugador) {
+    private void generarTazo(Jugador jugador, GestorDeAudio gestorDeAudio) {
         if (nubesActivas >= NUM_TAZOS) return;
 
         ControladorProyectiles cp = jugador.getControladorProyectiles();
@@ -34,7 +35,7 @@ public class AtaqueTazo {
         // El offset para cada nube es el número de nubes activas multiplicado por la separación
         float offsetAngle = separation * nubesActivas;
 
-        cp.anyadirNuevoProyectil(new ProyectilTazo(jugador, this, offsetAngle, radio));
+        cp.anyadirNuevoProyectil(new ProyectilTazo(jugador, this, offsetAngle, radio, gestorDeAudio));
         nubesActivas++;
     }
 

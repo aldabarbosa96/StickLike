@@ -1,6 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -15,7 +15,7 @@ public class AtaqueCalcetin {
     public AtaqueCalcetin(float intervaloDisparoInicial) {
         this.intervaloDisparo = intervaloDisparoInicial;
     }
-    public void procesarAtaque(Jugador jug, ControladorAudio controladorAudio) {
+    public void procesarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         // Obtenemos coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
         float startY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
@@ -38,15 +38,15 @@ public class AtaqueCalcetin {
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
         }
 
-        controladorAudio.reproducirEfecto("lanzarCalcetin", AUDIO_CALCETIN);
+        gestorDeAudio.reproducirEfecto("lanzarCalcetin", AUDIO_CALCETIN);
     }
 
-    public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
+    public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         temporizadorDisparo += delta;
 
         if (temporizadorDisparo >= intervaloDisparo) {
             temporizadorDisparo = 0;
-            procesarAtaque(jugador, controladorAudio);
+            procesarAtaque(jugador, gestorDeAudio);
         }
     }
 }

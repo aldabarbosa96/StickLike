@@ -1,6 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
@@ -28,13 +28,13 @@ public class AtaquePiedra {
      * Busca al enemigo más cercano y prepara el ataque.
      * Se almacena el objetivo para que cada disparo de la ráfaga se dirija hacia él.
      */
-    public void iniciarAtaque(Jugador jug, ControladorAudio controladorAudio) {
+    public void iniciarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         if (jug.getControladorEnemigos() == null) return;
 
         target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
 
-        controladorAudio.reproducirEfecto("lanzarPiedra", AUDIO_PIEDRA);
+        gestorDeAudio.reproducirEfecto("lanzarPiedra", AUDIO_PIEDRA);
 
         // Establece la cantidad de proyectiles a disparar (usando el valor actual del jugador)
         proyectilesPendientes = jug.getProyectilesPorDisparo();
@@ -46,12 +46,12 @@ public class AtaquePiedra {
      * Si se cumple el intervalo y no hay una ráfaga en curso, se inicia el ataque.
      * Luego, se dispara cada proyectil uno a uno recalculando la dirección con las posiciones actuales.
      */
-    public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
+    public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         temporizadorDisparo += delta;
 
         // Si no hay una ráfaga en curso y se cumple el intervalo, iniciar ataque
         if (temporizadorDisparo >= intervaloDisparo && proyectilesPendientes == 0) {
-            iniciarAtaque(jugador, controladorAudio);
+            iniciarAtaque(jugador, gestorDeAudio);
             temporizadorDisparo = 0; // Reinicia el temporizador de disparo completo
         }
 

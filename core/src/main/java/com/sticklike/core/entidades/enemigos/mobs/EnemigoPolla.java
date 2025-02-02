@@ -74,7 +74,7 @@ public class EnemigoPolla implements Enemigo {
             Color originalColor = sprite.getColor().cpy();
 
             if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.aplicarParpadeo1(sprite);
+                animacionesEnemigos.aplicarParpadeoRojo(sprite);
             } else {
 
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());
@@ -91,7 +91,7 @@ public class EnemigoPolla implements Enemigo {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
             if (!animacionesEnemigos.estaEnFade()) {
-                animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+                animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO - 0.05f);
                 animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }

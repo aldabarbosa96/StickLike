@@ -33,11 +33,11 @@ public class SistemaDeMejoras {
     }
 
     private void inicializarMejoras() {
-        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta la velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5));
-        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta el rango de ataque un 20%", () -> jugador.aumentarRangoAtaque(0.20f), 5));
-        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta la velocidad de ataque un 14%", () -> jugador.reducirIntervaloDisparo(0.125f), 5));
-        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta el daño del Ataque Básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5));
-        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
+        //todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta la velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5));
+        //todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta el rango de ataque un 20%", () -> jugador.aumentarRangoAtaque(0.20f), 5));
+        //todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta la velocidad de ataque un 14%", () -> jugador.reducirIntervaloDisparo(0.125f), 5));
+        //todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta el daño del Ataque Básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5));
+        //todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta el número de Proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Desbloquea ataque calcetines lefados", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Desbloquea ataque tazos giratorios", () -> jugador.setTazo(new AtaqueTazo()), 1));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Desbloquea ataque nube de pedo", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1));

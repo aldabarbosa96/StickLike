@@ -8,9 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.audio.ControladorAudio;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -64,7 +62,7 @@ public class VentanaJuego implements Screen {
     private MovimientoJugador movimientoJugador;
     private AtaquePiedra ataquePiedra;
     private ControladorProyectiles controladorProyectiles;
-    private ControladorAudio controladorAudio;
+    private GestorDeAudio gestorDeAudio;
     private PopUpMejoras popUpMejoras;
     private MenuPause menuPause;
 
@@ -100,7 +98,7 @@ public class VentanaJuego implements Screen {
     private void inicializarJugador() {
         InputsJugador inputJugador = new InputsJugador();
         colisionesJugador = new ColisionesJugador();
-        controladorAudio = game.controladorAudio;
+        gestorDeAudio = game.gestorDeAudio;
         movimientoJugador = new MovimientoJugador();
         ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
         controladorProyectiles = new ControladorProyectiles();
@@ -151,7 +149,7 @@ public class VentanaJuego implements Screen {
         }
 
         if (!pausado && !menuPause.isPaused()) {
-            actualizarLogica(delta, controladorAudio);
+            actualizarLogica(delta, gestorDeAudio);
             reproducirMusica();
         } else {
             pausarMusica();
@@ -165,15 +163,15 @@ public class VentanaJuego implements Screen {
     }
 
     private void reproducirMusica() {
-        controladorAudio.reproducirMusica();
+        gestorDeAudio.reproducirMusica();
     }
 
     private void pausarMusica() {
-        controladorAudio.pausarMusica();
+        gestorDeAudio.pausarMusica();
     }
 
-    private void actualizarLogica(float delta, ControladorAudio controladorAudio) {
-        jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, controladorAudio);
+    private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
+        jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, gestorDeAudio);
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
         actualizarRecogidaXP(delta);
@@ -186,10 +184,10 @@ public class VentanaJuego implements Screen {
     private void actualizarRecogidaXP(float delta) {
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
-            xp.actualizarObjetoXP(delta, jugador, controladorAudio);
+            xp.actualizarObjetoXP(delta, jugador, gestorDeAudio);
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
-                xp.recolectar(controladorAudio);
+                xp.recolectar(gestorDeAudio);
                 objetosXP.removeIndex(i);
 
                 if (xp instanceof ObjetoXp objetoXp) {
@@ -298,10 +296,10 @@ public class VentanaJuego implements Screen {
         this.pausado = pausa;
 
         if (pausa) {
-            controladorAudio.pausarMusica();
+            gestorDeAudio.pausarMusica();
             renderHUDComponents.pausarTemporizador();
         } else {
-            controladorAudio.reproducirMusica();
+            gestorDeAudio.reproducirMusica();
             renderHUDComponents.reanudarTemporizador();
         }
     }
@@ -315,10 +313,10 @@ public class VentanaJuego implements Screen {
     }
 
     public void reproducirSonidoPausa() {
-        controladorAudio.reproducirEfecto("pausa", AUDIO_PAUSA);
+        gestorDeAudio.reproducirEfecto("pausa", AUDIO_PAUSA);
     }
 
     public void reproducirSonidoUpgrade() {
-        controladorAudio.reproducirEfecto("upgrade", AUDIO_UPGRADE);
+        gestorDeAudio.reproducirEfecto("upgrade", AUDIO_UPGRADE);
     }
 }

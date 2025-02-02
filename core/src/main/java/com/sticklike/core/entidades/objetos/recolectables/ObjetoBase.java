@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.objetos.recolectables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -25,7 +25,7 @@ public abstract class ObjetoBase implements ObjetosXP {
     }
 
     @Override
-    public void actualizarObjetoXP(float delta, Jugador jugador, ControladorAudio controladorAudio) {
+    public void actualizarObjetoXP(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         if (recolectado) {
             return;
         }
@@ -52,7 +52,7 @@ public abstract class ObjetoBase implements ObjetosXP {
 
             // Si colisiona con el jugador, se recolecta
             if (distancia < 10) {
-                recolectar(controladorAudio);
+                recolectar(gestorDeAudio);
             }
         }
     }
@@ -65,8 +65,8 @@ public abstract class ObjetoBase implements ObjetosXP {
     }
 
     @Override
-    public void recolectar(ControladorAudio controladorAudio) { // todo --> manejar los audios individualmente
-        controladorAudio.reproducirEfecto("recogerXP",AUDIO_RECOLECCION_CACA);
+    public void recolectar(GestorDeAudio gestorDeAudio) { // todo --> manejar los audios individualmente
+        gestorDeAudio.reproducirEfecto("recogerXP",AUDIO_RECOLECCION_CACA);
         recolectado = true;
         sprite = null;
     }

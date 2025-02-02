@@ -1,7 +1,7 @@
 package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 
@@ -12,12 +12,12 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
  */
 public class ColisionesJugador {
 
-    public void verificarColisionesConEnemigos(ControladorEnemigos controladorEnemigos, Jugador jugador, ControladorAudio controladorAudio) {
+    public void verificarColisionesConEnemigos(ControladorEnemigos controladorEnemigos, Jugador jugador, GestorDeAudio gestorDeAudio) {
         if (controladorEnemigos != null) {
             for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
                 if (enColision(enemigo, jugador) && enemigo.puedeAplicarDanyo()) {
                     float damage = enemigo.getDamageAmount();
-                    recibeDanyo(damage, jugador, controladorAudio);
+                    recibeDanyo(damage, jugador, gestorDeAudio);
                     enemigo.reseteaTemporizadorDanyo();
                 }
             }
@@ -48,14 +48,14 @@ public class ColisionesJugador {
         return playerRect.overlaps(enemyHitbox);
     }
 
-    public void recibeDanyo(float cantidad, Jugador jugador, ControladorAudio controladorAudio) {
+    public void recibeDanyo(float cantidad, Jugador jugador, GestorDeAudio gestorDeAudio) {
         if (jugador.estaVivo()) return;
         jugador.restarVidaJugador(cantidad * (1 - jugador.getResistenciaJugador()));
-        controladorAudio.reproducirEfecto("recibeDanyo", AUDIO_DANYO);
+        gestorDeAudio.reproducirEfecto("recibeDanyo", AUDIO_DANYO);
 
 
         if (jugador.getVidaJugador() <= 0) {
-            controladorAudio.reproducirEfecto("muerteJugador", AUDIO_MUERTE);
+            gestorDeAudio.reproducirEfecto("muerteJugador", AUDIO_MUERTE);
             jugador.setVidaJugador(0);
             jugador.muere();
 

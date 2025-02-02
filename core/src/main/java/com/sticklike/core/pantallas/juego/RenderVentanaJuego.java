@@ -143,7 +143,8 @@ public class RenderVentanaJuego {
 
                 // 2) Escala y rotación aleatorias
                 float scale = MathUtils.random(0.12f, 0.3f);
-                float rotation = MathUtils.random(0f, 360f);
+                // Limitar la rotación entre -90 y 90 grados
+                float rotation = MathUtils.random(-85f, 85f);
 
                 // 3) Tamaño escalado
                 float borrWidth = tex.getWidth() * scale;
@@ -168,7 +169,8 @@ public class RenderVentanaJuego {
             if (nuevoBorron == null) {
                 Texture tex2 = borrones.random();
                 float scale2 = MathUtils.random(0.12f, 0.3f);
-                float rotation2 = MathUtils.random(0f, 360f);
+                // Limitar la rotación también en este caso
+                float rotation2 = MathUtils.random(-90f, 90f);
                 float w2 = tex2.getWidth() * scale2;
                 float h2 = tex2.getHeight() * scale2;
                 float x2 = MathUtils.random(MAP_MIN_X, MAP_MAX_X - w2);
@@ -180,6 +182,7 @@ public class RenderVentanaJuego {
             borronesMapa.add(nuevoBorron);
         }
     }
+
 
     private boolean seSolapaConOtroBorron(float x, float y, float width, float height) {
         float leftA = x;

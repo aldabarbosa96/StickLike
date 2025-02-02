@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.audio.ControladorAudio;
+import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
@@ -82,23 +82,25 @@ public class Jugador {
     }
 
 
-    public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText, ControladorAudio controladorAudio) {
+    public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText, GestorDeAudio gestorDeAudio) {
         if (!estaVivo) return;
 
         if (!paused) {
+            regenerarVida(delta);
             inputController.procesarInputYMovimiento(delta, movimientoJugador, this);
-            pedrada.manejarDisparo(delta, this, controladorAudio);
+            pedrada.manejarDisparo(delta, this, gestorDeAudio);
 
             if (calcetinazo != null) {
-                calcetinazo.manejarDisparo(delta, this, controladorAudio);
+                calcetinazo.manejarDisparo(delta, this, gestorDeAudio);
             }
             if (ataqueTazo != null) {
-                ataqueTazo.actualizar(delta, this);
+                ataqueTazo.actualizar(delta, this, gestorDeAudio);
             }
             if (ataqueNubePedo != null) {
                 ataqueNubePedo.procesarAtaque(delta);
             }
-            colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, controladorAudio);
+
+            colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, gestorDeAudio);
         } else {
             direccionActual = Direction.IDLE;
         }
@@ -263,6 +265,10 @@ public class Jugador {
         return regVidaJugador;
     }
 
+    private void regenerarVida(float delta){
+        vidaJugador += maxVidaJugador * regVidaJugador * delta;
+        if (vidaJugador > maxVidaJugador) vidaJugador = maxVidaJugador;
+    }
     public void setRegVidaJugador(float regVidaJugador) {
         this.regVidaJugador = regVidaJugador;
     }

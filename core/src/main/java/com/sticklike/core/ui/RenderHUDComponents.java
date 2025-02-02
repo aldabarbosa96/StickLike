@@ -249,7 +249,7 @@ public class RenderHUDComponents {
     }
 
     public void renderizarMasStatsJugador() {
-        DecimalFormat df = new DecimalFormat("#");
+        DecimalFormat df = new DecimalFormat("#.#");
 
         // Valores
         String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + df.format(jugador.getMaxVidaJugador());

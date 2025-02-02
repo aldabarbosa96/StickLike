@@ -105,7 +105,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float RESISTENCIA = 0.06f;
     public static final float CRITICO = 0.03f;
-    public static final float REGENERACION_VIDA = 0.01f;
+    public static final float REGENERACION_VIDA = 0.005f;
     public static final float WIDTH_JUGADOR = 11f;
     public static final float HEIGHT_JUGADOR = 33.5f;
     public static final float PARPADEO_JUGADOR = 0.2f;
@@ -172,16 +172,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
     public static final float MULT_DANYO = 1f;
-    public static final float TAZO_SIZE = 16f;
+    public static final float TAZO_SIZE = 14f;
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 52.5f;
-    public static final float RADIO_TAZOS_JUGADOR = 45f;
-    public static final float VEL_ROTACION = 360f;
+    public static final float RADIO_TAZOS_JUGADOR = 65f;
+    public static final float VEL_ROTACION = 180f;
     public static final float INTERVALO_TAZOS = 0.1f;
     public static final float DANYO_TAZOS = 1.5f;
     public static final int NUM_TAZOS = 1;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
     public static final float DANYO_PEDO = 1f;
+    public static final float DELAY_ENTRE_PEDOS = 5f;
 
     // Configuración TextoFlotante
     public static final float DESPLAZAMIENTOY_TEXTO = 5f;
@@ -236,4 +237,5 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_MUERTE = 0.7f;
     public static final float AUDIO_UPGRADE = 0.5f;
     public static final float AUDIO_PAUSA = 0.4f;
+    public static final float MAX_INSTANCIAS_SONIDO = 2f;
 }
