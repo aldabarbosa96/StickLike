@@ -67,7 +67,7 @@ public class ControladorEnemigos {
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
                 float random = MathUtils.random(0f, 100f);
 
-                // 1º - Comprobamos si suelta Caca Dorada (2.5% de probabilidad)
+                // 1º - Comprobamos si suelta Caca Dorada (2% de probabilidad)
                 if (random < 2f) {
                     ventanaJuego.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
                 }

@@ -220,12 +220,13 @@ public class RenderHUDComponents {
 
         fuente.getData().setScale(0.8f);
         float textX = posX + iconSize + 4f; // Padding entre icono y texto
-        float textY = posY + iconSize/2 + 5f;
+        float textY = posY + iconSize / 2 + 5f;
 
-        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY,Color.GOLD);
+        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.GOLD);
 
         spriteBatch.end();
     }
+
     public void renderizarStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");
 
@@ -248,14 +249,14 @@ public class RenderHUDComponents {
     }
 
     public void renderizarMasStatsJugador() {
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#");
 
         // Valores
-        String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + jugador.getMaxVidaJugador();
-        String valorRegeneracionVida = df.format(0) + " %";
+        String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + df.format(jugador.getMaxVidaJugador());
+        String valorRegeneracionVida = df.format(jugador.getRegVidaJugador() * 100) + " %";
         String valorPoderAtaque = df.format(0);
         String valorResistencia = df.format(jugador.getResistenciaJugador() * 100) + " %";
-        String valorCritico = df.format(jugador.getCriticoJugador() * 100) + " %";
+        String valorCritico = df.format(jugador.getCritico() * 100) + " %";
 
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};

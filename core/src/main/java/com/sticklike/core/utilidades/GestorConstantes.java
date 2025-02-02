@@ -96,15 +96,16 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_MOV_JUGADOR = 120.0f;
     public static final float DANYO = 25f;
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
-    public static final float VIDA_JUGADOR = 50f;
-    public static final float VIDAMAX_JUGADOR = 50f;
+    public static final int VIDA_JUGADOR = 50;
+    public static final int VIDAMAX_JUGADOR = 50;
     public static final float RANGO_ATAQUE = 175.0f;
     public static final float INTERVALO_DISPARO = 1.35f;
     public static final float INTERVALO_MIN_DISPARO = 0.1f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float RESISTENCIA = 0.06f;
-    public static final float CRITICO = 0.02f;
+    public static final float CRITICO = 0.03f;
+    public static final float REGENERACION_VIDA = 0.01f;
     public static final float WIDTH_JUGADOR = 11f;
     public static final float HEIGHT_JUGADOR = 33.5f;
     public static final float PARPADEO_JUGADOR = 0.2f;
@@ -129,7 +130,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ENEMY_MIN_MOVE_DURATION = 1.0f;
     public static final float ENEMY_MAX_MOVE_DURATION = 10.0f;
     public static final float BORDER_SPAWN_MARGIN = 200f;
-    public static final float INTERVALO_SPAWN = 0.6f;
+    public static final float INTERVALO_SPAWN = 0.5f;
     public static final float MAX_OFFSET = 100f;
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
@@ -180,15 +181,15 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_TAZOS = 1.5f;
     public static final int NUM_TAZOS = 1;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
-    public static final float DANYO_PEDO = 0.5f;
+    public static final float DANYO_PEDO = 1f;
 
     // Configuración TextoFlotante
     public static final float DESPLAZAMIENTOY_TEXTO = 5f;
     public static final float DESPLAZAMIENTOX_TEXTO = 5f;
     public static final float DESPLAZAMIENTOY_TEXTO2 = 5f;
     public static final float DURACION_TEXTO = 0.3f;
-    public static final float TEXTO_WIDTH = 0.75f;
-    public static final float TEXTO_HEIGHT = 1.3f;
+    public static final float TEXTO_WIDTH = 0.6f;
+    public static final float TEXTO_HEIGHT = 1.4f;
 
     // Configuración recolectables
     public static final float DISTANCIA_ACTIVACION = 75f;
@@ -205,9 +206,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 10;
-    public static final float EVENTO1_SPAWN_RATE = 0.3f;
+    public static final float EVENTO1_SPAWN_RATE = 0.25f;
     public static final float EVENTO1_SPEED_MULT = 1.15f;
-    public static final float EVENTO2_SPAWN_RATE = 0.1f;
+    public static final float EVENTO2_SPAWN_RATE = 0.15f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA"};

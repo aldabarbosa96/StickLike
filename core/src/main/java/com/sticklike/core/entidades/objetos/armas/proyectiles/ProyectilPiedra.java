@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
+
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
@@ -16,6 +17,7 @@ public class ProyectilPiedra implements Proyectiles {
     private float multiplicadorVelocidad;
     private float direccionX, direccionY;
     private boolean proyectilActivo;
+    private boolean esCritico;
 
     public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad) {
         if (textura == null) {
@@ -80,9 +82,17 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        // Daño base aleatorio entre 21 y 33
-        return 21 + (float) Math.random() * 10;
+        // Daño base aleatorio entre 21 y 31
+        float base = 21 + (float) Math.random() * 10;
+        if (Math.random() < CRITICO) {
+            esCritico = true;
+            return base * 1.5f;
+        } else {
+            esCritico = false;
+            return base;
+        }
     }
+
 
     @Override
     public float getKnockbackForce() {
@@ -95,10 +105,15 @@ public class ProyectilPiedra implements Proyectiles {
     }
 
     @Override
-    public void registrarImpacto(Enemigo enemigo) {}
+    public void registrarImpacto(Enemigo enemigo) {
+    }
 
     @Override
     public boolean yaImpacto(Enemigo enemigo) {
         return false;
+    }
+
+    public boolean esCritico() {
+        return esCritico;
     }
 }

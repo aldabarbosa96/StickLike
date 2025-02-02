@@ -56,12 +56,12 @@ public class RenderJugador {
     }
     public void renderizarBarraDeSalud(ShapeRenderer shapeRenderer, Jugador jugador) {
         float healthPercentage = jugador.obtenerPorcetajeVida();
-        float barWidth = 17f;
+        float barWidth = 15f;
         float barHeight = 2.5f;
 
         // Calcula la posición de la barra en función de la posición del jugador
         float barX = jugador.getSprite().getX() + (jugador.getSprite().getWidth() - barWidth) / 2f;
-        float barY = jugador.getSprite().getY() - barHeight - 2.5f; // margen inferior
+        float barY = jugador.getSprite().getY() - barHeight - 1.75f; // margen inferior
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 

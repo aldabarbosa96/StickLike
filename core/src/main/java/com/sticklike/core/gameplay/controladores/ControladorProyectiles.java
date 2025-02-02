@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
@@ -52,11 +53,7 @@ public class ControladorProyectiles {
                 boolean esNubePedo = proyectil instanceof ProyectilTazo;
                 boolean colision = esNubePedo ?
                     estaEnRadio(enemigo, proyectil) :
-                    enemigo.esGolpeadoPorProyectil(
-                        proyectil.getX(),
-                        proyectil.getY(),
-                        proyectil.getRectanguloColision().width,
-                        proyectil.getRectanguloColision().height);
+                    enemigo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), proyectil.getRectanguloColision().width, proyectil.getRectanguloColision().height);
 
                 if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
                     !proyectil.yaImpacto(enemigo) && colision) {
@@ -80,8 +77,13 @@ public class ControladorProyectiles {
                     if (ultimaY != null) {
                         posicionTextoY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
                     }
+                    // Determinar si el golpe fue crítico (suponiendo que ProyectilPiedra tiene el getter esCritico())
+                    boolean golpeCritico = false;
+                    if (proyectil instanceof ProyectilPiedra) {
+                        golpeCritico = ((ProyectilPiedra)proyectil).esCritico();
+                    }
 
-                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO);
+                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO,golpeCritico);
                     dmgText.add(damageText);
 
                     ultimaYTexto.put(enemigo, posicionTextoY);

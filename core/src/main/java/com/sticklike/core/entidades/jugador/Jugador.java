@@ -14,6 +14,7 @@ import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.utilidades.GestorDeAssets;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class Jugador {
@@ -41,12 +42,13 @@ public class Jugador {
     private int proyectilesPorDisparo;
     private float resistenciaJugador;
     private float criticoJugador;
+    private float regVidaJugador;
     private boolean estaVivo;
     private float oroGanado;
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, AtaqueTazo ataqueTazo,
+                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra,
                    ControladorProyectiles controladorProyectiles) {
         this.danyoAtaqueJugador = DANYO;
         this.velocidadJugador = VEL_MOV_JUGADOR;
@@ -58,6 +60,7 @@ public class Jugador {
         this.proyectilesPorDisparo = NUM_PROYECTILES_INICIALES;
         this.resistenciaJugador = RESISTENCIA;
         this.criticoJugador = CRITICO;
+        this.regVidaJugador = REGENERACION_VIDA;
         this.estaVivo = true;
         this.oroGanado = 0;
 
@@ -110,11 +113,10 @@ public class Jugador {
         renderJugador.renderizarJugador(batch, this);
         batch.end();
 
-        renderJugador.renderizarBarraDeSalud(shapeRenderer,this);
+        renderJugador.renderizarBarraDeSalud(shapeRenderer, this);
         // Vuelve a comenzar el SpriteBatch para el resto de las texturas
         batch.begin();
     }
-
 
 
     public void muere() {
@@ -180,6 +182,8 @@ public class Jugador {
     }
 
     public float getVidaJugador() {
+        if (vidaJugador < 0) vidaJugador = 0;
+        else if (vidaJugador > maxVidaJugador) vidaJugador = maxVidaJugador;
         return vidaJugador;
     }
 
@@ -255,7 +259,15 @@ public class Jugador {
         this.resistenciaJugador = resistenciaJugador;
     }
 
-    public float getCriticoJugador() {
+    public float getRegVidaJugador() {
+        return regVidaJugador;
+    }
+
+    public void setRegVidaJugador(float regVidaJugador) {
+        this.regVidaJugador = regVidaJugador;
+    }
+
+    public float getCritico() {
         return criticoJugador;
     }
 

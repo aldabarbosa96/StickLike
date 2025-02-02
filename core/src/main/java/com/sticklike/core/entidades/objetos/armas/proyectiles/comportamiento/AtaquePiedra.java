@@ -4,7 +4,6 @@ import com.sticklike.core.audio.ControladorAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
-import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class AtaquePiedra {
@@ -27,8 +26,7 @@ public class AtaquePiedra {
 
     /**
      * Busca al enemigo más cercano y prepara el ataque.
-     * Se calcula el objetivo y se almacena en la variable 'target' para que cada proyectil
-     * se dispare utilizando la posición actual del jugador y la posición actual del objetivo.
+     * Se almacena el objetivo para que cada disparo de la ráfaga se dirija hacia él.
      */
     public void iniciarAtaque(Jugador jug, ControladorAudio controladorAudio) {
         if (jug.getControladorEnemigos() == null) return;
@@ -36,43 +34,46 @@ public class AtaquePiedra {
         target = encontrarEnemigoMasCercano(jug);
         if (target == null) return;
 
-        // Reproducir sonido de disparo
         controladorAudio.reproducirEfecto("lanzarPiedra", AUDIO_PIEDRA);
 
-        // Establecer el número de proyectiles a disparar (todos se dispararán hacia el objetivo)
+        // Establece la cantidad de proyectiles a disparar (usando el valor actual del jugador)
         proyectilesPendientes = jug.getProyectilesPorDisparo();
         temporizadorEntreBalas = 0f;
     }
 
     /**
-     * Este método se llama cada frame para gestionar el disparo.
-     * Cuando se cumple el intervalo de disparo y no hay ráfaga en curso se inicia el ataque;
-     * luego, se disparan los proyectiles uno a uno, recalculando para cada uno la dirección
-     * en función de las posiciones actuales del jugador y del enemigo.
+     * Se llama cada frame para gestionar el disparo.
+     * Si se cumple el intervalo y no hay una ráfaga en curso, se inicia el ataque.
+     * Luego, se dispara cada proyectil uno a uno recalculando la dirección con las posiciones actuales.
      */
     public void manejarDisparo(float delta, Jugador jugador, ControladorAudio controladorAudio) {
         temporizadorDisparo += delta;
 
-        // Si se cumple el intervalo de disparo y no hay una ráfaga en curso, iniciamos el ataque
+        // Si no hay una ráfaga en curso y se cumple el intervalo, iniciar ataque
         if (temporizadorDisparo >= intervaloDisparo && proyectilesPendientes == 0) {
             iniciarAtaque(jugador, controladorAudio);
-            temporizadorDisparo = 0; // Reiniciar el temporizador de disparo completo
+            temporizadorDisparo = 0; // Reinicia el temporizador de disparo completo
+        }
+
+        // Si el objetivo se ha vuelto nulo o ha muerto, abortar la ráfaga
+        if (target == null || target.estaMuerto()) {
+            proyectilesPendientes = 0;
+            return;
         }
 
         // Si ya se ha iniciado un ataque (hay proyectiles pendientes)
-        if (proyectilesPendientes > 0 && target != null && !target.estaMuerto()) {
+        if (proyectilesPendientes > 0) {
             temporizadorEntreBalas += delta;
             if (temporizadorEntreBalas >= intervaloEntreBalas) {
-                // Calcular la posición actual del centro del jugador
+                // Obtener la posición actual del centro del jugador
                 float spawnX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
                 float spawnY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
 
-                // Calcular la dirección actual usando el centro del jugador y el centro actual del target
+                // Recalcular la dirección actual usando la posición actual del objetivo
                 float targetX = target.getX() + target.getSprite().getWidth() / 2f;
                 float targetY = target.getY() + target.getSprite().getHeight() / 2f;
                 float[] dir = calcularDireccionNormalizada(spawnX, spawnY, targetX, targetY);
 
-                // Generar el proyectil con la dirección actual
                 float velocidadAleatoria = 0.8f + (float) Math.random() * (1.2f - 0.8f);
                 ProyectilPiedra piedra = new ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria);
                 jugador.getControladorProyectiles().anyadirNuevoProyectil(piedra);

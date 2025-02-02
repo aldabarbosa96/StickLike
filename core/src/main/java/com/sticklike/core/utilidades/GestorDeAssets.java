@@ -26,9 +26,9 @@ public class GestorDeAssets {
 
         animations = new HashMap<>();
 
-        animations.put("idle", crearAnimacion("acciones/movement/stickman_idle", 3, 0.15f));
-        animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.09f));
-        animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.09f));
+        animations.put("idle", crearAnimacion("acciones/movement/stickman_idle", 3, 0.125f));
+        animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.05f));
+        animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.05f));
     }
 
     public static void cargarTexturas() {

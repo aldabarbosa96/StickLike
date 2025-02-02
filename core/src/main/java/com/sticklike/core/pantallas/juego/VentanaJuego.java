@@ -63,8 +63,6 @@ public class VentanaJuego implements Screen {
     private ColisionesJugador colisionesJugador;
     private MovimientoJugador movimientoJugador;
     private AtaquePiedra ataquePiedra;
-    private AtaqueCalcetin ataqueCalcetin;
-    private AtaqueTazo ataqueTazo;
     private ControladorProyectiles controladorProyectiles;
     private ControladorAudio controladorAudio;
     private PopUpMejoras popUpMejoras;
@@ -105,14 +103,12 @@ public class VentanaJuego implements Screen {
         controladorAudio = game.controladorAudio;
         movimientoJugador = new MovimientoJugador();
         ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
-        //ataqueCalcetin = new AtaqueCalcetin(ATAQUE_CALCETIN_INTERVALO);
-        //ataquePedo = new AtaquePedo();
         controladorProyectiles = new ControladorProyectiles();
 
         float playerStartX = worldWidth / 2f;
         float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
         jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador,
-            movimientoJugador, ataquePiedra, ataqueTazo, controladorProyectiles);
+            movimientoJugador, ataquePiedra, controladorProyectiles);
     }
 
     private void inicializarSistemasYControladores() {
@@ -149,7 +145,7 @@ public class VentanaJuego implements Screen {
     public void render(float delta) {
         menuPause.handleInput();
 
-        if (jugador.estaVivo()) {  // Nota: ten en cuenta que 'estaVivo()' está invertido en su lógica
+        if (jugador.estaVivo()) {  // booleano invertido, no olvidar!
             game.setScreen(new VentanaGameOver(game));
             return;
         }

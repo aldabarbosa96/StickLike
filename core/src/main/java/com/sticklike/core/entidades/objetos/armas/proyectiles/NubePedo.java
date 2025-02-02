@@ -142,13 +142,9 @@ public class NubePedo implements Proyectiles {
         float baseDamage;
         if (phase == Phase.VIBRATING) {
             baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f);
-        } else if (phase == Phase.GROWING) {
-            baseDamage = (float) (0.5 * (DANYO_PEDO + Math.random() * 3.35f));
         } else {
-            // Esto no debería ocurrir NUNCA pero por si acaso..
             baseDamage = DANYO_PEDO;
         }
-        // Forzamos que el daño mínimo sea un valor positivo
         if (baseDamage <= 0) {
             baseDamage = 1f;
         }

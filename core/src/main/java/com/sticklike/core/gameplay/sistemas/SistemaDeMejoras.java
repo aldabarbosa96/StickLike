@@ -42,7 +42,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Desbloquea ataque tazos giratorios", () -> jugador.setTazo(new AtaqueTazo()), 1));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Desbloquea ataque nube de pedo", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
-            jugador.setVidaMax(jugador.getMaxVidaJugador()+15);jugador.setVidaJugador(jugador.getVidaJugador()+15);},10));
+            jugador.setVidaMax((jugador.getMaxVidaJugador()+15));jugador.setVidaJugador((jugador.getVidaJugador()+15));},10));
         // todo --> implementar nuevas mejoras de habilidades y stats restantes
     }
 
