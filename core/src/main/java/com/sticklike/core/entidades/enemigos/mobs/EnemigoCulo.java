@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
-import com.sticklike.core.entidades.enemigos.movimiento.MovimientoCuloEnemigos;
+import com.sticklike.core.entidades.enemigos.movimiento.MovimientoCulo;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
@@ -17,7 +17,7 @@ public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGOCULO;
-    private MovimientoCuloEnemigos movimientoCulo;
+    private MovimientoCulo movimientoCulo;
     private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private static float velocidadBase = VEL_BASE_CULO;
@@ -30,7 +30,7 @@ public class EnemigoCulo implements Enemigo {
         esConOjo(); // Determina si el enemigo tiene ojo o no al crearse.
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoCulo = new MovimientoCuloEnemigos(velocidadBase, true);
+        this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 

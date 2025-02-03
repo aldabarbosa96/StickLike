@@ -136,7 +136,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VIDA_ENEMIGOCULO = 30f;
     public static final float DANYO_CULO = 2f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
-    public static final float VEL_BASE_CULO = 50f;
+    public static final float VEL_BASE_CULO = 35f;
     public static final float VIDA_ENEMIGOREGLA = 75f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
@@ -159,7 +159,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TIEMPO_CARGA_REGLA = 0.75f;
     public static final float CORRECCION_SPAWN = 50f;
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
-    public static final String[] TIPOS_ENEMIGOS2 = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
 
     // -------------------------------------------------
     // Sombras enemigos
@@ -167,6 +167,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float SHADOW_WIDTH_CULO = 0.9f;
     public static final float SHADOW_HEIGHT_CULO = 0.3f;
     public static final float SHADOW_OFFSET = 2f;
+    public static final float SHADOW_OFFSET_POLLA = 2f;
 
     // -------------------------------------------------
     // Animaciones enemigos

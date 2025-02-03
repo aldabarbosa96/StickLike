@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
-import com.sticklike.core.entidades.enemigos.movimiento.MovimientoReglaEnemigos;
+import com.sticklike.core.entidades.enemigos.movimiento.MovimientoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
@@ -18,7 +18,7 @@ public class EnemigoRegla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGOREGLA;
-    private MovimientoReglaEnemigos movimientoRegla;
+    private MovimientoRegla movimientoRegla;
     private OrthographicCamera orthographicCamera;
     private float coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
@@ -33,7 +33,7 @@ public class EnemigoRegla implements Enemigo {
         sprite.setSize(23, 23);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoRegla = new MovimientoReglaEnemigos(velocidadEnemigo, 666, orthographicCamera, false);
+        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, false);
         this.orthographicCamera = orthographicCamera;
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }

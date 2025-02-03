@@ -3,14 +3,14 @@ package com.sticklike.core.entidades.enemigos.movimiento;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
 
-public class MovimientoPollaEnemigos extends MovimientoBaseEnemigos {
+public class MovimientoPolla extends MovimientoBaseEnemigos {
     private float velocidadEnemigo;
     private float tiempo; // Tiempo acumulado para el zigzag
     private float amplitudZigzag; // Amplitud del zigzag
     private float frecuenciaZigzag; // Frecuencia del zigzag
     private float currentOffset;
 
-    public MovimientoPollaEnemigos(float velocidadEnemigo, float amplitudZigzag, float frecuenciaZigzag, boolean puedeEmpujar) {
+    public MovimientoPolla(float velocidadEnemigo, float amplitudZigzag, float frecuenciaZigzag, boolean puedeEmpujar) {
         super(puedeEmpujar);
         this.velocidadEnemigo = velocidadEnemigo;
         this.tiempo = 0;

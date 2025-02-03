@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
-import com.sticklike.core.entidades.enemigos.movimiento.MovimientoPollaEnemigos;
+import com.sticklike.core.entidades.enemigos.movimiento.MovimientoPolla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
@@ -22,7 +22,7 @@ public class EnemigoPolla implements Enemigo {
     private float vidaEnemigo = VIDA_ENEMIGO_POLLA; // todo --> revisar variables de clase
     private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
-    private MovimientoPollaEnemigos movimientoPolla;
+    private MovimientoPolla movimientoPolla;
     private static float velocidadBase = VEL_BASE_POLLA;
 
     private boolean haSoltadoXP = false;
@@ -35,7 +35,7 @@ public class EnemigoPolla implements Enemigo {
         sprite.setSize(26f, 26f);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoPolla = new MovimientoPollaEnemigos(velocidadBase, 0.75f, 25f, true);
+        this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
     }
 
@@ -196,7 +196,7 @@ public class EnemigoPolla implements Enemigo {
         movimientoPolla.setVelocidadEnemigo(nuevaVelocidad);
     }
 
-    public MovimientoPollaEnemigos getMovimientoPolla() {
+    public MovimientoPolla getMovimientoPolla() {
         return movimientoPolla;
     }
     public float getFadeAlpha() {

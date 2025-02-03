@@ -113,7 +113,7 @@ public class ControladorEnemigos {
         // Ordenamos según la Y para que el sombreado coincida con el orden de sprites
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
 
-        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos);
+        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos,camera);
     }
 
     private void spawnEnemigo() {

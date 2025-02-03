@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.enemigos.animacion;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
@@ -14,7 +15,9 @@ public class RenderSombrasEnemigos {
      * Clase encargada de dibujar las sombras de todos los enemigos de la lista, llamando al método específico según su tipo.
      * El orden de la lista se gestiona desde ControladorEnemigos
      */
-    public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer, Array<Enemigo> enemigos) {
+    public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer, Array<Enemigo> enemigos, OrthographicCamera camera) {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
         for (Enemigo enemigo : enemigos) {
             if (enemigo instanceof BossPolla) {
                 dibujarSombraBossPolla(enemigo, shapeRenderer);
@@ -46,6 +49,7 @@ public class RenderSombrasEnemigos {
 
         shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.5f);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
+
     }
 
     private void dibujarSombraCulo(Enemigo enemigo, ShapeRenderer shapeRenderer) {
@@ -72,7 +76,7 @@ public class RenderSombrasEnemigos {
         float w = polla.getSprite().getWidth();
         float h = polla.getSprite().getHeight();
 
-        float centerX = x + w / SHADOW_OFFSET;
+        float centerX = x + w / SHADOW_OFFSET_POLLA;
 
         float baseShadowWidth = w * 0.95f;
         float baseShadowHeight = h * 0.3f;
