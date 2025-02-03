@@ -166,6 +166,7 @@ public class MenuPause extends ControllerAdapter {
         return false;
     }
 
+
     // Usamos el viewport del HUD para actualizar el tamaño cuando se hace resize
     public Viewport getViewport() {
         return hudViewport;

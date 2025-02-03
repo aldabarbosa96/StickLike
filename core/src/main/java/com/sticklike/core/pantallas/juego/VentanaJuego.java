@@ -278,6 +278,7 @@ public class VentanaJuego implements Screen {
         renderVentanaJuego.dispose();
         popUpMejoras.getUiStage().dispose();
         popUpMejoras.getUiSkin().dispose();
+        menuPause.dispose();
 
         if (jugador != null) {
             jugador.dispose();

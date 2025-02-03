@@ -42,7 +42,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float BORDER_NEGATIVE = 1.5f * 1.09375f;
     public static final float BORDER_POSITIVE = 3f * 1.09375f;
     public static final float BORDER_CORRECTION = 2f * 1.09375f;
-    public static final float XPTEXT_Y_CORRECTION = 2.5f * 1.09375f;
+    public static final float XPTEXT_Y_CORRECTION = 2f * 1.09375f;
     public static final float STATS_X_CORRECTION = 905f * 1.4814814815f;
     public static final float STATS_X_CORRECTION2 = 730f * 1.4814814815f;
     public static final float STATS_Y_CORRECTION = 45f * 1.09375f;
