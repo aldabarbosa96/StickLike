@@ -8,8 +8,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Resolución virtual
     // -------------------------------------------------
-    public static final float VIRTUAL_WIDTH = 1600;
-    public static final float VIRTUAL_HEIGHT = 900f;
+    public static final float VIRTUAL_WIDTH = 1520f;
+    public static final float VIRTUAL_HEIGHT = 855f;
 
     // -------------------------------------------------
     // Configuración de la cámara
@@ -20,58 +20,58 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // CONFIGURACIÓN DEL HUD
     // -------------------------------------------------
-    public static final float HUD_HEIGHT = 180f;                           // Antes: 200f * 1.25 = 250
-    public static final float GRID_CELL_SIZE = 38f * 1.09375f;              // 38 → 41.625
-    public static final float GRID_CELL_SIZE_CORRECTION = 20f * 1.09375f;     // 20 → 21.875
-    public static final float HUD_BAR_WIDTH = 200f * 1.4814814815f;           // Se escala horizontalmente: ≈296.30
-    public static final float HUD_BAR_HEIGHT = 11.5f * 1.09375f;              // 12.5 → 13.671875
-    public static final float HUD_BAR_X = 435f * 1.4814814815f;               // Horizontal: ≈644.44
-    public static final float HUD_BAR_Y_OFFSET = 10f * 1.09375f;              // 10 → 10.9375
-    public static final float HEART_SIZE = 20f * 1.09375f;                    // 20 → 21.875
-    public static final float HEART_X = 410f * 1.4814814815f;                 // Horizontal: ≈607.41
-    public static final float HEART_Y_OFFSET = 2.5f * 1.09375f;               // 2.5 → 2.734375
-    public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f * 1.09375f;    // -30 → -32.8125
-    public static final float TEXT_X_CORRECTION = 10f * 1.4814814815f;          // Horizontal: ≈14.81
-    public static final float TEXT_Y_CORRECTION = 14f * 1.09375f;               // 13 → 14.21875
-    public static final float NUMBER_Y_CORRECTION = 9.75f * 1.09375f;            // 8.5 → 9.296875
-    public static final float XPBAR_Y_CORRECTION = 25f * 1.09375f;              // 25 → 27.34375
-    public static final float BASIC_OFFSET = 1f;                                // Se mantiene
-    public static final float UNDER_OFFSET = 0.8f;                              // Se mantiene
-    public static final float GROSOR_MARCO = 0.9f * 1.09375f;                   // 0.9 → 0.984375 (≈0.9844)
-    public static final float GROSOR_SOMBRA = 0.7f * 1.09375f;                  // 0.7 → 0.765625
-    public static final float BORDER_NEGATIVE = 1.5f * 1.09375f;                // 1.5 → 1.640625
-    public static final float BORDER_POSITIVE = 3f * 1.09375f;                  // 3 → 3.28125
-    public static final float BORDER_CORRECTION = 2f * 1.09375f;                // 2 → 2.1875
-    public static final float XPTEXT_Y_CORRECTION = 2.5f * 1.09375f;           // 1.75 → 1.9140625
-    public static final float STATS_X_CORRECTION = 960f * 1.4814814815f;         // Horizontal: ≈1422.22
-    public static final float STATS_X_CORRECTION2 = 780f * 1.4814814815f;        // Horizontal: ≈1155.56
-    public static final float STATS_Y_CORRECTION = 45f * 1.09375f;              // 45 → 49.21875
-    public static final float ESPACIADO = 18f * 1.09375f;                       // 18 → 19.6875
-    public static final float ANCHO_DESC1 = 75f * 1.4814814815f;                // Horizontal: ≈111.11
-    public static final float ANCHO_DESC2 = 75f * 1.4814814815f;                // Horizontal: ≈111.11
-    public static final float STATS_ICON_SIZE = 16f * 1.09375f;                  // 16 → 17.5
-    public static final float ICON_Y_CORRECTION = 2f * 1.09375f;                 // 2 → 2.1875
-    public static final float ESPACIADO_LATERAL = 22.5f * 1.4814814815f;         // Horizontal: ≈33.33
+    public static final float HUD_HEIGHT = 190f;
+    public static final float GRID_CELL_SIZE = 38f * 1.09375f;
+    public static final float GRID_CELL_SIZE_CORRECTION = 20f * 1.09375f;
+    public static final float HUD_BAR_WIDTH = 200f * 1.4814814815f;
+    public static final float HUD_BAR_HEIGHT = 11.5f * 1.09375f;
+    public static final float HUD_BAR_X = 407.5f * 1.4814814815f;
+    public static final float HUD_BAR_Y_OFFSET = 10f * 1.09375f;
+    public static final float HEART_SIZE = 20f * 1.09375f;
+    public static final float HEART_X = 410f * 1.4814814815f;
+    public static final float HEART_Y_OFFSET = 2.5f * 1.09375f;
+    public static final float DESPLAZAMIENTO_VERTICAL_HUD = -30f * 1.09375f;
+    public static final float TEXT_X_CORRECTION = 10f * 1.4814814815f;
+    public static final float TEXT_Y_CORRECTION = 14f * 1.09375f;
+    public static final float NUMBER_Y_CORRECTION = 9.75f * 1.09375f;
+    public static final float XPBAR_Y_CORRECTION = 25f * 1.09375f;
+    public static final float BASIC_OFFSET = 1f;
+    public static final float UNDER_OFFSET = 0.8f;
+    public static final float GROSOR_MARCO = 0.9f * 1.09375f;
+    public static final float GROSOR_SOMBRA = 0.7f * 1.09375f;
+    public static final float BORDER_NEGATIVE = 1.5f * 1.09375f;
+    public static final float BORDER_POSITIVE = 3f * 1.09375f;
+    public static final float BORDER_CORRECTION = 2f * 1.09375f;
+    public static final float XPTEXT_Y_CORRECTION = 2.5f * 1.09375f;
+    public static final float STATS_X_CORRECTION = 905f * 1.4814814815f;
+    public static final float STATS_X_CORRECTION2 = 730f * 1.4814814815f;
+    public static final float STATS_Y_CORRECTION = 45f * 1.09375f;
+    public static final float ESPACIADO = 18f * 1.09375f;
+    public static final float ANCHO_DESC1 = 75f * 1.4814814815f;
+    public static final float ANCHO_DESC2 = 75f * 1.4814814815f;
+    public static final float STATS_ICON_SIZE = 16f * 1.09375f;
+    public static final float ICON_Y_CORRECTION = 2f * 1.09375f;
+    public static final float ESPACIADO_LATERAL = 22.5f * 1.4814814815f;
 
     // -------------------------------------------------
     // Pop_up
     // -------------------------------------------------
-    public static final float POPUP_WIDTH = 400f * 1.4814814815f;               // Horizontal: ≈592.59
-    public static final float POPUP_HEIGHT = 350f * 1.09375f;                   // 350 → 382.8125
-    public static final float POPUP_HEADER_PADDING = 75f * 1.09375f;            // 75 → 82.03125
-    public static final float POPUP_ROW_PADDING = 6f * 1.09375f;                // 6 → 6.5625
-    public static final float LABEL_WIDTH = 6f * 1.4814814815f;                 // Horizontal: ≈8.89
-    public static final float BUTTON_WIDTH = 315f * 1.4814814815f;              // Horizontal: ≈466.67
-    public static final float BUTTON_PADDING = 6f * 1.09375f;                   // 6 → 6.5625
-    public static final float POPUP_POSITION_CORRECTION = 150f * 1.09375f;        // 150 → 164.0625
-    public static final String[] POPUP_BUTTON_LABELS = {"X","Y","B","A"};
+    public static final float POPUP_WIDTH = 300f * 1.4814814815f;
+    public static final float POPUP_HEIGHT = 375f * 1.09375f;
+    public static final float POPUP_HEADER_PADDING = 75f * 1.09375f;
+    public static final float POPUP_ROW_PADDING = 8f;
+    public static final float LABEL_WIDTH = 6f * 1.4814814815f;
+    public static final float BUTTON_WIDTH = 225f * 1.4814814815f;
+    public static final float BUTTON_PADDING = 6f * 1.09375f;
+    public static final float POPUP_POSITION_CORRECTION = 150f * 1.09375f;
+    public static final String[] POPUP_BUTTON_LABELS = {"X", "Y", "B", "A"};
 
     // -------------------------------------------------
     // Timer
     // -------------------------------------------------
-    public static final float TIMER_Y_POS = 290f * 1.09375f;                    // 290 → 317.1875
-    public static final float TIMER_SCALE = 0.85f;                                // se mantiene
-    public static final float TIMER_SECONDS = 60f;                               // se mantiene
+    public static final float TIMER_Y_POS = 290f * 1.09375f;
+    public static final float TIMER_SCALE = 0.85f;
+    public static final float TIMER_SECONDS = 60f;
 
     // -------------------------------------------------
     // Texto HUD
@@ -97,17 +97,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final String GAMEOVER = "G A M E  O V E R";
     public static final String GAMEOVER_TEXT = "Pulsa R para Restart o Q para Quit";
-    public static final float GAMEOVER_TEXT_Y = 60f * 1.09375f;                  // 60 → 65.625
+    public static final float GAMEOVER_TEXT_Y = 60f * 1.09375f;
 
     // -------------------------------------------------
     // ManuPausa
     // -------------------------------------------------
     public static final int BUTTON_START = 6; // se mantiene
-    public static final float BUTTON_PAUSE_Y_CORRECTION = 25f * 1.09375f;       // 25 → 27.34375
-    public static final float START_TEXT_OFFSET_X = 0.18875f * VIRTUAL_WIDTH; // Aproximadamente 302
-    public static final float START_TEXT_OFFSET_Y = 0.18333f * VIRTUAL_HEIGHT; // Aproximadamente 165
-    public static final float PAUSE_TEXT_OFFSET_X = 0.1f * VIRTUAL_WIDTH;       // 160
-    public static final float PAUSE_TEXT_OFFSET_Y = 0.4444f * VIRTUAL_HEIGHT;     // Aproximadamente 400
+    public static final float BUTTON_PAUSE_Y_CORRECTION = 25f * 1.09375f;
+    public static final float START_TEXT_OFFSET_X = 0.18875f * VIRTUAL_WIDTH;
+    public static final float START_TEXT_OFFSET_Y = 0.18333f * VIRTUAL_HEIGHT;
+    public static final float PAUSE_TEXT_OFFSET_X = 0.1f * VIRTUAL_WIDTH;
+    public static final float PAUSE_TEXT_OFFSET_Y = 0.4444f * VIRTUAL_HEIGHT;
 
 
     // -------------------------------------------------
@@ -126,8 +126,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float RESISTENCIA = 0.06f;
     public static final float CRITICO = 0.03f;
     public static final float REGENERACION_VIDA = 0.005f;
-    public static final float WIDTH_JUGADOR = 11f;
-    public static final float HEIGHT_JUGADOR = 33.5f;
+    public static final float WIDTH_JUGADOR = 12f;
+    public static final float HEIGHT_JUGADOR = 34f;
     public static final float PARPADEO_JUGADOR = 0.2f;
 
     // -------------------------------------------------
@@ -214,9 +214,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración TextoFlotante
     // -------------------------------------------------
-    public static final float DESPLAZAMIENTOY_TEXTO = 5f * 1.09375f;             // 5 → 5.46875
-    public static final float DESPLAZAMIENTOX_TEXTO = 5f * 1.4814814815f;          // Horizontal: ≈7.41
-    public static final float DESPLAZAMIENTOY_TEXTO2 = 5f * 1.09375f;              // 5 → 5.46875
+    public static final float DESPLAZAMIENTOY_TEXTO = 5f * 1.09375f;
+    public static final float DESPLAZAMIENTOX_TEXTO = 5f * 1.4814814815f;
+    public static final float DESPLAZAMIENTOY_TEXTO2 = 5f * 1.09375f;
     public static final float DURACION_TEXTO = 0.3f;
     public static final float TEXTO_WIDTH = 0.6f;
     public static final float TEXTO_HEIGHT = 1.4f;
@@ -224,14 +224,14 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración recolectables
     // -------------------------------------------------
-    public static final float DISTANCIA_ACTIVACION = 75f * 1.09375f;             // 75 → 82.03125
-    public static final float VEL_ATRACCION = 275f;                              // se mantiene
-    public static final float OBJETO_VIDA_WIDTH = 12f * 1.09375f;                 // 12 → 13.125
-    public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;                // 12 → 13.125
-    public static final float OBJETO1_XP_WIDTH = 10f * 1.09375f;                  // 10 → 10.9375
-    public static final float OBJETO1_XP_HEIGHT = 10.5f * 1.09375f;               // 10.5 → 11.484375
-    public static final float OBJETO_ORO_WIDTH = 10f * 1.09375f;                  // 10 → 10.9375
-    public static final float OBJETO_ORO_HEIGHT = 10f * 1.09375f;                 // 10 → 10.9375
+    public static final float DISTANCIA_ACTIVACION = 75f * 1.09375f;
+    public static final float VEL_ATRACCION = 275f;
+    public static final float OBJETO_VIDA_WIDTH = 12f * 1.09375f;
+    public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;
+    public static final float OBJETO1_XP_WIDTH = 10f * 1.09375f;
+    public static final float OBJETO1_XP_HEIGHT = 10.5f * 1.09375f;
+    public static final float OBJETO_ORO_WIDTH = 10f * 1.09375f;
+    public static final float OBJETO_ORO_HEIGHT = 10f * 1.09375f;
 
     // -------------------------------------------------
     // Controlador Evento
@@ -245,7 +245,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO2_SPAWN_RATE = 0.15f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
-    public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA"};
+    public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.1f;
 
     // -------------------------------------------------
@@ -256,9 +256,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int CANTIDAD_BORRONES = 1750; // todo --> dibujar más borrones
 
     public static final float MAP_MIN_X = -10000;
-    public static final float MAP_MAX_X =  10000;
+    public static final float MAP_MAX_X = 10000;
     public static final float MAP_MIN_Y = -10000;
-    public static final float MAP_MAX_Y =  10000;
+    public static final float MAP_MAX_Y = 10000;
 
     // -------------------------------------------------
     // Controlador AUDIO

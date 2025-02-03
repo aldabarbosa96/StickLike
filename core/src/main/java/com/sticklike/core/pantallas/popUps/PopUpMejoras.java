@@ -14,23 +14,23 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Clase que gestiona la creación y dibujado del Pop-Up de mejoras y maneja sus inputs
- * todo --> separar lógica de inputs en una clase a parte
+ * Clase que gestiona la creación y dibujado del Pop-Up de mejoras y maneja sus inputs.
  */
 public class PopUpMejoras {
     private Stage uiStage;
@@ -40,12 +40,17 @@ public class PopUpMejoras {
     private Window upgradeWindow;
     private GameInputHandler inputHandler;
 
+    private List<TextButton> improvementButtons;
+    // Índice de selección actual
+    private int selectedIndex = 0;
+
     public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego ventanaJuego) {
         this.ventanaJuego = ventanaJuego;
-        uiStage = new Stage(new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
+        uiStage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
         this.sistemaDeMejoras = sistemaDeMejoras;
         this.inputHandler = new GameInputHandler();
+        improvementButtons = new ArrayList<>();
     }
 
     public Skin crearAspectoUI() {
@@ -68,14 +73,6 @@ public class PopUpMejoras {
         tbs.font = font;
         skin.add("default-button", tbs);
 
-        // **Aquí agregas un estilo por defecto para Label**
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = font;
-        labelStyle.fontColor = Color.BLACK; // color del texto de los Labels
-
-        // Lo registras con el nombre "default" en el Skin
-        skin.add("default", labelStyle, Label.LabelStyle.class);
-
         return skin;
     }
 
@@ -96,19 +93,15 @@ public class PopUpMejoras {
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
 
-        // array de etiquetas para hasta 4 mejoras
-        String[] botonLabels = POPUP_BUTTON_LABELS;
+        improvementButtons.clear();
 
-        // Recorremos la lista de mejoras y creamos filas en la tabla
+        // Recorremos la lista de mejoras y creamos filas en la tabla.
+        // Ahora se añade solo el botón.
         for (int i = 0; i < mejoras.size(); i++) {
-            if (i >= botonLabels.length) break; // Evitamos out of bounds si hay más de 4
+            if (i >= POPUP_BUTTON_LABELS.length) break; // Evitamos out of bounds si hay más de 4
 
             final int index = i;
             final Mejora mejora = mejoras.get(i);
-
-            // Crea el Label para el mando
-            Label labelBoton = new Label(botonLabels[i] + ")", uiSkin);
-            labelBoton.setColor(Color.BLACK);
 
             // Crea el TextButton con la descripción de la mejora
             TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
@@ -117,12 +110,14 @@ public class PopUpMejoras {
             btn.getLabel().setAlignment(Align.center);
             btn.getLabel().setColor(Color.BLACK);
 
-            // Añade una nueva fila en la tabla y mete primero el label, luego el botón
-            upgradeWindow.row().pad(POPUP_ROW_PADDING); // pad representa el espaciado vertical entre filas
-            upgradeWindow.add(labelBoton).width(LABEL_WIDTH).left(); // ancho fijo para la col del label
-            upgradeWindow.add(btn).width(BUTTON_WIDTH).pad(BUTTON_PADDING);             // ancho para el botón
+            // Añadir el botón a la lista para luego poder navegar entre ellos
+            improvementButtons.add(btn);
 
-            // Listener para la selección con click/touch
+            // Añade una nueva fila en la tabla y agrega únicamente el botón.
+            upgradeWindow.row().pad(POPUP_ROW_PADDING);
+            upgradeWindow.add(btn).width(BUTTON_WIDTH).pad(BUTTON_PADDING);
+
+            // También seguimos añadiendo el listener para touch
             btn.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -132,13 +127,31 @@ public class PopUpMejoras {
             });
         }
 
+        // Inicialmente, selecciona la primera mejora (si existe)
+        if (!improvementButtons.isEmpty()) {
+            selectedIndex = 0;
+            updateButtonHighlight();
+        }
+
         uiStage.addActor(upgradeWindow);
         uiStage.setKeyboardFocus(upgradeWindow);
 
-        // con InputMultiplexer aseguramos que inputHandler reciba los eventos de teclado antes que uiStage
+        // Con InputMultiplexer aseguramos que inputHandler reciba los eventos de teclado antes que uiStage
         InputMultiplexer im = new InputMultiplexer(inputHandler, uiStage);
         Gdx.input.setInputProcessor(im);
         Controllers.addListener(inputHandler);
+    }
+
+    private void updateButtonHighlight() {
+        for (int i = 0; i < improvementButtons.size(); i++) {
+            TextButton btn = improvementButtons.get(i);
+            // Si el botón está seleccionado, se cambia el color del label; de lo contrario, se deja en negro.
+            if (i == selectedIndex) {
+                btn.getLabel().setColor(Color.BLUE);
+            } else {
+                btn.getLabel().setColor(Color.DARK_GRAY);
+            }
+        }
     }
 
     private void onSelectMejora(int index, List<Mejora> mejoras) {
@@ -149,7 +162,7 @@ public class PopUpMejoras {
         ventanaJuego.getRenderHUDComponents().reanudarTemporizador();
         ventanaJuego.getMenuPause().bloquearInputs(false);
 
-        // **Aquí se desactiva el input handler para que no quede escuchando**
+        // Desactivamos el input handler para que no siga escuchando
         Gdx.input.setInputProcessor(null);
         Controllers.removeListener(inputHandler);
     }
@@ -162,52 +175,121 @@ public class PopUpMejoras {
         return uiSkin;
     }
 
-    private class GameInputHandler extends ControllerAdapter implements InputProcessor { // todo --> mover a una clase dedicada en un futuro
+    private class GameInputHandler extends ControllerAdapter implements InputProcessor {
         @Override
         public boolean keyDown(int keycode) {
             switch (keycode) {
+                // Navegación vertical (para teclado)
+                case Input.Keys.DOWN:
+                case Input.Keys.RIGHT:
+                    if (selectedIndex < improvementButtons.size() - 1) {
+                        selectedIndex++;
+                        updateButtonHighlight();
+                    }
+                    return true;
+                case Input.Keys.UP:
+                case Input.Keys.LEFT:
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        updateButtonHighlight();
+                    }
+                    return true;
+                // Confirmar selección con Enter o la tecla A
+                case Input.Keys.ENTER:
+                case Input.Keys.NUMPAD_ENTER:
+                    onSelectMejora(selectedIndex, sistemaDeMejoras.getMejorasMostradas());
+                    return true;
+                // Selección directa
                 case Input.Keys.NUM_1:
                 case Input.Keys.NUMPAD_1:
+                    selectedIndex = 0;
+                    updateButtonHighlight();
                     onSelectMejora(0, sistemaDeMejoras.getMejorasMostradas());
                     return true;
                 case Input.Keys.NUM_2:
                 case Input.Keys.NUMPAD_2:
-                    onSelectMejora(1, sistemaDeMejoras.getMejorasMostradas());
+                    if (improvementButtons.size() > 1) {
+                        selectedIndex = 1;
+                        updateButtonHighlight();
+                        onSelectMejora(1, sistemaDeMejoras.getMejorasMostradas());
+                    }
                     return true;
                 case Input.Keys.NUM_3:
                 case Input.Keys.NUMPAD_3:
-                    onSelectMejora(2, sistemaDeMejoras.getMejorasMostradas());
-                    return true;
-            }
-            return false; // Importante: si no lo manejamos, devolver false
-        }
-
-        @Override
-        public boolean buttonDown(Controller controller, int buttonIndex) {
-            switch (buttonIndex) {
-                case 2: // X
-                    onSelectMejora(0, sistemaDeMejoras.getMejorasMostradas());
-                    return true;
-                case 3: // Y
-                    onSelectMejora(1, sistemaDeMejoras.getMejorasMostradas());
-                    return true;
-                case 1: // B
-                    onSelectMejora(2, sistemaDeMejoras.getMejorasMostradas());
-                    return true;
-                case 0: // A
-                    onSelectMejora(3, sistemaDeMejoras.getMejorasMostradas());
+                    if (improvementButtons.size() > 2) {
+                        selectedIndex = 2;
+                        updateButtonHighlight();
+                        onSelectMejora(2, sistemaDeMejoras.getMejorasMostradas());
+                    }
                     return true;
             }
             return false;
         }
+
+        private boolean axisLock = false; // variable para bloquear movimientos continuos
+
+        @Override
+        public boolean axisMoved(Controller controller, int axisIndex, float value) {
+            if (axisIndex == 1) {
+                // Si el joystick está en una posición neutral, liberamos el lock
+                if (Math.abs(value) < 0.2f) {
+                    axisLock = false;
+                    return false;
+                }
+                // Si ya se ha registrado un movimiento y no ha vuelto al centro, ignoramos
+                if (axisLock) {
+                    return false;
+                }
+                // Si se inclina hacia abajo (valor positivo) y aún hay opciones hacia abajo
+                if (value > 0.5f && selectedIndex < improvementButtons.size() - 1) {
+                    selectedIndex++;
+                    updateButtonHighlight();
+                    axisLock = true;
+                    return true;
+                }
+                // Si se inclina hacia arriba (valor negativo) y aún hay opciones hacia arriba
+                else if (value < -0.5f && selectedIndex > 0) {
+                    selectedIndex--;
+                    updateButtonHighlight();
+                    axisLock = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public boolean buttonDown(Controller controller, int buttonIndex) {
+            // Ejemplo: Para el nuevo Xbox, asumamos que:
+            // - Botón 11 = D-pad Up
+            // - Botón 12 = D-pad Down
+            // (Estos valores son comunes en Windows, pero verifica en tu entorno)
+            switch (buttonIndex) {
+                case 0: // A (confirmar)
+                    onSelectMejora(selectedIndex, sistemaDeMejoras.getMejorasMostradas());
+                    return true;
+                case 11: // D-pad Up
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        updateButtonHighlight();
+                    }
+                    return true;
+                case 12: // D-pad Down
+                    if (selectedIndex < improvementButtons.size() - 1) {
+                        selectedIndex++;
+                        updateButtonHighlight();
+                    }
+                    return true;
+            }
+            return false;
+        }
+
 
         @Override public boolean keyUp(int keycode) { return false; }
         @Override public boolean keyTyped(char character) { return false; }
         @Override public boolean touchDown(int screenX, int screenY, int pointer, int button) { return false; }
         @Override public boolean touchUp(int screenX, int screenY, int pointer, int button) { return false; }
-        @Override public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
-            return false;
-        }
+        @Override public boolean touchCancelled(int screenX, int screenY, int pointer, int button) { return false; }
         @Override public boolean touchDragged(int screenX, int screenY, int pointer) { return false; }
         @Override public boolean mouseMoved(int screenX, int screenY) { return false; }
         @Override public boolean scrolled(float amountX, float amountY) { return false; }

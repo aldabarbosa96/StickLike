@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,14 +12,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.pantallas.juego.VentanaJuego;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
- * Gestiona el dibujado en pantalla del botón y texto PAUSA, además de gestionar sus inputs
- * todo--> los inputs deberán moverse a una clase separada
+ * Gestiona el dibujado en pantalla del botón y texto PAUSA, además de gestionar sus inputs.
  */
 public class MenuPause extends ControllerAdapter {
     private float pauseWidth;
@@ -32,85 +33,101 @@ public class MenuPause extends ControllerAdapter {
     private VentanaJuego ventanaJuego;
     private boolean inputsBloqueados = false;
     private SpriteBatch spriteBatch;
-    private Viewport viewport;
 
-    public MenuPause(VentanaJuego ventanaJuego, Viewport viewport) {
+    // --- Para HUD (no se mueve con la cámara del juego) ---
+    private OrthographicCamera hudCamera;
+    private Viewport hudViewport;
+
+    public MenuPause(VentanaJuego ventanaJuego) {
+        // Los valores de posicionamiento siguen siendo los mismos (en unidades virtuales)
         this.pauseWidth = 4;
         this.pauseHeight = 12;
         this.pauseSpacing = 4;
         this.menuWidth = 22;
-        this.marginRight = 15;
+        this.marginRight = 20;
         this.marginTop = 55;
         this.isPaused = false;
         this.ventanaJuego = ventanaJuego;
         this.font = new BitmapFont();
         this.spriteBatch = new SpriteBatch();
-        this.viewport = viewport;
 
-        // Nos registramos como listener global de mando para recibir cualquier input en esta clase
+        // Inicializar la cámara y viewport para el HUD (fijos en la "lona virtual" 1600x900)
+        hudCamera = new OrthographicCamera();
+        hudCamera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
+        hudViewport.apply();
+
+        // Nos registramos como listener global de mando para recibir inputs en esta clase
         Controllers.addListener(this);
     }
 
     public void render(ShapeRenderer shapeRenderer) {
-        // Habilitar blending para transparencias
+        // Usar la cámara del HUD (no la del juego)
+        spriteBatch.setProjectionMatrix(hudCamera.combined);
+        shapeRenderer.setProjectionMatrix(hudCamera.combined);
+
+        // Extra vertical (en unidades virtuales) para el botón de pausa.
+        float extraVerticalOffset = -50f;
+        // Posición virtual del botón de pausa:
+        float pauseButtonX = VIRTUAL_WIDTH - marginRight - menuWidth;
+        float pauseButtonY = VIRTUAL_HEIGHT - marginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION - extraVerticalOffset;
+
+        //DIBUJAR EL BOTÓN DE PAUSA
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        // Extra offset para subir el botón de pausa (por ejemplo, -50 unidades)
-        float extraVerticalOffset = -50f;
-        // Calcular la posición del botón usando las dimensiones actuales del viewport
-        float pauseButtonX = viewport.getWorldWidth() - marginRight - menuWidth;
-        float pauseButtonY = viewport.getWorldHeight() - marginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION - extraVerticalOffset;
-
-        // --- Dibujar el botón de pausa ---
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         // Fondo del botón
         shapeRenderer.setColor(new Color(0.2f, 0.2f, 0.2f, 0.65f));
         shapeRenderer.rect(pauseButtonX, pauseButtonY, menuWidth, menuWidth);
-        // Coordenadas internas para los rectángulos del icono de pausa:
+
+        // Posición interna para el icono de pausa
         float pauseX = pauseButtonX + (menuWidth - (pauseWidth * 2 + pauseSpacing)) / 2;
         float pauseY = pauseButtonY + (menuWidth - pauseHeight) / 2;
+
         // Dibujar el reborde de cada rectángulo
-        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.65f);
+        shapeRenderer.setColor(new Color(0.3f, 0.3f, 0.3f, 0.65f));
         shapeRenderer.rect(pauseX - BORDER_NEGATIVE, pauseY - BORDER_NEGATIVE, pauseWidth + BORDER_POSITIVE, pauseHeight + BORDER_POSITIVE);
         shapeRenderer.rect(pauseX + pauseWidth + pauseSpacing - BORDER_NEGATIVE, pauseY - BORDER_NEGATIVE, pauseWidth + BORDER_POSITIVE, pauseHeight + BORDER_POSITIVE);
-        // Dibujar los rectángulos (rojos si está pausado, blancos en caso contrario)
+
+        // Dibujar los rectángulos del icono de pausa
         shapeRenderer.setColor(isPaused ? Color.RED : Color.WHITE);
         shapeRenderer.rect(pauseX, pauseY, pauseWidth, pauseHeight);
         shapeRenderer.rect(pauseX + pauseWidth + pauseSpacing, pauseY, pauseWidth, pauseHeight);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        // --- Dibujar el texto START (relativo al botón) ---
+        //DIBUJAR EL TEXTO START
         spriteBatch.begin();
         font.setColor(isPaused ? Color.RED : Color.BLACK);
-        font.getData().setScale(0.9f);
-        float startTextX = pauseButtonX + START_TEXT_OFFSET_X;
-        float startTextY = pauseButtonY + START_TEXT_OFFSET_Y;
+        font.getData().setScale(0.8f);
+        GlyphLayout layoutStart = new GlyphLayout(font, START);
+        float startTextX = pauseButtonX + (menuWidth - layoutStart.width) / 2;
+        float startTextY = pauseButtonY - 10;
+
         font.draw(spriteBatch, START, startTextX, startTextY);
         spriteBatch.end();
 
-        // --- Dibujar el texto "P A U S A" centrado en pantalla ---
+        // DIBUJAR EL TEXTO "P A U S A"
         if (isPaused) {
             spriteBatch.begin();
             font.getData().setScale(2.5f);
             GlyphLayout layoutPausa = new GlyphLayout(font, PAUSA);
-            float pauseTextX = (viewport.getWorldWidth() - layoutPausa.width) / 2 + PAUSE_TEXT_OFFSET_X;
-            float pauseTextY = (viewport.getWorldHeight() / 2) + PAUSE_TEXT_OFFSET_Y;
+            float pauseTextX = (VIRTUAL_WIDTH - layoutPausa.width) / 2;
+            float pauseTextY = (VIRTUAL_HEIGHT + layoutPausa.height) / 2 + 250f;
 
-            // Dibujar sombra en 4 direcciones (puedes ajustar o agregar más si lo deseas)
-            font.setColor(Color.BLACK);
+            // Dibujar sombras (opcional, ajusta BASIC_OFFSET si lo necesitas)
+            font.setColor(Color.WHITE);
             font.draw(spriteBatch, PAUSA, pauseTextX - BASIC_OFFSET, pauseTextY);
             font.draw(spriteBatch, PAUSA, pauseTextX + BASIC_OFFSET, pauseTextY);
             font.draw(spriteBatch, PAUSA, pauseTextX, pauseTextY - BASIC_OFFSET);
             font.draw(spriteBatch, PAUSA, pauseTextX, pauseTextY + BASIC_OFFSET);
             // Dibujar el texto principal
-            font.setColor(new Color(0.9f, 0.9f, 0.9f, 1f));
+            font.setColor(Color.RED);
             font.draw(spriteBatch, PAUSA, pauseTextX, pauseTextY);
             spriteBatch.end();
         }
     }
-
 
     public void handleInput() {
         if (inputsBloqueados) return;
@@ -149,15 +166,14 @@ public class MenuPause extends ControllerAdapter {
         return false;
     }
 
+    // Usamos el viewport del HUD para actualizar el tamaño cuando se hace resize
     public Viewport getViewport() {
-        return viewport;
+        return hudViewport;
     }
 
     public void dispose() {
         Controllers.removeListener(this);
         spriteBatch.dispose();
         font.dispose();
-
-
     }
 }

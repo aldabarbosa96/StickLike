@@ -130,7 +130,7 @@ public class VentanaJuego implements Screen {
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
 
-        menuPause = new MenuPause( this,viewport);
+        menuPause = new MenuPause( this);
     }
 
     private void inicializarListas() {

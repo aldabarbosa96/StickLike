@@ -48,8 +48,7 @@ public class Jugador {
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra,
-                   ControladorProyectiles controladorProyectiles) {
+                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles) {
         this.danyoAtaqueJugador = DANYO;
         this.velocidadJugador = VEL_MOV_JUGADOR;
         this.vidaJugador = VIDA_JUGADOR;
