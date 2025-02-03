@@ -38,11 +38,11 @@ public class NubePedo implements Proyectiles {
     private static final float COOLDOWN_DURATION = 2f;
 
     private static final float MIN_SCALE    = 0.1f;  // Escala inicial
-    private static final float MAX_SCALE    = 1.35f;  // Escala máxima (tamaño completo)
+    private static final float MAX_SCALE    = 1.35f; // Escala máxima (tamaño completo)
     private static final float MIN_ALPHA    = 0.1f;  // Opacidad mínima
     private static final float MAX_ALPHA    = 0.75f; // Opacidad máxima
     private static final float VIBRATE_RANGE = 8f;    // Rango de oscilación (en píxeles) durante la vibración
-    private static final float KNOCKBACK_FORCE = 100f; // Fuerza de knockback a aplicar
+    private static final float KNOCKBACK_FORCE = 200f; // Fuerza de knockback a aplicar
     private static final float ROTATION_SPEED  = 2500f;// Velocidad de rotación (grados por segundo)
 
     public NubePedo(Jugador jugador) {
@@ -75,12 +75,10 @@ public class NubePedo implements Proyectiles {
                 sprite.rotate(ROTATION_SPEED * delta);
 
                 // Interpolación lineal entre MIN_SCALE y MAX_SCALE
-
                 float currentScale = MIN_SCALE + progress * (MAX_SCALE - MIN_SCALE);
                 sprite.setScale(currentScale);
                 // Interpolación de opacidad
-
-                sprite.setColor(0.9f, 0.82f, 0.75f, currentAlpha);
+                sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
                 // Posición fija en el centro del jugador
                 sprite.setPosition(jugadorCenterX, jugadorCenterY);
 
@@ -88,18 +86,23 @@ public class NubePedo implements Proyectiles {
                 if (phaseTimer >= GROW_DURATION) {
                     phase = Phase.VIBRATE1;
                     phaseTimer = 0;
+                    // Limpieza una sola vez al inicio de la fase VIBRATE1
+                    enemigosImpactados.clear();
                 }
                 break;
 
             case VIBRATE1:
                 // Primera vibración: se aplica el efecto (audio, vibración y knockback)
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.2f);
-                enemigosImpactados.clear();
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.18f);
+                // Limpia el conjunto solo al inicio de la fase
+                if (phaseTimer < delta) {
+                    enemigosImpactados.clear();
+                }
 
                 float offsetX1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 float offsetY1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 sprite.setScale(MAX_SCALE);
-                sprite.setColor(0.7f, 0.65f, 0.1f, MAX_ALPHA);
+                sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX1, jugadorCenterY + offsetY1);
 
                 if (phaseTimer >= VIBRATE1_DURATION) {
@@ -111,24 +114,28 @@ public class NubePedo implements Proyectiles {
             case PAUSE:
                 // Durante la pausa, el sprite se mantiene fijo en el centro
                 sprite.setScale(MAX_SCALE);
-                sprite.setColor(0.9f, 0.82f, 0.75f, currentAlpha);
+                sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
                 sprite.setPosition(jugadorCenterX, jugadorCenterY);
 
                 if (phaseTimer >= PAUSE_DURATION) {
                     phase = Phase.VIBRATE2;
                     phaseTimer = 0;
+                    // Limpieza una sola vez al inicio de la fase VIBRATE2
+                    enemigosImpactados.clear();
                 }
                 break;
 
             case VIBRATE2:
                 // Segunda vibración, similar a la primera
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.2f);
-                enemigosImpactados.clear();
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.18f);
+                if (phaseTimer < delta) {
+                    enemigosImpactados.clear();
+                }
 
                 float offsetX2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 float offsetY2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 sprite.setScale(MAX_SCALE);
-                sprite.setColor(0.7f, 0.65f, 0.1f, MAX_ALPHA);
+                sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX2, jugadorCenterY + offsetY2);
 
                 if (phaseTimer >= VIBRATE2_DURATION) {
@@ -189,7 +196,6 @@ public class NubePedo implements Proyectiles {
         return new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
-
     @Override
     public boolean isProyectilActivo() {
         return proyectilActivo;
@@ -203,7 +209,7 @@ public class NubePedo implements Proyectiles {
     @Override
     public float getBaseDamage() {
         float baseDamage;
-        // Se aplica daño durante las vibraciones; en las demás fases se usa el valor base
+        // Se aplica daño durante las vibraciones; en las demás fases no se aplica (o se usa el valor base)
         if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2) {
             baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f);
         } else {

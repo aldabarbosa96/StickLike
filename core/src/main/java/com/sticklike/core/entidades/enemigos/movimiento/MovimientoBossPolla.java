@@ -21,11 +21,11 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
 
     public MovimientoBossPolla(boolean puedeEmpujar) {
         super(puedeEmpujar);
-        this.velocidadAproximacion = 50f;
+        this.velocidadAproximacion = 150f;
         this.distanciaOrbita = 175f;
-        this.velocidadOrbital = 100f;
-        this.velocidadCarga = 300f;
-        this.tiempoOrbita = 3f;
+        this.velocidadOrbital = 90f;
+        this.velocidadCarga = 295f;
+        this.tiempoOrbita = 3.5f;
         this.tiempoCarga = 1.5f;
 
         // Estados iniciales
@@ -34,7 +34,7 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         this.temporizador = 0;
         this.angulo = 0;
 
-        // Dirección inicial de la embestida (se recalcula cada vez)
+        // Dirección inicial de la embestida recalculada cada vez
         this.chargeDirX = 0;
         this.chargeDirY = 0;
 

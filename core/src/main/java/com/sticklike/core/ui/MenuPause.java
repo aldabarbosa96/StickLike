@@ -57,8 +57,11 @@ public class MenuPause extends ControllerAdapter {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        float pauseButtonX = viewportWidth - marginRight - menuWidth;
-        float pauseButtonY = viewportHeight - marginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION;
+        float dynamicMarginRight = marginRight * (viewportWidth / VIRTUAL_WIDTH);
+        float dynamicMarginTop = marginTop * (viewportHeight / VIRTUAL_HEIGHT);
+
+        float pauseButtonX = viewportWidth - dynamicMarginRight - menuWidth;
+        float pauseButtonY = viewportHeight - dynamicMarginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION;
 
         // Fondo cuadrado del botón
         shapeRenderer.setColor(new Color(0.2f, 0.2f, 0.2f, 0.65f));
@@ -88,8 +91,8 @@ public class MenuPause extends ControllerAdapter {
         font.setColor(Color.BLACK);
         font.getData().setScale(0.9f);
 
-        float startTextX = pauseX + START_TEXT_X;
-        float startTextY = pauseY + START_TEXT_Y;
+        float startTextX = pauseX + (START_TEXT_X * (viewportWidth / VIRTUAL_WIDTH));
+        float startTextY = pauseY + (START_TEXT_Y * (viewportHeight / VIRTUAL_HEIGHT));
         font.draw(spriteBatch, START, startTextX, startTextY);
 
         spriteBatch.end();

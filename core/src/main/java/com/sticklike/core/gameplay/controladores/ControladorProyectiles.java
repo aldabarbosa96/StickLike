@@ -77,7 +77,7 @@ public class ControladorProyectiles {
                     if (ultimaY != null) {
                         posicionTextoY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
                     }
-                    // Determinar si el golpe fue crítico (suponiendo que ProyectilPiedra tiene el getter esCritico())
+                    // Determinar si el golpe fue crítico
                     boolean golpeCritico = false;
                     if (proyectil instanceof ProyectilPiedra) {
                         golpeCritico = ((ProyectilPiedra)proyectil).esCritico();

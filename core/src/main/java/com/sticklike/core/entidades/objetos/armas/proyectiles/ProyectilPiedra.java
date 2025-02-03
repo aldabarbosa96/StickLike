@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 
@@ -18,8 +19,9 @@ public class ProyectilPiedra implements Proyectiles {
     private float direccionX, direccionY;
     private boolean proyectilActivo;
     private boolean esCritico;
+    private Jugador jugador;
 
-    public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad) {
+    public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad, Jugador jugador) {
         if (textura == null) {
             textura = armaPiedra;
         }
@@ -31,6 +33,7 @@ public class ProyectilPiedra implements Proyectiles {
         this.direccionY = direccionY;
         this.proyectilActivo = true;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
+        this.jugador = jugador;
     }
 
     @Override
@@ -84,7 +87,7 @@ public class ProyectilPiedra implements Proyectiles {
     public float getBaseDamage() {
         // Daño base aleatorio entre 21 y 31
         float base = 21 + (float) Math.random() * 10;
-        if (Math.random() < CRITICO) {
+        if (Math.random() < jugador.getCritico()) {
             esCritico = true;
             return base * 1.5f;
         } else {

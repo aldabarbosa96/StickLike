@@ -1,6 +1,5 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,9 +31,9 @@ public class ProyectilTazo implements Proyectiles {
     private GestorDeAudio gestorDeAudio;
 
     // --- Campos para el efecto de "crecer" ---
-    private static final float MIN_GROWTH_SCALE = 0.1f; // Escala inicial (muy pequeño)
-    private static final float MAX_GROWTH_SCALE = 0.9f;     // Escala final (tamaño normal)
-    private static final float GROW_DURATION = 1.5f;        // Duración del efecto de crecimiento (en segundos)
+    private static final float MIN_GROWTH_SCALE = 0.1f;
+    private static final float MAX_GROWTH_SCALE = 0.9f;
+    private static final float GROW_DURATION = 0.5f;  // Duración del efecto de crecimiento (y del fade-out)
 
     // --- Nuevas fases del ciclo del tazo ---
     private enum Phase { GROWING, ACTIVE, COOLDOWN }
@@ -43,7 +42,7 @@ public class ProyectilTazo implements Proyectiles {
 
     // Duraciones para la fase ACTIVE y la fase COOLDOWN
     private static final float ACTIVE_DURATION = 8f;    // Tiempo que el tazo se muestra activo
-    private static final float COOLDOWN_DURATION = 3f;  // Tiempo de pausa (tazo oculto) antes de reiniciarse
+    private static final float COOLDOWN_DURATION = 3f;  // Tiempo total de espera entre ataques
 
     // Usamos growthTimer para controlar el efecto de crecimiento (durante GROWING)
     private float growthTimer = 0f;
@@ -86,12 +85,11 @@ public class ProyectilTazo implements Proyectiles {
 
         switch (phase) {
             case GROWING:
-                // Actualizamos el efecto de crecimiento: interpolamos la escala
+                // Efecto de crecer: interpolamos la escala de MIN_GROWTH_SCALE a MAX_GROWTH_SCALE
                 growthTimer += delta;
                 float progress = Math.min(growthTimer / GROW_DURATION, 1f);
                 float currentScale = MIN_GROWTH_SCALE + progress * (MAX_GROWTH_SCALE - MIN_GROWTH_SCALE);
                 sprite.setScale(currentScale);
-                // Se puede aplicar algún efecto visual (p. ej., opacidad) si se desea
                 // Actualizamos la rotación
                 rotacionSprite += 720f * delta;
                 sprite.setRotation(rotacionSprite);
@@ -106,16 +104,12 @@ public class ProyectilTazo implements Proyectiles {
                 break;
 
             case ACTIVE:
-                // En la fase ACTIVE se comporta como el tazo habitual.
-                // Se asegura que la escala sea la final.
+                // Fase ACTIVE: el tazo se muestra normalmente
                 sprite.setScale(MAX_GROWTH_SCALE);
-                // Actualizamos la rotación
                 rotacionSprite += 720f * delta;
                 sprite.setRotation(rotacionSprite);
-                // Actualizamos la posición
-                sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2,
-                    jugadorCentroY + offsetY - sprite.getHeight() / 2);
-                // Se sigue con la lógica de daño
+                sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2, jugadorCentroY + offsetY - sprite.getHeight() / 2);
+                // Lógica de daño
                 temporizadorDano += delta;
                 if (temporizadorDano >= INTERVALO_TAZOS) {
                     enemigosImpactados.clear();
@@ -124,7 +118,7 @@ public class ProyectilTazo implements Proyectiles {
                 if (enemigosImpactados.isEmpty()) {
                     sprite.setColor(1, 1, 1, 1);
                 }
-                // Si transcurre el tiempo activo, pasamos a COOLDOWN
+                // Si transcurre el tiempo activo, pasamos a la fase COOLDOWN
                 if (phaseTimer >= ACTIVE_DURATION) {
                     phase = Phase.COOLDOWN;
                     phaseTimer = 0;
@@ -132,26 +126,29 @@ public class ProyectilTazo implements Proyectiles {
                 break;
 
             case COOLDOWN:
-                // Durante COOLDOWN se oculta el tazo (por ejemplo, se pone opacidad a 0)
-                sprite.setColor(1, 1, 1, 0f);
-                // Se puede reposicionar, aunque en este caso lo centramos al mismo lugar
-                sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2,
-                    jugadorCentroY + offsetY - sprite.getHeight() / 2);
-                // Si transcurre el tiempo de cooldown, reiniciamos el ciclo:
-                // Reseteamos el growthTimer y volvemos a la fase GROWING.
+                // Durante COOLDOWN: se realiza un efecto de fade-out
+                if (phaseTimer < GROW_DURATION) {
+                    float cooldownProgress = Math.min(phaseTimer / GROW_DURATION, 1f);
+                    float scaleDuringCooldown = MAX_GROWTH_SCALE - cooldownProgress * (MAX_GROWTH_SCALE - MIN_GROWTH_SCALE);
+                    sprite.setScale(scaleDuringCooldown);
+                    float alphaDuringCooldown = 1f - cooldownProgress;
+                    sprite.setColor(1, 1, 1, alphaDuringCooldown);
+                } else {
+                    // Después del fade-out, el sprite permanece oculto
+                    sprite.setColor(1, 1, 1, 0f);
+                }
+                // Mantenemos la posición
+                sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2, jugadorCentroY + offsetY - sprite.getHeight() / 2);
+                // Una vez completados los 3 segundos de cooldown, reiniciamos el ciclo
                 if (phaseTimer >= COOLDOWN_DURATION) {
                     phase = Phase.GROWING;
                     phaseTimer = 0;
                     growthTimer = 0;
-                    // Restauramos la escala y el color inicial
                     sprite.setScale(MIN_GROWTH_SCALE);
                     sprite.setColor(1, 1, 1, 1);
                 }
                 break;
         }
-
-        // Nota: La rotación y posición se actualizan en cada fase para que, al reiniciarse,
-        // el tazo aparezca en la posición correcta.
     }
 
     @Override
@@ -163,8 +160,13 @@ public class ProyectilTazo implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
+        // Solo se activa la colisión en la fase ACTIVE
+        if (phase != Phase.ACTIVE) {
+            return new Rectangle(0, 0, 0, 0);
+        }
         return new Rectangle(sprite.getX() + sprite.getWidth() / 2 - radioColision / 2,
-            sprite.getY() + sprite.getHeight() / 2 - radioColision / 2, radioColision, radioColision);
+            sprite.getY() + sprite.getHeight() / 2 - radioColision / 2,
+            radioColision, radioColision);
     }
 
     @Override
@@ -194,7 +196,11 @@ public class ProyectilTazo implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        return (float) (DANYO_TAZOS + Math.random() * 3.5f);
+        // Se aplica daño únicamente en la fase ACTIVE
+        if (phase == Phase.ACTIVE) {
+            return (float) (DANYO_TAZOS + Math.random() * 3.5f);
+        }
+        return 0f;
     }
 
     @Override

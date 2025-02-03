@@ -178,8 +178,18 @@ public class Jugador {
     public int getProyectilesPorDisparo() {
         return proyectilesPorDisparo;
     }
-    public void aumentarRegVida(float percentage){
+
+    public void aumentarRegVida(float percentage) {
         this.regVidaJugador += (percentage * maxVidaJugador) / 100;
+    }
+
+    public void aumentarCritico(float percentage) {
+        float criticalAmount = (percentage * criticoJugador) * 10;
+        this.criticoJugador += criticalAmount;
+    }
+    public void aumentarResistencia(float percentage) {
+        float resistenciaAmount = (percentage * resistenciaJugador) * 10;
+        this.resistenciaJugador += resistenciaAmount;
     }
 
     public float getVelocidadJugador() {
@@ -268,10 +278,11 @@ public class Jugador {
         return regVidaJugador;
     }
 
-    private void regenerarVida(float delta){
+    private void regenerarVida(float delta) {
         vidaJugador += maxVidaJugador * regVidaJugador * delta;
         if (vidaJugador > maxVidaJugador) vidaJugador = maxVidaJugador;
     }
+
     public void setRegVidaJugador(float regVidaJugador) {
         this.regVidaJugador = regVidaJugador;
     }
@@ -283,6 +294,7 @@ public class Jugador {
     public void setCriticoJugador(float criticoJugador) {
         this.criticoJugador = criticoJugador;
     }
+
 
     public float getOroGanado() {
         return oroGanado;

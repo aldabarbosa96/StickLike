@@ -20,7 +20,7 @@ public class BossPolla implements Enemigo {
     private AnimacionesEnemigos animaciones;
     private MovimientoBossPolla movimientoBoss;
 
-    private float vida = 1000;
+    private float vida = 1250f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private float damageAmount = 12.5f;
