@@ -62,9 +62,11 @@ public class VentanaGameOver implements Screen {
         });
     }
 
+    // En VentanaGameOver.java
     private void reiniciarJuego() {
         game.ventanaJuego.dispose();
-        game.ventanaJuego = new VentanaJuego(game); // creamos una nueva instancia de GameScreen
+        game.ventanaJuego = new VentanaJuego(game, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        game.ventanaJuego.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // <-- Añadir esta línea
         game.setScreen(game.ventanaJuego);
         game.gestorDeAudio.reproducirMusica();
     }

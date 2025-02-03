@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.utilidades.GestorDeAudio;
@@ -47,7 +48,7 @@ public class VentanaJuego implements Screen {
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private OrthographicCamera camara;
-    private Viewport viewport;
+    private FitViewport viewport;
     private RenderVentanaJuego renderVentanaJuego;
     private RenderHUDComponents renderHUDComponents;
 
@@ -71,10 +72,15 @@ public class VentanaJuego implements Screen {
     private Array<ObjetosXP> objetosXP;
     private Array<Enemigo> enemigosAEliminar;
 
+    private int currentScreenWidth;
+    private int currentScreenHeight;
+
     private boolean pausado = false;
 
-    public VentanaJuego(MainGame game) {
+    public VentanaJuego(MainGame game, int screenWidth, int screenHeight) {
         this.game = game;
+        this.currentScreenWidth = screenWidth;
+        this.currentScreenHeight = screenHeight;
 
         inicializarRenderYCamara();
         inicializarJugador();
@@ -91,7 +97,7 @@ public class VentanaJuego implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         camara = new OrthographicCamera();
-        viewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camara);
+        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camara);
         viewport.apply();
     }
 
@@ -124,7 +130,7 @@ public class VentanaJuego implements Screen {
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
 
-        menuPause = new MenuPause(4, 12f, 4, 22, 15, 55, this);
+        menuPause = new MenuPause( this,viewport);
     }
 
     private void inicializarListas() {
@@ -156,7 +162,7 @@ public class VentanaJuego implements Screen {
         }
 
         renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
-        menuPause.render(shapeRenderer, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        menuPause.render(shapeRenderer);
 
         popUpMejoras.getUiStage().act(delta);
         popUpMejoras.getUiStage().draw();
@@ -248,9 +254,12 @@ public class VentanaJuego implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        currentScreenWidth = width;
+        currentScreenHeight = height;
         viewport.update(width, height, true);
         popUpMejoras.getUiStage().getViewport().update(width, height, true);
         hud.resize(width, height);
+        menuPause.getViewport().update(width, height, true);
     }
 
     @Override

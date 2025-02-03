@@ -52,9 +52,10 @@ public class RenderHUDComponents {
         // Formateamos el tiempo en "MM:SS"
         tiempoFormateado = formatearTiempo(tiempoTranscurrido);
 
-        // posición del texto
-        float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + TIMER_Y_CORRECTION);
-        float textY = VIRTUAL_HEIGHT / 2 + TIMER_Y_POS;
+        // Se añade un offset vertical adicional para subir el timer
+        float timerVerticalOffset = 115f; // Ajusta este valor según tu preferencia
+        float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + 15f);
+        float textY = (VIRTUAL_HEIGHT / 2) + TIMER_Y_POS + timerVerticalOffset;
 
         spriteBatch.begin();
 
@@ -64,6 +65,7 @@ public class RenderHUDComponents {
         dibujarTextoConReborde(spriteBatch, tiempoFormateado, textX, textY, BASIC_OFFSET, colorReborde, colorTexto);
         spriteBatch.end();
     }
+
 
     private String formatearTiempo(float tiempoSegundos) {
         int minutos = (int) (tiempoSegundos / TIMER_SECONDS);
@@ -120,7 +122,7 @@ public class RenderHUDComponents {
 
         layout.setText(fuente, levelText + levelNumber);
 
-        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - TEXT_X_CORRECTION;
+        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - TEXT_X_CORRECTION +2f;
         float textY = HUD_HEIGHT - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
 
         spriteBatch.begin();
@@ -134,7 +136,7 @@ public class RenderHUDComponents {
 
         // Coordenadas número
         float levelTextWidth = new GlyphLayout(fuente, levelText).width;
-        float levelNumberX = textX + levelTextWidth;
+        float levelNumberX = textX + levelTextWidth +2f;
         float textYNumber = HUD_HEIGHT - NUMBER_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
 
         // Texto número del nivel
@@ -149,7 +151,7 @@ public class RenderHUDComponents {
         float barWidth = HUD_BAR_WIDTH;
         float barHeight = HUD_BAR_HEIGHT;
         float barX = HUD_BAR_X;
-        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD ;
         float experiencePercentage = sistemaDeNiveles.getXpActual() / sistemaDeNiveles.getXpHastaSiguienteNivel();
 
         renderizarFondoBarraXP(barX, barY, barWidth, barHeight, experiencePercentage);
@@ -184,7 +186,7 @@ public class RenderHUDComponents {
         int porcentajeXP = (int) ((xpActual / xpHastaSiguienteNivel) * 100);
 
         // Formateamos el texto para mostrar el porcentaje
-        String experienceText = porcentajeXP + "%";
+        String experienceText = porcentajeXP + " %";
         layout.setText(fuente, experienceText);
 
         float textWidth = layout.width;
@@ -196,7 +198,8 @@ public class RenderHUDComponents {
 
         spriteBatch.begin();
 
-        Color colorReborde = Color.BLACK;
+        fuente.getData().setScale(0.8f);
+        Color colorReborde = Color.DARK_GRAY;
         Color colorTexto = Color.WHITE;
         dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, UNDER_OFFSET, colorReborde, colorTexto);
 
@@ -207,7 +210,7 @@ public class RenderHUDComponents {
     public void renderizarCacaDorada(float oroAcumulado) {
         float iconSize = 15f;
         float posX = HUD_BAR_X + 10f; // Margen izquierdo de la barra de XP
-        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 73.5f; // Debajo de la barra
+        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 80f; // Debajo de la barra
 
         spriteBatch.begin();
 
@@ -220,7 +223,7 @@ public class RenderHUDComponents {
 
         fuente.getData().setScale(0.8f);
         float textX = posX + iconSize + 4f; // Padding entre icono y texto
-        float textY = posY + iconSize / 2 + 5f;
+        float textY = posY + iconSize / 2 + 4;
 
         dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.GOLD);
 
@@ -242,8 +245,8 @@ public class RenderHUDComponents {
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
         Texture[] iconos = {iconoVelMov, iconoRango, iconoVelAt, iconoFuerza, iconoProyectiles,};
 
-        float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION;
-        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION;
+        float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION +25;
+        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 3f;
 
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC1);
     }
@@ -262,8 +265,8 @@ public class RenderHUDComponents {
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
         Texture[] iconos = {iconoVida, iconoRegeneracion, iconoPoder, iconoResistencia, iconoCritico};
 
-        float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2;
-        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION;
+        float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2 + 10f;
+        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 3f;
 
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
     }

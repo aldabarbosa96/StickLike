@@ -19,7 +19,7 @@ public class MainGame extends Game {
         GestorDeAssets.cargarRecursos(); // Cargamos los assets al iniciar
         gestorDeAudio = new GestorDeAudio();
         gestorDeAudio.reproducirMusica();
-        ventanaJuego = new VentanaJuego(this); // Pasamos MainGame a GameScreen
+        ventanaJuego = new VentanaJuego(this,VentanaJuego.worldWidth,VentanaJuego.worldHeight); // Pasamos MainGame a GameScreen
         setScreen(ventanaJuego);
     }
 
