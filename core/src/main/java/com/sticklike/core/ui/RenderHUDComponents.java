@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 
@@ -31,6 +32,7 @@ public class RenderHUDComponents {
     private Jugador jugador;
     private SistemaDeNiveles sistemaDeNiveles;
     private ControladorProyectiles controladorProyectiles;
+    private ControladorEnemigos controladorEnemigos;
     private final Texture texturaCorazonVida, texturaLapizXP;
     private float tiempoTranscurrido = 0;
     private String tiempoFormateado;
@@ -50,6 +52,7 @@ public class RenderHUDComponents {
         this.texturaCorazonVida = corazonVida;
         this.texturaLapizXP = iconoXP;
         this.controladorProyectiles = jugador.getControladorProyectiles();
+        this.controladorEnemigos = jugador.getControladorEnemigos();
 
         // Inicializamos la cámara y viewport para el HUD usando la resolución virtual (por ejemplo, 1600x900)
         hudCamera = new OrthographicCamera();
@@ -164,6 +167,7 @@ public class RenderHUDComponents {
         renderizarFondoBarraXP(barX, barY, barWidth, barHeight, experiencePercentage);
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
         renderizarCacaDorada(jugador.getOroGanado());
+        renderizarContadorEnemigos(controladorEnemigos.getKillCounter());
     }
 
     private void renderizarFondoBarraXP(float barX, float barY, float barWidth, float barHeight, float experiencePercentage) {
@@ -201,8 +205,8 @@ public class RenderHUDComponents {
 
     public void renderizarCacaDorada(float oroAcumulado) {
         float iconSize = 15f;
-        float posX = HUD_BAR_X + 10f;
-        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 72f;
+        float posX = HUD_BAR_X + 50f;
+        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 92f;
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
         // Dibujar icono de caca
@@ -216,6 +220,24 @@ public class RenderHUDComponents {
         dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.GOLD);
         spriteBatch.end();
     }
+    public void renderizarContadorEnemigos(int contadorEnemigos) {
+        spriteBatch.setProjectionMatrix(hudCamera.combined);
+        spriteBatch.begin();
+
+        // Define la posición y estilo del texto
+        fuente.getData().setScale(0.8f);
+        String textoContador = "☠  " + contadorEnemigos;
+
+        // Puedes ajustar la posición según tu necesidad, por ejemplo:
+        float posX = HUD_BAR_X + 136f;
+        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 80f;
+
+        // Opcional: dibuja el texto con reborde para mejorar la legibilidad
+        dibujarTextoConReborde(spriteBatch, textoContador, posX, posY, 1f, Color.BLACK, Color.WHITE);
+
+        spriteBatch.end();
+    }
+
 
     public void renderizarStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");

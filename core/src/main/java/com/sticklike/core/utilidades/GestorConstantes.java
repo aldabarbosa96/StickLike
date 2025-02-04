@@ -136,7 +136,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VIDA_ENEMIGOCULO = 30f;
     public static final float DANYO_CULO = 2f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
-    public static final float VEL_BASE_CULO = 35f;
+    public static final float VEL_BASE_CULO = 30f;
     public static final float VIDA_ENEMIGOREGLA = 75f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
@@ -233,6 +233,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 10.5f * 1.09375f;
     public static final float OBJETO_ORO_WIDTH = 10f * 1.09375f;
     public static final float OBJETO_ORO_HEIGHT = 10f * 1.09375f;
+    public static final float OBJETO_PWUP_WIDTH = 8f;
+    public static final float OBJETO_PWUP_HEIGHT = 14f;
 
     // -------------------------------------------------
     // Controlador Evento
@@ -255,11 +257,18 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;
     public static final int MAX_ATTEMPTS = 5;
     public static final int CANTIDAD_BORRONES = 1750; // todo --> dibujar más borrones
-
     public static final float MAP_MIN_X = -10000;
-    public static final float MAP_MAX_X = 10000;
+    public static final float MAP_MAX_X = 10500;
     public static final float MAP_MIN_Y = -10000;
-    public static final float MAP_MAX_Y = 10000;
+    public static final float MAP_MAX_Y = 10500;
+
+    // -------------------------------------------------
+    // Configuración recolectables mapa
+    // -------------------------------------------------
+    public static final float MAP_MIN_X_DROP = -2000;
+    public static final float MAP_MAX_X_DROP = 2500;
+    public static final float MAP_MIN_Y_DROP = -2000;
+    public static final float MAP_MAX_Y_DROP = 2500;
 
     // -------------------------------------------------
     // Controlador AUDIO
@@ -275,5 +284,5 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_MUERTE = 0.7f;
     public static final float AUDIO_UPGRADE = 0.5f;
     public static final float AUDIO_PAUSA = 0.4f;
-    public static final float MAX_INSTANCIAS_SONIDO = 2f;
+    public static final int MAX_INSTANCIAS_SONIDO = 3;
 }

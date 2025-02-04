@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
@@ -87,6 +89,7 @@ public class VentanaJuego implements Screen {
         inicializarSistemasYControladores();
         inicializarCuadriculaYHUD();
         inicializarListas();
+        spawnObjetoPowerUp();
 
         // Ajustar la posición de la cámara
         actualizarPosCamara();
@@ -251,6 +254,22 @@ public class VentanaJuego implements Screen {
     public void addXPObject(ObjetosXP xpObject) {
         objetosXP.add(xpObject);
     }
+
+    public void spawnObjetoPowerUp() {
+        // Define los límites del mapa para que el objeto aparezca dentro de la zona visible
+        float minX = MAP_MIN_X_DROP;
+        float maxX = MAP_MAX_X_DROP;
+        float minY = MAP_MIN_Y_DROP;
+        float maxY = MAP_MAX_Y_DROP;
+
+        int cantidadPowerUps = 3;
+        Array<ObjetoPowerUp> powerUps = ObjetoPowerUp.crearPowerUps(cantidadPowerUps, minX, maxX, minY, maxY);
+
+        for (ObjetoPowerUp powerUp : powerUps) {
+            addXPObject(powerUp);
+        }
+    }
+
 
     @Override
     public void resize(int width, int height) {

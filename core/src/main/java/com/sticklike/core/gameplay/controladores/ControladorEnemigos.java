@@ -28,6 +28,7 @@ public class ControladorEnemigos {
     private float intervaloDeAparicion;
     private float temporizadorDeAparicion;
 
+    private int killCounter = 0; // para renderizar en el hud
     private int spawnCounter = 0; // para en un futuro controlar eventos
 
     private final Array<Enemigo> enemigosAEliminar = new Array<>();
@@ -65,6 +66,7 @@ public class ControladorEnemigos {
             enemigo.actualizar(delta);
 
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
+                killCounter++;
                 float random = MathUtils.random(0f, 100f);
 
                 // 1º - Comprobamos si suelta Caca Dorada (2% de probabilidad)
@@ -209,5 +211,9 @@ public class ControladorEnemigos {
 
     public Jugador getJugador() {
         return jugador;
+    }
+
+    public int getKillCounter() {
+        return killCounter;
     }
 }

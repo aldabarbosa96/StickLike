@@ -294,7 +294,6 @@ public class Jugador {
         this.criticoJugador = criticoJugador;
     }
 
-
     public float getOroGanado() {
         return oroGanado;
     }

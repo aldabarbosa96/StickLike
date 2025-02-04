@@ -18,8 +18,6 @@ public class GestorDeAudio {
     // Duración estimada de cada efecto (en segundos)
     private Map<String, Float> duracionSonidos;
 
-    private static final int MAX_INSTANCIAS_SONIDO = 3;
-
     public GestorDeAudio() {
         efectosSonido = new HashMap<>();
         contadorInstancias = new HashMap<>();
@@ -41,13 +39,12 @@ public class GestorDeAudio {
         efectosSonido.put("recogerXP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerObjetoXPCaca.wav")));
         efectosSonido.put("recogerVida", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerCorazon.wav")));
         efectosSonido.put("recogerOro", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoOro.wav")));
+        efectosSonido.put("recogerPowerUP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPowerUp.wav")));
         efectosSonido.put("upgrade", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoUpgrade.wav")));
         efectosSonido.put("pausa", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPausa.wav")));
 
-        // Duraciones estimadas (en segundos) de cada efecto. Ajusta según la duración real de tus archivos.
+        // Manejar tiempos de duración de los efectos
         duracionSonidos.put("tazo", 0.5f);
-        duracionSonidos.put("lanzarPiedra", 0.7f);
-        // … y así sucesivamente para los demás efectos.
     }
 
     public void reproducirMusica() {
