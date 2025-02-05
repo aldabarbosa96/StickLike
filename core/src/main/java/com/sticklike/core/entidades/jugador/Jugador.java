@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
@@ -30,6 +31,7 @@ public class Jugador {
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
+    private ObjetoPowerUp objetoPowerUp;
 
     // Atributos de stats
     private float velocidadJugador;

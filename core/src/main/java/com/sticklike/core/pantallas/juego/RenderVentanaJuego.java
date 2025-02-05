@@ -53,7 +53,7 @@ public class RenderVentanaJuego {
     public void renderizarVentana(float delta, VentanaJuego ventanaJuego, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
         // 1) Limpiamos la pantalla
-        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+        Gdx.gl.glClearColor(0.875f, 0.875f, 0.875f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
@@ -105,7 +105,7 @@ public class RenderVentanaJuego {
     public void renderizarLineasCuadricula(OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.64f, 0.80f, 0.86f, 1);
+        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1);
 
         float startX = camera.position.x - camera.viewportWidth / 2;
         float endX = camera.position.x + camera.viewportWidth / 2;

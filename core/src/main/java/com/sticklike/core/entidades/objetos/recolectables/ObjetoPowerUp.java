@@ -9,7 +9,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 public class ObjetoPowerUp extends ObjetoBase {
-
+    private int contador = 0;
 
     public ObjetoPowerUp(float x, float y) {
         super(x, y);
@@ -18,8 +18,10 @@ public class ObjetoPowerUp extends ObjetoBase {
 
     @Override
     public void recolectar(GestorDeAudio gestorDeAudio) {
-        gestorDeAudio.reproducirEfecto("recogerPowerUP", AUDIO_RECOLECCION_ORO);
+        contador++;
+        gestorDeAudio.reproducirEfecto("recogerPowerUP", AUDIO_RECOLECCION_PWUP);
         super.recolectar(gestorDeAudio);
+
     }
     @Override
     protected Texture getTexture() {
@@ -38,12 +40,15 @@ public class ObjetoPowerUp extends ObjetoBase {
     public static Array<ObjetoPowerUp> crearPowerUps(int cantidad, float minX, float maxX, float minY, float maxY) {
         Array<ObjetoPowerUp> powerUps = new Array<>();
         for (int i = 0; i < cantidad; i++) {
-            // Puedes agregar márgenes si lo necesitas:
-            float margen = 20f;
+            float margen = 50f;
             float x = MathUtils.random(minX + margen, maxX - margen);
             float y = MathUtils.random(minY + margen, maxY - margen);
             powerUps.add(new ObjetoPowerUp(x, y));
         }
         return powerUps;
+    }
+
+    public int getContador() {
+        return contador;
     }
 }

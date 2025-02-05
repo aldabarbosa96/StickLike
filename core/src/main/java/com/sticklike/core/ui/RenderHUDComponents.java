@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
@@ -21,8 +22,8 @@ import java.text.DecimalFormat;
 
 /**
  * Clase encargada de dibujar los elementos del HUD en pantalla, como los stats, experiencia, nivel, temporizador, etc.
- * Ahora utiliza una cámara y viewport propios para el HUD, de forma similar al MenuPause,
- * lo que garantiza que se mantenga la relación de aspecto definida (por ejemplo, 1600x900) sin importar el tamaño real.
+ * Ahora utiliza una cámara y viewport propios para el HUD, de forma similar al MenuPause, lo que garantiza que se mantenga
+ * la relación de aspecto definida sin importar el tamaño real
  */
 public class RenderHUDComponents {
     private ShapeRenderer shapeRenderer;
@@ -71,7 +72,7 @@ public class RenderHUDComponents {
         tiempoFormateado = formatearTiempo(tiempoTranscurrido);
 
         // Se añade un offset vertical adicional para subir el timer
-        float timerVerticalOffset = 90f; // Ajusta según prefieras
+        float timerVerticalOffset = 70f; // Ajusta según prefieras
         float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + 15f);
         float textY = (VIRTUAL_HEIGHT / 2) + TIMER_Y_POS + timerVerticalOffset;
 
@@ -93,7 +94,7 @@ public class RenderHUDComponents {
         // Usar la proyección del HUD en la shapeRenderer
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1.0f, 0.95f, 0.75f, 1);
+        shapeRenderer.setColor(0.95f, 0.90f, 0.70f, 1);
         shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
         shapeRenderer.end();
     }
@@ -124,7 +125,7 @@ public class RenderHUDComponents {
     public void renderizarLineasHorizontalesCuadricula(float alturaHUD) {
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.64f, 0.80f, 0.86f, 1);
+        shapeRenderer.setColor(0.64f, 0.74f, 0.9f, 1);
 
         float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
         for (float y = 0; y <= alturaHUD; y += cellSize) {
@@ -168,6 +169,7 @@ public class RenderHUDComponents {
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
         renderizarCacaDorada(jugador.getOroGanado());
         renderizarContadorEnemigos(controladorEnemigos.getKillCounter());
+        renderizarContadorLapices(1);
     }
 
     private void renderizarFondoBarraXP(float barX, float barY, float barWidth, float barHeight, float experiencePercentage) {
@@ -204,9 +206,9 @@ public class RenderHUDComponents {
     }
 
     public void renderizarCacaDorada(float oroAcumulado) {
-        float iconSize = 15f;
-        float posX = HUD_BAR_X + 50f;
-        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 92f;
+        float iconSize = 22f;
+        float posX = HUD_BAR_X + 127.5f;
+        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
         // Dibujar icono de caca
@@ -216,25 +218,46 @@ public class RenderHUDComponents {
         String cantidad = df.format(oroAcumulado);
         fuente.getData().setScale(0.8f);
         float textX = posX + iconSize + 4f;
-        float textY = posY + iconSize / 2 + 4;
+        float textY = posY + iconSize / 2 + 5;
         dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.GOLD);
         spriteBatch.end();
     }
+
     public void renderizarContadorEnemigos(int contadorEnemigos) {
+        float iconSize = 23f;
+        float posX = HUD_BAR_X + 50f;
+        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
 
-        // Define la posición y estilo del texto
+        spriteBatch.draw(iconoCalaveraKills, posX, posY, iconSize, iconSize);
+
+        DecimalFormat df = new DecimalFormat("#");
+        String cantidad = df.format(contadorEnemigos);
         fuente.getData().setScale(0.8f);
-        String textoContador = "☠  " + contadorEnemigos;
+        float textX = posX + iconSize + 4f;
+        float textY = posY + iconSize / 2 + 4;
+        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.WHITE);
+        spriteBatch.end();
+    }
 
-        // Puedes ajustar la posición según tu necesidad, por ejemplo:
-        float posX = HUD_BAR_X + 136f;
-        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 80f;
+    public void renderizarContadorLapices(float contadorLapices) {
+        float iconWidth = 9f;
+        float iconHeight = 22f;
 
-        // Opcional: dibuja el texto con reborde para mejorar la legibilidad
-        dibujarTextoConReborde(spriteBatch, textoContador, posX, posY, 1f, Color.BLACK, Color.WHITE);
+        float posX = HUD_BAR_X + 205f;
+        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
+        spriteBatch.setProjectionMatrix(hudCamera.combined);
+        spriteBatch.begin();
 
+        spriteBatch.draw(recolectablePowerUp, posX, posY, iconWidth, iconHeight);
+
+        DecimalFormat df = new DecimalFormat("#");
+        String cantidad = df.format(contadorLapices);
+        fuente.getData().setScale(0.8f);
+        float textX = posX + iconWidth + 5f;
+        float textY = posY + iconHeight / 2 + 4;
+        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.WHITE);
         spriteBatch.end();
     }
 

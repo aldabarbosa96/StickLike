@@ -8,24 +8,24 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Resolución virtual
     // -------------------------------------------------
-    public static final float VIRTUAL_WIDTH = 1520f;
-    public static final float VIRTUAL_HEIGHT = 855f;
+    public static final float VIRTUAL_WIDTH = 1440;
+    public static final float VIRTUAL_HEIGHT = 810f;
 
     // -------------------------------------------------
     // Configuración de la cámara
     // -------------------------------------------------
-    public static final float CAMERA_OFFSET_Y = -65f;
+    public static final float CAMERA_OFFSET_Y = -95f;
     public static final float CAMERA_JUGADOR_OFFSET_Y = 125f;
 
     // -------------------------------------------------
     // CONFIGURACIÓN DEL HUD
     // -------------------------------------------------
-    public static final float HUD_HEIGHT = 190f;
+    public static final float HUD_HEIGHT = 180f;
     public static final float GRID_CELL_SIZE = 38f * 1.09375f;
     public static final float GRID_CELL_SIZE_CORRECTION = 20f * 1.09375f;
     public static final float HUD_BAR_WIDTH = 200f * 1.4814814815f;
     public static final float HUD_BAR_HEIGHT = 11.5f * 1.09375f;
-    public static final float HUD_BAR_X = 407.5f * 1.4814814815f;
+    public static final float HUD_BAR_X = 382f * 1.4814814815f;
     public static final float HUD_BAR_Y_OFFSET = 10f * 1.09375f;
     public static final float HEART_SIZE = 20f * 1.09375f;
     public static final float HEART_X = 410f * 1.4814814815f;
@@ -43,9 +43,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float BORDER_POSITIVE = 3f * 1.09375f;
     public static final float BORDER_CORRECTION = 2f * 1.09375f;
     public static final float XPTEXT_Y_CORRECTION = 2f * 1.09375f;
-    public static final float STATS_X_CORRECTION = 905f * 1.4814814815f;
-    public static final float STATS_X_CORRECTION2 = 730f * 1.4814814815f;
-    public static final float STATS_Y_CORRECTION = 45f * 1.09375f;
+    public static final float STATS_X_CORRECTION = 855f * 1.4814814815f;
+    public static final float STATS_X_CORRECTION2 = 695f * 1.4814814815f;
+    public static final float STATS_Y_CORRECTION = 38f * 1.09375f;
     public static final float ESPACIADO = 18f * 1.09375f;
     public static final float ANCHO_DESC1 = 75f * 1.4814814815f;
     public static final float ANCHO_DESC2 = 75f * 1.4814814815f;
@@ -280,6 +280,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_RECOLECCION_CACA = 1f;
     public static final float AUDIO_RECOLECCION_VIDA = 0.7f;
     public static final float AUDIO_RECOLECCION_ORO = 0.6f;
+    public static final float AUDIO_RECOLECCION_PWUP = 1f;
     public static final float AUDIO_DANYO = 0.9f;
     public static final float AUDIO_MUERTE = 0.7f;
     public static final float AUDIO_UPGRADE = 0.5f;

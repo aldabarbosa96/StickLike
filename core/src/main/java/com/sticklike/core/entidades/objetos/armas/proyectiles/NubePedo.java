@@ -127,7 +127,7 @@ public class NubePedo implements Proyectiles {
 
             case VIBRATE2:
                 // Segunda vibración, similar a la primera
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.18f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
