@@ -7,8 +7,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.enemigos.movimiento.MovimientoCulo;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
+import com.sticklike.core.interfaces.ObjetosXP;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
@@ -105,8 +107,13 @@ public class EnemigoCulo implements Enemigo {
     }
 
     @Override
-    public ObjetoXp sueltaObjetoXP() {
-        if (!haSoltadoXP) {
+    public ObjetosXP sueltaObjetoXP() {
+        float randomXP = (float) (Math.random() * 100);
+        if (!haSoltadoXP && randomXP <= 1f) {
+            haSoltadoXP = true;
+            return new ObjetoVida(this.getX(), this.getY());
+        }
+        if (!haSoltadoXP && randomXP >= 15f) {
             haSoltadoXP = true;
             return new ObjetoXp(this.getX(), this.getY());
         }

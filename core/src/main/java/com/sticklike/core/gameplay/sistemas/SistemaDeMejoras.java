@@ -35,16 +35,16 @@ public class SistemaDeMejoras {
     }
 
     private void inicializarMejoras() {
-        //todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5,null));
-        //todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 25%", () -> jugador.aumentarRangoAtaque(0.25f), 5,null));
-        //todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 14%", () -> jugador.reducirIntervaloDisparo(0.125f), 5,null));
-        //todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5,null));
-        //todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5,null));
-        //todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 3%", () -> jugador.aumentarRegVida(0.03f), 5,null));
-        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 12%", () -> jugador.aumentarCritico(0.12f), 5,iconoCritico));
-        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 7%", () -> jugador.aumentarResistencia(0.07f), 5,iconoFuerza));
+        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5,null));
+        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 25%", () -> jugador.aumentarRangoAtaque(0.25f), 5,null));
+        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 14%", () -> jugador.reducirIntervaloDisparo(0.125f), 5,null));
+        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5,null));
+        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5,null));
+        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 3%", () -> jugador.aumentarRegVida(0.03f), 5,null));
+        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 12%", () -> jugador.aumentarCritico(0.12f), 5,null));
+        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 7%", () -> jugador.aumentarResistencia(0.07f), 5,null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
-            jugador.setVidaMax((jugador.getMaxVidaJugador()+15));jugador.setVidaJugador((jugador.getVidaJugador()+15));},10,iconoVida));
+            jugador.setVidaMax((jugador.getMaxVidaJugador()+15));jugador.setVidaJugador((jugador.getVidaJugador()+15));},10,null));
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1,armaCalcetin));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1,armaTazos));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1,armaNubePedo));
