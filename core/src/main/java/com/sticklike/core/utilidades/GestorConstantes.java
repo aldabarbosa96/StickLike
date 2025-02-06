@@ -207,7 +207,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_ROTACION = 180f;
     public static final float INTERVALO_TAZOS = 0.1f;
     public static final float DANYO_TAZOS = 1.5f;
-    public static final int NUM_TAZOS = 1;
+    public static final int NUM_TAZOS = 2;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
     public static final float DANYO_PEDO = 1f;
     public static final float DELAY_ENTRE_PEDOS = 5f;
@@ -243,13 +243,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 10;
-    public static final float EVENTO1_SPAWN_RATE = 0.25f;
+    public static final float EVENTO1_SPAWN_RATE = 0.5f;
     public static final float EVENTO1_SPEED_MULT = 1.15f;
-    public static final float EVENTO2_SPAWN_RATE = 0.15f;
+    public static final float EVENTO2_SPAWN_RATE = 0.25f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
-    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.1f;
+    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.15f;
 
     // -------------------------------------------------
     // Configuración borrones

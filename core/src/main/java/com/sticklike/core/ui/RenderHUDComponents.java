@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -26,6 +28,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +52,8 @@ public class RenderHUDComponents {
     // --- NUEVA CAMARA Y VIEWPORT PARA EL HUD ---
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
+
+    private List<Rectangle> slotsList = new ArrayList<>();
 
     public RenderHUDComponents(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, Jugador jugador, SistemaDeNiveles sistemaDeNiveles) {
         this.sistemaDeNiveles = sistemaDeNiveles;
@@ -201,9 +206,14 @@ public class RenderHUDComponents {
 
         renderizarFondoBarraXP(barX, barY, barWidth, barHeight, experiencePercentage);
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
-        renderizarCacaDorada(jugador.getOroGanado());
-        renderizarContadorEnemigos(controladorEnemigos.getKillCounter());
-        renderizarContadorLapices();
+
+        float centerX = barX + barWidth * 0.49f;
+        float posY    = barY - 35f;
+        float offset  = 60f;
+
+        renderizarIconoConTexto(recolectableCacaDorada, 22f, 22f, centerX - offset, posY, String.valueOf((int)jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
+        renderizarIconoConTexto(iconoCalaveraKills, 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
+        renderizarIconoConTexto(recolectablePowerUp, 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
     }
 
     private void renderizarFondoBarraXP(float barX, float barY, float barWidth, float barHeight, float experiencePercentage) {
@@ -239,62 +249,24 @@ public class RenderHUDComponents {
         spriteBatch.end();
     }
 
-    public void renderizarCacaDorada(float oroAcumulado) {
-        float iconSize = 22f;
-        float posX = HUD_BAR_X + 130f;
-        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
-        spriteBatch.setProjectionMatrix(hudCamera.combined);
-        spriteBatch.begin();
-        // Dibujar icono de caca
-        spriteBatch.draw(recolectableCacaDorada, posX, posY, iconSize, iconSize);
-        // Dibujar contador numérico al lado
-        DecimalFormat df = new DecimalFormat("#");
-        String cantidad = df.format(oroAcumulado);
-        fuente.getData().setScale(0.8f);
-        float textX = posX + iconSize + 4f;
-        float textY = posY + iconSize / 2 + 5;
-        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.GOLD);
-        spriteBatch.end();
-    }
-
-    public void renderizarContadorEnemigos(int contadorEnemigos) {
-        float iconSize = 23f;
-        float posX = HUD_BAR_X + 50f;
-        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
+    public void renderizarIconoConTexto(Texture iconTexture, float iconWidth, float iconHeight, float posX, float posY, String texto, float scaleFuente, Color colorTexto, Color colorReborde) {
+        // Ajustar cámara si es necesario
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
 
-        spriteBatch.draw(iconoCalaveraKills, posX, posY, iconSize, iconSize);
+        // Dibujamos el icono centrado
+        spriteBatch.draw(iconTexture, posX - iconWidth * 0.5f, posY - iconHeight * 0.5f, iconWidth, iconHeight);
 
-        DecimalFormat df = new DecimalFormat("#");
-        String cantidad = df.format(contadorEnemigos);
-        fuente.getData().setScale(0.8f);
-        float textX = posX + iconSize + 4f;
-        float textY = posY + iconSize / 2 + 4;
-        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.WHITE);
+        // Escalamos la fuente
+        fuente.getData().setScale(scaleFuente);
+
+        // Calculamos la posición del texto a la derecha del icono
+        float textX = posX + (iconWidth * 0.5f) + 5f;
+        float textY = posY + 5f;
+        dibujarTextoConReborde(spriteBatch, texto, textX, textY, 1f, colorReborde, colorTexto);
+
         spriteBatch.end();
     }
-
-    public void renderizarContadorLapices() {
-        float iconWidth = 9f;
-        float iconHeight = 22f;
-
-        float posX = HUD_BAR_X + 210f;
-        float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
-        spriteBatch.setProjectionMatrix(hudCamera.combined);
-        spriteBatch.begin();
-
-        spriteBatch.draw(recolectablePowerUp, posX, posY, iconWidth, iconHeight);
-
-        DecimalFormat df = new DecimalFormat("#");
-        String cantidad = df.format(ObjetoPowerUp.getContador());
-        fuente.getData().setScale(0.8f);
-        float textX = posX + iconWidth + 5f;
-        float textY = posY + iconHeight / 2 + 4;
-        dibujarTextoConReborde(spriteBatch, cantidad, textX, textY, 1f, Color.DARK_GRAY, Color.WHITE);
-        spriteBatch.end();
-    }
-
 
     public void renderizarStatsJugador() {
         DecimalFormat df = new DecimalFormat("#.##");
@@ -332,8 +304,8 @@ public class RenderHUDComponents {
         fuente.getData().setScale(0.8f);
         for (int i = 0; i < descripciones.length; i++) {
             float posicionY = statsY - i * ESPACIADO;
-            // Dibujar la descripción a la izquierda con reborde negro
-            dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.DARK_GRAY, Color.WHITE);
+            // Dibujar la descripción a la izquierda
+            dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
             // Dibujar el icono (si existe)
             if (iconos != null && i < iconos.length && iconos[i] != null) {
                 Texture icono = iconos[i];
@@ -342,12 +314,11 @@ public class RenderHUDComponents {
                 float iconY = posicionY - iconSize / 2f - ICON_Y_CORRECTION;
                 spriteBatch.draw(icono, iconX, iconY, iconSize, iconSize);
             }
-            // Dibujar el valor con reborde negro
-            dibujarTextoConReborde(spriteBatch, valores[i], statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, Color.DARK_GRAY, Color.WHITE);
+            // Dibujar el valor con reborde azul
+            dibujarTextoConReborde(spriteBatch, valores[i], statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, Color.BLUE, Color.WHITE);
         }
         spriteBatch.end();
     }
-
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         fuente.setColor(colorReborde);
@@ -364,45 +335,73 @@ public class RenderHUDComponents {
         fuente.draw(batch, texto, x, y);
     }
 
-    public void setHabilidadesActivas(List<Mejora> habilidadesActivas) {
-        hudStage.clear();
+    public void crearSlots() {
+        slotsList.clear();
 
         float baseX   = VIRTUAL_WIDTH - 500f;
-        float baseY   = 70f;
+        float baseY   = 75f;
         float colGap  = 100f;
-        float rowGap  = 75f;
-        int columns   = 6;
-        float buttonSize = 45f;
+        float rowGap  = 50f;
+        int columns   = 5;
+        int totalSlots = 10;
+        float slotSize = 45f;
 
-        for (int i = 0; i < habilidadesActivas.size(); i++) {
-            Mejora m = habilidadesActivas.get(i);
+        for (int i = 0; i < totalSlots; i++) {
+            int rowIndex = i / columns;
+            int colIndex = i % columns;
 
-            if (m.getIcono() != null) {
-                TextureRegionDrawable drawableIcono = new TextureRegionDrawable(new TextureRegion(m.getIcono()));
-                ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-                style.imageUp = drawableIcono;
+            float slotX = baseX + colIndex * colGap;
+            float slotY = baseY - rowIndex * rowGap;
 
-                ImageButton boton = new ImageButton(style);
-                boton.setSize(buttonSize, buttonSize);
+            slotsList.add(new Rectangle(slotX, slotY, slotSize, slotSize));
+        }
+    }
 
-                // Listener opcional al hacer clic todo --> por implementar (para en un futuro poder visualizar cada habilidad individualmente)
-                boton.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        System.out.println("Hiciste clic en " + m.getNombreMejora());
-                    }
-                });
+    public void setHabilidadesActivas(List<Mejora> habilidadesActivas) {
+        // OJO: aquí NO limpies slotsList.clear() para no eliminar los slots
+        hudStage.clear();
 
-                int rowIndex = i / columns;
-                int colIndex = i % columns;
+        // Para cada slot, si hay una mejora, ponle un icono
+        for (int i = 0; i < slotsList.size(); i++) {
+            if (i < habilidadesActivas.size()) {
+                Mejora m = habilidadesActivas.get(i);
+                if (m.getIcono() != null) {
+                    TextureRegionDrawable drawableIcono =
+                        new TextureRegionDrawable(new TextureRegion(m.getIcono()));
+                    ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+                    style.imageUp = drawableIcono;
 
-                float iconX = baseX + colIndex * colGap;
-                float iconY = baseY - rowIndex * rowGap;
+                    ImageButton boton = new ImageButton(style);
+                    boton.setSize(slotsList.get(i).width, slotsList.get(i).height);
 
-                boton.setPosition(iconX, iconY);
-                hudStage.addActor(boton);
+                    // Usa las mismas coords del slot
+                    boton.setPosition(slotsList.get(i).x, slotsList.get(i).y);
+
+                    boton.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            System.out.println("Hiciste clic en " + m.getNombreMejora());
+                        }
+                    });
+
+                    hudStage.addActor(boton);
+                }
             }
         }
+    }
+
+    public void renderizarMarcosMejoras() {
+        shapeRenderer.setProjectionMatrix(hudCamera.combined);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.BLUE);
+
+        // Dibujamos cada slot que tengamos en la lista
+        for (Rectangle rect : slotsList) {
+            shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+        }
+
+        shapeRenderer.end();
     }
 
     public void dispose() {

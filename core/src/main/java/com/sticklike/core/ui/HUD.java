@@ -3,7 +3,6 @@ package com.sticklike.core.ui;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
@@ -23,12 +22,13 @@ public class HUD {
     private static final float desplazamientoVertHUD = DESPLAZAMIENTO_VERTICAL_HUD;
 
     public HUD(Jugador jugador, SistemaDeNiveles sistemaDeNiveles, ShapeRenderer shapeRenderer, SpriteBatch spriteBatch) {
-        this.renderHUDComponents = new RenderHUDComponents(shapeRenderer, spriteBatch, jugador, sistemaDeNiveles); // Clase encargada de renderizar los componentes del HUD
+        this.renderHUDComponents = new RenderHUDComponents(shapeRenderer, spriteBatch, jugador, sistemaDeNiveles);
         this.shapeRenderer = shapeRenderer;
         this.spriteBatch = spriteBatch;
         this.hudCamara = new OrthographicCamera();
         this.hudViewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
         this.hudCamara.update();
+        renderHUDComponents.crearSlots();
 
 
 
@@ -52,6 +52,8 @@ public class HUD {
         renderHUDComponents.renderizarMasStatsJugador();
         renderHUDComponents.getHudStage().act(delta);
         renderHUDComponents.getHudStage().draw();
+        renderHUDComponents.renderizarMarcosMejoras();
+
 
     }
 
