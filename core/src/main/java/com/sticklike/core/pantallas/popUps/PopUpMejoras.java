@@ -156,6 +156,7 @@ public class PopUpMejoras {
     private void onSelectMejora(int index, List<Mejora> mejoras) {
         if (index < 0 || index >= mejoras.size()) return;
         sistemaDeMejoras.aplicarMejora(mejoras.get(index));
+        ventanaJuego1.getRenderHUDComponents().setHabilidadesActivas(sistemaDeMejoras.getHabilidadesActivas());
         upgradeWindow.remove();
         ventanaJuego1.setPausado(false);
         ventanaJuego1.getRenderHUDComponents().reanudarTemporizador();

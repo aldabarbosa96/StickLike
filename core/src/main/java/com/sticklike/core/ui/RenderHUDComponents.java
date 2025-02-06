@@ -6,24 +6,30 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
+import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Clase encargada de dibujar los elementos del HUD en pantalla, como los stats, experiencia, nivel, temporizador, etc.
- * Ahora utiliza una cámara y viewport propios para el HUD, de forma similar al MenuPause, lo que garantiza que se mantenga
- * la relación de aspecto definida sin importar el tamaño real
  */
 public class RenderHUDComponents {
     private ShapeRenderer shapeRenderer;
@@ -38,6 +44,7 @@ public class RenderHUDComponents {
     private float tiempoTranscurrido = 0;
     private String tiempoFormateado;
     private boolean pausadoTemporizador = false;
+    private Stage hudStage;
 
     // --- NUEVA CAMARA Y VIEWPORT PARA EL HUD ---
     private OrthographicCamera hudCamera;
@@ -55,12 +62,15 @@ public class RenderHUDComponents {
         this.controladorProyectiles = jugador.getControladorProyectiles();
         this.controladorEnemigos = jugador.getControladorEnemigos();
 
-        // Inicializamos la cámara y viewport para el HUD usando la resolución virtual (por ejemplo, 1600x900)
+        // --- Configurar la cámara y el viewport del HUD ---
         hudCamera = new OrthographicCamera();
         hudCamera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply();
+        hudStage = new Stage(hudViewport, spriteBatch);
+
     }
+
 
     public void renderizarTemporizador(float delta) {
         // Usar la proyección del HUD
@@ -132,6 +142,7 @@ public class RenderHUDComponents {
         }
         shapeRenderer.end();
     }
+
     public void renderizarLineaVerticalCuadricula(float alturaHUD) {
         // Usamos la proyección del HUD para que la línea y los círculos se dibujen en el mismo sistema de coordenadas
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
@@ -160,7 +171,7 @@ public class RenderHUDComponents {
     public void renderizarTextoNivelPlayer() {
         layout.setText(fuente, TEXTO_LVL + sistemaDeNiveles.getNivelActual());
 
-        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - TEXT_X_CORRECTION ;
+        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - TEXT_X_CORRECTION;
         float textY = HUD_HEIGHT - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
 
         spriteBatch.setProjectionMatrix(hudCamera.combined);
@@ -322,7 +333,7 @@ public class RenderHUDComponents {
         for (int i = 0; i < descripciones.length; i++) {
             float posicionY = statsY - i * ESPACIADO;
             // Dibujar la descripción a la izquierda con reborde negro
-            dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.DARK_GRAY,  Color.WHITE);
+            dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.DARK_GRAY, Color.WHITE);
             // Dibujar el icono (si existe)
             if (iconos != null && i < iconos.length && iconos[i] != null) {
                 Texture icono = iconos[i];
@@ -353,6 +364,47 @@ public class RenderHUDComponents {
         fuente.draw(batch, texto, x, y);
     }
 
+    public void setHabilidadesActivas(List<Mejora> habilidadesActivas) {
+        hudStage.clear();
+
+        float baseX   = VIRTUAL_WIDTH - 500f;
+        float baseY   = 70f;
+        float colGap  = 100f;
+        float rowGap  = 75f;
+        int columns   = 6;
+        float buttonSize = 45f;
+
+        for (int i = 0; i < habilidadesActivas.size(); i++) {
+            Mejora m = habilidadesActivas.get(i);
+
+            if (m.getIcono() != null) {
+                TextureRegionDrawable drawableIcono = new TextureRegionDrawable(new TextureRegion(m.getIcono()));
+                ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+                style.imageUp = drawableIcono;
+
+                ImageButton boton = new ImageButton(style);
+                boton.setSize(buttonSize, buttonSize);
+
+                // Listener opcional al hacer clic todo --> por implementar (para en un futuro poder visualizar cada habilidad individualmente)
+                boton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        System.out.println("Hiciste clic en " + m.getNombreMejora());
+                    }
+                });
+
+                int rowIndex = i / columns;
+                int colIndex = i % columns;
+
+                float iconX = baseX + colIndex * colGap;
+                float iconY = baseY - rowIndex * rowGap;
+
+                boton.setPosition(iconX, iconY);
+                hudStage.addActor(boton);
+            }
+        }
+    }
+
     public void dispose() {
         if (texturaCorazonVida != null) texturaCorazonVida.dispose();
         if (texturaLapizXP != null) texturaLapizXP.dispose();
@@ -365,5 +417,9 @@ public class RenderHUDComponents {
 
     public void reanudarTemporizador() {
         pausadoTemporizador = false;
+    }
+
+    public Stage getHudStage() {
+        return hudStage;
     }
 }

@@ -6,6 +6,7 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.Ata
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ public class SistemaDeMejoras {
     private final Jugador jugador;
     private final List<Mejora> todasLasMejoras;
     private final List<Mejora> mejorasMostradas;
+    private final List<Mejora> habilidadesActivas = new ArrayList<>();
     private final MainGame game;
 
     public SistemaDeMejoras(Jugador jugador, MainGame game) {
@@ -33,19 +35,19 @@ public class SistemaDeMejoras {
     }
 
     private void inicializarMejoras() {
-        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5));
-        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 25%", () -> jugador.aumentarRangoAtaque(0.25f), 5));
-        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 14%", () -> jugador.reducirIntervaloDisparo(0.125f), 5));
-        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5));
-        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5));
-        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 3%", () -> jugador.aumentarRegVida(0.03f), 5));
-        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 12%", () -> jugador.aumentarCritico(0.12f), 5));
-        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 7%", () -> jugador.aumentarResistencia(0.07f), 5));
+        //todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 5,null));
+        //todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 25%", () -> jugador.aumentarRangoAtaque(0.25f), 5,null));
+        //todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 14%", () -> jugador.reducirIntervaloDisparo(0.125f), 5,null));
+        //todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 11%", () -> jugador.aumentarDanyo(1.11f), 5,null));
+        //todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5,null));
+        //todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 3%", () -> jugador.aumentarRegVida(0.03f), 5,null));
+        //todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 12%", () -> jugador.aumentarCritico(0.12f), 5,null));
+        //todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 7%", () -> jugador.aumentarResistencia(0.07f), 5,null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
-            jugador.setVidaMax((jugador.getMaxVidaJugador()+15));jugador.setVidaJugador((jugador.getVidaJugador()+15));},10));
-        todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1));
-        todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1));
-        todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1));
+            jugador.setVidaMax((jugador.getMaxVidaJugador()+15));jugador.setVidaJugador((jugador.getVidaJugador()+15));},10,null));
+        todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1,armaCalcetin));
+        todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1,armaTazos));
+        todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1,armaNubePedo));
 
         // todo --> implementar nuevas mejoras de habilidades y stats restantes
     }
@@ -87,10 +89,19 @@ public class SistemaDeMejoras {
         System.out.println("Mejora aplicada: " + mejoraSeleccionada.getNombreMejora());
 
         mejoraSeleccionada.apply();
+
+        if (mejoraSeleccionada.getIcono() != null) {
+            habilidadesActivas.add(mejoraSeleccionada);
+        }
+
         mejorasMostradas.clear();
     }
 
     public List<Mejora> getMejorasMostradas() {
         return mejorasMostradas;
+    }
+
+    public List<Mejora> getHabilidadesActivas() {
+        return habilidadesActivas;
     }
 }

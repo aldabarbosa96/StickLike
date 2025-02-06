@@ -1,5 +1,7 @@
 package com.sticklike.core.gameplay.progreso;
 
+import com.badlogic.gdx.graphics.Texture;
+
 /**
  * Clase base de las mejoras. Se definen y se aplica su efecto
  */
@@ -8,12 +10,14 @@ public class Mejora {
     private final String descripcionMejora;
     private final Runnable efectoMejora;
     private int usosRestantes;
+    private Texture texture;
 
-    public Mejora(String nombreMejora, String descripcionMejora, Runnable efectoMejora, int usosMaximos) {
+    public Mejora(String nombreMejora, String descripcionMejora, Runnable efectoMejora, int usosMaximos, Texture texture) {
         this.nombreMejora = nombreMejora;
         this.descripcionMejora = descripcionMejora;
         this.efectoMejora = efectoMejora;
         this.usosRestantes = usosMaximos;
+        this.texture = texture;
     }
 
     public String getNombreMejora() {
@@ -34,5 +38,9 @@ public class Mejora {
     }
     public boolean estaDisponible() {
         return usosRestantes > 0;
+    }
+
+    public Texture getIcono() {
+        return texture;
     }
 }

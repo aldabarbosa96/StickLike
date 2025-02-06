@@ -30,6 +30,8 @@ public class HUD {
         this.hudViewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
         this.hudCamara.update();
 
+
+
     }
 
     //todo -- > falta implementar elementos en el HUD (iconos stats player, mejoras obtenidas...)
@@ -48,6 +50,9 @@ public class HUD {
         renderHUDComponents.renderizarTemporizador(delta);
         renderHUDComponents.renderizarStatsJugador();
         renderHUDComponents.renderizarMasStatsJugador();
+        renderHUDComponents.getHudStage().act(delta);
+        renderHUDComponents.getHudStage().draw();
+
     }
 
     public void resize(int width, int height) { // ajusta el viewport al redimensionar la ventana
