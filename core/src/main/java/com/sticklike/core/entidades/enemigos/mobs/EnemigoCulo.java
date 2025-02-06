@@ -193,19 +193,16 @@ public class EnemigoCulo implements Enemigo {
         return damageAmount;
     }
 
+
+    public static void resetStats() {
+        velocidadBase = VEL_BASE_CULO;
+    }
+
     public void setDamageAmount(float damageAmount) {
         this.damageAmount = damageAmount;
     }
 
-    public static void setVelocidadBase(float nuevaVelocidadBase) {
-        velocidadBase = nuevaVelocidadBase;
-    }
-
-    public static float getVelocidadBase() {
-        return velocidadBase;
-    }
     public float getFadeAlpha() {
         return animacionesEnemigos.getAlphaActual();
     }
-
 }

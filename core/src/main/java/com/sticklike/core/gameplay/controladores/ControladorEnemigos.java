@@ -14,13 +14,13 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
-import com.sticklike.core.pantallas.juego.VentanaJuego;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class ControladorEnemigos {
 
-    private final VentanaJuego ventanaJuego;
+    private final VentanaJuego1 ventanaJuego1;
     private final Array<Enemigo> enemigos;
     private final Jugador jugador;
     private final OrthographicCamera camera;
@@ -38,13 +38,13 @@ public class ControladorEnemigos {
     private boolean bossSpawned = false;
     private final RenderSombrasEnemigos renderSombrasEnemigos;
 
-    public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego ventanaJuego) {
+    public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.enemigos = new Array<>();
         this.jugador = jugador;
         this.intervaloDeAparicion = intervaloDeAparicion;
         this.temporizadorDeAparicion = 0;
-        this.ventanaJuego = ventanaJuego;
-        this.camera = ventanaJuego.getOrtographicCamera();
+        this.ventanaJuego1 = ventanaJuego1;
+        this.camera = ventanaJuego1.getOrtographicCamera();
         this.renderSombrasEnemigos = new RenderSombrasEnemigos();
     }
 
@@ -71,13 +71,13 @@ public class ControladorEnemigos {
 
                 // 1º - Comprobamos si suelta Caca Dorada (2% de probabilidad)
                 if (random < 2f) {
-                    ventanaJuego.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
+                    ventanaJuego1.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
                 }
                 // 2º - Si NO suelta Caca Dorada, suelta XP normal (si el enemigo lo tiene)
                 else {
                     ObjetosXP xpObject = enemigo.sueltaObjetoXP();
                     if (xpObject != null) {
-                        ventanaJuego.addXPObject(xpObject);
+                        ventanaJuego1.addXPObject(xpObject);
                     }
                 }
 
@@ -126,10 +126,10 @@ public class ControladorEnemigos {
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
         // Límites de la cámara (margen extra para que aparezcan fuera de pantalla).
-        float leftLimit = playerX - (VentanaJuego.worldWidth / 2f) - CORRECCION_SPAWN;
-        float rightLimit = playerX + (VentanaJuego.worldWidth / 2f) - CORRECCION_SPAWN;
-        float bottomLimit = playerY - (VentanaJuego.worldHeight / 2f) - CORRECCION_SPAWN;
-        float topLimit = playerY + (VentanaJuego.worldHeight / 2f) - CORRECCION_SPAWN;
+        float leftLimit = playerX - (VentanaJuego1.worldWidth / 2f) - CORRECCION_SPAWN;
+        float rightLimit = playerX + (VentanaJuego1.worldWidth / 2f) - CORRECCION_SPAWN;
+        float bottomLimit = playerY - (VentanaJuego1.worldHeight / 2f) - CORRECCION_SPAWN;
+        float topLimit = playerY + (VentanaJuego1.worldHeight / 2f) - CORRECCION_SPAWN;
 
         float x = 0, y = 0;
 

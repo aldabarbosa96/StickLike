@@ -94,7 +94,7 @@ public class RenderHUDComponents {
         // Usar la proyección del HUD en la shapeRenderer
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.95f, 0.90f, 0.70f, 1);
+        shapeRenderer.setColor(0.985f, 0.91f, 0.7f, 1.0f);
         shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
         shapeRenderer.end();
     }
@@ -125,19 +125,42 @@ public class RenderHUDComponents {
     public void renderizarLineasHorizontalesCuadricula(float alturaHUD) {
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.64f, 0.74f, 0.9f, 1);
-
+        shapeRenderer.setColor(0.75f, 0.85f, 0.9f, 1);
         float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
         for (float y = 0; y <= alturaHUD; y += cellSize) {
             shapeRenderer.line(0, y, VIRTUAL_WIDTH, y);
         }
         shapeRenderer.end();
     }
+    public void renderizarLineaVerticalCuadricula(float alturaHUD) {
+        // Usamos la proyección del HUD para que la línea y los círculos se dibujen en el mismo sistema de coordenadas
+        shapeRenderer.setProjectionMatrix(hudCamera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        shapeRenderer.setColor(Color.RED);
+        float margenIzquierdo = 40f;
+
+        float grosorLinea = 1.5f;
+        float espacioEntreLineas = 2.5f;
+        shapeRenderer.rect(margenIzquierdo, 0, grosorLinea, alturaHUD - 2f);
+        shapeRenderer.rect(margenIzquierdo + grosorLinea + espacioEntreLineas, 0, grosorLinea, alturaHUD - 2f);
+
+        float circleX = margenIzquierdo / 2f;
+        float circleRadius = 6f;
+        float circleYBottom = 45f;
+        float circleYTop = 108f;
+
+        shapeRenderer.setColor(new Color(0.85f, 0.85f, 0.85f, 1));
+        shapeRenderer.circle(circleX, circleYBottom, circleRadius);
+        shapeRenderer.circle(circleX, circleYTop, circleRadius);
+
+        shapeRenderer.end();
+    }
 
     public void renderizarTextoNivelPlayer() {
         layout.setText(fuente, TEXTO_LVL + sistemaDeNiveles.getNivelActual());
 
-        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - TEXT_X_CORRECTION + 2f;
+        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - TEXT_X_CORRECTION ;
         float textY = HUD_HEIGHT - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
 
         spriteBatch.setProjectionMatrix(hudCamera.combined);
@@ -169,7 +192,7 @@ public class RenderHUDComponents {
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
         renderizarCacaDorada(jugador.getOroGanado());
         renderizarContadorEnemigos(controladorEnemigos.getKillCounter());
-        renderizarContadorLapices(1);
+        renderizarContadorLapices();
     }
 
     private void renderizarFondoBarraXP(float barX, float barY, float barWidth, float barHeight, float experiencePercentage) {
@@ -179,7 +202,7 @@ public class RenderHUDComponents {
         shapeRenderer.setColor(0, 0, 0, 1f);
         shapeRenderer.rect(barX - BORDER_NEGATIVE, barY - BORDER_NEGATIVE, barWidth + BORDER_POSITIVE, barHeight + BORDER_POSITIVE);
         // Fondo gris claro
-        shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 0.5f);
+        shapeRenderer.setColor(0.89f, 0.89f, 0.89f, 1);
         shapeRenderer.rect(barX, barY, barWidth, barHeight);
         // Barra azul con la fracción de XP
         shapeRenderer.setColor(0f, 0.5f, 1f, 1f);
@@ -207,7 +230,7 @@ public class RenderHUDComponents {
 
     public void renderizarCacaDorada(float oroAcumulado) {
         float iconSize = 22f;
-        float posX = HUD_BAR_X + 127.5f;
+        float posX = HUD_BAR_X + 130f;
         float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
@@ -241,11 +264,11 @@ public class RenderHUDComponents {
         spriteBatch.end();
     }
 
-    public void renderizarContadorLapices(float contadorLapices) {
+    public void renderizarContadorLapices() {
         float iconWidth = 9f;
         float iconHeight = 22f;
 
-        float posX = HUD_BAR_X + 205f;
+        float posX = HUD_BAR_X + 210f;
         float posY = HUD_HEIGHT - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION - 85f;
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
@@ -253,7 +276,7 @@ public class RenderHUDComponents {
         spriteBatch.draw(recolectablePowerUp, posX, posY, iconWidth, iconHeight);
 
         DecimalFormat df = new DecimalFormat("#");
-        String cantidad = df.format(contadorLapices);
+        String cantidad = df.format(ObjetoPowerUp.getContador());
         fuente.getData().setScale(0.8f);
         float textX = posX + iconWidth + 5f;
         float textY = posY + iconHeight / 2 + 4;
@@ -273,7 +296,7 @@ public class RenderHUDComponents {
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
         Texture[] iconos = {iconoVelMov, iconoRango, iconoVelAt, iconoFuerza, iconoProyectiles};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION + 10;
-        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 10f;
+        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC1);
     }
 
@@ -288,7 +311,7 @@ public class RenderHUDComponents {
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
         Texture[] iconos = {iconoVida, iconoRegeneracion, iconoPoder, iconoResistencia, iconoCritico};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2 + 10f;
-        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 10f;
+        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
     }
 
@@ -298,10 +321,9 @@ public class RenderHUDComponents {
         fuente.getData().setScale(0.8f);
         for (int i = 0; i < descripciones.length; i++) {
             float posicionY = statsY - i * ESPACIADO;
-            // Descripción a la izquierda
-            fuente.setColor(Color.BLACK);
-            fuente.draw(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY);
-            // Icono en medio
+            // Dibujar la descripción a la izquierda con reborde negro
+            dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.DARK_GRAY,  Color.WHITE);
+            // Dibujar el icono (si existe)
             if (iconos != null && i < iconos.length && iconos[i] != null) {
                 Texture icono = iconos[i];
                 float iconSize = STATS_ICON_SIZE;
@@ -309,10 +331,12 @@ public class RenderHUDComponents {
                 float iconY = posicionY - iconSize / 2f - ICON_Y_CORRECTION;
                 spriteBatch.draw(icono, iconX, iconY, iconSize, iconSize);
             }
-            dibujarTextoConReborde(spriteBatch, valores[i], statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, Color.GRAY, Color.WHITE);
+            // Dibujar el valor con reborde negro
+            dibujarTextoConReborde(spriteBatch, valores[i], statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, Color.DARK_GRAY, Color.WHITE);
         }
         spriteBatch.end();
     }
+
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         fuente.setColor(colorReborde);

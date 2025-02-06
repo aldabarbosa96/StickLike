@@ -50,10 +50,10 @@ public class RenderVentanaJuego {
         generarBorronesRandom(CANTIDAD_BORRONES);
     }
 
-    public void renderizarVentana(float delta, VentanaJuego ventanaJuego, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
+    public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
         // 1) Limpiamos la pantalla
-        Gdx.gl.glClearColor(0.875f, 0.875f, 0.875f, 1);
+        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
@@ -74,7 +74,7 @@ public class RenderVentanaJuego {
         spriteBatch.end();
 
         // 4) Renderizamos la cuadrícula
-        ventanaJuego.actualizarPosCamara();
+        ventanaJuego1.actualizarPosCamara();
         renderizarLineasCuadricula(camara);
 
         // 5) Dibujar sombras de los enemigos

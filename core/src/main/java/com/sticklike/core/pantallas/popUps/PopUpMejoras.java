@@ -19,11 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
-import com.sticklike.core.pantallas.juego.VentanaJuego;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class PopUpMejoras {
     private Stage uiStage;
     private Skin uiSkin;
     private SistemaDeMejoras sistemaDeMejoras;
-    private VentanaJuego ventanaJuego;
+    private VentanaJuego1 ventanaJuego1;
     private Window upgradeWindow;
     private GameInputHandler inputHandler;
 
@@ -44,8 +43,8 @@ public class PopUpMejoras {
     // Índice de selección actual
     private int selectedIndex = 0;
 
-    public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego ventanaJuego) {
-        this.ventanaJuego = ventanaJuego;
+    public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego1 ventanaJuego1) {
+        this.ventanaJuego1 = ventanaJuego1;
         uiStage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
         this.sistemaDeMejoras = sistemaDeMejoras;
@@ -77,9 +76,9 @@ public class PopUpMejoras {
     }
 
     public void mostrarPopUpMejoras(final List<Mejora> mejoras) {
-        ventanaJuego.setPausado(true);
-        ventanaJuego.getMenuPause().bloquearInputs(true);
-        ventanaJuego.getRenderHUDComponents().pausarTemporizador();
+        ventanaJuego1.setPausado(true);
+        ventanaJuego1.getMenuPause().bloquearInputs(true);
+        ventanaJuego1.getRenderHUDComponents().pausarTemporizador();
 
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         upgradeWindow = new Window(POPUP_HEADER, wStyle);
@@ -158,9 +157,9 @@ public class PopUpMejoras {
         if (index < 0 || index >= mejoras.size()) return;
         sistemaDeMejoras.aplicarMejora(mejoras.get(index));
         upgradeWindow.remove();
-        ventanaJuego.setPausado(false);
-        ventanaJuego.getRenderHUDComponents().reanudarTemporizador();
-        ventanaJuego.getMenuPause().bloquearInputs(false);
+        ventanaJuego1.setPausado(false);
+        ventanaJuego1.getRenderHUDComponents().reanudarTemporizador();
+        ventanaJuego1.getMenuPause().bloquearInputs(false);
 
         // Desactivamos el input handler para que no siga escuchando
         Gdx.input.setInputProcessor(null);

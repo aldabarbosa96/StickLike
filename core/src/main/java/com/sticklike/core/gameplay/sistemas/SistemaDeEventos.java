@@ -55,9 +55,6 @@ public class SistemaDeEventos {
     }
 
     private void incrementarVelocidadCulo(float factorMultiplicador) {
-        float nuevaVelocidadBase = EnemigoCulo.getVelocidadBase() * factorMultiplicador;
-        EnemigoCulo.setVelocidadBase(nuevaVelocidadBase);
-
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo instanceof EnemigoCulo culo) {
                 float velocidadActual = culo.getVelocidad();
@@ -88,6 +85,11 @@ public class SistemaDeEventos {
                 evento.applyEvento();
             }
         }
+
+    }
+    public void dispose(){
+        eventos.clear();
+        eventos = null;
     }
 
 

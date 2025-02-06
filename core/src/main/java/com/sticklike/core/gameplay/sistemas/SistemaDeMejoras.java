@@ -73,7 +73,7 @@ public class SistemaDeMejoras {
 
     public void anyadirMejorasAlPopUp() {
         List<Mejora> options = generarOpcionesDeMejoraAleatorias(3);
-        game.ventanaJuego.mostrarPopUpDeMejoras(options);
+        game.ventanaJuego1.mostrarPopUpDeMejoras(options);
     }
 
     public void aplicarMejora(Mejora mejoraSeleccionada) {

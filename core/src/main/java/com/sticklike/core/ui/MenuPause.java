@@ -14,7 +14,7 @@ import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sticklike.core.pantallas.juego.VentanaJuego;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
@@ -30,7 +30,7 @@ public class MenuPause extends ControllerAdapter {
     private float marginTop;
     private boolean isPaused;
     private BitmapFont font;
-    private VentanaJuego ventanaJuego;
+    private VentanaJuego1 ventanaJuego1;
     private boolean inputsBloqueados = false;
     private SpriteBatch spriteBatch;
 
@@ -38,7 +38,7 @@ public class MenuPause extends ControllerAdapter {
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
 
-    public MenuPause(VentanaJuego ventanaJuego) {
+    public MenuPause(VentanaJuego1 ventanaJuego1) {
         // Los valores de posicionamiento siguen siendo los mismos (en unidades virtuales)
         this.pauseWidth = 4;
         this.pauseHeight = 12;
@@ -47,7 +47,7 @@ public class MenuPause extends ControllerAdapter {
         this.marginRight = 20;
         this.marginTop = 55;
         this.isPaused = false;
-        this.ventanaJuego = ventanaJuego;
+        this.ventanaJuego1 = ventanaJuego1;
         this.font = new BitmapFont();
         this.spriteBatch = new SpriteBatch();
 
@@ -144,10 +144,10 @@ public class MenuPause extends ControllerAdapter {
 
     private void alternarPausa() {
         isPaused = !isPaused;
-        ventanaJuego.setPausado(isPaused);
+        ventanaJuego1.setPausado(isPaused);
 
         if (isPaused) {
-            ventanaJuego.reproducirSonidoPausa();
+            ventanaJuego1.reproducirSonidoPausa();
         }
     }
 

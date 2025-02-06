@@ -2,7 +2,7 @@ package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
 import com.sticklike.core.utilidades.GestorDeAudio;
-import com.sticklike.core.pantallas.juego.VentanaJuego;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.GestorDeAssets;
 
 /**
@@ -11,7 +11,7 @@ import com.sticklike.core.utilidades.GestorDeAssets;
  * inicializar la ventana principal del juego
  */
 public class MainGame extends Game {
-    public VentanaJuego ventanaJuego;
+    public VentanaJuego1 ventanaJuego1;
     public GestorDeAudio gestorDeAudio;
 
     @Override
@@ -19,8 +19,8 @@ public class MainGame extends Game {
         GestorDeAssets.cargarRecursos(); // Cargamos los assets al iniciar
         gestorDeAudio = new GestorDeAudio();
         gestorDeAudio.reproducirMusica();
-        ventanaJuego = new VentanaJuego(this,VentanaJuego.worldWidth,VentanaJuego.worldHeight); // Pasamos MainGame a GameScreen
-        setScreen(ventanaJuego);
+        ventanaJuego1 = new VentanaJuego1(this, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight); // Pasamos MainGame a GameScreen
+        setScreen(ventanaJuego1);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class MainGame extends Game {
     public void dispose() {
         super.dispose();
         GestorDeAssets.dispose();
-        ventanaJuego.dispose();
+        ventanaJuego1.dispose();
         gestorDeAudio.dispose();
     }
 }

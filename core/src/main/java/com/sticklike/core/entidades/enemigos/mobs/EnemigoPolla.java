@@ -180,6 +180,11 @@ public class EnemigoPolla implements Enemigo {
     public float getDamageAmount() {
         return damageAmount;
     }
+
+    public static void resetStats() {
+        velocidadBase = VEL_BASE_POLLA;
+    }
+
     public void setDamageAmount(float damage){
         this.damageAmount = damage;
     }

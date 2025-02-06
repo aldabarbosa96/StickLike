@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.pantallas.juego.VentanaJuego;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
@@ -64,10 +66,12 @@ public class VentanaGameOver implements Screen {
 
     // En VentanaGameOver.java
     private void reiniciarJuego() {
-        game.ventanaJuego.dispose();
-        game.ventanaJuego = new VentanaJuego(game, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        game.ventanaJuego.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // <-- Añadir esta línea
-        game.setScreen(game.ventanaJuego);
+        EnemigoCulo.resetStats();
+        EnemigoPolla.resetStats();
+        game.ventanaJuego1.dispose();
+        game.ventanaJuego1 = new VentanaJuego1(game, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        game.ventanaJuego1.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // <-- Añadir esta línea
+        game.setScreen(game.ventanaJuego1);
         game.gestorDeAudio.reproducirMusica();
     }
 

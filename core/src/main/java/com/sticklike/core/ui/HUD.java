@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
@@ -31,7 +32,7 @@ public class HUD {
 
     }
 
-     //todo -- > falta implementar elementos en el HUD (iconos stats player, mejoras obtenidas...)
+    //todo -- > falta implementar elementos en el HUD (iconos stats player, mejoras obtenidas...)
     public void renderizarHUD(float delta) {
         hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamara.combined);
@@ -40,6 +41,7 @@ public class HUD {
         float hudHeight = HUD_HEIGHT + desplazamientoVertHUD;
         renderHUDComponents.renderizarFondoHUD();
         renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
+        renderHUDComponents.renderizarLineaVerticalCuadricula(hudHeight);
         renderHUDComponents.renderizarMarcoHUD();
         renderHUDComponents.renderizarBarraXP();
         renderHUDComponents.renderizarTextoNivelPlayer();
@@ -51,6 +53,7 @@ public class HUD {
     public void resize(int width, int height) { // ajusta el viewport al redimensionar la ventana
         hudViewport.update(width, height, true);
     }
+
     public void dispose() {
         renderHUDComponents.dispose();
         shapeRenderer.dispose();

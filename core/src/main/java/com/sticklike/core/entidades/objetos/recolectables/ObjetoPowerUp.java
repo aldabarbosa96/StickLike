@@ -9,7 +9,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 public class ObjetoPowerUp extends ObjetoBase {
-    private int contador = 0;
+    private static int contador = 0;
 
     public ObjetoPowerUp(float x, float y) {
         super(x, y);
@@ -48,7 +48,8 @@ public class ObjetoPowerUp extends ObjetoBase {
         return powerUps;
     }
 
-    public int getContador() {
+
+    public static int getContador() {
         return contador;
     }
 }

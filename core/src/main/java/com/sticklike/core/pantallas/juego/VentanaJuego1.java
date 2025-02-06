@@ -37,7 +37,7 @@ import java.util.List;
  * GameScreen (VentanaJuego) es la pantalla principal del juego
  * Implementa la interfaz {@link Screen} de libGDX para el renderizado
  */
-public class VentanaJuego implements Screen {
+public class VentanaJuego1 implements Screen {
     public static final int worldWidth = (int) VIRTUAL_WIDTH;
     public static final int worldHeight = (int) VIRTUAL_HEIGHT;
     private float cameraOffsetY = CAMERA_OFFSET_Y;
@@ -76,7 +76,7 @@ public class VentanaJuego implements Screen {
 
     private boolean pausado = false;
 
-    public VentanaJuego(MainGame game, int screenWidth, int screenHeight) {
+    public VentanaJuego1(MainGame game, int screenWidth, int screenHeight) {
         this.game = game;
         this.currentScreenWidth = screenWidth;
         this.currentScreenHeight = screenHeight;
@@ -253,14 +253,8 @@ public class VentanaJuego implements Screen {
     }
 
     public void spawnObjetoPowerUp() {
-        // Define los límites del mapa para que el objeto aparezca dentro de la zona visible
-        float minX = MAP_MIN_X_DROP;
-        float maxX = MAP_MAX_X_DROP;
-        float minY = MAP_MIN_Y_DROP;
-        float maxY = MAP_MAX_Y_DROP;
-
         int cantidadPowerUps = 3;
-        Array<ObjetoPowerUp> powerUps = ObjetoPowerUp.crearPowerUps(cantidadPowerUps, minX, maxX, minY, maxY);
+        Array<ObjetoPowerUp> powerUps = ObjetoPowerUp.crearPowerUps(cantidadPowerUps, MAP_MIN_X_DROP, MAP_MAX_X_DROP, MAP_MIN_Y_DROP, MAP_MAX_Y_DROP);
 
         for (ObjetoPowerUp powerUp : powerUps) {
             addXPObject(powerUp);
@@ -312,6 +306,7 @@ public class VentanaJuego implements Screen {
             xp.dispose();
         }
         objetosXP.clear();
+        sistemaDeEventos.dispose();
     }
 
     public OrthographicCamera getOrtographicCamera() {

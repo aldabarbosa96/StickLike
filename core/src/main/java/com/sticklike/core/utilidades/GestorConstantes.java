@@ -20,12 +20,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // CONFIGURACIÓN DEL HUD
     // -------------------------------------------------
-    public static final float HUD_HEIGHT = 180f;
+    public static final float HUD_HEIGHT = 175f;
     public static final float GRID_CELL_SIZE = 38f * 1.09375f;
-    public static final float GRID_CELL_SIZE_CORRECTION = 20f * 1.09375f;
+    public static final float GRID_CELL_SIZE_CORRECTION = 18f * 1.09375f;
     public static final float HUD_BAR_WIDTH = 200f * 1.4814814815f;
     public static final float HUD_BAR_HEIGHT = 11.5f * 1.09375f;
-    public static final float HUD_BAR_X = 382f * 1.4814814815f;
+    public static final float HUD_BAR_X = 380f * 1.4814814815f;
     public static final float HUD_BAR_Y_OFFSET = 10f * 1.09375f;
     public static final float HEART_SIZE = 20f * 1.09375f;
     public static final float HEART_X = 410f * 1.4814814815f;
@@ -43,8 +43,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float BORDER_POSITIVE = 3f * 1.09375f;
     public static final float BORDER_CORRECTION = 2f * 1.09375f;
     public static final float XPTEXT_Y_CORRECTION = 2f * 1.09375f;
-    public static final float STATS_X_CORRECTION = 855f * 1.4814814815f;
-    public static final float STATS_X_CORRECTION2 = 695f * 1.4814814815f;
+    public static final float STATS_X_CORRECTION = 850f * 1.4814814815f;
+    public static final float STATS_X_CORRECTION2 = 690f * 1.4814814815f;
     public static final float STATS_Y_CORRECTION = 38f * 1.09375f;
     public static final float ESPACIADO = 18f * 1.09375f;
     public static final float ANCHO_DESC1 = 75f * 1.4814814815f;
@@ -125,7 +125,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float RESISTENCIA = 0.06f;
     public static final float CRITICO = 0.03f;
-    public static final float REGENERACION_VIDA = 0.005f;
+    public static final float REGENERACION_VIDA = 0.001f;
     public static final float WIDTH_JUGADOR = 12f;
     public static final float HEIGHT_JUGADOR = 34f;
     public static final float PARPADEO_JUGADOR = 0.2f;
@@ -152,7 +152,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ENEMY_MIN_MOVE_DURATION = 1.0f;
     public static final float ENEMY_MAX_MOVE_DURATION = 10.0f;
     public static final float BORDER_SPAWN_MARGIN = 200f;
-    public static final float INTERVALO_SPAWN = 0.5f;
+    public static final float INTERVALO_SPAWN = 0.75f;
     public static final float MAX_OFFSET = 100f;
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
@@ -173,7 +173,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Animaciones enemigos
     // -------------------------------------------------
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
-    public static final float DURACION_PARPADEO_ENEMIGO = 0.15f;
+    public static final float DURACION_PARPADEO_ENEMIGO = 0.1f;
     public static final float DURACION_FADE_ENEMIGO = 0.2f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
     public static final float TIEMPO_FADE_TOTAL = 0.25f;
@@ -233,8 +233,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 10.5f * 1.09375f;
     public static final float OBJETO_ORO_WIDTH = 10f * 1.09375f;
     public static final float OBJETO_ORO_HEIGHT = 10f * 1.09375f;
-    public static final float OBJETO_PWUP_WIDTH = 8f;
-    public static final float OBJETO_PWUP_HEIGHT = 14f;
+    public static final float OBJETO_PWUP_WIDTH = 7.5f;
+    public static final float OBJETO_PWUP_HEIGHT = 15f;
 
     // -------------------------------------------------
     // Controlador Evento

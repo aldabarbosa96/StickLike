@@ -27,7 +27,7 @@ public class NubePedo implements Proyectiles {
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0;
 
-    private static final float GROW_DURATION = 0.35f; // Duración de la fase de crecimiento
+    private static final float GROW_DURATION = 0.3f; // Duración de la fase de crecimiento
 
     // Duraciones de las fases de vibración
     private static final float VIBRATE1_DURATION = 0.3f; // Primera vibración
@@ -35,7 +35,7 @@ public class NubePedo implements Proyectiles {
     private static final float VIBRATE2_DURATION = 0.3f; // Segunda vibración
 
     // Duración de la fase de COOLDOWN (pausa entre ciclos)
-    private static final float COOLDOWN_DURATION = 2f;
+    private static final float COOLDOWN_DURATION = 2.5f;
 
     private static final float MIN_SCALE    = 0.1f;  // Escala inicial
     private static final float MAX_SCALE    = 1.35f; // Escala máxima (tamaño completo)
@@ -93,7 +93,7 @@ public class NubePedo implements Proyectiles {
 
             case VIBRATE1:
                 // Primera vibración: se aplica el efecto (audio, vibración y knockback)
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.18f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
                 // Limpia el conjunto solo al inicio de la fase
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
@@ -149,9 +149,9 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case COOLDOWN:
-                // Durante el COOLDOWN el sprite se oculta para marcar una pausa real entre ciclos
+                // Mover el sprite fuera del área de juego
+                sprite.setPosition(-1000, -1000);
                 sprite.setColor(0.75f, 0.75f, 0.75f, 0f);
-                sprite.setPosition(jugadorCenterX, jugadorCenterY);
                 if (phaseTimer >= COOLDOWN_DURATION) {
                     // Reiniciamos el ciclo
                     phase = Phase.GROWING;
@@ -159,6 +159,7 @@ public class NubePedo implements Proyectiles {
                     sprite.setColor(0.75f, 0.75f, 0.75f, MIN_ALPHA);
                 }
                 break;
+
         }
     }
 
@@ -196,10 +197,13 @@ public class NubePedo implements Proyectiles {
         return new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
+
     @Override
     public boolean isProyectilActivo() {
         return proyectilActivo;
     }
+
+
 
     @Override
     public void desactivarProyectil() {
@@ -208,18 +212,18 @@ public class NubePedo implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
+        if (phase == Phase.COOLDOWN) {
+            return 0f;
+        }
         float baseDamage;
-        // Se aplica daño durante las vibraciones; en las demás fases no se aplica (o se usa el valor base)
         if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2) {
             baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f);
         } else {
             baseDamage = DANYO_PEDO;
         }
-        if (baseDamage <= 0) {
-            baseDamage = 1f;
-        }
-        return baseDamage;
+        return baseDamage > 0 ? baseDamage : 1f;
     }
+
 
     @Override
     public float getKnockbackForce() {
