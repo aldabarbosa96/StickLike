@@ -338,13 +338,13 @@ public class RenderHUDComponents {
     public void crearSlots() {
         slotsList.clear();
 
-        float baseX   = VIRTUAL_WIDTH - 500f;
+        float baseX   = VIRTUAL_WIDTH - 450f;
         float baseY   = 75f;
-        float colGap  = 100f;
+        float colGap  = 75f;
         float rowGap  = 50f;
         int columns   = 5;
         int totalSlots = 10;
-        float slotSize = 45f;
+        float slotSize = 40f;
 
         for (int i = 0; i < totalSlots; i++) {
             int rowIndex = i / columns;
@@ -372,10 +372,10 @@ public class RenderHUDComponents {
                     style.imageUp = drawableIcono;
 
                     ImageButton boton = new ImageButton(style);
-                    boton.setSize(slotsList.get(i).width, slotsList.get(i).height);
+                    boton.setSize(slotsList.get(i).width -10f, slotsList.get(i).height-10f);
 
                     // Usa las mismas coords del slot
-                    boton.setPosition(slotsList.get(i).x, slotsList.get(i).y);
+                    boton.setPosition(slotsList.get(i).x +5f, slotsList.get(i).y+5f);
 
                     boton.addListener(new ClickListener() {
                         @Override
@@ -391,18 +391,16 @@ public class RenderHUDComponents {
     }
 
     public void renderizarMarcosMejoras() {
-        shapeRenderer.setProjectionMatrix(hudCamera.combined);
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.BLUE);
-
-        // Dibujamos cada slot que tengamos en la lista
+        // Asegúrate de que la proyección esté configurada
+        spriteBatch.setProjectionMatrix(hudCamera.combined);
+        spriteBatch.begin();
+        // Recorre cada slot y dibuja la textura en la posición y tamaño indicados
         for (Rectangle rect : slotsList) {
-            shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            spriteBatch.draw(texturaMarco, rect.x, rect.y, rect.width, rect.height);
         }
-
-        shapeRenderer.end();
+        spriteBatch.end();
     }
+
 
     public void dispose() {
         if (texturaCorazonVida != null) texturaCorazonVida.dispose();

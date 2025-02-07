@@ -50,11 +50,9 @@ public class HUD {
         renderHUDComponents.renderizarTemporizador(delta);
         renderHUDComponents.renderizarStatsJugador();
         renderHUDComponents.renderizarMasStatsJugador();
+        renderHUDComponents.renderizarMarcosMejoras();
         renderHUDComponents.getHudStage().act(delta);
         renderHUDComponents.getHudStage().draw();
-        renderHUDComponents.renderizarMarcosMejoras();
-
-
     }
 
     public void resize(int width, int height) { // ajusta el viewport al redimensionar la ventana
