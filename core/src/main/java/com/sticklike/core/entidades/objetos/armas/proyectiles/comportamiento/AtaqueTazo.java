@@ -11,7 +11,7 @@ public class AtaqueTazo {
     private int tazosActivos;
     private float radio = RADIO_TAZOS_JUGADOR;
     private float globalAngle = 0f;
-    private final float velocidadRotacion = VEL_ROTACION;
+    private float velocidadRotacion = VEL_ROTACION;
 
     public void actualizar(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         temporizador += delta;
@@ -39,7 +39,11 @@ public class AtaqueTazo {
         tazosActivos++;
     }
 
-    public void reducirNubesActivas() {
+    public void aumentarVelocidadTazos(float incremento){
+        velocidadRotacion *= incremento;
+    }
+
+    public void reducirTazosActivos() {
         if (tazosActivos > 0) tazosActivos--;
     }
 

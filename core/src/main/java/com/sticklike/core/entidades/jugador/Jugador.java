@@ -304,4 +304,16 @@ public class Jugador {
     public void setAtaqueNubePedo(AtaqueNubePedo ataqueNubePedo) {
         this.ataqueNubePedo = ataqueNubePedo;
     }
+
+    public AtaqueCalcetin getAtaqueCalcetin() {
+        return calcetinazo;
+    }
+
+    public AtaqueTazo getAtaqueTazo() {
+        return ataqueTazo;
+    }
+
+    public AtaqueNubePedo getAtaqueNubePedo() {
+        return ataqueNubePedo;
+    }
 }

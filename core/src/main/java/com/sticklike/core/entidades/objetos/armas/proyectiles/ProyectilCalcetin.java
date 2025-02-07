@@ -26,13 +26,14 @@ public class ProyectilCalcetin implements Proyectiles {
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float damageEscalado;
 
-    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador) {
+    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY,
+                             float velocidadProyectil, float multiplicadorVelocidad,
+                             float poderJugador, float extraDamage) {
         if (textura == null) {
             textura = armaCalcetin;
         }
         this.distanciaMaxima = MAX_DISTANCIA;
-        this.distanciaRecorrida = DISTANCIA_RECORRIDA;
-
+        this.distanciaRecorrida = 0; // inicializamos en 0
         sprite = new Sprite(textura);
         sprite.setSize(CALCETIN_W_SIZE, CALCETIN_H_SIZE);
         sprite.setPosition(x, y);
@@ -44,7 +45,8 @@ public class ProyectilCalcetin implements Proyectiles {
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
 
-        float baseDamage = (float) (DANYO_CALCETIN + Math.random() * 8);
+        // Se calcula el daño base: se parte de DANYO_CALCETIN, se le suma la bonificación (extraDamage)
+        float baseDamage = (float) (DANYO_CALCETIN + extraDamage + Math.random() * 8);
         this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
     }
 
@@ -58,7 +60,6 @@ public class ProyectilCalcetin implements Proyectiles {
 
         sprite.rotate(rotationSpeed * delta);
 
-        // Verificar si ha recorrido su distancia máxima
         if (distanciaRecorrida >= distanciaMaxima) {
             desactivarProyectil();
         }
@@ -103,7 +104,6 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        // daño base entre 13 y 21
         return damageEscalado;
     }
 
@@ -113,7 +113,7 @@ public class ProyectilCalcetin implements Proyectiles {
     }
 
     @Override
-    public boolean isPersistente() { // calcetín no desaparece al impactar
+    public boolean isPersistente() {
         return true;
     }
 

@@ -65,7 +65,6 @@ public class ProyectilTazo implements Proyectiles {
         // Iniciamos con la escala mínima para el efecto de crecer
         sprite.setScale(MIN_GROWTH_SCALE);
 
-
     }
 
     @Override
@@ -106,7 +105,7 @@ public class ProyectilTazo implements Proyectiles {
             case ACTIVE:
                 // Fase ACTIVE: el tazo se muestra normalmente
                 sprite.setScale(MAX_GROWTH_SCALE);
-                rotacionSprite += 720f * delta;
+                rotacionSprite += 1000f * delta;
                 sprite.setRotation(rotacionSprite);
                 sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2, jugadorCentroY + offsetY - sprite.getHeight() / 2);
                 // Lógica de daño
@@ -227,7 +226,7 @@ public class ProyectilTazo implements Proyectiles {
         return enemigosImpactados.contains(enemigo);
     }
 
-    public AtaqueTazo getAtaquePedo() {
+    public AtaqueTazo getAtaqueTazo() {
         return ataqueTazo;
     }
 }

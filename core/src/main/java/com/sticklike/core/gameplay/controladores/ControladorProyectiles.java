@@ -102,7 +102,7 @@ public class ControladorProyectiles {
             if (!proyectil.isProyectilActivo()) {
                 iterator.remove();
                 if (proyectil instanceof ProyectilTazo) {
-                    ((ProyectilTazo) proyectil).getAtaquePedo().reducirNubesActivas();
+                    ((ProyectilTazo) proyectil).getAtaqueTazo().reducirTazosActivos();
                 }
             }
         }

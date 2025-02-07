@@ -11,13 +11,15 @@ public class Mejora {
     private final Runnable efectoMejora;
     private int usosRestantes;
     private Texture texture;
+    private String idHabilidad;
 
-    public Mejora(String nombreMejora, String descripcionMejora, Runnable efectoMejora, int usosMaximos, Texture texture) {
+    public Mejora(String nombreMejora, String descripcionMejora, Runnable efectoMejora, int usosMaximos, Texture texture, String idHabilidad) {
         this.nombreMejora = nombreMejora;
         this.descripcionMejora = descripcionMejora;
         this.efectoMejora = efectoMejora;
         this.usosRestantes = usosMaximos;
         this.texture = texture;
+        this.idHabilidad = idHabilidad;
     }
 
     public String getNombreMejora() {
@@ -38,6 +40,10 @@ public class Mejora {
     }
     public boolean estaDisponible() {
         return usosRestantes > 0;
+    }
+
+    public String getIdHabilidad() {
+        return idHabilidad;
     }
 
     public Texture getIcono() {

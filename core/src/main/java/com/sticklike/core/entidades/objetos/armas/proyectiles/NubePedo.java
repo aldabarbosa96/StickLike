@@ -39,7 +39,7 @@ public class NubePedo implements Proyectiles {
     private static final float COOLDOWN_DURATION = 2.5f;
 
     private static final float MIN_SCALE    = 0.1f;  // Escala inicial
-    private static final float MAX_SCALE    = 1.35f; // Escala máxima (tamaño completo)
+    private float maxScale = 1.35f; // Escala máxima (tamaño completo)
     private static final float MIN_ALPHA    = 0.1f;  // Opacidad mínima
     private static final float MAX_ALPHA    = 0.75f; // Opacidad máxima
     private static final float VIBRATE_RANGE = 8f;    // Rango de oscilación (en píxeles) durante la vibración
@@ -77,7 +77,7 @@ public class NubePedo implements Proyectiles {
                 sprite.rotate(ROTATION_SPEED * delta);
 
                 // Interpolación lineal entre MIN_SCALE y MAX_SCALE
-                float currentScale = MIN_SCALE + progress * (MAX_SCALE - MIN_SCALE);
+                float currentScale = MIN_SCALE + progress * (maxScale - MIN_SCALE);
                 sprite.setScale(currentScale);
                 // Interpolación de opacidad
                 sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
@@ -103,7 +103,7 @@ public class NubePedo implements Proyectiles {
 
                 float offsetX1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 float offsetY1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
-                sprite.setScale(MAX_SCALE);
+                sprite.setScale(maxScale);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX1, jugadorCenterY + offsetY1);
 
@@ -115,7 +115,7 @@ public class NubePedo implements Proyectiles {
 
             case PAUSE:
                 // Durante la pausa, el sprite se mantiene fijo en el centro
-                sprite.setScale(MAX_SCALE);
+                sprite.setScale(maxScale);
                 sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
                 sprite.setPosition(jugadorCenterX, jugadorCenterY);
 
@@ -136,7 +136,7 @@ public class NubePedo implements Proyectiles {
 
                 float offsetX2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
                 float offsetY2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
-                sprite.setScale(MAX_SCALE);
+                sprite.setScale(maxScale);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX2, jugadorCenterY + offsetY2);
 
