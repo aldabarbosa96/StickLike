@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -23,9 +24,9 @@ public class ProyectilCalcetin implements Proyectiles {
     private float direccionX, direccionY;
     private float rotationSpeed = VEL_ROTACION_CALCETIN;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
+    private float damageEscalado;
 
-
-    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad) {
+    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador) {
         if (textura == null) {
             textura = armaCalcetin;
         }
@@ -42,6 +43,9 @@ public class ProyectilCalcetin implements Proyectiles {
         this.direccionY = direccionY;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
+
+        float baseDamage = (float) (DANYO_CALCETIN + Math.random() * 8);
+        this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
     }
 
     @Override
@@ -99,8 +103,8 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        // daño base entre 13 y 24
-        return  6 + (float) Math.random() * 7;
+        // daño base entre 13 y 21
+        return damageEscalado;
     }
 
     @Override
@@ -110,8 +114,9 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public boolean isPersistente() { // calcetín no desaparece al impactar
-        return  true;
+        return true;
     }
+
     @Override
     public void registrarImpacto(Enemigo enemigo) {
         enemigosImpactados.add(enemigo);

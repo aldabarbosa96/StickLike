@@ -31,8 +31,9 @@ public class AtaqueCalcetin {
             float direccionX = (float) Math.cos(radianes);
             float direccionY = (float) Math.sin(radianes);
 
+            float poderHabilidad = jug.getPoderJugador();
             // Crear el proyectil
-            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY, PROJECTILE_CALCETIN_SPEED, SPEED_MULT);
+            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY, PROJECTILE_CALCETIN_SPEED, SPEED_MULT,poderHabilidad);
 
             // Añadir el proyectil al controlador del jugador
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);

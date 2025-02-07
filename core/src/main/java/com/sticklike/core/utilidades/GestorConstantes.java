@@ -126,6 +126,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float RESISTENCIA = 0.06f;
     public static final float CRITICO = 0.03f;
     public static final float REGENERACION_VIDA = 0.001f;
+    public static final float PODER_JUGADOR = 10f;
     public static final float WIDTH_JUGADOR = 12f;
     public static final float HEIGHT_JUGADOR = 34f;
     public static final float PARPADEO_JUGADOR = 0.2f;
@@ -189,6 +190,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float PROJECTILE_PIEDRA_SPEED = 250f;
     public static final float PROJECTILE_CALCETIN_SPEED = 185f;
     public static final int VEL_ROTACION_CALCETIN = 1080;
+    public static final float DANYO_CALCETIN = 13f;
     public static final float SPEED_MULT = 1.8f;
     public static final float PIEDRA_SIZE = 6f;
     public static final float CALCETIN_W_SIZE = 18f;
@@ -206,10 +208,10 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float RADIO_TAZOS_JUGADOR = 65f;
     public static final float VEL_ROTACION = 180f;
     public static final float INTERVALO_TAZOS = 0.1f;
-    public static final float DANYO_TAZOS = 1.5f;
+    public static final float DANYO_TAZOS = 3.5f;
     public static final int NUM_TAZOS = 2;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
-    public static final float DANYO_PEDO = 1f;
+    public static final float DANYO_PEDO = 2.5f;
     public static final float DELAY_ENTRE_PEDOS = 5f;
 
     // -------------------------------------------------

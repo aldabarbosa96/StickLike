@@ -35,17 +35,17 @@ public class ProyectilTazo implements Proyectiles {
     private static final float MAX_GROWTH_SCALE = 0.9f;
     private static final float GROW_DURATION = 0.5f;  // Duración del efecto de crecimiento (y del fade-out)
 
-    // --- Nuevas fases del ciclo del tazo ---
+    // --- fases del ciclo del tazo ---
     private enum Phase { GROWING, ACTIVE, COOLDOWN }
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0f;  // Temporizador para la fase actual
 
     // Duraciones para la fase ACTIVE y la fase COOLDOWN
-    private static final float ACTIVE_DURATION = 8f;    // Tiempo que el tazo se muestra activo
-    private static final float COOLDOWN_DURATION = 3f;  // Tiempo total de espera entre ataques
+    private static final float ACTIVE_DURATION = 8.5f;    // Tiempo que el tazo se muestra activo
+    private static final float COOLDOWN_DURATION = 3.5f;  // Tiempo total de espera entre ataques
 
-    // Usamos growthTimer para controlar el efecto de crecimiento (durante GROWING)
     private float growthTimer = 0f;
+    private float powerFactor;
 
     public ProyectilTazo(Jugador jugador, AtaqueTazo ataqueTazo, float offsetAngle, float radio, GestorDeAudio gestorDeAudio) {
         if (textura == null) {
@@ -61,10 +61,11 @@ public class ProyectilTazo implements Proyectiles {
         this.offsetAngle = offsetAngle;
         this.radio = radio;
         this.gestorDeAudio = gestorDeAudio;
+        this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
         // Iniciamos con la escala mínima para el efecto de crecer
         sprite.setScale(MIN_GROWTH_SCALE);
-        // Aseguramos el color inicial (por ejemplo, blanco)
-        sprite.setColor(1, 1, 1, 1);
+
+
     }
 
     @Override
@@ -94,8 +95,7 @@ public class ProyectilTazo implements Proyectiles {
                 rotacionSprite += 720f * delta;
                 sprite.setRotation(rotacionSprite);
                 // Posicionamos el sprite centrado
-                sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2,
-                    jugadorCentroY + offsetY - sprite.getHeight() / 2);
+                sprite.setPosition(jugadorCentroX + offsetX - sprite.getWidth() / 2, jugadorCentroY + offsetY - sprite.getHeight() / 2);
                 // Cuando termina el crecimiento, pasamos a la fase ACTIVE
                 if (growthTimer >= GROW_DURATION) {
                     phase = Phase.ACTIVE;
@@ -198,10 +198,12 @@ public class ProyectilTazo implements Proyectiles {
     public float getBaseDamage() {
         // Se aplica daño únicamente en la fase ACTIVE
         if (phase == Phase.ACTIVE) {
-            return (float) (DANYO_TAZOS + Math.random() * 3.5f);
+            float baseDamage = (float)(DANYO_TAZOS + Math.random() * 3.5f); // Asegúrate de tener definida la constante DANYO_TAZO
+            return baseDamage * powerFactor;
         }
         return 0f;
     }
+
 
     @Override
     public float getKnockbackForce() {

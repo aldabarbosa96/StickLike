@@ -287,7 +287,7 @@ public class RenderHUDComponents {
         DecimalFormat df = new DecimalFormat("#.#");
         String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + df.format(jugador.getMaxVidaJugador());
         String valorRegeneracionVida = df.format(jugador.getRegVidaJugador() * 100) + " %";
-        String valorPoderAtaque = df.format(0);
+        String valorPoderAtaque = df.format(jugador.getPoderJugador()) + " %";
         String valorResistencia = df.format(jugador.getResistenciaJugador() * 100) + " %";
         String valorCritico = df.format(jugador.getCritico() * 100) + " %";
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};

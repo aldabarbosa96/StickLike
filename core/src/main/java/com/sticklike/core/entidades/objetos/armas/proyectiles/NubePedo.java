@@ -21,6 +21,7 @@ public class NubePedo implements Proyectiles {
     private Jugador jugador;
     private boolean proyectilActivo;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
+    private float powerFactor;
 
     // --- Estados para la animación ---
     private enum Phase { GROWING, VIBRATE1, PAUSE, VIBRATE2, COOLDOWN }
@@ -52,6 +53,7 @@ public class NubePedo implements Proyectiles {
         sprite.setOriginCenter();
         this.jugador = jugador;
         this.proyectilActivo = true;
+        this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
 
         // Iniciamos con la escala y opacidad mínimas para el efecto de crecimiento
         sprite.setScale(MIN_SCALE);
@@ -221,7 +223,9 @@ public class NubePedo implements Proyectiles {
         } else {
             baseDamage = DANYO_PEDO;
         }
-        return baseDamage > 0 ? baseDamage : 1f;
+        float damageEscalado = baseDamage * powerFactor;
+
+        return (damageEscalado > 0f) ? damageEscalado : 1f;
     }
 
 

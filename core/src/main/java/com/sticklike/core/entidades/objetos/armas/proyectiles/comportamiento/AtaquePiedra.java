@@ -74,7 +74,7 @@ public class AtaquePiedra {
                 float targetY = target.getY() + target.getSprite().getHeight() / 2f;
                 float[] dir = calcularDireccionNormalizada(spawnX, spawnY, targetX, targetY);
 
-                float velocidadAleatoria = 0.8f + (float) Math.random() * (1.2f - 0.8f);
+                float velocidadAleatoria = 1.5f + (float) Math.random() * (1.75f - 1.5f);
                 ProyectilPiedra piedra = new ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria,jugador);
                 jugador.getControladorProyectiles().anyadirNuevoProyectil(piedra);
 

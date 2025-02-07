@@ -45,6 +45,7 @@ public class Jugador {
     private float resistenciaJugador;
     private float criticoJugador;
     private float regVidaJugador;
+    private float poderJugador;
     private boolean estaVivo;
     private float oroGanado;
     private Direction direccionActual = Direction.IDLE;
@@ -62,6 +63,7 @@ public class Jugador {
         this.resistenciaJugador = RESISTENCIA;
         this.criticoJugador = CRITICO;
         this.regVidaJugador = REGENERACION_VIDA;
+        this.poderJugador = PODER_JUGADOR;
         this.estaVivo = true;
         this.oroGanado = 0;
 
@@ -170,6 +172,9 @@ public class Jugador {
     public void aumentarProyectilesPorDisparo(int amount) {
         proyectilesPorDisparo += amount;
     }
+    public void aumentarPoderJugador(float amount) {
+        poderJugador *= amount;
+    }
 
     // Getters y Setters básicos
     public float getRangoAtaqueJugador() {
@@ -271,8 +276,8 @@ public class Jugador {
         return resistenciaJugador;
     }
 
-    public void setResistenciaJugador(float resistenciaJugador) {
-        this.resistenciaJugador = resistenciaJugador;
+    public float getPoderJugador() {
+        return poderJugador;
     }
 
     public float getRegVidaJugador() {
@@ -284,16 +289,8 @@ public class Jugador {
         if (vidaJugador > maxVidaJugador) vidaJugador = maxVidaJugador;
     }
 
-    public void setRegVidaJugador(float regVidaJugador) {
-        this.regVidaJugador = regVidaJugador;
-    }
-
     public float getCritico() {
         return criticoJugador;
-    }
-
-    public void setCriticoJugador(float criticoJugador) {
-        this.criticoJugador = criticoJugador;
     }
 
     public float getOroGanado() {
