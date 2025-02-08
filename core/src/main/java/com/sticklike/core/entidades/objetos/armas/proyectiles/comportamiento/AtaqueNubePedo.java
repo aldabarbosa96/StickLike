@@ -28,4 +28,8 @@ public class AtaqueNubePedo {
             }
         }
     }
+
+    public NubePedo getNubePedo() {
+        return nubePedo;
+    }
 }

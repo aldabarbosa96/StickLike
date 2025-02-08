@@ -23,28 +23,28 @@ public class NubePedo implements Proyectiles {
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float powerFactor;
 
+    // Variables para ajustes de posición
+    private float offsetX = 0f;
+    private float offsetY = 0f;
+
     // --- Estados para la animación ---
     private enum Phase { GROWING, VIBRATE1, PAUSE, VIBRATE2, COOLDOWN }
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0;
 
-    private static final float GROW_DURATION = 0.3f; // Duración de la fase de crecimiento
-
-    // Duraciones de las fases de vibración
-    private static final float VIBRATE1_DURATION = 0.3f; // Primera vibración
-    private static final float PAUSE_DURATION    = 0.25f; // Pausa entre vibraciones
-    private static final float VIBRATE2_DURATION = 0.3f; // Segunda vibración
-
-    // Duración de la fase de COOLDOWN (pausa entre ciclos)
+    private static final float GROW_DURATION = 0.3f;
+    private static final float VIBRATE1_DURATION = 0.3f;
+    private static final float PAUSE_DURATION = 0.25f;
+    private static final float VIBRATE2_DURATION = 0.3f;
     private static final float COOLDOWN_DURATION = 2.5f;
 
-    private static final float MIN_SCALE    = 0.1f;  // Escala inicial
-    private float maxScale = 1.35f; // Escala máxima (tamaño completo)
-    private static final float MIN_ALPHA    = 0.1f;  // Opacidad mínima
-    private static final float MAX_ALPHA    = 0.75f; // Opacidad máxima
-    private static final float VIBRATE_RANGE = 8f;    // Rango de oscilación (en píxeles) durante la vibración
-    private static final float KNOCKBACK_FORCE = 200f; // Fuerza de knockback a aplicar
-    private static final float ROTATION_SPEED  = 2500f;// Velocidad de rotación (grados por segundo)
+    private static final float MIN_SCALE = 0.1f;
+    private float maxScale = 1.35f;
+    private static final float MIN_ALPHA = 0.1f;
+    private static final float MAX_ALPHA = 0.75f;
+    private static final float VIBRATE_RANGE = 8f;
+    private static final float KNOCKBACK_FORCE = 200f;
+    private static final float ROTATION_SPEED = 2500f;
 
     public NubePedo(Jugador jugador) {
         this.texture = armaNubePedo;
@@ -55,7 +55,6 @@ public class NubePedo implements Proyectiles {
         this.proyectilActivo = true;
         this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
 
-        // Iniciamos con la escala y opacidad mínimas para el efecto de crecimiento
         sprite.setScale(MIN_SCALE);
         sprite.setColor(0.75f, 0.75f, 0.75f, MIN_ALPHA);
     }
@@ -68,35 +67,26 @@ public class NubePedo implements Proyectiles {
         float currentAlpha = MIN_ALPHA + progress * (MAX_ALPHA - MIN_ALPHA);
         phaseTimer += delta;
 
-        // Posición base relativa al jugador (ajústala según necesites)
-        float jugadorCenterX = jugador.getSprite().getX() - jugador.getSprite().getWidth() / 2 - 15f;
-        float jugadorCenterY = jugador.getSprite().getY() - jugador.getSprite().getHeight() / 2 + 5f;
+        float jugadorCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2 - sprite.getWidth() / 2;
+        float jugadorCenterY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2 - sprite.getHeight() / 2;
 
         switch (phase) {
             case GROWING:
                 sprite.rotate(ROTATION_SPEED * delta);
-
-                // Interpolación lineal entre MIN_SCALE y MAX_SCALE
                 float currentScale = MIN_SCALE + progress * (maxScale - MIN_SCALE);
                 sprite.setScale(currentScale);
-                // Interpolación de opacidad
                 sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
-                // Posición fija en el centro del jugador
                 sprite.setPosition(jugadorCenterX, jugadorCenterY);
 
-                // Al finalizar el crecimiento, pasamos a la primera vibración
                 if (phaseTimer >= GROW_DURATION) {
                     phase = Phase.VIBRATE1;
                     phaseTimer = 0;
-                    // Limpieza una sola vez al inicio de la fase VIBRATE1
                     enemigosImpactados.clear();
                 }
                 break;
 
             case VIBRATE1:
-                // Primera vibración: se aplica el efecto (audio, vibración y knockback)
                 GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
-                // Limpia el conjunto solo al inicio de la fase
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -114,7 +104,6 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case PAUSE:
-                // Durante la pausa, el sprite se mantiene fijo en el centro
                 sprite.setScale(maxScale);
                 sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
                 sprite.setPosition(jugadorCenterX, jugadorCenterY);
@@ -122,13 +111,11 @@ public class NubePedo implements Proyectiles {
                 if (phaseTimer >= PAUSE_DURATION) {
                     phase = Phase.VIBRATE2;
                     phaseTimer = 0;
-                    // Limpieza una sola vez al inicio de la fase VIBRATE2
                     enemigosImpactados.clear();
                 }
                 break;
 
             case VIBRATE2:
-                // Segunda vibración, similar a la primera
                 GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
@@ -141,45 +128,24 @@ public class NubePedo implements Proyectiles {
                 sprite.setPosition(jugadorCenterX + offsetX2, jugadorCenterY + offsetY2);
 
                 if (phaseTimer >= VIBRATE2_DURATION) {
-                    // Una vez terminada la segunda vibración, iniciamos el COOLDOWN
                     phase = Phase.COOLDOWN;
                     phaseTimer = 0;
-                    // Reiniciamos algunos parámetros para el siguiente ciclo
                     sprite.setScale(MIN_SCALE);
                     enemigosImpactados.clear();
                 }
                 break;
 
             case COOLDOWN:
-                // Mover el sprite fuera del área de juego
                 sprite.setPosition(-1000, -1000);
                 sprite.setColor(0.75f, 0.75f, 0.75f, 0f);
                 if (phaseTimer >= COOLDOWN_DURATION) {
-                    // Reiniciamos el ciclo
                     phase = Phase.GROWING;
                     phaseTimer = 0;
                     sprite.setColor(0.75f, 0.75f, 0.75f, MIN_ALPHA);
                 }
                 break;
-
         }
     }
-
-    @Override
-    public void renderizarProyectil(SpriteBatch batch) {
-        if (proyectilActivo) {
-            // Durante COOLDOWN no se dibuja el sprite (está oculto)
-            if (phase != Phase.COOLDOWN) {
-                sprite.draw(batch);
-            }
-        }
-    }
-
-    @Override
-    public void dispose() {
-        texture = null;
-    }
-
     @Override
     public float getX() {
         return sprite.getX();
@@ -193,25 +159,42 @@ public class NubePedo implements Proyectiles {
     @Override
     public Rectangle getRectanguloColision() {
         if (phase == Phase.COOLDOWN) {
-            // Retornamos un rectángulo vacío para desactivar la colisión
-            return new Rectangle(0, 0, 0, 0);
+            return new Rectangle(0, 0, 0, 0); // Evita colisiones durante el cooldown
         }
         return new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
+
+    public void setEscalaMax(float incremento) {
+        float nuevoAncho = sprite.getWidth() * incremento;
+        float nuevoAlto = sprite.getHeight() * incremento;
+
+        sprite.setSize(nuevoAncho, nuevoAlto);
+        sprite.setOriginCenter();
+
+    }
+
+    @Override
+    public void renderizarProyectil(SpriteBatch batch) {
+        if (proyectilActivo && phase != Phase.COOLDOWN) {
+            sprite.draw(batch);
+        }
+    }
+
+    @Override
+    public void dispose() {
+        texture = null;
+    }
 
     @Override
     public boolean isProyectilActivo() {
         return proyectilActivo;
     }
 
-
-
     @Override
     public void desactivarProyectil() {
         proyectilActivo = false;
     }
-
     @Override
     public float getBaseDamage() {
         if (phase == Phase.COOLDOWN) {
@@ -228,7 +211,6 @@ public class NubePedo implements Proyectiles {
         return (damageEscalado > 0f) ? damageEscalado : 1f;
     }
 
-
     @Override
     public float getKnockbackForce() {
         // Se aplica knockback solo durante las vibraciones
@@ -237,6 +219,7 @@ public class NubePedo implements Proyectiles {
         }
         return 0f;
     }
+
 
     @Override
     public boolean isPersistente() {

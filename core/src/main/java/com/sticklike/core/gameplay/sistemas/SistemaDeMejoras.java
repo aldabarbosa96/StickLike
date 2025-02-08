@@ -54,8 +54,7 @@ public class SistemaDeMejoras {
         //todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%",() -> jugador.aumentarCritico(0.15f), 5, null, null));
         //todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%",() -> jugador.aumentarResistencia(0.2f), 5, null, null));
         //todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%",() -> jugador.aumentarPoderJugador(1.5f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos",
-            () -> {jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);jugador.setVidaJugador(jugador.getVidaJugador() + 15);}, 10, null, null));
+        //todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);jugador.setVidaJugador(jugador.getVidaJugador() + 15);}, 10, null, null));
 
         // Mejoras base para habilidades (se especifica el id de la habilidad; no contienen "_" en el id)
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!",
@@ -71,7 +70,7 @@ public class SistemaDeMejoras {
             () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)),
             1, armaNubePedo, "PEDO"));
 
-        // Upgrades específicos para la habilidad de Calcetín (el id contiene "_" y requieren que "CALCETIN" esté activa)
+        // Upgrades específicos para las habilidades
         todasLasMejoras.add(new Mejora("¡CALCETÍN: DAÑO MAX!",
             "Aumenta el daño de los calcetines un 20%",
             () -> {jugador.getAtaqueCalcetin().aumentarDamage(0.2f);
@@ -87,12 +86,12 @@ public class SistemaDeMejoras {
             () -> {
                 jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);
             }, 3, null, "TAZO_rotacion"));
-        /* Upgrade para NubePedo:
-        todasLasMejoras.add(new Mejora("¡PEDO: COOLDOWN MENOR!",
-            "Reduce el cooldown entre pedos",
+        //Upgrade para NubePedo:
+        todasLasMejoras.add(new Mejora("¡PEDO: + AREA!",
+            "Aumenta el area de efecto del pedo",
             () -> {
-                jugador.getAtaqueNubePedo().reducirCooldown(0.20f);
-            }, 2, yetAnotherIcon, "NUBE_PEDO_cooldown"));*/
+                jugador.getAtaqueNubePedo().getNubePedo().setEscalaMax(2f);
+            }, 2, null, "PEDO_maxArea"));
 
     }
 

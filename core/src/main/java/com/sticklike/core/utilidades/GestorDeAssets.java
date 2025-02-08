@@ -81,6 +81,7 @@ public class GestorDeAssets {
         borrones.add(new Texture("fondo/borronELBERTO.png"));
         borrones.add(new Texture("fondo/borronColgado.png"));
         borrones.add(new Texture("fondo/borronSmile.png"));
+        borrones.add(new Texture("fondo/tote.png"));
 
     }
 
