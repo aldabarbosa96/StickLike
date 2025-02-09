@@ -18,14 +18,6 @@ public class AtaqueCalcetin {
         this.intervaloDisparo = intervaloDisparoInicial;
     }
 
-    public void incrementarNumeroProyectiles(int incremento) {
-        proyectilesExtra += incremento;
-    }
-
-    public void aumentarDamage(float incremento) {
-        extraDamage += DANYO_CALCETIN + (DANYO_CALCETIN * incremento);
-    }
-
     public void procesarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         // Obtenemos las coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
@@ -65,5 +57,12 @@ public class AtaqueCalcetin {
             temporizadorDisparo = 0;
             procesarAtaque(jugador, gestorDeAudio);
         }
+    }
+    public void incrementarNumeroProyectiles(int incremento) {
+        proyectilesExtra += incremento;
+    }
+
+    public void aumentarDamage(float incremento) {
+        extraDamage += DANYO_CALCETIN + (DANYO_CALCETIN * incremento);
     }
 }

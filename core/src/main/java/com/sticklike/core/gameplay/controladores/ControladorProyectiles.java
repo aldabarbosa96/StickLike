@@ -80,10 +80,10 @@ public class ControladorProyectiles {
                     // Determinar si el golpe fue crítico
                     boolean golpeCritico = false;
                     if (proyectil instanceof ProyectilPiedra) {
-                        golpeCritico = ((ProyectilPiedra)proyectil).esCritico();
+                        golpeCritico = ((ProyectilPiedra) proyectil).esCritico();
                     }
 
-                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO,golpeCritico);
+                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO, golpeCritico);
                     dmgText.add(damageText);
 
                     ultimaYTexto.put(enemigo, posicionTextoY);
@@ -138,15 +138,16 @@ public class ControladorProyectiles {
         multiplicadorDeDanyo *= multiplier;
         System.out.println("Multiplicador de daño actualizado a: " + multiplicadorDeDanyo);
     }
+
     private boolean estaEnRadio(Enemigo enemigo, Proyectiles proyectil) {
         if (!(proyectil instanceof ProyectilTazo)) return false;
 
-        float enemigoX = enemigo.getX() + enemigo.getSprite().getWidth()/2;
-        float enemigoY = enemigo.getY() + enemigo.getSprite().getHeight()/2;
+        float enemigoX = enemigo.getX() + enemigo.getSprite().getWidth() / 2;
+        float enemigoY = enemigo.getY() + enemigo.getSprite().getHeight() / 2;
 
         Rectangle areaNube = proyectil.getRectanguloColision();
-        float centroNubeX = areaNube.x + areaNube.width/2;
-        float centroNubeY = areaNube.y + areaNube.height/2;
+        float centroNubeX = areaNube.x + areaNube.width / 2;
+        float centroNubeY = areaNube.y + areaNube.height / 2;
 
         // Distancia entre centros
         float distancia = (float) Math.sqrt(
@@ -154,8 +155,31 @@ public class ControladorProyectiles {
                 Math.pow(enemigoY - centroNubeY, 2)
         );
 
-        return distancia <= areaNube.width/2;
+        return distancia <= areaNube.width / 2;
     }
+
+    public ProyectilTazo obtenerUltimoProyectilTazo() {
+        for (int i = proyectiles.size() - 1; i >= 0; i--) {
+            if (proyectiles.get(i) instanceof ProyectilTazo) {
+                return (ProyectilTazo) proyectiles.get(i);
+            }
+        }
+        return null;
+    }
+
+    public ProyectilTazo obtenerProyectilPorIndice(int indice) {
+        int contador = 0;
+        for (Proyectiles p : proyectiles) {
+            if (p instanceof ProyectilTazo) {
+                if (contador == indice) {
+                    return (ProyectilTazo) p;
+                }
+                contador++;
+            }
+        }
+        return null;
+    }
+
 
     public void reset() { // Reseteamos de proyectiles para evitar interferencias y poder gestionar el nuevo estado de estos
         // todo --> se deberá gestionar desde aquí en vez de desde dispose (así podrán mantenerse algunas mejoras si existe la posibilidad de vida extra)

@@ -23,9 +23,7 @@ public class NubePedo implements Proyectiles {
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float powerFactor;
 
-    // Variables para ajustes de posición
-    private float offsetX = 0f;
-    private float offsetY = 0f;
+
 
     // --- Estados para la animación ---
     private enum Phase { GROWING, VIBRATE1, PAUSE, VIBRATE2, COOLDOWN }
@@ -43,7 +41,7 @@ public class NubePedo implements Proyectiles {
     private static final float MIN_ALPHA = 0.1f;
     private static final float MAX_ALPHA = 0.75f;
     private static final float VIBRATE_RANGE = 8f;
-    private static final float KNOCKBACK_FORCE = 200f;
+    private  float knockbackForce = 200f;
     private static final float ROTATION_SPEED = 2500f;
 
     public NubePedo(Jugador jugador) {
@@ -173,6 +171,9 @@ public class NubePedo implements Proyectiles {
         sprite.setOriginCenter();
 
     }
+    public void setMaxKnockBack(float incremento) {
+        this.knockbackForce = knockbackForce * incremento;
+    }
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
@@ -215,7 +216,7 @@ public class NubePedo implements Proyectiles {
     public float getKnockbackForce() {
         // Se aplica knockback solo durante las vibraciones
         if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2) {
-            return KNOCKBACK_FORCE;
+            return knockbackForce;
         }
         return 0f;
     }

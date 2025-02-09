@@ -6,6 +6,8 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.Ata
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.utilidades.GestorDeAudio;
+
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.util.ArrayList;
@@ -58,40 +60,31 @@ public class SistemaDeMejoras {
 
         // Mejoras base para habilidades (se especifica el id de la habilidad; no contienen "_" en el id)
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!",
-            "Lanza calcetines lefados en todas direcciones",
-            () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)),
-            1, armaCalcetin, "CALCETIN"));
+            "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin(jugador.getIntervaloDisparo() + 1.15f)), 1, armaCalcetin, "CALCETIN"));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!",
-            "Invoca un tazo giratorio rotativo",
-            () -> jugador.setTazo(new AtaqueTazo()),
-            1, armaTazos, "TAZO"));
+            "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, armaTazos, "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!",
-            "Emana pedo tóxico repelente",
-            () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)),
-            1, armaNubePedo, "PEDO"));
+            "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, armaNubePedo, "PEDO"));
 
         // Upgrades específicos para las habilidades
+        // Calcetín
         todasLasMejoras.add(new Mejora("¡CALCETÍN: DAÑO MAX!",
-            "Aumenta el daño de los calcetines un 20%",
-            () -> {jugador.getAtaqueCalcetin().aumentarDamage(0.2f);
-            }, 5, null, "CALCETIN_damage"));
+            "Aumenta el daño de los calcetines un 20%", () -> {jugador.getAtaqueCalcetin().aumentarDamage(0.2f);}, 5, null, "CALCETIN_damage"));
         todasLasMejoras.add(new Mejora("¡CALCETÍN: MULTI-PROYECTIL!",
-            "Aumenta el número de calcetines +1",
-            () -> {jugador.getAtaqueCalcetin().incrementarNumeroProyectiles(1);
-            }, 4, null, "CALCETIN_multi"));
+            "Aumenta el número de calcetines +1", () -> {jugador.getAtaqueCalcetin().incrementarNumeroProyectiles(1);}, 4, null, "CALCETIN_multi"));
 
-        // Upgrade para Tazo:
+        // Tazo
         todasLasMejoras.add(new Mejora("¡TAZO: + ROTATIVO!",
-            "Aumenta la velocidad de rotación del tazo",
-            () -> {
-                jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);
-            }, 3, null, "TAZO_rotacion"));
-        //Upgrade para NubePedo:
-        todasLasMejoras.add(new Mejora("¡PEDO: + AREA!",
-            "Aumenta el area de efecto del pedo",
-            () -> {
-                jugador.getAtaqueNubePedo().getNubePedo().setEscalaMax(2f);
-            }, 2, null, "PEDO_maxArea"));
+            "Aumenta la velocidad de rotación del tazo", () -> {jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);}, 3, null, "TAZO_rotacion"));
+        todasLasMejoras.add(new Mejora("¡TAZO: MULTi_PROYECTIL!",
+            "Aumenta el número de tazos +1", ()-> {jugador.getAtaqueTazo().aumentarNumTazos(1);},3,null,"TAZO_proyectil"));
+
+        // NubePedo
+        todasLasMejoras.add(new Mejora("¡PEDO: ÁREA PESTOSA!",
+            "Aumenta el area de efecto del pedo un 100%", () -> {jugador.getAtaqueNubePedo().getNubePedo().setEscalaMax(2f);}, 2, null, "PEDO_maxArea"));
+        todasLasMejoras.add(new Mejora("¡PEDO: ÁREA PEDORRA!",
+            "Aumenta el empuje del pedo un 30%", () -> {jugador.getAtaqueNubePedo().getNubePedo().setMaxKnockBack(1.3f);}, 2, null, "PEDO_maxEmpuje"));
+
 
     }
 

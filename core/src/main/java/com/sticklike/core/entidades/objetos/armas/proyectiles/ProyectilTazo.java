@@ -36,7 +36,7 @@ public class ProyectilTazo implements Proyectiles {
     private static final float GROW_DURATION = 0.5f;  // Duración del efecto de crecimiento (y del fade-out)
 
     // --- fases del ciclo del tazo ---
-    private enum Phase { GROWING, ACTIVE, COOLDOWN }
+    public enum Phase { GROWING, ACTIVE, COOLDOWN }
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0f;  // Temporizador para la fase actual
 
@@ -229,4 +229,22 @@ public class ProyectilTazo implements Proyectiles {
     public AtaqueTazo getAtaqueTazo() {
         return ataqueTazo;
     }
+
+    public void setPhase(Phase phase, float phaseTimer) {
+        this.phase = phase;
+        this.phaseTimer = phaseTimer;
+    }
+
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public float getPhaseTimer() {
+        return phaseTimer;
+    }
+
+    public void setOffsetAngle(float nuevoOffset) {
+        this.offsetAngle = nuevoOffset;
+    }
+
 }
