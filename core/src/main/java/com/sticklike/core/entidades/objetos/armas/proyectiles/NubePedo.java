@@ -24,9 +24,9 @@ public class NubePedo implements Proyectiles {
     private float powerFactor;
 
 
-
     // --- Estados para la animación ---
-    private enum Phase { GROWING, VIBRATE1, PAUSE, VIBRATE2, COOLDOWN }
+    public enum Phase {GROWING, VIBRATE1, PAUSE, VIBRATE2, VIBRATE3, COOLDOWN}
+
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0;
 
@@ -41,7 +41,7 @@ public class NubePedo implements Proyectiles {
     private static final float MIN_ALPHA = 0.1f;
     private static final float MAX_ALPHA = 0.75f;
     private static final float VIBRATE_RANGE = 8f;
-    private  float knockbackForce = 200f;
+    private float knockbackForce = 200f;
     private static final float ROTATION_SPEED = 2500f;
 
     public NubePedo(Jugador jugador) {
@@ -125,6 +125,31 @@ public class NubePedo implements Proyectiles {
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX2, jugadorCenterY + offsetY2);
 
+                if (phaseTimer >= VIBRATE2_DURATION + 0.2f) {
+                    if (jugador.getAtaqueNubePedo().isEsTriple()) {
+                        phase = Phase.VIBRATE3;
+                    } else {
+                        phase = Phase.COOLDOWN;
+                        sprite.setScale(MIN_SCALE);
+                    }
+                    phaseTimer = 0;
+                    enemigosImpactados.clear();
+                }
+
+                break;
+
+            case VIBRATE3:
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
+                if (phaseTimer < delta) {
+                    enemigosImpactados.clear();
+                }
+
+                float offsetX3 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE + 2f;
+                float offsetY3 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE + 2f;
+                sprite.setScale(maxScale);
+                sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
+                sprite.setPosition(jugadorCenterX + offsetX3, jugadorCenterY + offsetY3);
+
                 if (phaseTimer >= VIBRATE2_DURATION) {
                     phase = Phase.COOLDOWN;
                     phaseTimer = 0;
@@ -132,6 +157,7 @@ public class NubePedo implements Proyectiles {
                     enemigosImpactados.clear();
                 }
                 break;
+
 
             case COOLDOWN:
                 sprite.setPosition(-1000, -1000);
@@ -144,6 +170,7 @@ public class NubePedo implements Proyectiles {
                 break;
         }
     }
+
     @Override
     public float getX() {
         return sprite.getX();
@@ -171,6 +198,7 @@ public class NubePedo implements Proyectiles {
         sprite.setOriginCenter();
 
     }
+
     public void setMaxKnockBack(float incremento) {
         this.knockbackForce = knockbackForce * incremento;
     }
@@ -196,13 +224,14 @@ public class NubePedo implements Proyectiles {
     public void desactivarProyectil() {
         proyectilActivo = false;
     }
+
     @Override
     public float getBaseDamage() {
         if (phase == Phase.COOLDOWN) {
             return 0f;
         }
         float baseDamage;
-        if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2) {
+        if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2 || phase == Phase.VIBRATE3) {
             baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f);
         } else {
             baseDamage = DANYO_PEDO;
@@ -215,7 +244,7 @@ public class NubePedo implements Proyectiles {
     @Override
     public float getKnockbackForce() {
         // Se aplica knockback solo durante las vibraciones
-        if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2) {
+        if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2 || phase == Phase.VIBRATE3) {
             return knockbackForce;
         }
         return 0f;

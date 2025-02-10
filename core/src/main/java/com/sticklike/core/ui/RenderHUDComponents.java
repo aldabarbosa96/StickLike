@@ -208,10 +208,10 @@ public class RenderHUDComponents {
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
 
         float centerX = barX + barWidth * 0.49f;
-        float posY    = barY - 35f;
-        float offset  = 60f;
+        float posY = barY - 35f;
+        float offset = 60f;
 
-        renderizarIconoConTexto(recolectableCacaDorada, 22f, 22f, centerX - offset, posY, String.valueOf((int)jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
+        renderizarIconoConTexto(recolectableCacaDorada, 22f, 22f, centerX - offset, posY, String.valueOf((int) jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
         renderizarIconoConTexto(iconoCalaveraKills, 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
         renderizarIconoConTexto(recolectablePowerUp, 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
     }
@@ -338,11 +338,11 @@ public class RenderHUDComponents {
     public void crearSlots() {
         slotsList.clear();
 
-        float baseX   = VIRTUAL_WIDTH - 450f;
-        float baseY   = 75f;
-        float colGap  = 75f;
-        float rowGap  = 50f;
-        int columns   = 5;
+        float baseX = VIRTUAL_WIDTH - 450f;
+        float baseY = 75f;
+        float colGap = 80f;
+        float rowGap = 50f;
+        int columns = 5;
         int totalSlots = 10;
         float slotSize = 40f;
 
@@ -358,10 +358,9 @@ public class RenderHUDComponents {
     }
 
     public void setHabilidadesActivas(List<Mejora> habilidadesActivas) {
-        // OJO: aquí NO limpies slotsList.clear() para no eliminar los slots
         hudStage.clear();
 
-        // Para cada slot, si hay una mejora, ponle un icono
+        // Para cada slot, si hay una mejora, ponemos icono
         for (int i = 0; i < slotsList.size(); i++) {
             if (i < habilidadesActivas.size()) {
                 Mejora m = habilidadesActivas.get(i);
@@ -372,14 +371,14 @@ public class RenderHUDComponents {
                     style.imageUp = drawableIcono;
 
                     ImageButton boton = new ImageButton(style);
-                    boton.setSize(slotsList.get(i).width -10f, slotsList.get(i).height-10f);
+                    boton.setSize(slotsList.get(i).width - 10f, slotsList.get(i).height - 10f);
 
                     // Usa las mismas coords del slot
-                    boton.setPosition(slotsList.get(i).x +5f, slotsList.get(i).y+5f);
+                    boton.setPosition(slotsList.get(i).x + 5f, slotsList.get(i).y + 5f);
 
                     boton.addListener(new ClickListener() {
                         @Override
-                        public void clicked(InputEvent event, float x, float y) {
+                        public void clicked(InputEvent event, float x, float y) { // todo --> gestionar info de cada mejora al hacer click en ellas
                             System.out.println("Hiciste clic en " + m.getNombreMejora());
                         }
                     });
@@ -391,13 +390,33 @@ public class RenderHUDComponents {
     }
 
     public void renderizarMarcosMejoras() {
-        // Asegúrate de que la proyección esté configurada
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
-        // Recorre cada slot y dibuja la textura en la posición y tamaño indicados
-        for (Rectangle rect : slotsList) {
+
+        fuente.getData().setScale(0.65f);
+
+        for (int i = 0; i < slotsList.size(); i++) {
+            Rectangle rect = slotsList.get(i);
+
+            // Dibujar el marco
             spriteBatch.draw(texturaMarco, rect.x, rect.y, rect.width, rect.height);
+
+            // Si el slot está vacío, dibujar el número
+            if (i >= sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas().size()) {
+                String textoNumero = String.valueOf(i + 1);
+                GlyphLayout layout = new GlyphLayout(fuente, textoNumero);
+                float textWidth = layout.width;
+                float textHeight = layout.height;
+
+                // Calcular la posición para centrarlo en el marco
+                float textX = rect.x + (rect.width - textWidth) / 2;
+                float textY = rect.y + (rect.height + textHeight) / 2;
+
+                fuente.setColor(Color.BLUE);
+                fuente.draw(spriteBatch, textoNumero, textX, textY);
+            }
         }
+
         spriteBatch.end();
     }
 

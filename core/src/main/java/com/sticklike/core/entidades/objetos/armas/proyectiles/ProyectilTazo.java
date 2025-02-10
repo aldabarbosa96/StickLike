@@ -41,7 +41,7 @@ public class ProyectilTazo implements Proyectiles {
     private float phaseTimer = 0f;  // Temporizador para la fase actual
 
     // Duraciones para la fase ACTIVE y la fase COOLDOWN
-    private static final float ACTIVE_DURATION = 8.5f;    // Tiempo que el tazo se muestra activo
+    private float activeDuration = 8.5f;    // Tiempo que el tazo se muestra activo
     private static final float COOLDOWN_DURATION = 3.5f;  // Tiempo total de espera entre ataques
 
     private float growthTimer = 0f;
@@ -118,7 +118,8 @@ public class ProyectilTazo implements Proyectiles {
                     sprite.setColor(1, 1, 1, 1);
                 }
                 // Si transcurre el tiempo activo, pasamos a la fase COOLDOWN
-                if (phaseTimer >= ACTIVE_DURATION) {
+                if (phaseTimer >= ataqueTazo.getDuracionActivaTazo()) {
+                    System.out.println("Tazo entrando en COOLDOWN después de: " + ataqueTazo.getDuracionActivaTazo() + " segundos.");
                     phase = Phase.COOLDOWN;
                     phaseTimer = 0;
                 }
@@ -247,4 +248,7 @@ public class ProyectilTazo implements Proyectiles {
         this.offsetAngle = nuevoOffset;
     }
 
+    public void setActiveDuration(float activeDuration) {
+        this.activeDuration = activeDuration;
+    }
 }

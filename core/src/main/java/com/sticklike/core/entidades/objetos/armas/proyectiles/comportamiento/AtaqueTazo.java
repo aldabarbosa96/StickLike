@@ -15,6 +15,8 @@ public class AtaqueTazo {
     private float velocidadRotacion = VEL_ROTACION;
     private float incrementoNumTazos = 0;
     private float incrementoPendiente = 0; // Variable para el incremento en espera
+    private float duracionActivaTazo = 8.5f;
+
 
     public void actualizar(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         temporizador += delta;
@@ -57,8 +59,11 @@ public class AtaqueTazo {
         ProyectilTazo.Phase faseInicial = referenciaTazo != null ? referenciaTazo.getPhase() : ProyectilTazo.Phase.GROWING;
         float phaseTimerInicial = referenciaTazo != null ? referenciaTazo.getPhaseTimer() : 0;
 
+        System.out.println("Generando tazo con duración activa: " + duracionActivaTazo);
+
         ProyectilTazo nuevoTazo = new ProyectilTazo(jugador, this, offsetAngle, radio, gestorDeAudio);
         nuevoTazo.setPhase(faseInicial, phaseTimerInicial);
+        nuevoTazo.setActiveDuration(duracionActivaTazo);
         cp.anyadirNuevoProyectil(nuevoTazo);
 
         tazosActivos++;
@@ -77,7 +82,17 @@ public class AtaqueTazo {
         incrementoPendiente += incremento;
     }
 
+    public void aumentarDuracionActivaTazos(float incremento) {
+        this.duracionActivaTazo += incremento;
+        System.out.println("Nueva duración activa de tazo: " + duracionActivaTazo);
+    }
+
+
     public float getGlobalAngle() {
         return globalAngle;
+    }
+
+    public float getDuracionActivaTazo() {
+        return duracionActivaTazo;
     }
 }

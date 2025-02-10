@@ -17,9 +17,7 @@ import com.sticklike.core.ui.HUD;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * Se encarga de dibujar la ventana principal del juego (mapa) y sus elementos
- */
+
 public class RenderVentanaJuego {
 
     private ShapeRenderer shapeRenderer;
@@ -87,12 +85,12 @@ public class RenderVentanaJuego {
         spriteBatch.begin();
         // Objetos XP
         for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
+        // Proyectiles
+        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         // Jugador
         jugador.aplicarRenderizadoAlJugador(spriteBatch, shapeRenderer);
         // Enemigos
         controladorEnemigos.renderizarEnemigos(spriteBatch);
-        // Proyectiles
-        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         // Textos flotantes
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
 
@@ -124,10 +122,7 @@ public class RenderVentanaJuego {
         shapeRenderer.end();
     }
 
-    /**
-     * Genera y almacena borrones con posición, escala, rotación y textura de borrón aleatorias, evitando superposición
-     * y evitando proximidad excesiva si la textura es la misma
-     */
+
     private void generarBorronesRandom(int cantidad) {
         borronesMapa = new Array<>();
 

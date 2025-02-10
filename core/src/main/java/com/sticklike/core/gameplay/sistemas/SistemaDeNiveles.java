@@ -52,4 +52,8 @@ public class SistemaDeNiveles {
     public float getXpHastaSiguienteNivel() {
         return xpHastaSiguienteNivel;
     }
+
+    public SistemaDeMejoras getSistemaDeMejoras() {
+        return sistemaDeMejoras;
+    }
 }

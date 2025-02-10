@@ -33,10 +33,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.List;
 
-/**
- * GameScreen (VentanaJuego) es la pantalla principal del juego
- * Implementa la interfaz {@link Screen} de libGDX para el renderizado
- */
 public class VentanaJuego1 implements Screen {
     public static final int worldWidth = (int) VIRTUAL_WIDTH;
     public static final int worldHeight = (int) VIRTUAL_HEIGHT;

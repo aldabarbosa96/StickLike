@@ -47,7 +47,7 @@ public class RenderSombrasEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - 8f;
 
-        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.5f);
+        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
 
     }
@@ -64,7 +64,7 @@ public class RenderSombrasEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - SHADOW_OFFSET;
 
-        shapeRenderer.setColor(0.3f, 0.3f, 0.3f, 0.5f);
+        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
@@ -78,9 +78,9 @@ public class RenderSombrasEnemigos {
 
         float centerX = x + w / SHADOW_OFFSET_POLLA;
 
-        float baseShadowWidth = w * 0.95f;
-        float baseShadowHeight = h * 0.3f;
-        float baseShadowY = y - 2.5f;
+        float baseShadowWidth = w * 1.75f;
+        float baseShadowHeight = h * 0.5f;
+        float baseShadowY = y - 1f;
 
         float maxZigzag = polla.getMovimientoPolla().getAmplitudZigzag();
 
@@ -97,7 +97,7 @@ public class RenderSombrasEnemigos {
         float finalShadowHeight = baseShadowHeight * factor;
         float finalShadowX = centerX - finalShadowWidth / 2f;
 
-        shapeRenderer.setColor(0.3f, 0.3f, 0.1f, 0.5f);
+        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
         shapeRenderer.ellipse(finalShadowX, baseShadowY, finalShadowWidth, finalShadowHeight);
     }
 

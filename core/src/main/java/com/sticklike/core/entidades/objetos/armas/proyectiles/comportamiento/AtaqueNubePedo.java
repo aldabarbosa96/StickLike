@@ -9,6 +9,7 @@ public class AtaqueNubePedo {
     private NubePedo nubePedo;
     private Jugador jugador;
     private float cooldownTimer = 0f;
+    private boolean esTriple = false;
 
 
     public AtaqueNubePedo(Jugador jugador) {
@@ -31,5 +32,13 @@ public class AtaqueNubePedo {
 
     public NubePedo getNubePedo() {
         return nubePedo;
+    }
+
+    public boolean isEsTriple() {
+        return esTriple;
+    }
+
+    public void setEsTriple(boolean esTriple) {
+        this.esTriple = esTriple;
     }
 }

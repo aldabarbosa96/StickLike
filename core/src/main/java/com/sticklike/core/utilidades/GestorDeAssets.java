@@ -61,7 +61,7 @@ public class GestorDeAssets {
         iconoCritico = new Texture("hud/critico.png");
         iconoVida = new Texture("hud/vida.png");
         iconoCalaveraKills = new Texture("hud/calavera.png");
-        texturaMarco = new Texture("hud/marco.png");
+        texturaMarco = new Texture("hud/marco2.png");
         bossPolla = new Texture("enemigos/bossPolla.png");
 
         // borrones del mapa

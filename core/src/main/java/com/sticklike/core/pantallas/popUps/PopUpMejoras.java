@@ -28,9 +28,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Clase que gestiona la creación y dibujado del Pop-Up de mejoras y maneja sus inputs.
- */
+
 public class PopUpMejoras {
     private Stage uiStage;
     private Skin uiSkin;
