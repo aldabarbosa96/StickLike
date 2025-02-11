@@ -29,7 +29,9 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Clase encargada de dibujar los elementos del HUD en pantalla, como los stats, experiencia, nivel, temporizador, etc.
@@ -48,6 +50,7 @@ public class RenderHUDComponents {
     private String tiempoFormateado;
     private boolean pausadoTemporizador = false;
     private Stage hudStage;
+    private Set<String> upgradeStats = new HashSet<>();
 
     // --- NUEVA CAMARA Y VIEWPORT PARA EL HUD ---
     private OrthographicCamera hudCamera;
@@ -306,6 +309,7 @@ public class RenderHUDComponents {
             float posicionY = statsY - i * ESPACIADO;
             // Dibujar la descripción a la izquierda
             dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
+
             // Dibujar el icono (si existe)
             if (iconos != null && i < iconos.length && iconos[i] != null) {
                 Texture icono = iconos[i];
@@ -314,11 +318,23 @@ public class RenderHUDComponents {
                 float iconY = posicionY - iconSize / 2f - ICON_Y_CORRECTION;
                 spriteBatch.draw(icono, iconX, iconY, iconSize, iconSize);
             }
-            // Dibujar el valor con reborde azul
-            dibujarTextoConReborde(spriteBatch, valores[i], statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, Color.BLUE, Color.WHITE);
+
+            // Definir colores según si el stat está mejorado o no
+            Color textColor;
+            Color borderColor;
+            if (upgradeStats.contains(descripciones[i])) {
+                textColor = Color.GREEN;
+                borderColor = Color.BLACK;
+            } else {
+                textColor = Color.WHITE;
+                borderColor = Color.BLUE;
+            }
+
+            dibujarTextoConReborde(spriteBatch, valores[i], statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, borderColor, textColor);
         }
         spriteBatch.end();
     }
+
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         fuente.setColor(colorReborde);
@@ -363,10 +379,10 @@ public class RenderHUDComponents {
         // Para cada slot, si hay una mejora, ponemos icono
         for (int i = 0; i < slotsList.size(); i++) {
             if (i < habilidadesActivas.size()) {
-                Mejora m = habilidadesActivas.get(i);
-                if (m.getIcono() != null) {
+                Mejora mejora = habilidadesActivas.get(i);
+                if (mejora.getIcono() != null) {
                     TextureRegionDrawable drawableIcono =
-                        new TextureRegionDrawable(new TextureRegion(m.getIcono()));
+                        new TextureRegionDrawable(new TextureRegion(mejora.getIcono()));
                     ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
                     style.imageUp = drawableIcono;
 
@@ -379,7 +395,7 @@ public class RenderHUDComponents {
                     boton.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) { // todo --> gestionar info de cada mejora al hacer click en ellas
-                            System.out.println("Hiciste clic en " + m.getNombreMejora());
+                            System.out.println("Hiciste clic en " + mejora.getNombreMejora());
                         }
                     });
 
@@ -420,6 +436,9 @@ public class RenderHUDComponents {
         spriteBatch.end();
     }
 
+    public void marcarStatComoMejorado(String statKey) {
+        upgradeStats.add(statKey);
+    }
 
     public void dispose() {
         if (texturaCorazonVida != null) texturaCorazonVida.dispose();

@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.enemigos.mobs;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.enemigos.movimiento.MovimientoCulo;
@@ -17,6 +18,8 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 public class EnemigoCulo implements Enemigo {
     private Sprite sprite;
+    private Sprite spriteOjoAbierto;
+    private Sprite spriteOjoCerrado;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGOCULO;
     private MovimientoCulo movimientoCulo;
@@ -28,8 +31,14 @@ public class EnemigoCulo implements Enemigo {
     private AnimacionesEnemigos animacionesEnemigos;
     private float damageAmount = DANYO_CULO;
 
+    private boolean tieneOjo = false;
+    private boolean ojoCerrado = false;
+    private float tiempoAcumulado = 0;
+    private float tiempoParpadeo = 1.0f;
+    private float duracionCerrado = 0.25f;
+
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
-        esConOjo(); // Determina si el enemigo tiene ojo o no al crearse.
+        esConOjo(); // Determina si el enemigo tiene ojo o no al crearse
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
@@ -37,16 +46,22 @@ public class EnemigoCulo implements Enemigo {
     }
 
     private void esConOjo() {
-        float random = (float) (Math.random() * 10);
+        float random = MathUtils.random(10);
         if (random >= 2.5f) {
             sprite = new Sprite(enemigoCulo);
             sprite.setSize(26, 22);
         } else {
-            sprite = new Sprite(enemigoCuloOjo);
-            sprite.setSize(30, 26);
-            vidaEnemigo = VIDA_ENEMIGOCULO * 2; // Incrementa la vida si tiene ojo.
+            tieneOjo = true;
+            spriteOjoAbierto = new Sprite(enemigoCuloOjo);
+            spriteOjoAbierto.setSize(30, 26);
+            spriteOjoCerrado = new Sprite(enemigoCuloOjoCerrado);
+            spriteOjoCerrado.setSize(30, 26);
+            sprite = new Sprite(spriteOjoAbierto);
+
+            vidaEnemigo = VIDA_ENEMIGOCULO * 2;
         }
     }
+
 
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
@@ -55,7 +70,6 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        // Comprobamos si el enemigo sigue "vivo" o está en proceso de desvanecimiento (fade)
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
 
         if (mostrarSprite) {
@@ -83,14 +97,30 @@ public class EnemigoCulo implements Enemigo {
         animacionesEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
 
-        if (temporizadorDanyo > 0) { // reseteamos el temporizador para que pueda aplicar daño más de 1 vez
+        if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
 
-        // Verificar si el sprite debe voltearse
-        boolean estaALaIzquierda = !(sprite.getX() + sprite.getWidth() / 2 < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2);
+        // Animación de parpadeo del ojo
+        if (tieneOjo) {
+            tiempoAcumulado += delta;
 
-        // Voltear el sprite horizontalmente si la dirección ha cambiado
+            if (!ojoCerrado && tiempoAcumulado >= tiempoParpadeo) {
+                System.out.println("Ojo CERRADO");
+                sprite.setRegion(spriteOjoCerrado);
+                ojoCerrado = true;
+                tiempoAcumulado = 0;
+            } else if (ojoCerrado && tiempoAcumulado >= duracionCerrado) {
+                System.out.println("Ojo ABIERTO");
+                sprite.setRegion(spriteOjoAbierto);
+                ojoCerrado = false;
+                tiempoAcumulado = 0;
+            }
+        }
+
+        // Control de dirección del sprite según la posición del jugador
+        boolean estaALaIzquierda = !(sprite.getX() + sprite.getWidth() / 2 <
+            jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2);
         if ((estaALaIzquierda && !sprite.isFlipX()) || (!estaALaIzquierda && sprite.isFlipX())) {
             sprite.flip(true, false);
         }

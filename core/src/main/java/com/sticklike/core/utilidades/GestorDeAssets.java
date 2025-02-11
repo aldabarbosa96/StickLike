@@ -11,7 +11,7 @@ import java.util.HashMap;
  * Clase encargada de cargar y liberar los recursos gráficos usados en el juego (texturas y animaciones)
  */
 public class GestorDeAssets {
-    public static Texture stickman, enemigoCulo, enemigoCuloOjo, enemigoRegla, enemigoReglaCruzada, enemigoPolla, corazonVida,
+    public static Texture stickman, enemigoCulo, enemigoCuloOjo,enemigoCuloOjoCerrado, enemigoRegla, enemigoReglaCruzada, enemigoPolla, corazonVida,
         armaPiedra, armaCalcetin, armaTazos, armaNubePedo, iconoXP, recolectableXP, recolectableXP2, recolectableVida, recolectableCacaDorada,
         recolectablePowerUp, iconoVelMov, iconoPoder, iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion, iconoRango, iconoVelAt,
         iconoCritico, iconoVida,iconoCalaveraKills,texturaMarco, bossPolla;
@@ -37,6 +37,7 @@ public class GestorDeAssets {
         stickman = new Texture("jugador/01stickman.png");
         enemigoCulo = new Texture("enemigos/01culo.png");
         enemigoCuloOjo = new Texture("enemigos/04culoOjo.png");
+        enemigoCuloOjoCerrado = new Texture("enemigos/04culoOjoCerrado.png");
         enemigoReglaCruzada = new Texture("enemigos/03reglaCruzada.png");
         enemigoPolla = new Texture("enemigos/05polla2.png");
         corazonVida = new Texture("hud/life.png");

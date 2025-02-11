@@ -7,6 +7,7 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.Ata
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
 
+import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import java.util.ArrayList;
@@ -133,6 +134,30 @@ public class SistemaDeMejoras {
 
         // Se aplica la mejora (se decrementa el contador de usos)
         mejoraSeleccionada.apply();
+
+        // marcamos las mejoras para aplicar el cambio de color al escogerlas
+        if (mejoraSeleccionada.getNombreMejora().equals("¡PIES VELOCES!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(VEL_MOV);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡BRAZOS LARGOS!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(RANGO);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡MANOS RÁPIDAS!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(VEL_ATAQUE);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡PUÑO DURO!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(FUERZA);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡MULTI PROYECTIL!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(NUM_PROYECTILES);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡CHUTE VITAL!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(REG_VIDA);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡PECHO FIRME!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(RESIST);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡CRITICÓN!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(CRITIC);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡PODER PODEROSO!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(PODER);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡CRITICÓN!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(CRITIC);
+        if (mejoraSeleccionada.getNombreMejora().equals("¡CORAZÓN GORDO!"))
+            game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(VIDA_MAX);
 
         // Si la mejora aplicada tiene ícono, se considera que es una habilidad o upgrade visual.
         // Si se trata de una habilidad base (su id no contiene "_"), se registra su id para habilitar futuros upgrades.
