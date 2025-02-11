@@ -174,14 +174,14 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Animaciones enemigos
     // -------------------------------------------------
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
-    public static final float DURACION_PARPADEO_ENEMIGO = 0.1f;
-    public static final float DURACION_FADE_ENEMIGO = 0.2f;
+    public static final float DURACION_PARPADEO_ENEMIGO = 0.075f;
+    public static final float DURACION_FADE_ENEMIGO = 0.25f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
     public static final float TIEMPO_FADE_TOTAL = 0.25f;
     public static final float ALPHA_ACTUAL = 1f;
     public static final float VELOCIDAD_EMPUJE = 0f;
     public static final float TEMPORIZADOR_EMPUJE = 0f;
-    public static final float DURACION_EMPUJE = 0.15f;
+    public static final float DURACION_EMPUJE = 0.25f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
 
     // -------------------------------------------------
@@ -235,8 +235,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 10.5f * 1.09375f;
     public static final float OBJETO_ORO_WIDTH = 10f * 1.09375f;
     public static final float OBJETO_ORO_HEIGHT = 10f * 1.09375f;
-    public static final float OBJETO_PWUP_WIDTH = 7.5f;
-    public static final float OBJETO_PWUP_HEIGHT = 15f;
+    public static final float OBJETO_PWUP_WIDTH = 7f;
+    public static final float OBJETO_PWUP_HEIGHT = 17.5f;
 
     // -------------------------------------------------
     // Controlador Evento

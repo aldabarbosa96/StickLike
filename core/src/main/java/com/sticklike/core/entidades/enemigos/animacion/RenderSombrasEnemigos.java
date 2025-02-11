@@ -11,10 +11,6 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class RenderSombrasEnemigos {
 
-    /**
-     * Clase encargada de dibujar las sombras de todos los enemigos de la lista, llamando al método específico según su tipo.
-     * El orden de la lista se gestiona desde ControladorEnemigos
-     */
     public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer, Array<Enemigo> enemigos, OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
@@ -78,7 +74,7 @@ public class RenderSombrasEnemigos {
 
         float centerX = x + w / SHADOW_OFFSET_POLLA;
 
-        float baseShadowWidth = w * 1.75f;
+        float baseShadowWidth = w * 1.6f;
         float baseShadowHeight = h * 0.5f;
         float baseShadowY = y - 1f;
 
