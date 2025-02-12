@@ -38,7 +38,7 @@ public class EnemigoCulo implements Enemigo {
     private float duracionCerrado = 0.25f;
 
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
-        esConOjo(); // Determina si el enemigo tiene ojo o no al crearse
+        esConOjo();
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
@@ -106,12 +106,10 @@ public class EnemigoCulo implements Enemigo {
             tiempoAcumulado += delta;
 
             if (!ojoCerrado && tiempoAcumulado >= tiempoParpadeo) {
-                System.out.println("Ojo CERRADO");
                 sprite.setRegion(spriteOjoCerrado);
                 ojoCerrado = true;
                 tiempoAcumulado = 0;
             } else if (ojoCerrado && tiempoAcumulado >= duracionCerrado) {
-                System.out.println("Ojo ABIERTO");
                 sprite.setRegion(spriteOjoAbierto);
                 ojoCerrado = false;
                 tiempoAcumulado = 0;

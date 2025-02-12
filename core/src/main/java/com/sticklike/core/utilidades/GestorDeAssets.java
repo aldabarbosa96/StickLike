@@ -14,7 +14,7 @@ public class GestorDeAssets {
     public static Texture stickman, enemigoCulo, enemigoCuloOjo,enemigoCuloOjoCerrado, enemigoRegla, enemigoReglaCruzada, enemigoPolla, corazonVida,
         armaPiedra, armaCalcetin, armaTazos, armaNubePedo, iconoXP, recolectableXP, recolectableXP2, recolectableVida, recolectableCacaDorada,
         recolectablePowerUp, iconoVelMov, iconoPoder, iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion, iconoRango, iconoVelAt,
-        iconoCritico, iconoVida,iconoCalaveraKills,texturaMarco, bossPolla;
+        iconoCritico, iconoVida,iconoCalaveraKills,texturaMarco, bossPolla, bossPollaBocaCerrada;
     public static Array<Texture> borrones;
     public static HashMap<String, Animation<TextureRegion>> animations;
 
@@ -45,12 +45,12 @@ public class GestorDeAssets {
         armaCalcetin = new Texture("armas/02calcetin.png");
         armaTazos = new Texture("armas/04tetazo.png");
         armaNubePedo = new Texture("armas/03nubePedo.png");
-        iconoXP = new Texture("hud/xp.png");
-        recolectableXP = new Texture("drops/xp1.png");
-        recolectableXP2 = new Texture("drops/xp2.png");
+        //iconoXP = new Texture("hud/xp.png");
+        recolectableXP = new Texture("drops/01xp1.png");
+        recolectableXP2 = new Texture("drops/01xp2.png");
         recolectableVida = new Texture("hud/life.png");
-        recolectableCacaDorada = new Texture("drops/cacaDorada.png");
-        recolectablePowerUp = new Texture("drops/powerUp.png");
+        recolectableCacaDorada = new Texture("drops/02cacaDorada.png");
+        recolectablePowerUp = new Texture("drops/03powerUp.png");
         iconoVelMov = new Texture("hud/vel_mov.png");
         iconoFuerza = new Texture("hud/fuerza.png");
         iconoPoder = new Texture("hud/poder_ataque.png");
@@ -64,6 +64,7 @@ public class GestorDeAssets {
         iconoCalaveraKills = new Texture("hud/calavera.png");
         texturaMarco = new Texture("hud/marco2.png");
         bossPolla = new Texture("enemigos/bossPolla.png");
+        bossPollaBocaCerrada = new Texture("enemigos/bossPollaCerrada.png");
 
         // borrones del mapa
         borrones = new Array<>();

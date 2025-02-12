@@ -59,8 +59,6 @@ public class AtaqueTazo {
         ProyectilTazo.Phase faseInicial = referenciaTazo != null ? referenciaTazo.getPhase() : ProyectilTazo.Phase.GROWING;
         float phaseTimerInicial = referenciaTazo != null ? referenciaTazo.getPhaseTimer() : 0;
 
-        System.out.println("Generando tazo con duración activa: " + duracionActivaTazo);
-
         ProyectilTazo nuevoTazo = new ProyectilTazo(jugador, this, offsetAngle, radio, gestorDeAudio);
         nuevoTazo.setPhase(faseInicial, phaseTimerInicial);
         nuevoTazo.setActiveDuration(duracionActivaTazo);
@@ -84,7 +82,6 @@ public class AtaqueTazo {
 
     public void aumentarDuracionActivaTazos(float incremento) {
         this.duracionActivaTazo += incremento;
-        System.out.println("Nueva duración activa de tazo: " + duracionActivaTazo);
     }
 
 

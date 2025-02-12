@@ -17,9 +17,9 @@ public class MainGame extends Game {
     @Override
     public void create() {
         GestorDeAssets.cargarRecursos(); // Cargamos los assets al iniciar
-        gestorDeAudio = new GestorDeAudio();
+        gestorDeAudio = GestorDeAudio.getInstance();
         gestorDeAudio.reproducirMusica();
-        ventanaJuego1 = new VentanaJuego1(this, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight); // Pasamos MainGame a GameScreen
+        ventanaJuego1 = new VentanaJuego1(this, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight); // Pasamos MainGame a la ventana principal (en un futuro el menú del juego)
         setScreen(ventanaJuego1);
     }
 

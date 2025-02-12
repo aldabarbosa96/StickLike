@@ -17,7 +17,6 @@ import com.sticklike.core.ui.HUD;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-
 public class RenderVentanaJuego {
 
     private ShapeRenderer shapeRenderer;
@@ -51,7 +50,9 @@ public class RenderVentanaJuego {
     public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
         // 1) Limpiamos la pantalla
-        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+        if (jugador.getVidaJugador() <= 15)
+            Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
+        else Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
@@ -73,7 +74,7 @@ public class RenderVentanaJuego {
 
         // 4) Renderizamos la cuadrícula
         ventanaJuego1.actualizarPosCamara();
-        renderizarLineasCuadricula(camara);
+        renderizarLineasCuadricula(camara, jugador);
 
         // 5) Dibujar sombras de los enemigos
         shapeRenderer.setProjectionMatrix(camara.combined);
@@ -100,10 +101,15 @@ public class RenderVentanaJuego {
         hud.renderizarHUD(delta);
     }
 
-    public void renderizarLineasCuadricula(OrthographicCamera camera) {
+    public void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1);
+
+        if (jugador.getVidaJugador() <= 15) {
+            shapeRenderer.setColor(0.9f, 0.64f, 0.7f, 1f);
+        } else {
+            shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
+        }
 
         float startX = camera.position.x - camera.viewportWidth / 2;
         float endX = camera.position.x + camera.viewportWidth / 2;

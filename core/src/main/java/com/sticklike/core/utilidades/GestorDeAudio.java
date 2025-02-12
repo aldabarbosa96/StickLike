@@ -11,11 +11,12 @@ import java.util.Map;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class GestorDeAudio {
-    private Music musicaFondo;
+    // Mantenemos una pista de música actualmente en reproducción.
+    private Music musicaActual;
+    // Usamos un mapa para todas las pistas de música de fondo.
+    private Map<String, Music> musicasFondo;
     private Map<String, Sound> efectosSonido;
-    // Usaremos un mapa para contar las instancias activas de cada sonido.
     private Map<String, Integer> contadorInstancias;
-    // Duración estimada de cada efecto (en segundos)
     private Map<String, Float> duracionSonidos;
 
     public GestorDeAudio() {
@@ -27,7 +28,13 @@ public class GestorDeAudio {
 
     private void cargarRecursos() {
         // Cargar música de fondo
-        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo2.mp3"));
+        musicasFondo = new HashMap<>();
+        musicasFondo.put("fondo", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo.mp3")));
+        musicasFondo.put("fondo2", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo2.mp3")));
+        musicasFondo.put("fondo3", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo3.mp3")));
+
+        // fondo2 por defecto (música inicial)
+        musicaActual = musicasFondo.get("fondo2");
 
         // Cargar efectos de sonido
         efectosSonido.put("recibeDanyo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/recibeDaño.wav")));
@@ -42,30 +49,54 @@ public class GestorDeAudio {
         efectosSonido.put("recogerPowerUP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPowerUp.wav")));
         efectosSonido.put("upgrade", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoUpgrade.wav")));
         efectosSonido.put("pausa", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPausa.wav")));
+        efectosSonido.put("sonidoBossPolla", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla.wav")));
+        efectosSonido.put("sonidoBossPolla2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla2.wav")));
+        efectosSonido.put("sonidoBossPolla3", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla3.wav")));
+        efectosSonido.put("sonidoBossPolla4", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla4.wav")));
 
         // Manejar tiempos de duración de los efectos
         duracionSonidos.put("tazo", 0.5f);
     }
 
     public void reproducirMusica() {
-        if (musicaFondo != null) {
-            musicaFondo.setLooping(true);
-            musicaFondo.setVolume(MUSICA_VOLUMEN);
-            musicaFondo.play();
+        if (musicaActual != null) {
+            musicaActual.setLooping(true);
+            musicaActual.setVolume(MUSICA_VOLUMEN);
+            musicaActual.play();
         }
     }
 
     public void pausarMusica() {
-        if (musicaFondo != null) {
-            musicaFondo.setVolume(MUSICA_VOLUMEN_PAUSA);
+        if (musicaActual != null) {
+            musicaActual.setVolume(MUSICA_VOLUMEN_PAUSA);
         }
     }
 
     public void detenerMusica() {
-        if (musicaFondo != null) {
-            musicaFondo.stop();
+        if (musicaActual != null) {
+            musicaActual.stop();
         }
     }
+
+    public void cambiarMusica(String nombre) {
+        // Busca la nueva música en el mapa
+        Music nuevaMusica = musicasFondo.get(nombre);
+        if (nuevaMusica == null) {
+            Gdx.app.log("GestorDeAudio", "Música no encontrada: " + nombre);
+            return;
+        }
+        // Si hay una pista actual, detenerla y opcionalmente liberarla o hacer una transición
+        if (musicaActual != null && musicaActual.isPlaying()) {
+            musicaActual.stop();
+        }
+        // Asignamos la nueva música
+        musicaActual = nuevaMusica;
+        // Configuramos la nueva música
+        musicaActual.setLooping(true);
+        musicaActual.setVolume(MUSICA_VOLUMEN);
+        musicaActual.play();
+    }
+
     public void reproducirEfecto(String nombre, float volumen) {
         int instancias = contadorInstancias.getOrDefault(nombre, 0);
         if (instancias >= MAX_INSTANCIAS_SONIDO) {
@@ -95,8 +126,11 @@ public class GestorDeAudio {
     }
 
     public void dispose() {
-        if (musicaFondo != null) {
-            musicaFondo.dispose();
+        if (musicaActual != null) {
+            musicaActual.dispose();
+        }
+        for (Music musica : musicasFondo.values()) {
+            musica.dispose();
         }
         for (Sound efecto : efectosSonido.values()) {
             efecto.dispose();
@@ -104,12 +138,11 @@ public class GestorDeAudio {
         efectosSonido.clear();
     }
 
-    // todo --> podrá servir en un futuro para resetear los contadores, por ejemplo para una nueva pantalla
     public void resetearInstancias() {
         contadorInstancias.clear();
     }
 
-    // Si usas un singleton, podrías implementar:
+    // Implementación del patrón singleton
     private static GestorDeAudio instance;
     public static GestorDeAudio getInstance() {
         if (instance == null) {

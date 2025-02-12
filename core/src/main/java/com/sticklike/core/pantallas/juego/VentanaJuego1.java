@@ -152,9 +152,9 @@ public class VentanaJuego1 implements Screen {
 
         if (!pausado && !menuPause.isPaused()) {
             actualizarLogica(delta, gestorDeAudio);
-            reproducirMusica();
+            gestorDeAudio.reproducirMusica();
         } else {
-            pausarMusica();
+            gestorDeAudio.pausarMusica();
         }
 
         renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
@@ -164,13 +164,6 @@ public class VentanaJuego1 implements Screen {
         popUpMejoras.getUiStage().draw();
     }
 
-    private void reproducirMusica() {
-        gestorDeAudio.reproducirMusica();
-    }
-
-    private void pausarMusica() {
-        gestorDeAudio.pausarMusica();
-    }
 
     private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
         jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, gestorDeAudio);
@@ -180,8 +173,6 @@ public class VentanaJuego1 implements Screen {
         actualizarTextoFlotante(delta);
         sistemaDeEventos.actualizar();
     }
-
-
 
     private void actualizarRecogidaXP(float delta) {
         for (int i = objetosXP.size - 1; i >= 0; i--) {

@@ -29,7 +29,7 @@ public class ControladorEnemigos {
     private float temporizadorDeAparicion;
 
     private int killCounter = 0; // para renderizar en el hud
-    private int spawnCounter = 0; // para en un futuro controlar eventos
+    private int spawnCounter = 0; // para en un futuro controlar eventos o limitar el spawn
 
     private final Array<Enemigo> enemigosAEliminar = new Array<>();
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;

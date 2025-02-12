@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.enemigos.bosses;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.enemigos.movimiento.MovimientoBossPolla;
@@ -10,12 +11,15 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 public class BossPolla implements Enemigo {
     private Sprite sprite;
+    private Sprite spriteBocaAbierta;
+    private Sprite spriteBocaCerrada;
     private Jugador jugador;
     private AnimacionesEnemigos animaciones;
     private MovimientoBossPolla movimientoBoss;
@@ -27,10 +31,21 @@ public class BossPolla implements Enemigo {
     private float coolDownDanyo = 1.2f;
     private float temporizadorDanyo = 0f;
 
+    private boolean bocaCerrada = false;
+    private float tiempoAcumuladoBoca = 0;
+    private float tiempoBocaAbierta = 0.5f;
+    private float duracionBocaCerrada = 2.5f;
+
     public BossPolla(Jugador jugador, float x, float y) {
         sprite = new Sprite(bossPolla);
         sprite.setSize(90, 125);
         sprite.setPosition(x, y);
+
+        spriteBocaAbierta = new Sprite(bossPolla);
+        spriteBocaAbierta.setSize(90, 125);
+        spriteBocaCerrada = new Sprite(bossPollaBocaCerrada);
+        spriteBocaCerrada.setSize(90, 125);
+        sprite.setRegion(spriteBocaCerrada);
 
         this.jugador = jugador;
         this.animaciones = new AnimacionesEnemigos();
@@ -47,10 +62,40 @@ public class BossPolla implements Enemigo {
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
+        // Animación de apertura/cierre de boca
+        tiempoAcumuladoBoca += delta;
+        if (!bocaCerrada && tiempoAcumuladoBoca >= tiempoBocaAbierta) {
+            // Cerrar la boca
+            sprite.setRegion(spriteBocaCerrada);
+            bocaCerrada = true;
+            tiempoAcumuladoBoca = 0;
+        } else if (bocaCerrada && tiempoAcumuladoBoca >= duracionBocaCerrada) {
+            // Abrir la boca
+            sprite.setRegion(spriteBocaAbierta);
+            int sonidoRandom = MathUtils.random(3);
+            switch (sonidoRandom) {
+                case 0:
+                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla2", 0.65f);
+                    break;
+                case 1:
+                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla", 0.65f);
+                    break;
+                case 2:
+                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla3", 0.65f);
+                    break;
+                case 3:
+                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla4", 0.65f);
+                    break;
+            }
 
-        float bossCenterX = sprite.getX() + sprite.getWidth()/2f;
-        float playerCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth()/2f;
+            bocaCerrada = false;
+            tiempoAcumuladoBoca = 0;
+        }
+
+        float bossCenterX = sprite.getX() + sprite.getWidth() / 2f;
+        float playerCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
         boolean estaALaIzquierda = bossCenterX < playerCenterX;
+
         if (!estaALaIzquierda && !sprite.isFlipX()) {
             sprite.flip(true, false);
         } else if (estaALaIzquierda && sprite.isFlipX()) {

@@ -39,7 +39,7 @@ public class NubePedo implements Proyectiles {
     private static final float MIN_SCALE = 0.1f;
     private float maxScale = 1.35f;
     private static final float MIN_ALPHA = 0.1f;
-    private static final float MAX_ALPHA = 0.75f;
+    private static final float MAX_ALPHA = 0.65f;
     private static final float VIBRATE_RANGE = 8f;
     private float knockbackForce = 200f;
     private static final float ROTATION_SPEED = 2500f;
@@ -184,7 +184,7 @@ public class NubePedo implements Proyectiles {
     @Override
     public Rectangle getRectanguloColision() {
         if (phase == Phase.COOLDOWN) {
-            return new Rectangle(0, 0, 0, 0); // Evita colisiones durante el cooldown
+            return new Rectangle(0, 0, 0, 0);
         }
         return new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }

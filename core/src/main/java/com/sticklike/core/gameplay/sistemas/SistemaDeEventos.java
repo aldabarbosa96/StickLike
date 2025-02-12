@@ -5,6 +5,7 @@ import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
+import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
@@ -71,6 +72,7 @@ public class SistemaDeEventos {
 
     private void spawnPrimerBoss() {
        controladorEnemigos.setTiposDeEnemigos(LISTA_BOSSPOLLA);
+       GestorDeAudio.getInstance().cambiarMusica("fondo3");
         System.out.println("¡Ha aparecido el PollaBOSS en el nivel 10!");
     }
 
@@ -91,7 +93,6 @@ public class SistemaDeEventos {
         eventos.clear();
         eventos = null;
     }
-
 
 
         /* todo --> se usará en un futuro
