@@ -8,6 +8,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 /**
  * Clase responsable de dibujar la información de interfaz del jugador en pantalla (vida, experiencia, nivel, etc.)
@@ -50,6 +51,7 @@ public class HUD {
         renderHUDComponents.renderizarTemporizador(delta);
         renderHUDComponents.renderizarStatsJugador();
         renderHUDComponents.renderizarMasStatsJugador();
+        renderHUDComponents.dibujarAtaqueBasico(armaPiedra);
         renderHUDComponents.renderizarMarcosMejoras();
         renderHUDComponents.getHudStage().act(delta);
         renderHUDComponents.getHudStage().draw();

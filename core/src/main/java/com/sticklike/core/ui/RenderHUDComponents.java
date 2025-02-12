@@ -213,11 +213,34 @@ public class RenderHUDComponents {
         float centerX = barX + barWidth * 0.49f;
         float posY = barY - 35f;
         float offset = 60f;
+        float textoOffset = 17.5f;
+        float textXOffset = 6.5f;
 
         renderizarIconoConTexto(recolectableCacaDorada, 22f, 22f, centerX - offset, posY, String.valueOf((int) jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
+        renderizarTextoBajoIcono("ORO", centerX - offset +textXOffset, posY - textoOffset);
+
         renderizarIconoConTexto(iconoCalaveraKills, 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
+        renderizarTextoBajoIcono("KILLS", centerX + textXOffset, posY - textoOffset);
+
         renderizarIconoConTexto(recolectablePowerUp, 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
+        renderizarTextoBajoIcono("???", centerX + offset + textXOffset, posY - textoOffset);
     }
+
+    private void renderizarTextoBajoIcono(String texto, float posX, float posY) {
+        spriteBatch.setProjectionMatrix(hudCamera.combined);
+        spriteBatch.begin();
+        fuente.getData().setScale(0.6f);
+        fuente.setColor(Color.BLACK);
+
+        // Centramos el texto debajo del icono
+        layout.setText(fuente, texto);
+        float textX = posX - layout.width / 2;
+        float textY = posY;
+
+        fuente.draw(spriteBatch, texto, textX, textY);
+        spriteBatch.end();
+    }
+
 
     private void renderizarFondoBarraXP(float barX, float barY, float barWidth, float barHeight, float experiencePercentage) {
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
@@ -351,6 +374,42 @@ public class RenderHUDComponents {
         fuente.draw(batch, texto, x, y);
     }
 
+    public void dibujarAtaqueBasico(Texture texturaArma) {
+        float slotSize = 40f;
+        float attackSlotSize = slotSize / 1.8f;
+        float offsetX = 67.5f;
+        float baseX = VIRTUAL_WIDTH - 450f - offsetX;
+        float baseY = 65f;
+
+        // Renderizar el marco
+        spriteBatch.setProjectionMatrix(hudCamera.combined);
+        spriteBatch.begin();
+        spriteBatch.draw(texturaMarco, baseX, baseY, attackSlotSize, attackSlotSize);
+
+        // Renderizar la textura del arma dentro del marco
+        if (texturaArma != null) {
+            float iconSize = attackSlotSize * 0.75f;
+            float iconX = baseX + (attackSlotSize - iconSize) / 2;
+            float iconY = baseY + (attackSlotSize - iconSize) / 2;
+            spriteBatch.draw(texturaArma, iconX, iconY, iconSize, iconSize);
+        }
+        spriteBatch.end();
+
+        // Renderizar el texto debajo del recuadro sin reborde
+        String textoAtaque = "ARMA";
+        layout.setText(fuente, textoAtaque);
+        float textX = baseX + (attackSlotSize - layout.width) / 2 + 2.5f;
+        float textY = baseY - 7.5f;
+
+        spriteBatch.begin();
+        fuente.getData().setScale(0.6f);
+        fuente.setColor(Color.BLACK);
+        fuente.draw(spriteBatch, textoAtaque, textX, textY);
+        spriteBatch.end();
+    }
+
+
+
     public void crearSlots() {
         slotsList.clear();
 
@@ -408,7 +467,6 @@ public class RenderHUDComponents {
     public void renderizarMarcosMejoras() {
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
-
         fuente.getData().setScale(0.65f);
 
         for (int i = 0; i < slotsList.size(); i++) {
@@ -430,6 +488,7 @@ public class RenderHUDComponents {
 
                 fuente.setColor(Color.BLUE);
                 fuente.draw(spriteBatch, textoNumero, textX, textY);
+
             }
         }
 

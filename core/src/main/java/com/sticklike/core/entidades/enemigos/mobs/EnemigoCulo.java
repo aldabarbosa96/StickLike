@@ -34,8 +34,8 @@ public class EnemigoCulo implements Enemigo {
     private boolean tieneOjo = false;
     private boolean ojoCerrado = false;
     private float tiempoAcumulado = 0;
-    private float tiempoParpadeo = 1.0f;
-    private float duracionCerrado = 0.25f;
+    private float tiempoParpadeo = 0.5f;
+    private float duracionCerrado = 0.1f;
 
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         esConOjo();
