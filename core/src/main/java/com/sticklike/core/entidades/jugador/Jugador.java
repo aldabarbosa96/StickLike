@@ -316,4 +316,9 @@ public class Jugador {
     public AtaqueNubePedo getAtaqueNubePedo() {
         return ataqueNubePedo;
     }
+
+    public RenderJugador getRenderJugador() {
+        return renderJugador;
+    }
+
 }

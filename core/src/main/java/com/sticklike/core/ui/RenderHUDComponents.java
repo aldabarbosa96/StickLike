@@ -33,9 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Clase encargada de dibujar los elementos del HUD en pantalla, como los stats, experiencia, nivel, temporizador, etc.
- */
 public class RenderHUDComponents {
     private ShapeRenderer shapeRenderer;
     private GlyphLayout layout;
@@ -78,7 +75,6 @@ public class RenderHUDComponents {
         hudStage = new Stage(hudViewport, spriteBatch);
 
     }
-
 
     public void renderizarTemporizador(float delta) {
         // Usar la proyección del HUD
@@ -213,32 +209,10 @@ public class RenderHUDComponents {
         float centerX = barX + barWidth * 0.49f;
         float posY = barY - 35f;
         float offset = 60f;
-        float textoOffset = 17.5f;
-        float textXOffset = 6.5f;
 
         renderizarIconoConTexto(recolectableCacaDorada, 22f, 22f, centerX - offset, posY, String.valueOf((int) jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
-        renderizarTextoBajoIcono("ORO", centerX - offset +textXOffset, posY - textoOffset);
-
         renderizarIconoConTexto(iconoCalaveraKills, 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
-        renderizarTextoBajoIcono("KILLS", centerX + textXOffset, posY - textoOffset);
-
         renderizarIconoConTexto(recolectablePowerUp, 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
-        renderizarTextoBajoIcono("???", centerX + offset + textXOffset, posY - textoOffset);
-    }
-
-    private void renderizarTextoBajoIcono(String texto, float posX, float posY) {
-        spriteBatch.setProjectionMatrix(hudCamera.combined);
-        spriteBatch.begin();
-        fuente.getData().setScale(0.6f);
-        fuente.setColor(Color.BLACK);
-
-        // Centramos el texto debajo del icono
-        layout.setText(fuente, texto);
-        float textX = posX - layout.width / 2;
-        float textY = posY;
-
-        fuente.draw(spriteBatch, texto, textX, textY);
-        spriteBatch.end();
     }
 
 
@@ -361,18 +335,23 @@ public class RenderHUDComponents {
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         fuente.setColor(colorReborde);
-        // Dibujar sombra en las 8 direcciones cardinales
-        fuente.draw(batch, texto, x - offset, y); // O
-        fuente.draw(batch, texto, x + offset, y); // E
-        fuente.draw(batch, texto, x, y - offset); // S
-        fuente.draw(batch, texto, x, y + offset); // N
-        fuente.draw(batch, texto, x - offset, y + offset); // NO
-        fuente.draw(batch, texto, x + offset, y + offset); // NE
-        fuente.draw(batch, texto, x - offset, y - offset); // SO
-        fuente.draw(batch, texto, x + offset, y - offset); // SE
+
+        // Dibujar reborde primero
+        fuente.draw(batch, texto, x - offset, y); // Izquierda
+        fuente.draw(batch, texto, x + offset, y); // Derecha
+        fuente.draw(batch, texto, x, y - offset); // Abajo
+        fuente.draw(batch, texto, x, y + offset); // Arriba
+
+        fuente.draw(batch, texto, x - offset, y - offset); // Esquina abajo-izquierda
+        fuente.draw(batch, texto, x + offset, y - offset); // Esquina abajo-derecha
+        fuente.draw(batch, texto, x - offset, y + offset); // Esquina arriba-izquierda
+        fuente.draw(batch, texto, x + offset, y + offset); // Esquina arriba-derecha
+
+        // Dibujar texto principal encima del reborde
         fuente.setColor(colorTexto);
         fuente.draw(batch, texto, x, y);
     }
+
 
     public void dibujarAtaqueBasico(Texture texturaArma) {
         float slotSize = 40f;
@@ -388,9 +367,9 @@ public class RenderHUDComponents {
 
         // Renderizar la textura del arma dentro del marco
         if (texturaArma != null) {
-            float iconSize = attackSlotSize * 0.75f;
+            float iconSize = attackSlotSize * 0.725f;
             float iconX = baseX + (attackSlotSize - iconSize) / 2;
-            float iconY = baseY + (attackSlotSize - iconSize) / 2;
+            float iconY = baseY + (attackSlotSize - iconSize) / 2 + 0.5f;
             spriteBatch.draw(texturaArma, iconX, iconY, iconSize, iconSize);
         }
         spriteBatch.end();
@@ -407,7 +386,6 @@ public class RenderHUDComponents {
         fuente.draw(spriteBatch, textoAtaque, textX, textY);
         spriteBatch.end();
     }
-
 
 
     public void crearSlots() {

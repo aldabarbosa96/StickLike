@@ -13,10 +13,6 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * Pantalla ** GAME OVER ** que se muestra al terminar la partida (al morir)
- * Permite al usuario reiniciar el juego o salir
- */
 public class VentanaGameOver implements Screen {
     private final MainGame game;
     private SpriteBatch spriteBatch;
@@ -93,11 +89,10 @@ public class VentanaGameOver implements Screen {
     }
 
     @Override
-    public void hide() { // se llama cuando se oculta la pantalla, iberamos recursos para no malgastar memoria
+    public void hide() { // se llama cuando se oculta la pantalla, liberamos recursos para no malgastar memoria
         spriteBatch.dispose();
         font.dispose();
 
-        // Limpiamos el InputProcessor al ocultar la pantalla
         Gdx.input.setInputProcessor(null);
     }
 

@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
+import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -50,9 +52,19 @@ public class RenderVentanaJuego {
     public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
         // 1) Limpiamos la pantalla
-        if (jugador.getVidaJugador() <= 15)
-            Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
-        else Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+        if (jugador.getVidaJugador() <= 15) {
+            if (jugador.getRenderJugador().isEnParpadeo()) {
+                Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
+            } else {
+                Gdx.gl.glClearColor(0.92f, 0.8f, 0.8f, 1);
+            }
+        } else {
+            if (jugador.getRenderJugador().isEnParpadeo()) {
+                Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
+            } else {
+                Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+            }
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual

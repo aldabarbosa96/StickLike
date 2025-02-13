@@ -44,7 +44,7 @@ public class RenderJugador {
 
         if (enParpadeo) {
 
-            batch.setColor(1, 1, 1, 0.15f);
+            batch.setColor(1, 1, 1, 0.1f);
         }
 
         batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),
@@ -67,8 +67,8 @@ public class RenderJugador {
 
         if (enParpadeo) {
             // Si el jugador está en parpadeo, la barra entera se pone blanca
-            shapeRenderer.setColor(0.85f, 0.85f, 0.85f, 0.5f);
-            shapeRenderer.rect(barX - 0.5f, barY - 0.5f, barWidth + 1f, barHeight + 1f); // Borde blanco
+            shapeRenderer.setColor(0.9f, 0.9f, 0.9f, 0.5f);
+            shapeRenderer.rect(barX - 0.5f, barY - 0.5f, barWidth + 1f, barHeight + 1f);
             shapeRenderer.rect(barX, barY, barWidth * healthPercentage, barHeight); // Fondo blanco
         } else {
             // Borde negro

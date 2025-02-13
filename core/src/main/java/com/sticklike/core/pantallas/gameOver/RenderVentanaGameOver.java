@@ -28,14 +28,15 @@ public class RenderVentanaGameOver {
     }
 
     private void dibujarTextoVentanaGameOver(GlyphLayout layout, BitmapFont font, SpriteBatch spriteBatch) {
-        font.getData().setScale(2f);
+        //font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); todo --> valorar en un futuro
+        font.getData().setScale(4f);
         String gameOverText = GAMEOVER;
         layout.setText(font, gameOverText);
         float textWidth = layout.width;
         float textHeight = layout.height;
 
         float textX = (VIRTUAL_WIDTH - textWidth) / 2f;
-        float textY = (VIRTUAL_HEIGHT + textHeight) / 2f;
+        float textY = (VIRTUAL_HEIGHT + textHeight) / 2f + 300;
         font.draw(spriteBatch, gameOverText, textX, textY);
 
         font.getData().setScale(1f);
@@ -45,7 +46,7 @@ public class RenderVentanaGameOver {
         textWidth = layout.width;
 
         textX = (VIRTUAL_WIDTH - textWidth) / 2f;
-        textY -= GAMEOVER_TEXT_Y; // Posicionamos el texto debajo de "GAME OVER"
+        textY -= GAMEOVER_TEXT_Y;
         font.draw(spriteBatch, optionsText, textX, textY);
     }
 }

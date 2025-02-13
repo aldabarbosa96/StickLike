@@ -95,9 +95,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Texto GameOver
     // -------------------------------------------------
-    public static final String GAMEOVER = "G A M E  O V E R";
-    public static final String GAMEOVER_TEXT = "Pulsa R para Restart o Q para Quit";
-    public static final float GAMEOVER_TEXT_Y = 60f * 1.09375f;
+    public static final String GAMEOVER = "G A M E   O V E R";
+    public static final String GAMEOVER_TEXT = "Pulsa R para Reiniciar o Q para Quitar";
+    public static final float GAMEOVER_TEXT_Y = 100f * 1.09375f;
 
     // -------------------------------------------------
     // ManuPausa
