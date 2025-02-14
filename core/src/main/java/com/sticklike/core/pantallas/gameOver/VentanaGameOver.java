@@ -43,7 +43,7 @@ public class VentanaGameOver implements Screen {
 
     @Override
     public void render(float delta) {
-        renderVentanaGameOver.renderizarVentanaGameOver(viewport, camera, spriteBatch, layout, font);
+        renderVentanaGameOver.renderizarVentanaGameOver(viewport, camera, spriteBatch, layout, font, game.getVentanaJuego1());
     }
 
     private void inputsVentanaGameOver() { // todo --> manejar en una clase dedicada (añadir además inputs de mando)

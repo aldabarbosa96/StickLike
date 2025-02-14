@@ -98,7 +98,7 @@ public class RenderHUDComponents {
         spriteBatch.end();
     }
 
-    private String formatearTiempo(float tiempoSegundos) {
+    public String formatearTiempo(float tiempoSegundos) {
         int minutos = (int) (tiempoSegundos / TIMER_SECONDS);
         int segundos = (int) (tiempoSegundos % TIMER_SECONDS);
         return String.format("%02d : %02d", minutos, segundos);
@@ -493,5 +493,9 @@ public class RenderHUDComponents {
 
     public Stage getHudStage() {
         return hudStage;
+    }
+
+    public float getTiempoTranscurrido() {
+        return tiempoTranscurrido;
     }
 }

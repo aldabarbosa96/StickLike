@@ -312,6 +312,10 @@ public class VentanaJuego1 implements Screen {
         }
     }
 
+    public Jugador getJugador() {
+        return jugador;
+    }
+
     public MenuPause getMenuPause() {
         return menuPause;
     }
@@ -326,5 +330,9 @@ public class VentanaJuego1 implements Screen {
 
     public void reproducirSonidoUpgrade() {
         gestorDeAudio.reproducirEfecto("upgrade", AUDIO_UPGRADE);
+    }
+
+    public ControladorEnemigos getControladorEnemigos() {
+        return controladorEnemigos;
     }
 }

@@ -31,7 +31,6 @@ public class Jugador {
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
-    private ObjetoPowerUp objetoPowerUp;
 
     // Atributos de stats
     private float velocidadJugador;
@@ -47,7 +46,7 @@ public class Jugador {
     private float regVidaJugador;
     private float poderJugador;
     private boolean estaVivo;
-    private float oroGanado;
+    private int oroGanado;
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
@@ -293,11 +292,11 @@ public class Jugador {
         return criticoJugador;
     }
 
-    public float getOroGanado() {
+    public int getOroGanado() {
         return oroGanado;
     }
 
-    public void setOroGanado(float oroGanado) {
+    public void setOroGanado(int oroGanado) {
         this.oroGanado = oroGanado;
     }
 

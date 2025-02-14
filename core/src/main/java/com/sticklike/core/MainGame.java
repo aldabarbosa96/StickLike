@@ -35,4 +35,8 @@ public class MainGame extends Game {
         ventanaJuego1.dispose();
         gestorDeAudio.dispose();
     }
+
+    public VentanaJuego1 getVentanaJuego1() {
+        return ventanaJuego1;
+    }
 }
