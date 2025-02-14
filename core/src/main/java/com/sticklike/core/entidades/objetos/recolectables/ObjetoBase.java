@@ -9,11 +9,34 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public abstract class ObjetoBase implements ObjetosXP {
+
     private Sprite sprite;
     private boolean recolectado = false;
+
+    // Enums para estados
+    private enum EstadoRecolectable {
+        INACTIVO,
+        REBOTE,
+        ATRACCION,
+        RECOLECTADO
+    }
+
+    private EstadoRecolectable estado = EstadoRecolectable.INACTIVO;
+
+    // Constantes de movimiento
     private final float distanciaActivacion = DISTANCIA_ACTIVACION;
     private final float velocidadAtraccion = VEL_ATRACCION;
+
+    // Parámetros para el rebote
+    private float tiempoRebote = 0f;
+    private float duracionRebote = 0.1f;
+    private float velocidadRebote = 200;
+
+    // Posiciones
     private float x, y;
+
+    // Dirección del rebote (se calcula solo una vez al iniciar el rebote)
+    private float reboteDirX, reboteDirY;
 
     public ObjetoBase(float x, float y) {
         this.sprite = new Sprite(getTexture());
@@ -26,7 +49,7 @@ public abstract class ObjetoBase implements ObjetosXP {
 
     @Override
     public void actualizarObjetoXP(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
-        if (recolectado) {
+        if (recolectado || estado == EstadoRecolectable.RECOLECTADO) {
             return;
         }
 
@@ -37,23 +60,63 @@ public abstract class ObjetoBase implements ObjetosXP {
         // Calcula la distancia al jugador
         float distancia = (float) Math.sqrt(Math.pow(jugadorX - x, 2) + Math.pow(jugadorY - y, 2));
 
-        if (distancia < distanciaActivacion) {
-            // Movimiento hacia el jugador
-            float direccionX = jugadorX - x;
-            float direccionY = jugadorY - y;
-            float longitud = (float) Math.sqrt(direccionX * direccionX + direccionY * direccionY);
-            direccionX /= longitud; // Normaliza
-            direccionY /= longitud;
+        switch (estado) {
 
-            x += direccionX * velocidadAtraccion * delta;
-            y += direccionY * velocidadAtraccion * delta;
+            case INACTIVO:
+                // Si está en rango de activación, iniciamos el rebote
+                if (distancia < distanciaActivacion) {
+                    estado = EstadoRecolectable.REBOTE;
+                    float dirX = x - jugadorX;
+                    float dirY = y - jugadorY;
+                    float longitud = (float) Math.sqrt(dirX * dirX + dirY * dirY);
 
-            sprite.setPosition(x, y);
+                    if (longitud != 0) {
+                        dirX /= longitud;
+                        dirY /= longitud;
+                    }
+                    // Guardamos la dirección para usarla en el rebote
+                    reboteDirX = dirX;
+                    reboteDirY = dirY;
+                    tiempoRebote = 0f;
+                }
+                break;
 
-            // Si colisiona con el jugador, se recolecta
-            if (distancia < 10) {
-                recolectar(gestorDeAudio);
-            }
+            case REBOTE:
+                // Movemos el objeto en dirección contraria al jugador
+                tiempoRebote += delta;
+                if (tiempoRebote < duracionRebote) {
+                    x += reboteDirX * velocidadRebote * delta;
+                    y += reboteDirY * velocidadRebote * delta;
+                    sprite.setPosition(x, y);
+                } else {
+                    estado = EstadoRecolectable.ATRACCION;
+                }
+                break;
+
+            case ATRACCION:
+                    // Movimiento hacia el jugador
+                    float direccionX = jugadorX - x;
+                    float direccionY = jugadorY - y;
+                    float longitud = (float) Math.sqrt(direccionX * direccionX + direccionY * direccionY);
+
+                    if (longitud != 0) {
+                        direccionX /= longitud;
+                        direccionY /= longitud;
+                    }
+
+                    x += direccionX * velocidadAtraccion * delta;
+                    y += direccionY * velocidadAtraccion * delta;
+                    sprite.setPosition(x, y);
+
+                    // Si colisiona con el jugador, se recolecta
+                    if (distancia < 10) {
+                        recolectar(gestorDeAudio);
+
+                }
+                break;
+
+            case RECOLECTADO:
+                break;
         }
     }
 
@@ -65,9 +128,10 @@ public abstract class ObjetoBase implements ObjetosXP {
     }
 
     @Override
-    public void recolectar(GestorDeAudio gestorDeAudio) { // todo --> manejar los audios individualmente
-        gestorDeAudio.reproducirEfecto("recogerXP",AUDIO_RECOLECCION_CACA);
+    public void recolectar(GestorDeAudio gestorDeAudio) {
+        gestorDeAudio.reproducirEfecto("recogerXP", AUDIO_RECOLECCION_CACA);
         recolectado = true;
+        estado = EstadoRecolectable.RECOLECTADO;
         sprite = null;
     }
 
@@ -80,12 +144,14 @@ public abstract class ObjetoBase implements ObjetosXP {
     public void dispose() {
         sprite = null;
     }
+
     protected void setSpriteTexture(Texture texture) {
         if (sprite != null) {
             sprite.setTexture(texture); // Actualiza la textura del sprite
         }
     }
 
+    // Métodos abstractos que deben implementarse en clases hijas:
     protected abstract Texture getTexture();
     protected abstract float getWidth();
     protected abstract float getHeight();

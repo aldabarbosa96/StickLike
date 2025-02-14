@@ -227,8 +227,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración recolectables
     // -------------------------------------------------
-    public static final float DISTANCIA_ACTIVACION = 75f * 1.09375f;
-    public static final float VEL_ATRACCION = 275f;
+    public static final float DISTANCIA_ACTIVACION = 45f;
+    public static final float VEL_ATRACCION = 300f;
     public static final float OBJETO_VIDA_WIDTH = 12f * 1.09375f;
     public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;
     public static final float OBJETO1_XP_WIDTH = 10f * 1.09375f;

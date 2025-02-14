@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
@@ -19,7 +18,6 @@ import com.sticklike.core.utilidades.GestorDeAssets;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class Jugador {
-
     private Sprite sprite;
     private ControladorEnemigos controladorEnemigos;
     private ControladorProyectiles controladorProyectiles;
