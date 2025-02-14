@@ -29,6 +29,7 @@ public class ProyectilTazo implements Proyectiles {
     private float radio;
     private float rotacionSprite = 0f;
     private GestorDeAudio gestorDeAudio;
+    private boolean esCritico;
 
     // --- Campos para el efecto de "crecer" ---
     private static final float MIN_GROWTH_SCALE = 0.1f;
@@ -198,8 +199,15 @@ public class ProyectilTazo implements Proyectiles {
     public float getBaseDamage() {
         // Se aplica daño únicamente en la fase ACTIVE
         if (phase == Phase.ACTIVE) {
-            float baseDamage = (float) (DANYO_TAZOS + Math.random() * 3.5f);
-            return baseDamage * powerFactor;
+            if (Math.random() < jugador.getCritico()) {
+                esCritico = true;
+                float baseDamage = (float) (DANYO_TAZOS + Math.random() * 3.5f) * 1.5f;
+                return baseDamage * powerFactor;
+            } else {
+                esCritico = false;
+                float baseDamage = (float) (DANYO_TAZOS + Math.random() * 3.5f);
+                return baseDamage * powerFactor;
+            }
         }
         return 0f;
     }
@@ -225,6 +233,11 @@ public class ProyectilTazo implements Proyectiles {
     @Override
     public boolean yaImpacto(Enemigo enemigo) {
         return enemigosImpactados.contains(enemigo);
+    }
+
+    @Override
+    public boolean esCritico() {
+        return esCritico;
     }
 
     public AtaqueTazo getAtaqueTazo() {

@@ -22,6 +22,7 @@ public class NubePedo implements Proyectiles {
     private boolean proyectilActivo;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float powerFactor;
+    private boolean esCritico;
 
 
     // --- Estados para la animación ---
@@ -230,10 +231,19 @@ public class NubePedo implements Proyectiles {
         if (phase == Phase.COOLDOWN) {
             return 0f;
         }
-        float baseDamage;
+        float baseDamage = 0;
+
         if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2 || phase == Phase.VIBRATE3) {
-            baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f);
+            if (Math.random() < jugador.getCritico()) {
+                esCritico = true;
+                baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f) * 1.5f;
+            } else {
+                esCritico = false;
+                baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f);
+            }
+
         } else {
+            esCritico = false;
             baseDamage = DANYO_PEDO;
         }
         float damageEscalado = baseDamage * powerFactor;
@@ -264,5 +274,10 @@ public class NubePedo implements Proyectiles {
     @Override
     public boolean yaImpacto(Enemigo enemigo) {
         return enemigosImpactados.contains(enemigo);
+    }
+
+    @Override
+    public boolean esCritico() {
+        return esCritico;
     }
 }

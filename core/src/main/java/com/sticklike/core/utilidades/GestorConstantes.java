@@ -123,8 +123,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float INTERVALO_MIN_DISPARO = 0.1f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
     public static final int NUM_PROYECTILES_INICIALES = 2;
-    public static final float RESISTENCIA = 0.06f;
-    public static final float CRITICO = 0.03f;
+    public static final float RESISTENCIA = 0.05f;
+    public static final float CRITICO = 0.07f;
     public static final float REGENERACION_VIDA = 0.001f;
     public static final float PODER_JUGADOR = 10f;
     public static final float WIDTH_JUGADOR = 12f;

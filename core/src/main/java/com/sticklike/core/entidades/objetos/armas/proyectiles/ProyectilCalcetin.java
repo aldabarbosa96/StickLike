@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 
@@ -25,10 +26,11 @@ public class ProyectilCalcetin implements Proyectiles {
     private float rotationSpeed = VEL_ROTACION_CALCETIN;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float damageEscalado;
+    private boolean esCritico;
+    private Jugador jugador;
 
-    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY,
-                             float velocidadProyectil, float multiplicadorVelocidad,
-                             float poderJugador, float extraDamage) {
+    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad,
+                             float poderJugador, float extraDamage, Jugador jugador) {
         if (textura == null) {
             textura = armaCalcetin;
         }
@@ -39,6 +41,7 @@ public class ProyectilCalcetin implements Proyectiles {
         sprite.setPosition(x, y);
         sprite.setOriginCenter();
 
+        this.jugador = jugador;
         this.velocidadProyectil = velocidadProyectil;
         this.direccionX = direccionX;
         this.direccionY = direccionY;
@@ -104,7 +107,13 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        return damageEscalado;
+        if(Math.random() < jugador.getCritico()) {
+            esCritico = true;
+            return damageEscalado * 1.5f;
+        }else {
+            esCritico = false;
+            return damageEscalado;
+        }
     }
 
     @Override
@@ -125,5 +134,10 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public boolean yaImpacto(Enemigo enemigo) {
         return enemigosImpactados.contains(enemigo);
+    }
+
+    @Override
+    public boolean esCritico() {
+        return esCritico;
     }
 }

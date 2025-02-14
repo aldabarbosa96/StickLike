@@ -33,4 +33,5 @@ public interface Proyectiles {
     void registrarImpacto(Enemigo enemigo);
 
     boolean yaImpacto(Enemigo enemigo);
+    boolean esCritico();
 }

@@ -35,11 +35,8 @@ public class AtaqueCalcetin {
 
             float poderHabilidad = jug.getPoderJugador();
             // Se crea el proyectil pasando también el extraDamage para aumentar el daño base
-            ProyectilCalcetin calcetin = new ProyectilCalcetin(
-                startX, startY, direccionX, direccionY,
-                PROJECTILE_CALCETIN_SPEED, SPEED_MULT,
-                poderHabilidad, extraDamage
-            );
+            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY,
+                PROJECTILE_CALCETIN_SPEED, SPEED_MULT, poderHabilidad, extraDamage, jug);
 
             // Se añade el proyectil al controlador del jugador
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
@@ -68,10 +65,8 @@ public class AtaqueCalcetin {
     }
 
     public void aumentarVelocidadDisparo(float factorReduccion) {
-        // Reducir el intervalo en un porcentaje, pero sin bajar del mínimo
         intervaloDisparo *= (1 - factorReduccion);
 
-        // Asegurar que el intervalo no sea menor que el mínimo permitido
         if (intervaloDisparo < MIN_INTERVALO_DISPARO) {
             intervaloDisparo = MIN_INTERVALO_DISPARO;
         }

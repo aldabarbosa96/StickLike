@@ -78,11 +78,9 @@ public class ControladorProyectiles {
                         posicionTextoY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
                     }
                     // Determinar si el golpe fue crítico
-                    boolean golpeCritico = false;
-                    if (proyectil instanceof ProyectilPiedra) {
-                        golpeCritico = ((ProyectilPiedra) proyectil).esCritico();
-                    }
+                    boolean golpeCritico = proyectil.esCritico();
 
+                    // Crear el texto flotante
                     TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO, golpeCritico);
                     dmgText.add(damageText);
 
