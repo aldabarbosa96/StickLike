@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
@@ -81,7 +82,7 @@ public class ControladorProyectiles {
                     boolean golpeCritico = proyectil.esCritico();
 
                     // Crear el texto flotante
-                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO, golpeCritico);
+                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO, FontManager.damageFont, golpeCritico);
                     dmgText.add(damageText);
 
                     ultimaYTexto.put(enemigo, posicionTextoY);

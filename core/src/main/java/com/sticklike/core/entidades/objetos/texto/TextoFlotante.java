@@ -24,7 +24,7 @@ public class TextoFlotante {
     private boolean esCritico;
 
     public TextoFlotante(String texto, float x, float y, float duracion, float extraOffsetX, float extraOffsetY,
-                         float finalScaleX, float finalScaleY, boolean esCritico) {
+                         float finalScaleX, float finalScaleY, boolean esCritico, BitmapFont fuenteCompartida) {
         this.texto = texto;
         // Se suma el offset a la posición base para conseguir el efecto de apilado
         this.x = x + extraOffsetX;
@@ -35,21 +35,21 @@ public class TextoFlotante {
         this.tiempoTranscurrido = 0;
         this.esCritico = esCritico;
 
-        // Asignamos la escala final (control individual)
+        this.fuente = fuenteCompartida;
+
         this.finalScaleX = finalScaleX;
         this.finalScaleY = finalScaleY;
-        // Escala inicial: usamos un porcentaje (por ejemplo, 20%) de la escala final
         this.initialScaleX = finalScaleX * 0.2f;
         this.initialScaleY = finalScaleY * 0.2f;
 
-        fuente = new BitmapFont();
         // Iniciamos con la escala mínima para el efecto "pop"
         fuente.getData().setScale(initialScaleX, initialScaleY);
     }
 
-    public TextoFlotante(String texto, float x, float y, float duracion, boolean esCritico) {
-        this(texto, x, y, duracion, 0, 0, TEXTO_WIDTH, TEXTO_HEIGHT, esCritico);
+    public TextoFlotante(String texto, float x, float y, float duracion, BitmapFont fuenteCompartida, boolean esCritico) {
+        this(texto, x, y, duracion, 0, 0, TEXTO_WIDTH, TEXTO_HEIGHT, esCritico, fuenteCompartida);
     }
+
 
     public boolean haDesaparecido() {
         return duracion <= 0;
@@ -93,7 +93,4 @@ public class TextoFlotante {
         fuente.draw(batch, texto, x + offset, y + offset); // Esquina superior derecha
     }
 
-    public void dispose() {
-        fuente.dispose();
-    }
 }

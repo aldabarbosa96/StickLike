@@ -284,9 +284,6 @@ public class VentanaJuego1 implements Screen {
             controladorEnemigos.dispose();
         }
 
-        for (TextoFlotante ft : textosDanyo) {
-            ft.dispose();
-        }
         textosDanyo.clear();
 
         for (ObjetosXP xp : objetosXP) {

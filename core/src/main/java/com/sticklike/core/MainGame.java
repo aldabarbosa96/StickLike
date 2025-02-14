@@ -1,6 +1,7 @@
 package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.GestorDeAssets;
@@ -17,6 +18,7 @@ public class MainGame extends Game {
     @Override
     public void create() {
         GestorDeAssets.cargarRecursos(); // Cargamos los assets al iniciar
+        FontManager.initFonts();
         gestorDeAudio = GestorDeAudio.getInstance();
         gestorDeAudio.reproducirMusica();
         ventanaJuego1 = new VentanaJuego1(this, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight); // Pasamos MainGame a la ventana principal (en un futuro el menú del juego)
@@ -31,6 +33,7 @@ public class MainGame extends Game {
     @Override
     public void dispose() {
         super.dispose();
+        FontManager.disposeFonts();
         GestorDeAssets.dispose();
         ventanaJuego1.dispose();
         gestorDeAudio.dispose();
