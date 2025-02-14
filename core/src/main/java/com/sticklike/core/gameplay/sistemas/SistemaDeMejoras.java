@@ -39,7 +39,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 16%",() -> jugador.reducirIntervaloDisparo(0.16f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 19%",() -> jugador.aumentarDanyo(1.19f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1",() -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 3%",() -> jugador.aumentarRegVida(0.03f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%",() -> jugador.aumentarRegVida(0.005f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%",() -> jugador.aumentarCritico(0.15f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%",() -> jugador.aumentarResistencia(0.2f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%",() -> jugador.aumentarPoderJugador(1.5f), 5, null, null));
