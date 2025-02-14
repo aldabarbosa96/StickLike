@@ -185,8 +185,9 @@ public class Jugador {
     }
 
     public void aumentarRegVida(float percentage) {
-        this.regVidaJugador += (percentage * maxVidaJugador) / 100;
+        this.regVidaJugador += (this.regVidaJugador * percentage / 100);
     }
+
 
     public void aumentarCritico(float percentage) {
         float criticalAmount = (percentage * criticoJugador) * 10;
