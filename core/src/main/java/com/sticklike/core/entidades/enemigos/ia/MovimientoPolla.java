@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos.movimiento;
+package com.sticklike.core.entidades.enemigos.ia;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
