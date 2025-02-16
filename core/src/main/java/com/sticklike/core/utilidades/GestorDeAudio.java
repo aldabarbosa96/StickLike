@@ -32,6 +32,7 @@ public class GestorDeAudio {
         musicasFondo.put("fondo", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo.mp3")));
         musicasFondo.put("fondo2", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo2.mp3")));
         musicasFondo.put("fondo3", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo3.mp3")));
+        musicasFondo.put("fondo4", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondo4.mp3")));
 
         // fondo2 por defecto (música inicial)
         musicaActual = musicasFondo.get("fondo2");

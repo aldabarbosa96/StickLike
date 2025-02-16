@@ -36,6 +36,8 @@ public class BossPolla implements Enemigo {
     private float tiempoBocaAbierta = 0.5f;
     private float duracionBocaCerrada = 2.5f;
 
+    private boolean estaMuerto = false;
+
     public BossPolla(Jugador jugador, float x, float y) {
         sprite = new Sprite(bossPolla);
         sprite.setSize(90, 125);
@@ -131,6 +133,7 @@ public class BossPolla implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
+        estaMuerto = true;
         return (vida <= 0 && !animaciones.estaEnFade());
     }
 
@@ -213,5 +216,9 @@ public class BossPolla implements Enemigo {
     @Override
     public float getDamageAmount() {
         return damageAmount;
+    }
+
+    public boolean isEstaMuerto() {
+        return estaMuerto;
     }
 }

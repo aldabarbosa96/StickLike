@@ -7,14 +7,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
-import com.sticklike.core.utilidades.GestorDeAudio;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -24,9 +25,12 @@ public class RenderVentanaJuego {
     private ShapeRenderer shapeRenderer;
     private final int tamanyoCeldas;
     private Array<Borron> borronesMapa;
+    private AtomicBoolean borronesListos = new AtomicBoolean(false);
+    private static final float POISSON_MIN_DISTANCE = 500f;
+    private static final int POISSON_K = 30;
 
     // Clase interna que gestiona los borrones del mapa
-    private static class Borron { // todo --> manejar en una clase separada en un futuro
+    private static class Borron { // todo --> (posteriormente se podría mover a una clase separada)
         Texture textura;
         float posX, posY;
         float scale;
@@ -41,16 +45,41 @@ public class RenderVentanaJuego {
         }
     }
 
-    public RenderVentanaJuego(int tamanyoCeldas) {
+    public RenderVentanaJuego(int tamanyoCeldas, Jugador jugador) {
         this.shapeRenderer = new ShapeRenderer();
         this.tamanyoCeldas = tamanyoCeldas;
 
-        // Genera la lista de borrones aleatorios
-        generarBorronesRandom(CANTIDAD_BORRONES);
+        final Vector2 posicionInicialJugador = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long startTime = System.currentTimeMillis();
+                generarBorronesRandom(CANTIDAD_BORRONES, posicionInicialJugador);
+                long elapsed = System.currentTimeMillis() - startTime;
+                // Si la generación ha tardado menos de 1 segundo, esperamos el tiempo restante.
+                if (elapsed < 500) {
+                    try {
+                        Thread.sleep(500 - elapsed);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                borronesListos.set(true);
+            }
+        }).start();
     }
+
 
     public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
+
+        if (!borronesListos.get()) {
+            spriteBatch.begin();
+            spriteBatch.draw(loadingTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            spriteBatch.end();
+            return;
+        }
         // 1) Limpiamos la pantalla
         if (jugador.getVidaJugador() <= 15) {
             if (jugador.getRenderJugador().isEnParpadeo()) {
@@ -81,7 +110,6 @@ public class RenderVentanaJuego {
             spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation,
                 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
         }
-
         spriteBatch.end();
 
         // 4) Renderizamos la cuadrícula
@@ -106,7 +134,6 @@ public class RenderVentanaJuego {
         controladorEnemigos.renderizarEnemigos(spriteBatch);
         // Textos flotantes
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
-
         spriteBatch.end();
 
         // 7) Renderizar HUD
@@ -141,59 +168,124 @@ public class RenderVentanaJuego {
     }
 
 
-    private void generarBorronesRandom(int cantidad) {
+    private void generarBorronesRandom(int cantidad, Vector2 posicionInicialJugador) {
         borronesMapa = new Array<>();
 
-        for (int i = 0; i < cantidad; i++) {
-            int attempts = 0;
-            Borron nuevoBorron = null;
+        // Definimos la región de generación a partir de los límites del mapa
+        float minX = MAP_MIN_X;
+        float minY = MAP_MIN_Y;
+        float maxX = MAP_MAX_X;
+        float maxY = MAP_MAX_Y;
 
-            while (attempts < MAX_ATTEMPTS) {
-                attempts++;
+        // Generamos puntos candidatos con Poisson Disk Sampling
+        Array<Vector2> candidateCenters = generatePoissonPoints(minX, minY, maxX, maxY, POISSON_MIN_DISTANCE, POISSON_K);
+        candidateCenters.shuffle();
 
-                // 1) Seleccionar textura aleatoria
-                Texture tex = borrones.random();
+        // Iteramos sobre los puntos candidatos y asignamos datos aleatorios a cada borrón
+        for (Vector2 center : candidateCenters) {
+            if (center.dst(posicionInicialJugador) < 350f) {
+                continue;
+            }
+            if (borronesMapa.size >= cantidad) break;
 
-                // 2) Escala y rotación aleatorias
-                float scale = MathUtils.random(0.12f, 0.3f);
-                // Limitar la rotación entre -90 y 90 grados
-                float rotation = MathUtils.random(-85f, 85f);
+            // Seleccionar textura, escala y rotación aleatorias
+            Texture tex = borrones.random();
+            float scale = MathUtils.random(0.5f, 1f);
+            float rotation = MathUtils.random(-85f, 85f);
+            float drawWidth = tex.getWidth() * scale;
+            float drawHeight = tex.getHeight() * scale;
 
-                // 3) Tamaño escalado
-                float borrWidth = tex.getWidth() * scale;
-                float borrHeight = tex.getHeight() * scale;
+            // Convertir el punto candidato (centro) en la posición (esquina inferior izquierda)
+            float posX = center.x - drawWidth / 2f;
+            float posY = center.y - drawHeight / 2f;
 
-                // 4) Posición aleatoria
-                float x = MathUtils.random(MAP_MIN_X, MAP_MAX_X - borrWidth);
-                float y = MathUtils.random(MAP_MIN_Y, MAP_MAX_Y - borrHeight);
-
-                // 5) Comprobar solapamiento
-                boolean solapado = seSolapaConOtroBorron(x, y, borrWidth, borrHeight);
-
-                // 6) Comprobar distancia mínima con la misma textura
-                boolean demasiadoCerca = estaDemasiadoCercaMismoBorron(tex, x, y, scale);
-
-                if (!solapado && !demasiadoCerca) {
-                    nuevoBorron = new Borron(tex, x, y, scale, rotation);
-                    break;
-                }
+            // Verificar que el borrón quepa totalmente dentro de los límites del mapa
+            if (posX < MAP_MIN_X || posX + drawWidth > MAP_MAX_X ||
+                posY < MAP_MIN_Y || posY + drawHeight > MAP_MAX_Y) {
+                continue; // descartamos este candidato
             }
 
-            if (nuevoBorron == null) {
-                Texture tex2 = borrones.random();
-                float scale2 = MathUtils.random(0.12f, 0.3f);
-                // Limitar la rotación también en este caso
-                float rotation2 = MathUtils.random(-90f, 90f);
-                float w2 = tex2.getWidth() * scale2;
-                float h2 = tex2.getHeight() * scale2;
-                float x2 = MathUtils.random(MAP_MIN_X, MAP_MAX_X - w2);
-                float y2 = MathUtils.random(MAP_MIN_Y, MAP_MAX_Y - h2);
+            // Comprobar que no se solape con otro borrón ya colocado
+            if (seSolapaConOtroBorron(posX, posY, drawWidth, drawHeight)) continue;
+            // Comprobar que no esté demasiado cerca de otro borrón con la misma textura
+            if (estaDemasiadoCercaMismoBorron(tex, posX, posY, scale)) continue;
 
-                nuevoBorron = new Borron(tex2, x2, y2, scale2, rotation2);
-            }
-
+            // Si pasa todas las comprobaciones, se añade el borrón
+            Borron nuevoBorron = new Borron(tex, posX, posY, scale, rotation);
             borronesMapa.add(nuevoBorron);
         }
+    }
+
+    /**
+     * Implementación del algoritmo de Poisson Disk Sampling para generar puntos en una región rectangular.
+     *
+     * @param minX límite mínimo en X
+     * @param minY límite mínimo en Y
+     * @param maxX límite máximo en X
+     * @param maxY límite máximo en Y
+     * @param r distancia mínima entre puntos
+     * @param k número máximo de intentos por punto activo
+     * @return Array de puntos generados
+     */
+    private Array<Vector2> generatePoissonPoints(float minX, float minY, float maxX, float maxY, float r, int k) {
+        Array<Vector2> points = new Array<>();
+        Array<Vector2> activeList = new Array<>();
+
+        float width = maxX - minX;
+        float height = maxY - minY;
+        float cellSize = r / (float)Math.sqrt(2);
+        int gridCols = (int)Math.ceil(width / cellSize);
+        int gridRows = (int)Math.ceil(height / cellSize);
+        Vector2[][] grid = new Vector2[gridCols][gridRows];
+
+        // Elegir un punto inicial aleatorio
+        float initialX = MathUtils.random(minX, maxX);
+        float initialY = MathUtils.random(minY, maxY);
+        Vector2 initial = new Vector2(initialX, initialY);
+        points.add(initial);
+        activeList.add(initial);
+        int gridX = (int)((initial.x - minX) / cellSize);
+        int gridY = (int)((initial.y - minY) / cellSize);
+        grid[gridX][gridY] = initial;
+
+        while (activeList.size > 0) {
+            int index = MathUtils.random(activeList.size - 1);
+            Vector2 point = activeList.get(index);
+            boolean found = false;
+            for (int i = 0; i < k; i++) {
+                float angle = MathUtils.random(0, MathUtils.PI2);
+                float distance = MathUtils.random(r, 2 * r);
+                float newX = point.x + distance * MathUtils.cos(angle);
+                float newY = point.y + distance * MathUtils.sin(angle);
+                if (newX < minX || newX >= maxX || newY < minY || newY >= maxY) continue;
+                Vector2 newPoint = new Vector2(newX, newY);
+                int newGridX = (int)((newX - minX) / cellSize);
+                int newGridY = (int)((newY - minY) / cellSize);
+                boolean ok = true;
+                // Comprobar vecinos en el grid
+                for (int ix = Math.max(0, newGridX - 2); ix <= Math.min(gridCols - 1, newGridX + 2); ix++) {
+                    for (int iy = Math.max(0, newGridY - 2); iy <= Math.min(gridRows - 1, newGridY + 2); iy++) {
+                        if (grid[ix][iy] != null) {
+                            if (newPoint.dst2(grid[ix][iy]) < r * r) {
+                                ok = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (!ok) break;
+                }
+                if (ok) {
+                    points.add(newPoint);
+                    activeList.add(newPoint);
+                    grid[newGridX][newGridY] = newPoint;
+                    found = true;
+                }
+            }
+            if (!found) {
+                activeList.removeIndex(index);
+            }
+        }
+        return points;
     }
 
 
@@ -212,17 +304,16 @@ public class RenderVentanaJuego {
             float bottomB = b.posY;
             float topB = b.posY + bh;
 
-            // Comprobación de overlap entre dos rectángulos A y B
+            // Si no hay separación entre los rectángulos, hay solapamiento
             if (!(rightA < leftB || leftA > rightB || topA < bottomB || bottomA > topB)) {
-                return true; // se solapan
-
+                return true;
             }
         }
         return false;
     }
 
     private boolean estaDemasiadoCercaMismoBorron(Texture tex, float x, float y, float scale) {
-        // Centro del borrón candidate
+        // Centro del borrón candidato
         float cx = x + tex.getWidth() * scale / 2f;
         float cy = y + tex.getHeight() * scale / 2f;
 
@@ -237,12 +328,17 @@ public class RenderVentanaJuego {
                 float sqDist = distX * distX + distY * distY;
 
                 if (sqDist < (MIN_DIST_SAME_TEXTURE * MIN_DIST_SAME_TEXTURE)) {
-                    return true; // Si está demasiado cerca
+                    return true; // Demasiado cerca
                 }
             }
         }
         return false;
     }
+
+    public boolean isLoadingComplete() {
+        return borronesListos.get();
+    }
+
 
     public void dispose() {
         shapeRenderer.dispose();

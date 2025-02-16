@@ -116,8 +116,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_MOV_JUGADOR = 120.0f;
     public static final float DANYO = 25f;
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
-    public static final int VIDA_JUGADOR = 50;
-    public static final int VIDAMAX_JUGADOR = 50;
+    public static final int VIDA_JUGADOR = 75;
+    public static final int VIDAMAX_JUGADOR = 75;
     public static final float RANGO_ATAQUE = 175.0f;
     public static final float INTERVALO_DISPARO = 1.35f;
     public static final float INTERVALO_MIN_DISPARO = 0.1f;
@@ -137,6 +137,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VIDA_ENEMIGOCULO = 35f;
     public static final float DANYO_CULO = 2f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
+    public static final float COOLDOWN_POLLA = 1f;
     public static final float VEL_BASE_CULO = 30f;
     public static final float VIDA_ENEMIGOREGLA = 95f;
     public static final float DANYO_REGLA = 3.5f;
@@ -144,9 +145,14 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_POLLA = 65f;
     public static final float VIDA_ENEMIGO_POLLA = 65f;
     public static final float DANYO_POLLA = 1.25f;
+    public static final float VIDA_ENEMIGO_EXAMEN = 27f;
+    public static final float DANYO_EXAMEN = 1.5f;
+    public static final float COOLDOWN_EXAMEN = 1.2f;
+    public static final float VEL_BASE_EXAMEN = 100f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
     public static final float MULT_VELOCIDAD_POLLA = 1.5f;
+    public static final float MULT_VELOCIDAD_EXAMEN = 1.75f;
     public static final float TEMPORIZADOR_DANYO = 0f;
     public static final float ENEMY_MAX_PAUSE = 0.75f;
     public static final float ENEMY_MIN_PAUSE = 0.25f;
@@ -158,6 +164,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
     public static final float TIEMPO_CARGA_REGLA = 0.75f;
+    public static final float TIEMPO_CARGA_EXAMEN = 1;
+    public static final float TIEMPO_LINEAL_EXAMEN = 5;
+    public static final float TIEMPO_PARABOLA_EXAMEN = 3;
     public static final float CORRECCION_SPAWN = 50f;
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
@@ -244,13 +253,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO1 = 3;
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
-    public static final int LVL_EVENTO4 = 10;
+    public static final int LVL_EVENTO4 = 9;
+    public static final int LVL_EVENTO5 = 10;
     public static final float EVENTO1_SPAWN_RATE = 0.5f;
     public static final float EVENTO1_SPEED_MULT = 1.15f;
     public static final float EVENTO2_SPAWN_RATE = 0.25f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
+    public static final float EVENTO3_SPEED_MULT = 1.75f;
+    public static final float EVENTO3_SPAWN_RATE = 0.15f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
+    public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN","CULO"};
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.15f;
 
     // -------------------------------------------------
@@ -258,7 +271,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;
     public static final int MAX_ATTEMPTS = 5;
-    public static final int CANTIDAD_BORRONES = 1750; // todo --> dibujar más borrones
+    public static final int CANTIDAD_BORRONES = 1000; // todo --> dibujar más borrones
     public static final float MAP_MIN_X = -10000;
     public static final float MAP_MAX_X = 10500;
     public static final float MAP_MIN_Y = -10000;

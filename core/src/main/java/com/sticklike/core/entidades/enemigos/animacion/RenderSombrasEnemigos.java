@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.interfaces.Enemigo;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 public class RenderSombrasEnemigos {
@@ -17,14 +19,13 @@ public class RenderSombrasEnemigos {
         for (Enemigo enemigo : enemigos) {
             if (enemigo instanceof BossPolla) {
                 dibujarSombraBossPolla(enemigo, shapeRenderer);
-            }
-            else if (enemigo instanceof EnemigoCulo) {
+            } else if (enemigo instanceof EnemigoCulo) {
                 dibujarSombraCulo(enemigo, shapeRenderer);
-            }
-            else if (enemigo instanceof EnemigoPolla) {
+            } else if (enemigo instanceof EnemigoPolla) {
                 dibujarSombraPolla((EnemigoPolla) enemigo, shapeRenderer);
-            }
-            else {
+            } else if (enemigo instanceof EnemigoExamen) {
+                dibujarSombraExamen((EnemigoExamen) enemigo, shapeRenderer);
+            } else {
                 dibujarSombraDefault(enemigo, shapeRenderer);
             }
         }
@@ -95,6 +96,22 @@ public class RenderSombrasEnemigos {
 
         shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
         shapeRenderer.ellipse(finalShadowX, baseShadowY, finalShadowWidth, finalShadowHeight);
+    }
+
+    private void dibujarSombraExamen(EnemigoExamen examen, ShapeRenderer shapeRenderer) {
+        float x = examen.getX();
+        float y = examen.getY();
+        float w = examen.getSprite().getWidth();
+        float h = examen.getSprite().getHeight();
+
+        float shadowSize = ((w + h) / 2f) * 0.55f;
+        float centerX = x + w / 2f + 1.5f;
+        float shadowX = centerX - shadowSize / 2f;
+        // Colocamos la sombra unos píxeles debajo del sprite (ajusta el offset a tus necesidades)
+        float shadowY = y;
+
+        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+        shapeRenderer.ellipse(shadowX, shadowY, shadowSize + 1f, shadowSize - 10f);
     }
 
     private void dibujarSombraDefault(Enemigo enemigo, ShapeRenderer shapeRenderer) {

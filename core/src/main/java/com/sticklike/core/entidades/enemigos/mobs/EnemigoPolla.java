@@ -22,7 +22,7 @@ public class EnemigoPolla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGO_POLLA; // todo --> revisar variables de clase
-    private float coolDownDanyo = COOLDOWN_ENEMIGOCULO;
+    private float coolDownDanyo = COOLDOWN_POLLA;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private MovimientoPolla movimientoPolla;
     private static float velocidadBase = VEL_BASE_POLLA;

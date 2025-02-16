@@ -11,10 +11,10 @@ import java.util.HashMap;
  * Clase encargada de cargar y liberar los recursos gráficos usados en el juego (texturas y animaciones)
  */
 public class GestorDeAssets {
-    public static Texture stickman, enemigoCulo, enemigoCuloOjo,enemigoCuloOjoCerrado, enemigoRegla, enemigoReglaCruzada, enemigoPolla, corazonVida,
-        armaPiedra, armaCalcetin, armaTazos, armaNubePedo, iconoXP, recolectableXP, recolectableXP2, recolectableVida, recolectableCacaDorada,
+    public static Texture stickman, enemigoCulo, enemigoCuloOjo,enemigoCuloOjoCerrado, enemigoRegla, enemigoReglaCruzada, enemigoPolla, enemigoExamen, enemigoExamen2,
+        corazonVida, armaPiedra, armaCalcetin, armaTazos, armaNubePedo, iconoXP, recolectableXP, recolectableXP2, recolectableVida, recolectableCacaDorada,
         recolectablePowerUp, iconoVelMov, iconoPoder, iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion, iconoRango, iconoVelAt,
-        iconoCritico, iconoVida,iconoCalaveraKills,texturaMarco, bossPolla, bossPollaBocaCerrada;
+        iconoCritico, iconoVida,iconoCalaveraKills,texturaMarco, bossPolla, bossPollaBocaCerrada, loadingTexture;
     public static Array<Texture> borrones;
     public static HashMap<String, Animation<TextureRegion>> animations;
 
@@ -40,6 +40,8 @@ public class GestorDeAssets {
         enemigoCuloOjoCerrado = new Texture("enemigos/04culoOjoCerrado.png");
         enemigoReglaCruzada = new Texture("enemigos/03reglaCruzada.png");
         enemigoPolla = new Texture("enemigos/05polla2.png");
+        enemigoExamen = new Texture("enemigos/examen.png");
+        enemigoExamen2 = new Texture("enemigos/examen2.png");
         corazonVida = new Texture("hud/life.png");
         armaPiedra = new Texture("armas/01piedra.png");
         armaCalcetin = new Texture("armas/02calcetin.png");
@@ -65,25 +67,26 @@ public class GestorDeAssets {
         texturaMarco = new Texture("hud/marco2.png");
         bossPolla = new Texture("enemigos/bossPolla.png");
         bossPollaBocaCerrada = new Texture("enemigos/bossPollaCerrada.png");
+        loadingTexture = new Texture("fondo/fondoLoading.png");
 
         // borrones del mapa
         borrones = new Array<>();
-        borrones.add(new Texture("fondo/borronPolla.png"));
-        borrones.add(new Texture("fondo/borronPolla2.png"));
-        borrones.add(new Texture("fondo/borronPezpolla.png"));
-        borrones.add(new Texture("fondo/borronTetasText.png"));
-        borrones.add(new Texture("fondo/borronAnalText.png"));
-        borrones.add(new Texture("fondo/borronTontoQuienLoLea.png"));
-        borrones.add(new Texture("fondo/borronTetas.png"));
-        borrones.add(new Texture("fondo/borronAmorText.png"));
-        borrones.add(new Texture("fondo/borronLOL.png"));
-        borrones.add(new Texture("fondo/borronTeleranya.png"));
-        borrones.add(new Texture("fondo/borronFollar.png"));
-        borrones.add(new Texture("fondo/borronPizza2.png"));
-        borrones.add(new Texture("fondo/borronELBERTO.png"));
-        borrones.add(new Texture("fondo/borronColgado.png"));
-        borrones.add(new Texture("fondo/borronSmile.png"));
-        borrones.add(new Texture("fondo/tote.png"));
+        borrones.add(new Texture("fondo/borrones/borronPolla.png"));
+        borrones.add(new Texture("fondo/borrones/borronPolla2.png"));
+        borrones.add(new Texture("fondo/borrones/borronPezpolla.png"));
+        borrones.add(new Texture("fondo/borrones/borronTetasText.png"));
+        borrones.add(new Texture("fondo/borrones/borronAnalText.png"));
+        borrones.add(new Texture("fondo/borrones/borronTontoQuienLoLea.png"));
+        borrones.add(new Texture("fondo/borrones/borronTetas.png"));
+        borrones.add(new Texture("fondo/borrones/borronAmorText.png"));
+        borrones.add(new Texture("fondo/borrones/borronLOL.png"));
+        borrones.add(new Texture("fondo/borrones/borronTeleranya.png"));
+        borrones.add(new Texture("fondo/borrones/borronFollar.png"));
+        borrones.add(new Texture("fondo/borrones/borronPizza2.png"));
+        borrones.add(new Texture("fondo/borrones/borronELBERTO.png"));
+        borrones.add(new Texture("fondo/borrones/borronColgado.png"));
+        borrones.add(new Texture("fondo/borrones/borronSmile.png"));
+        borrones.add(new Texture("fondo/borrones/tote.png"));
 
     }
 

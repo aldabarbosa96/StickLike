@@ -2,12 +2,14 @@ package com.sticklike.core.gameplay.controladores;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.animacion.RenderSombrasEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -18,23 +20,21 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Clase que gestiona el spawn, actualización y render de enemigos.
+ */
 public class ControladorEnemigos {
 
     private final VentanaJuego1 ventanaJuego1;
     private final Array<Enemigo> enemigos;
     private final Jugador jugador;
     private final OrthographicCamera camera;
-
     private float intervaloDeAparicion;
     private float temporizadorDeAparicion;
-
-    private int killCounter = 0; // para renderizar en el hud
-    private int spawnCounter = 0; // para en un futuro controlar eventos o limitar el spawn
-
+    private int killCounter = 0;
+    private int spawnCounter = 0;
     private final Array<Enemigo> enemigosAEliminar = new Array<>();
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
-
-    // Flag para asegurar que el Boss solo aparezca UNA vez
     private boolean bossSpawned = false;
     private final RenderSombrasEnemigos renderSombrasEnemigos;
 
@@ -48,13 +48,14 @@ public class ControladorEnemigos {
         this.renderSombrasEnemigos = new RenderSombrasEnemigos();
     }
 
+
     public void actualizarSpawnEnemigos(float delta) {
-        // Si el jugador está vivo, no actualizamos nada (lógica booleano invertida)
+        // Si el jugador está vivo, no actualizamos la IA de enemigos (nota: tu boolean invertido sugiere lo contrario, revisa si es intencional)
         if (jugador.estaVivo()) {
             return;
         }
 
-        // Temporizador para spawnear enemigos de forma periódica
+        // Temporizador para spawnear enemigos de manera periódica
         temporizadorDeAparicion += delta;
         if (temporizadorDeAparicion >= intervaloDeAparicion) {
             spawnEnemigo();
@@ -65,15 +66,16 @@ public class ControladorEnemigos {
         for (Enemigo enemigo : enemigos) {
             enemigo.actualizar(delta);
 
+            // Si un enemigo muere, procesamos su XP / drop
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
                 killCounter++;
-                float random = MathUtils.random(0f, 100f);
 
-                // 1º - Comprobamos si suelta Caca Dorada (2% de probabilidad)
+                float random = MathUtils.random(0f, 100f);
+                // 1º - 2% de probabilidad de soltar Caca Dorada
                 if (random < 2f) {
                     ventanaJuego1.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
                 }
-                // 2º - Si NO suelta Caca Dorada, suelta XP normal (si el enemigo lo tiene)
+                // 2º - Si no suelta Caca Dorada, suelta XP normal (si es que retorna algo)
                 else {
                     ObjetosXP xpObject = enemigo.sueltaObjetoXP();
                     if (xpObject != null) {
@@ -86,7 +88,7 @@ public class ControladorEnemigos {
             }
         }
 
-        // Eliminamos de la lista aquellos que ya murieron y se han procesado
+        // Eliminamos de la lista los que ya murieron y se procesaron
         for (Enemigo enemigo : enemigosAEliminar) {
             enemigos.removeValue(enemigo, true);
         }
@@ -94,12 +96,11 @@ public class ControladorEnemigos {
     }
 
     public void renderizarEnemigos(SpriteBatch batch) {
-        // Si el jugador está vivo, no se dibujan enemigos (booleano invertido)
         if (jugador.estaVivo()) {
             return;
         }
 
-        // Ordenar para dibujar en orden (Z-order)
+        // Ordenar por Y descendente para simular Z-order
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
 
         for (Enemigo enemigo : enemigos) {
@@ -112,20 +113,33 @@ public class ControladorEnemigos {
             return;
         }
 
-        // Ordenamos según la Y para que el sombreado coincida con el orden de sprites
+        // Ordenar por Y descendente
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
 
-        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos,camera);
+        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos, camera);
     }
+
 
     private void spawnEnemigo() {
         spawnCounter++;
 
+        Vector2 spawnPos = getRandomSpawnPosition();
+
+        float randomSpeed = 35f + (float) Math.random() * 45f;
+        String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
+
+        // Construimos el enemigo mediante la fábrica
+        Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, camera);
+        enemigos.add(enemigo);
+    }
+
+
+    private Vector2 getRandomSpawnPosition() {
         // Centro del jugador
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
-        // Límites de la cámara (margen extra para que aparezcan fuera de pantalla).
+        // Límites de la cámara
         float leftLimit = playerX - (VentanaJuego1.worldWidth / 2f) - CORRECCION_SPAWN;
         float rightLimit = playerX + (VentanaJuego1.worldWidth / 2f) - CORRECCION_SPAWN;
         float bottomLimit = playerY - (VentanaJuego1.worldHeight / 2f) - CORRECCION_SPAWN;
@@ -153,21 +167,7 @@ public class ControladorEnemigos {
                 y = MathUtils.random(bottomLimit, topLimit);
                 break;
         }
-
-        float randomSpeed = 35f + (float) Math.random() * 45f;
-        String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
-
-        // Si el tipo es BOSSPOLLA y ya se ha spawneado antes, no lo creamos otra vez
-        if ("BOSSPOLLA".equals(tipoElegido) && bossSpawned) {
-            return;
-        }
-        // Si es BOSSPOLLA por primera vez, marcamos que ya se ha spawneado
-        if ("BOSSPOLLA".equals(tipoElegido)) {
-            bossSpawned = true;
-        }
-
-        // Construimos el enemigo usando la fábrica
-        enemigos.add(fabricaEnemigos(tipoElegido, x, y, jugador, randomSpeed, camera));
+        return new Vector2(x, y);
     }
 
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
@@ -178,11 +178,22 @@ public class ControladorEnemigos {
                 return new EnemigoRegla(x, y, jugador, velocidad * MULT_VELOCIDAD_REGLA, camera);
             case "POLLA":
                 return new EnemigoPolla(x, y, jugador, velocidad * MULT_VELOCIDAD_POLLA);
-            case "BOSSPOLLA":
-                return new BossPolla(jugador, x, y);
+            case "EXAMEN":
+                return new EnemigoExamen(x, y, jugador, velocidad * MULT_VELOCIDAD_EXAMEN);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
+    }
+
+
+    public void spawnBossPollaAleatorio() {
+        if (bossSpawned) {
+            return;
+        }
+        Vector2 spawnPos = getRandomSpawnPosition();
+        BossPolla boss = new BossPolla(jugador, spawnPos.x, spawnPos.y);
+        enemigos.add(boss);
+        bossSpawned = true;
     }
 
     public void dispose() {
@@ -191,6 +202,7 @@ public class ControladorEnemigos {
                 enemigo.dispose();
             }
         }
+        enemigos.clear();
     }
 
     public Array<Enemigo> getEnemigos() {

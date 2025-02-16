@@ -121,7 +121,7 @@ public class VentanaJuego1 implements Screen {
     }
 
     private void inicializarCuadriculaYHUD() {
-        renderVentanaJuego = new RenderVentanaJuego((int) GRID_CELL_SIZE);
+        renderVentanaJuego = new RenderVentanaJuego((int) GRID_CELL_SIZE, jugador);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
@@ -150,7 +150,7 @@ public class VentanaJuego1 implements Screen {
             return;
         }
 
-        if (!pausado && !menuPause.isPaused()) {
+        if (!pausado && !menuPause.isPaused() && renderVentanaJuego.isLoadingComplete()) {
             actualizarLogica(delta, gestorDeAudio);
             gestorDeAudio.reproducirMusica();
         } else {
@@ -221,11 +221,8 @@ public class VentanaJuego1 implements Screen {
     }
 
     public void actualizarPosCamara() {
-        camara.position.set(
-            jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
-            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY,
-            0
-        );
+        camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
+            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY, 0);
         camara.update();
     }
 
