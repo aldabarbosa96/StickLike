@@ -1,6 +1,7 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -34,8 +35,10 @@ public class EnemigoCulo implements Enemigo {
     private boolean tieneOjo = false;
     private boolean ojoCerrado = false;
     private float tiempoAcumulado = 0;
-    private float tiempoParpadeo = 0.5f;
+    private float tiempoParpadeo = 0.5f; // referente al pestañeo de los ojos
     private float duracionCerrado = 0.1f;
+
+    private final Texture damageTexture;
 
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         esConOjo();
@@ -43,6 +46,7 @@ public class EnemigoCulo implements Enemigo {
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
+        this.damageTexture = damageCuloTexture;
     }
 
     private void esConOjo() {
@@ -57,11 +61,9 @@ public class EnemigoCulo implements Enemigo {
             spriteOjoCerrado = new Sprite(enemigoCuloOjoCerrado);
             spriteOjoCerrado.setSize(30, 26);
             sprite = new Sprite(spriteOjoAbierto);
-
             vidaEnemigo = VIDA_ENEMIGOCULO * 2;
         }
     }
-
 
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
@@ -75,17 +77,19 @@ public class EnemigoCulo implements Enemigo {
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
 
-            // Aplicar efecto de parpadeo rojo si está activo
-            if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.aplicarParpadeo1(sprite);
+            // Si el fade está activo, aplicamos el alfa del fade
+            if (animacionesEnemigos.estaEnFade()) {
+                float alphaFade = animacionesEnemigos.getAlphaActual();
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
+            } else if (animacionesEnemigos.estaEnParpadeo()) {
+                // Si está en parpadeo, se cambia la textura, pero el alfa se deja en 1
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             } else {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
 
-            // Dibujar el sprite en pantalla
             sprite.draw(batch);
-
-            // Restaurar el color original del sprite después de dibujar
+            // Restauramos el color original
             animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
@@ -93,7 +97,8 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public void actualizar(float delta) {
-        animacionesEnemigos.actualizarParpadeo(delta);
+        // Actualizamos el parpadeo (daño y fade) para todos los enemigos
+        animacionesEnemigos.actualizarParpadeo(sprite, delta);
         animacionesEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
 
@@ -101,10 +106,8 @@ public class EnemigoCulo implements Enemigo {
             temporizadorDanyo -= delta;
         }
 
-        // Animación de parpadeo del ojo
-        if (tieneOjo) {
+        if (tieneOjo && !animacionesEnemigos.estaEnParpadeo()) {
             tiempoAcumulado += delta;
-
             if (!ojoCerrado && tiempoAcumulado >= tiempoParpadeo) {
                 sprite.setRegion(spriteOjoCerrado);
                 ojoCerrado = true;
@@ -117,16 +120,17 @@ public class EnemigoCulo implements Enemigo {
         }
 
         // Control de dirección del sprite según la posición del jugador
-        boolean estaALaIzquierda = !(sprite.getX() + sprite.getWidth() / 2 <
-            jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2);
-        if ((estaALaIzquierda && !sprite.isFlipX()) || (!estaALaIzquierda && sprite.isFlipX())) {
+        boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2 > jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
+
+        if (sprite.isFlipX() != estaALaIzquierda) {
             sprite.flip(true, false);
         }
+
     }
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesEnemigos.activarParpadeo(duracion);
+        animacionesEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -152,10 +156,10 @@ public class EnemigoCulo implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // el enemigo inicia el proceso de desvanecimiento y parpadeo al morir
+            // Inicia fade-out y activa el parpadeo de daño (para ambos tipos de enemigos)
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+                activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
     }
@@ -227,7 +231,6 @@ public class EnemigoCulo implements Enemigo {
     public float getDamageAmount() {
         return damageAmount;
     }
-
 
     public static void resetStats() {
         velocidadBase = VEL_BASE_CULO;

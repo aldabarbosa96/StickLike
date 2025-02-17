@@ -1,63 +1,45 @@
 package com.sticklike.core.entidades.enemigos.animacion;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-/**
- * Clase que gestiona las animaciones de parpadeo y fade-out de los enemigos
- */
 public class AnimacionesEnemigos {
     private boolean enParpadeo = false;
     private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
+    private Texture texturaOriginal;
     private boolean enFade = false;
     private float tiempoFadeRestante = TIEMPO_FADE_RESTANTE;
     private float tiempoTotalFade = TIEMPO_FADE_TOTAL;
     private float alphaActual = ALPHA_ACTUAL;
 
-    // ================================
-    // PARPADEO
-    // ================================
-    public void aplicarParpadeo1(Sprite sprite) {
-        if (enParpadeo) {
-            sprite.setColor(0.8f, 0.2f, 0.5f, alphaActual); // color morado/rojizo
+    public void activarParpadeo(Sprite sprite, float duracion, Texture damageTexture) {
+        if (!enParpadeo) {
+            texturaOriginal = sprite.getTexture();
         }
-    }
-
-    public void restaurarColor(Sprite sprite, Color originalColor) {
-        if (enParpadeo || enFade) {
-            sprite.setColor(originalColor);
-        }
-    }
-
-    public void activarParpadeo(float duracion) {
         enParpadeo = true;
         tiempoParpadeoRestante = duracion;
+        sprite.setTexture(damageTexture);
     }
 
-    public void actualizarParpadeo(float delta) {
+
+    public void actualizarParpadeo(Sprite sprite, float delta) {
         if (enParpadeo) {
             tiempoParpadeoRestante -= delta;
             if (tiempoParpadeoRestante <= 0) {
                 enParpadeo = false;
+                sprite.setTexture(texturaOriginal);
             }
         }
     }
-    public void aplicarParpadeoRojo(Sprite sprite) {
-        if (enParpadeo) {
-            sprite.setColor(0.9f, 0f, 0f, alphaActual);
-        }
-    }
-
 
     public boolean estaEnParpadeo() {
         return enParpadeo;
     }
 
-    // ================================
-    // FADE-OUT
-    // ================================
+
+
     public void iniciarFadeMuerte(float duracion) {
         enFade = true;
         tiempoTotalFade = duracion;
@@ -65,12 +47,11 @@ public class AnimacionesEnemigos {
         alphaActual = ALPHA_ACTUAL;
     }
 
-    // Actualiza el fade-out en cada frame
     public void actualizarFade(float delta) {
         if (enFade) {
             tiempoFadeRestante -= delta;
             if (tiempoFadeRestante <= 0) {
-                enFade = false; // finaliza el fade-out
+                enFade = false;
                 alphaActual = 0f;
             } else {
                 alphaActual = tiempoFadeRestante / tiempoTotalFade;
@@ -84,5 +65,11 @@ public class AnimacionesEnemigos {
 
     public float getAlphaActual() {
         return alphaActual;
+    }
+
+    public void restaurarColor(Sprite sprite, Color originalColor) {
+        if (enParpadeo || enFade) {
+            sprite.setColor(originalColor);
+        }
     }
 }

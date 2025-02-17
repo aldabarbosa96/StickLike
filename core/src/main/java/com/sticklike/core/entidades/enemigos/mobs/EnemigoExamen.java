@@ -1,6 +1,7 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -17,7 +18,6 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 public class EnemigoExamen implements Enemigo {
 
     private Sprite sprite;
-    private Sprite sprite2;
     private Jugador jugador;
 
     private float vidaEnemigo = VIDA_ENEMIGO_EXAMEN;
@@ -33,26 +33,31 @@ public class EnemigoExamen implements Enemigo {
 
     private static float velocidadBase = VEL_BASE_EXAMEN;
 
+    private final Texture damageTexture;
+
+    private float tiempoAcumulado = 0;
+    private float tiempoCambio = 0.25f; // Tiempo entre cambios de frame
+    private boolean usandoFrame2 = false;
+
     public EnemigoExamen(float x, float y, Jugador jugador, float velocidadEnemigo) {
         this.jugador = jugador;
 
+        // Se crea el sprite utilizando la primera textura como estado inicial.
         sprite = new Sprite(enemigoExamen);
         sprite.setSize(32f, 32f);
         sprite.setPosition(x, y);
 
-        sprite2 = new Sprite(enemigoExamen2);
-        sprite2.setSize(32f, 32);
-        sprite2.setPosition(x, y);
-
         this.movimientoExamen = new MovimientoExamen();
         this.animacionesEnemigos = new AnimacionesEnemigos();
-
         setVelocidad(velocidadEnemigo);
+
+        this.damageTexture = damageExamenTexture;
     }
 
     @Override
     public void actualizar(float delta) {
-        animacionesEnemigos.actualizarParpadeo(delta);
+        // Actualiza los efectos de parpadeo y fade en el sprite.
+        animacionesEnemigos.actualizarParpadeo(sprite, delta);
         animacionesEnemigos.actualizarFade(delta);
 
         if (movimientoExamen != null) {
@@ -60,10 +65,10 @@ public class EnemigoExamen implements Enemigo {
         }
 
         if (jugador != null) {
+            // Se ajusta la orientación (flip) del sprite según la posición del jugador.
             boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2
-                    < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
-
-            if ((estaALaIzquierda && !sprite.isFlipX()) || (!estaALaIzquierda && sprite.isFlipX())) {
+                < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
+            if (sprite.isFlipX() != estaALaIzquierda) {
                 sprite.flip(true, false);
             }
         }
@@ -71,50 +76,63 @@ public class EnemigoExamen implements Enemigo {
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
+
+        // Si no está en parpadeo (efecto de daño), se alternan los frames de la animación.
+        if (!animacionesEnemigos.estaEnParpadeo()) {
+            tiempoAcumulado += delta;
+            if (tiempoAcumulado >= tiempoCambio) {
+                // Se alterna entre la primera y segunda textura para simular movimiento.
+                if (usandoFrame2) {
+                    sprite.setRegion(enemigoExamen); // Primer frame
+                    usandoFrame2 = false;
+                } else {
+                    sprite.setRegion(enemigoExamen2); // Segundo frame
+                    usandoFrame2 = true;
+                }
+                tiempoAcumulado = 0;
+            }
+        }
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
+        // Se renderiza mientras el enemigo tenga vida o se esté ejecutando el fade-out.
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
         if (mostrarSprite) {
-            Color colorOriginal = sprite.getColor().cpy();
+            Color originalColor = sprite.getColor().cpy();
 
+            // Se aplica el efecto de daño: parpadeo (alfa 1) o fade (alfa variable)
             if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.aplicarParpadeo1(sprite);
-                animacionesEnemigos.aplicarParpadeo1(sprite2);
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
+            } else if (animacionesEnemigos.estaEnFade()) {
+                float alphaFade = animacionesEnemigos.getAlphaActual();
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             } else {
-                sprite.setColor(colorOriginal.r, colorOriginal.g, colorOriginal.b, animacionesEnemigos.getAlphaActual());
-                sprite2.setColor(colorOriginal.r, colorOriginal.g, colorOriginal.b, animacionesEnemigos.getAlphaActual());
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
 
-            if (movimientoExamen != null && movimientoExamen.isUsandoSprite2()) {
-                sprite2.setPosition(sprite.getX(), sprite.getY());
-                sprite2.draw(batch);
-            } else {
-                sprite.draw(batch);
-            }
-
-            animacionesEnemigos.restaurarColor(sprite, colorOriginal);
-            animacionesEnemigos.restaurarColor(sprite2, colorOriginal);
+            sprite.draw(batch);
+            animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
-
 
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
+        // Activa el efecto de daño (parpadeo) si aún no está activo.
+        if (!animacionesEnemigos.estaEnParpadeo()) {
+            animacionesEnemigos.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
+        }
+        // Si la salud llega a 0, inicia el fade-out.
         if (vidaEnemigo <= 0) {
-            // Iniciar animación de fade y parpadeo si no se ha iniciado
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
     }
 
     @Override
     public boolean estaMuerto() {
-        // Muerto solo si vida <= 0 y terminó el fade
         return (vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade());
     }
 
@@ -129,15 +147,15 @@ public class EnemigoExamen implements Enemigo {
     }
 
     @Override
-    public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
+    public boolean esGolpeadoPorProyectil(float projectileX, float projectileY,
+                                          float projectileWidth, float projectileHeight) {
         return sprite.getBoundingRectangle().overlaps(
-                new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight)
+            new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight)
         );
     }
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        // Ejemplo de probabilidad de soltar ítems: ajústala a tu gusto
         float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 5f) {
             haSoltadoXP = true;
@@ -162,7 +180,7 @@ public class EnemigoExamen implements Enemigo {
 
     @Override
     public boolean puedeAplicarDanyo() {
-        return (temporizadorDanyo <= 0);
+        return temporizadorDanyo <= 0;
     }
 
     @Override
@@ -182,13 +200,7 @@ public class EnemigoExamen implements Enemigo {
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesEnemigos.activarParpadeo(duracion);
-    }
-
-    @Override
-    public void dispose() {
-        sprite = null;
-        sprite2 = null;
+        animacionesEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -212,7 +224,6 @@ public class EnemigoExamen implements Enemigo {
         this.damageAmount = newDamageAmount;
     }
 
-
     public static void resetStats() {
         velocidadBase = VEL_BASE_EXAMEN;
     }
@@ -221,11 +232,9 @@ public class EnemigoExamen implements Enemigo {
         velocidadBase = nuevaVelocidadBase;
     }
 
-
     public static float getVelocidadBase() {
         return velocidadBase;
     }
-
 
     public void setVelocidad(float nuevaVelocidad) {
         if (movimientoExamen != null) {
@@ -233,13 +242,16 @@ public class EnemigoExamen implements Enemigo {
         }
     }
 
-
     public MovimientoExamen getMovimientoExamen() {
         return movimientoExamen;
     }
 
-
     public float getFadeAlpha() {
         return animacionesEnemigos.getAlphaActual();
+    }
+
+    @Override
+    public void dispose() {
+        sprite = null;
     }
 }

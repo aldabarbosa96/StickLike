@@ -14,7 +14,8 @@ public class GestorDeAssets {
     public static Texture stickman, enemigoCulo, enemigoCuloOjo,enemigoCuloOjoCerrado, enemigoRegla, enemigoReglaCruzada, enemigoPolla, enemigoExamen, enemigoExamen2,
         corazonVida, armaPiedra, armaCalcetin, armaTazos, armaNubePedo, iconoXP, recolectableXP, recolectableXP2, recolectableVida, recolectableCacaDorada,
         recolectablePowerUp, iconoVelMov, iconoPoder, iconoFuerza, iconoResistencia, iconoProyectiles, iconoRegeneracion, iconoRango, iconoVelAt,
-        iconoCritico, iconoVida,iconoCalaveraKills,texturaMarco, bossPolla, bossPollaBocaCerrada, loadingTexture;
+        iconoCritico, iconoVida,iconoCalaveraKills,texturaMarco, bossPolla, bossPollaBocaCerrada, loadingTexture, damageCuloTexture, damagePollaTexture,
+    damageReglaTexture, damageExamenTexture, damageBossPollaTexture;
     public static Array<Texture> borrones;
     public static HashMap<String, Animation<TextureRegion>> animations;
 
@@ -68,6 +69,11 @@ public class GestorDeAssets {
         bossPolla = new Texture("enemigos/bossPolla.png");
         bossPollaBocaCerrada = new Texture("enemigos/bossPollaCerrada.png");
         loadingTexture = new Texture("fondo/fondoLoading.png");
+        damageCuloTexture = new Texture("enemigos/damageSprites/01culoD.png");
+        damagePollaTexture = new Texture("enemigos/damageSprites/05polla2D.png");
+        damageReglaTexture = new Texture("enemigos/damageSprites/03reglaCruzadaD.png");
+        damageExamenTexture = new Texture("enemigos/damageSprites/06examenD.png");
+        damageBossPollaTexture = new Texture("enemigos/damageSprites/bossPollaD.png");
 
         // borrones del mapa
         borrones = new Array<>();

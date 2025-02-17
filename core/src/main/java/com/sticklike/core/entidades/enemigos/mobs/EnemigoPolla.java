@@ -1,6 +1,7 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,13 +16,11 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-
-import static com.sticklike.core.utilidades.GestorConstantes.DURACION_PARPADEO_ENEMIGO;
-
 public class EnemigoPolla implements Enemigo {
+
     private Sprite sprite;
     private Jugador jugador;
-    private float vidaEnemigo = VIDA_ENEMIGO_POLLA; // todo --> revisar variables de clase
+    private float vidaEnemigo = VIDA_ENEMIGO_POLLA;
     private float coolDownDanyo = COOLDOWN_POLLA;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private MovimientoPolla movimientoPolla;
@@ -32,6 +31,9 @@ public class EnemigoPolla implements Enemigo {
     private AnimacionesEnemigos animacionesEnemigos;
     private float damageAmount = DANYO_POLLA;
 
+    // Usamos la misma textura de daño de EnemigoCulo como placeholder.
+    private final Texture damageTexture;
+
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         sprite = new Sprite(enemigoPolla);
         sprite.setSize(26f, 26f);
@@ -39,31 +41,26 @@ public class EnemigoPolla implements Enemigo {
         this.jugador = jugador;
         this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.animacionesEnemigos = new AnimacionesEnemigos();
+        this.damageTexture = damagePollaTexture;
     }
-
-    /*private void escogerPolla() {
-        float pollaRandom = (float) (Math.random() * 140f);
-
-        if (pollaRandom <= 20) sprite = new Sprite(enemigoPolla);
-        else if (pollaRandom <= 40) sprite = new Sprite(enemigoPolla2);
-        else if (pollaRandom <= 60) sprite = new Sprite(enemigoPolla3);
-        else if (pollaRandom <= 80) sprite = new Sprite(enemigoPolla4);
-        else if (pollaRandom <= 100) sprite = new Sprite(enemigoPolla5);
-        else if (pollaRandom <= 120) sprite = new Sprite(enemigoPolla6);
-        else sprite = new Sprite(enemigoPolla7);
-    }*/
-
 
     @Override
     public void actualizar(float delta) {
-        animacionesEnemigos.actualizarParpadeo(delta);
+        animacionesEnemigos.actualizarParpadeo(sprite, delta);
         animacionesEnemigos.actualizarFade(delta);
         movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
 
-        boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2 < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
+        if (jugador != null) {
+            boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2
+                < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
 
-        if ((estaALaIzquierda && !sprite.isFlipX()) || (!estaALaIzquierda && sprite.isFlipX())) {
-            sprite.flip(true, false);
+            if (sprite.isFlipX() != estaALaIzquierda) {
+                sprite.flip(true, false);
+            }
+        }
+
+        if (temporizadorDanyo > 0) {
+            temporizadorDanyo -= delta;
         }
     }
 
@@ -71,19 +68,22 @@ public class EnemigoPolla implements Enemigo {
     @Override
     public void renderizar(SpriteBatch batch) {
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
-
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
-
-            if (animacionesEnemigos.estaEnParpadeo()) {
-                animacionesEnemigos.aplicarParpadeoRojo(sprite);
-            } else {
-
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, animacionesEnemigos.getAlphaActual());
+            // Si se está en fade-out, aplicamos el alfa calculado
+            if (animacionesEnemigos.estaEnFade()) {
+                float alphaFade = animacionesEnemigos.getAlphaActual();
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             }
-
+            // Si no está en fade pero sí en parpadeo, mantenemos el alfa a 1 (la textura ya es la de daño)
+            else if (animacionesEnemigos.estaEnParpadeo()) {
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
+            }
+            // Caso por defecto: alfa 1
+            else {
+                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
+            }
             sprite.draw(batch);
-
             animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
@@ -94,7 +94,7 @@ public class EnemigoPolla implements Enemigo {
         if (vidaEnemigo <= 0) {
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO - 0.05f);
-                animacionesEnemigos.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+                activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
     }
@@ -116,7 +116,9 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        return sprite.getBoundingRectangle().overlaps(
+            new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight)
+        );
     }
 
     @Override
@@ -124,11 +126,11 @@ public class EnemigoPolla implements Enemigo {
         float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 1f) {
             haSoltadoXP = true;
-            return new ObjetoVida(this.getX(), this.getY());
+            return new ObjetoVida(getX(), getY());
         }
         if (!haSoltadoXP && randomXP >= 20f) {
             haSoltadoXP = true;
-            return new ObjetoXp(this.getX(), this.getY());
+            return new ObjetoXp(getX(), getY());
         }
         return null;
     }
@@ -165,12 +167,7 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesEnemigos.activarParpadeo(duracion);
-    }
-
-    @Override
-    public void dispose() {
-        sprite = null;
+        animacionesEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -188,12 +185,12 @@ public class EnemigoPolla implements Enemigo {
         return damageAmount;
     }
 
-    public static void resetStats() {
-        velocidadBase = VEL_BASE_POLLA;
+    public void setDamageAmount(float damage) {
+        this.damageAmount = damage;
     }
 
-    public void setDamageAmount(float damage){
-        this.damageAmount = damage;
+    public static void resetStats() {
+        velocidadBase = VEL_BASE_POLLA;
     }
 
     public static void setVelocidadBase(float nuevaVelocidadBase) {
@@ -211,8 +208,13 @@ public class EnemigoPolla implements Enemigo {
     public MovimientoPolla getMovimientoPolla() {
         return movimientoPolla;
     }
+
     public float getFadeAlpha() {
         return animacionesEnemigos.getAlphaActual();
     }
 
+    @Override
+    public void dispose() {
+        sprite = null;
+    }
 }

@@ -183,7 +183,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Animaciones enemigos
     // -------------------------------------------------
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
-    public static final float DURACION_PARPADEO_ENEMIGO = 0.075f;
+    public static final float DURACION_PARPADEO_ENEMIGO = 0.085f;
     public static final float DURACION_FADE_ENEMIGO = 0.25f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
     public static final float TIEMPO_FADE_TOTAL = 0.25f;
@@ -260,7 +260,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO2_SPAWN_RATE = 0.25f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
     public static final float EVENTO3_SPEED_MULT = 1.75f;
-    public static final float EVENTO3_SPAWN_RATE = 0.15f;
+    public static final float EVENTO3_SPAWN_RATE = 0.1f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN","CULO"};

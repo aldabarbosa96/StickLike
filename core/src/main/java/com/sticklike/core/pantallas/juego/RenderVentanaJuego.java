@@ -200,8 +200,7 @@ public class RenderVentanaJuego {
             float posY = center.y - drawHeight / 2f;
 
             // Verificar que el borrón quepa totalmente dentro de los límites del mapa
-            if (posX < MAP_MIN_X || posX + drawWidth > MAP_MAX_X ||
-                posY < MAP_MIN_Y || posY + drawHeight > MAP_MAX_Y) {
+            if (posX < MAP_MIN_X || posX + drawWidth > MAP_MAX_X || posY < MAP_MIN_Y || posY + drawHeight > MAP_MAX_Y) {
                 continue; // descartamos este candidato
             }
 

@@ -7,7 +7,6 @@ import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
-import com.sticklike.core.utilidades.GestorDeAssets;
 import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -40,17 +39,15 @@ public class SistemaDeEventos {
         controladorEnemigos.setIntervaloDeAparicion(EVENTO1_SPAWN_RATE);
         controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS2);
         incrementarVelocidadCulo(EVENTO1_SPEED_MULT);
-        Gdx.app.log("Intervalo aparición","¡Se ha reducido el intervalo de aparición de enemigos!");
-        Gdx.app.log("Aparición","Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
-        Gdx.app.log("Velocidad","Velocidad enemigo aumentada un 15%");
+        Gdx.app.log("Aparición", "Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
+
     }
 
     private void eventoAumentaEnemigos2() {
         controladorEnemigos.setIntervaloDeAparicion(EVENTO2_SPAWN_RATE);
         incrementarVelocidadCulo(EVENTO2_SPEED_MULT);
-        Gdx.app.log("Intervalo aparición","¡Se ha reducido el intervalo de aparición de enemigos!");
-        Gdx.app.log("Aparición","Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
-        Gdx.app.log("Velocidad","Velocidad enemigo aumentada un 30%");
+        Gdx.app.log("Aparición", "Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
+
     }
 
     private void incrementarVelocidadCulo(float factorMultiplicador) {
@@ -65,13 +62,13 @@ public class SistemaDeEventos {
     private void entraEnemigoPolla() {
         controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
-        Gdx.app.log("Polla","Enemigo polla aparece");
+        Gdx.app.log("Polla", "Enemigo polla aparece");
     }
 
     private void spawnPrimerBoss() {
         controladorEnemigos.spawnBossPollaAleatorio();
         GestorDeAudio.getInstance().cambiarMusica("fondo3");
-        Gdx.app.log("BossPolla","¡Ha aparecido el PollaBOSS en el nivel 10!");
+        Gdx.app.log("BossPolla", "¡Ha aparecido el PollaBOSS en el nivel 10!");
     }
 
 
@@ -80,27 +77,18 @@ public class SistemaDeEventos {
         controladorEnemigos.setTiposDeEnemigos(LISTA_EXAMEN);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
         incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
-        Gdx.app.log("Examen","¡Exámenes comienzan a aparecer!");
+        Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
 
     public void actualizar() {
         if (!eventos.isEmpty()) {
-            Evento siguiente = eventos.peek();
-            if (sistemaDeNiveles.getNivelActual() >= siguiente.getNivelRequerido()) {
-                // Si el siguiente evento es "Examen Aparece", comprobamos que el Boss ya esté muerto
-                if (siguiente.getNombreEvento().equals("Examen Aparece")) {
-                    boolean bossPollaSigueVivo = false;
-                    for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
-                        if (enemigo instanceof BossPolla && !enemigo.estaMuerto()) {
-                            bossPollaSigueVivo = true;
-                            break;
-                        }
-                    }
-                    if (bossPollaSigueVivo) {
-                        return;
-                    }
+            Evento siguienteEvento = eventos.peek();
+            if (sistemaDeNiveles.getNivelActual() >= siguienteEvento.getNivelRequerido()) {
+                if (!comprobarBossPollaMuerto(siguienteEvento)) {
+                    return;
                 }
                 Evento evento = eventos.poll();
+                assert evento != null;
                 Gdx.app.log("Act. Eventos.", "Activando evento: " + evento.getNombreEvento() + " [nivel requerido: " + evento.getNivelRequerido() + "]");
                 evento.applyEvento();
                 return;
@@ -108,8 +96,20 @@ public class SistemaDeEventos {
         }
     }
 
+
     public void dispose() {
         eventos.clear();
         eventos = null;
+    }
+
+    private boolean comprobarBossPollaMuerto(Evento siguienteEvento) {
+        if (siguienteEvento.getNombreEvento().equals("Examen Aparece")) {
+            for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
+                if (enemigo instanceof BossPolla && !enemigo.estaMuerto()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
