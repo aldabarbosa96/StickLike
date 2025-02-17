@@ -1,6 +1,8 @@
 package com.sticklike.core.gameplay.controladores;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -37,6 +39,8 @@ public class ControladorEnemigos {
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
     private boolean bossSpawned = false;
     private final RenderSombrasEnemigos renderSombrasEnemigos;
+    private static final int MAX_ENEMIGOS = 300;
+
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.enemigos = new Array<>();
@@ -93,6 +97,7 @@ public class ControladorEnemigos {
             enemigos.removeValue(enemigo, true);
         }
         enemigosAEliminar.clear();
+        reposicionarEnemigos();
     }
 
     public void renderizarEnemigos(SpriteBatch batch) {
@@ -121,7 +126,11 @@ public class ControladorEnemigos {
 
 
     private void spawnEnemigo() {
+        if (enemigos.size >= MAX_ENEMIGOS) return;
+
         spawnCounter++;
+        //Gdx.app.log("SpawnCounter", "Número enemigos generados: " + spawnCounter);
+        Gdx.app.log("EnemyCounter", "Número enemigos actuales: " + getEnemigosActuales());
 
         Vector2 spawnPos = getRandomSpawnPosition();
 
@@ -185,6 +194,33 @@ public class ControladorEnemigos {
         }
     }
 
+    private void reposicionarEnemigos() {
+        float margin = 200f;
+        // Calculamos los límites de la cámara con margen extra
+        float leftBound = camera.position.x - VentanaJuego1.worldWidth / 2 - margin;
+        float rightBound = camera.position.x + VentanaJuego1.worldWidth / 2 + margin;
+        float bottomBound = camera.position.y - VentanaJuego1.worldHeight / 2 - margin;
+        float topBound = camera.position.y + VentanaJuego1.worldHeight / 2 + margin;
+
+        for (Enemigo enemigo : enemigos) {
+            Sprite sprite = enemigo.getSprite();
+            float x = sprite.getX();
+            float y = sprite.getY();
+
+            if (x < leftBound) {
+                sprite.setX(rightBound);
+            } else if (x > rightBound) {
+                sprite.setX(leftBound);
+            }
+
+            if (y < bottomBound) {
+                sprite.setY(topBound);
+            } else if (y > topBound) {
+                sprite.setY(bottomBound);
+            }
+        }
+    }
+
 
     public void spawnBossPollaAleatorio() {
         if (bossSpawned) {
@@ -227,5 +263,9 @@ public class ControladorEnemigos {
 
     public int getKillCounter() {
         return killCounter;
+    }
+
+    public int getEnemigosActuales() {
+        return enemigos.size;
     }
 }

@@ -74,6 +74,8 @@ public class RenderVentanaJuego {
     public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
                                   Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
 
+        ventanaJuego1.actualizarPosCamara();
+
         if (!borronesListos.get()) {
             spriteBatch.begin();
             spriteBatch.draw(loadingTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -113,7 +115,6 @@ public class RenderVentanaJuego {
         spriteBatch.end();
 
         // 4) Renderizamos la cuadrícula
-        ventanaJuego1.actualizarPosCamara();
         renderizarLineasCuadricula(camara, jugador);
 
         // 5) Dibujar sombras de los enemigos
