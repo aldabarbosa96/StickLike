@@ -28,9 +28,8 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 public class ControladorEnemigos {
 
     private final VentanaJuego1 ventanaJuego1;
-    private final Array<Enemigo> enemigos;
+    private final Array<Enemigo> enemigos = new Array<>();
     private final Jugador jugador;
-    private final OrthographicCamera camera;
     private float intervaloDeAparicion;
     private float temporizadorDeAparicion;
     private int killCounter = 0;
@@ -41,21 +40,21 @@ public class ControladorEnemigos {
     private final RenderSombrasEnemigos renderSombrasEnemigos;
     private static final int MAX_ENEMIGOS = 300;
 
+    private boolean ventanaRedimensionada = false;
+    private float temporizadorRedimension = 0f;
+    private static final float TIEMPO_ESPERA_REDIMENSION = 0.5f;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
-        this.enemigos = new Array<>();
         this.jugador = jugador;
         this.intervaloDeAparicion = intervaloDeAparicion;
         this.temporizadorDeAparicion = 0;
         this.ventanaJuego1 = ventanaJuego1;
-        this.camera = ventanaJuego1.getOrtographicCamera();
         this.renderSombrasEnemigos = new RenderSombrasEnemigos();
     }
 
 
     public void actualizarSpawnEnemigos(float delta) {
-        // Si el jugador está vivo, no actualizamos la IA de enemigos (nota: tu boolean invertido sugiere lo contrario, revisa si es intencional)
-        if (jugador.estaVivo()) {
+        if (jugador.estaMuerto()) {
             return;
         }
 
@@ -74,12 +73,9 @@ public class ControladorEnemigos {
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
                 killCounter++;
 
-                float random = MathUtils.random(0f, 100f);
-                // 1º - 2% de probabilidad de soltar Caca Dorada
-                if (random < 2f) {
+                if (MathUtils.randomBoolean(0.01f)) {
                     ventanaJuego1.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
                 }
-                // 2º - Si no suelta Caca Dorada, suelta XP normal (si es que retorna algo)
                 else {
                     ObjetosXP xpObject = enemigo.sueltaObjetoXP();
                     if (xpObject != null) {
@@ -92,16 +88,13 @@ public class ControladorEnemigos {
             }
         }
 
-        // Eliminamos de la lista los que ya murieron y se procesaron
-        for (Enemigo enemigo : enemigosAEliminar) {
-            enemigos.removeValue(enemigo, true);
-        }
+        enemigos.removeAll(enemigosAEliminar, true);
         enemigosAEliminar.clear();
         reposicionarEnemigos();
     }
 
     public void renderizarEnemigos(SpriteBatch batch) {
-        if (jugador.estaVivo()) {
+        if (jugador.estaMuerto()) {
             return;
         }
 
@@ -114,14 +107,14 @@ public class ControladorEnemigos {
     }
 
     public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer) {
-        if (jugador.estaVivo()) {
+        if (jugador.estaMuerto()) {
             return;
         }
 
         // Ordenar por Y descendente
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
 
-        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos, camera);
+        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos, ventanaJuego1.getOrtographicCamera());
     }
 
 
@@ -134,50 +127,32 @@ public class ControladorEnemigos {
 
         Vector2 spawnPos = getRandomSpawnPosition();
 
-        float randomSpeed = 35f + (float) Math.random() * 45f;
-        String tipoElegido = tiposDeEnemigos[(int) (Math.random() * tiposDeEnemigos.length)];
+        float randomSpeed = MathUtils.random(35f, 80f);
+        String tipoElegido = tiposDeEnemigos[MathUtils.random(tiposDeEnemigos.length - 1)];
 
         // Construimos el enemigo mediante la fábrica
-        Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, camera);
+        Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
         enemigos.add(enemigo);
     }
 
 
     private Vector2 getRandomSpawnPosition() {
-        // Centro del jugador
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
         float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2;
 
-        // Límites de la cámara
         float leftLimit = playerX - (VentanaJuego1.worldWidth / 2f) - CORRECCION_SPAWN;
         float rightLimit = playerX + (VentanaJuego1.worldWidth / 2f) - CORRECCION_SPAWN;
         float bottomLimit = playerY - (VentanaJuego1.worldHeight / 2f) - CORRECCION_SPAWN;
         float topLimit = playerY + (VentanaJuego1.worldHeight / 2f) - CORRECCION_SPAWN;
 
-        float x = 0, y = 0;
-
-        // Escogemos un borde al azar: 0=arriba, 1=abajo, 2=izquierda, 3=derecha
-        int side = MathUtils.random(3);
-        switch (side) {
-            case 0: // arriba
-                y = topLimit;
-                x = MathUtils.random(leftLimit, rightLimit);
-                break;
-            case 1: // abajo
-                y = bottomLimit;
-                x = MathUtils.random(leftLimit, rightLimit);
-                break;
-            case 2: // izquierda
-                x = leftLimit;
-                y = MathUtils.random(bottomLimit, topLimit);
-                break;
-            case 3: // derecha
-                x = rightLimit;
-                y = MathUtils.random(bottomLimit, topLimit);
-                break;
-        }
-        return new Vector2(x, y);
+        return switch (MathUtils.random(3)) {
+            case 0 -> new Vector2(MathUtils.random(leftLimit, rightLimit), topLimit);
+            case 1 -> new Vector2(MathUtils.random(leftLimit, rightLimit), bottomLimit);
+            case 2 -> new Vector2(leftLimit, MathUtils.random(bottomLimit, topLimit));
+            default -> new Vector2(rightLimit, MathUtils.random(bottomLimit, topLimit));
+        };
     }
+
 
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
         switch (tipoEnemigo) {
@@ -195,29 +170,30 @@ public class ControladorEnemigos {
     }
 
     private void reposicionarEnemigos() {
-        float margin = 200f;
-        // Calculamos los límites de la cámara con margen extra
-        float leftBound = camera.position.x - VentanaJuego1.worldWidth / 2 - margin;
-        float rightBound = camera.position.x + VentanaJuego1.worldWidth / 2 + margin;
-        float bottomBound = camera.position.y - VentanaJuego1.worldHeight / 2 - margin;
-        float topBound = camera.position.y + VentanaJuego1.worldHeight / 2 + margin;
+        if (ventanaRedimensionada) {
+            temporizadorRedimension += Gdx.graphics.getDeltaTime();
+            if (temporizadorRedimension < TIEMPO_ESPERA_REDIMENSION) {
+                return;
+            }
+            ventanaRedimensionada = false;
+        }
+
+        float margin = 50f;
+        float leftBound = ventanaJuego1.getOrtographicCamera().position.x - (ventanaJuego1.getViewport().getWorldWidth() / 2) - margin;
+        float rightBound = ventanaJuego1.getOrtographicCamera().position.x + (ventanaJuego1.getViewport().getWorldWidth() / 2) + margin;
+        float bottomBound = ventanaJuego1.getOrtographicCamera().position.y - (ventanaJuego1.getViewport().getWorldHeight() / 2) - margin;
+        float topBound = ventanaJuego1.getOrtographicCamera().position.y + (ventanaJuego1.getViewport().getWorldHeight() / 2) + margin;
 
         for (Enemigo enemigo : enemigos) {
             Sprite sprite = enemigo.getSprite();
             float x = sprite.getX();
             float y = sprite.getY();
 
-            if (x < leftBound) {
-                sprite.setX(rightBound);
-            } else if (x > rightBound) {
-                sprite.setX(leftBound);
-            }
+            if (x < leftBound) sprite.setX(rightBound);
+            else if (x > rightBound) sprite.setX(leftBound);
 
-            if (y < bottomBound) {
-                sprite.setY(topBound);
-            } else if (y > topBound) {
-                sprite.setY(bottomBound);
-            }
+            if (y < bottomBound) sprite.setY(topBound);
+            else if (y > topBound) sprite.setY(bottomBound);
         }
     }
 
@@ -233,11 +209,7 @@ public class ControladorEnemigos {
     }
 
     public void dispose() {
-        for (Enemigo enemigo : enemigos) {
-            if (enemigo != null) {
-                enemigo.dispose();
-            }
-        }
+        enemigos.forEach(Enemigo::dispose);
         enemigos.clear();
     }
 
@@ -267,5 +239,10 @@ public class ControladorEnemigos {
 
     public int getEnemigosActuales() {
         return enemigos.size;
+    }
+
+    public void setVentanaRedimensionada(boolean ventanaRedimensionada) {
+        this.ventanaRedimensionada = ventanaRedimensionada;
+        this.temporizadorRedimension = 0f;
     }
 }

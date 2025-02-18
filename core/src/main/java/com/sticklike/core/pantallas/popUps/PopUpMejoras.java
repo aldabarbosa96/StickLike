@@ -14,15 +14,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.ArrayList;
@@ -89,32 +88,49 @@ public class PopUpMejoras {
         upgradeWindow.padTop(POPUP_HEADER_PADDING);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
+        upgradeWindow.getTitleTable().padTop(15);
+        upgradeWindow.getTitleTable().padBottom(-15);
 
         improvementButtons.clear();
 
-        // Recorremos la lista de mejoras y creamos filas en la tabla.
-        // Ahora se añade solo el botón.
         for (int i = 0; i < mejoras.size(); i++) {
-            if (i >= POPUP_BUTTON_LABELS.length) break; // Evitamos out of bounds si hay más de 4
+            if (i >= POPUP_BUTTON_LABELS.length) break;
 
             final int index = i;
             final Mejora mejora = mejoras.get(i);
 
-            // Crea el TextButton con la descripción de la mejora
             TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
-            TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora() + POPUP_FOOTER, tbs);
+            TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora(), tbs);
             btn.getLabel().setWrap(true);
             btn.getLabel().setAlignment(Align.center);
             btn.getLabel().setColor(Color.BLACK);
 
-            // Añadir el botón a la lista para luego poder navegar entre ellos
+            Table rowTable = new Table();
+            rowTable.pad(POPUP_ROW_PADDING + 5f);
+            rowTable.defaults().center();
+
+            rowTable.add().width(20);
+
+            rowTable.add(btn).expandX().fillX().center();
+
+            if (mejora.getIcono() != null) {
+                Image iconImage = new Image(mejora.getIcono());
+                //iconImage.setSize(30, 30);
+                Container<Image> iconContainer = new Container<>(iconImage);
+                // Alineamos el contenido a la izquierda y desplazamos el icono hacia la izquierda
+                iconContainer.align(Align.left);
+                iconContainer.padLeft(-10f);
+                rowTable.add(iconContainer).width(20).center().padRight(10f).height(25);
+            } else {
+                rowTable.add().width(20);
+            }
+
+
+            upgradeWindow.row();
+            upgradeWindow.add(rowTable).expandX().fillX().center().pad(BUTTON_PADDING);
+
             improvementButtons.add(btn);
 
-            // Añade una nueva fila en la tabla y agrega únicamente el botón.
-            upgradeWindow.row().pad(POPUP_ROW_PADDING);
-            upgradeWindow.add(btn).width(BUTTON_WIDTH).pad(BUTTON_PADDING);
-
-            // También seguimos añadiendo el listener para touch
             btn.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -124,7 +140,6 @@ public class PopUpMejoras {
             });
         }
 
-        // Inicialmente, selecciona la primera mejora (si existe)
         if (!improvementButtons.isEmpty()) {
             selectedIndex = 0;
             updateButtonHighlight();
@@ -133,11 +148,11 @@ public class PopUpMejoras {
         uiStage.addActor(upgradeWindow);
         uiStage.setKeyboardFocus(upgradeWindow);
 
-        // Con InputMultiplexer aseguramos que inputHandler reciba los eventos de teclado antes que uiStage
         InputMultiplexer im = new InputMultiplexer(inputHandler, uiStage);
         Gdx.input.setInputProcessor(im);
         Controllers.addListener(inputHandler);
     }
+
 
     private void updateButtonHighlight() {
         for (int i = 0; i < improvementButtons.size(); i++) {
@@ -258,10 +273,6 @@ public class PopUpMejoras {
 
         @Override
         public boolean buttonDown(Controller controller, int buttonIndex) {
-            // Ejemplo: Para el nuevo Xbox, asumamos que:
-            // - Botón 11 = D-pad Up
-            // - Botón 12 = D-pad Down
-            // (Estos valores son comunes en Windows, pero verifica en tu entorno)
             switch (buttonIndex) {
                 case 0: // A (confirmar)
                     onSelectMejora(selectedIndex, sistemaDeMejoras.getMejorasMostradas());
@@ -283,13 +294,44 @@ public class PopUpMejoras {
         }
 
 
-        @Override public boolean keyUp(int keycode) { return false; }
-        @Override public boolean keyTyped(char character) { return false; }
-        @Override public boolean touchDown(int screenX, int screenY, int pointer, int button) { return false; }
-        @Override public boolean touchUp(int screenX, int screenY, int pointer, int button) { return false; }
-        @Override public boolean touchCancelled(int screenX, int screenY, int pointer, int button) { return false; }
-        @Override public boolean touchDragged(int screenX, int screenY, int pointer) { return false; }
-        @Override public boolean mouseMoved(int screenX, int screenY) { return false; }
-        @Override public boolean scrolled(float amountX, float amountY) { return false; }
+        @Override
+        public boolean keyUp(int keycode) {
+            return false;
+        }
+
+        @Override
+        public boolean keyTyped(char character) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDragged(int screenX, int screenY, int pointer) {
+            return false;
+        }
+
+        @Override
+        public boolean mouseMoved(int screenX, int screenY) {
+            return false;
+        }
+
+        @Override
+        public boolean scrolled(float amountX, float amountY) {
+            return false;
+        }
     }
 }

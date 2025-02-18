@@ -42,7 +42,11 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
     private static final float DISPARO_RANDOM_OFFSET = 1.25f;
     private static final float PARABOLA_RANDOM_OFFSET = 1.75f;
 
-    private static final float CONTROL_POINT_RANDOM_OFFSET = 80f;
+    private static final float CONTROL_POINT_RANDOM_OFFSET = 100f;
+
+    private float offsetX;
+    private float offsetY;
+
 
     public MovimientoExamen() {
         super(true);
@@ -55,6 +59,10 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
         if (tiempoFaseCarga < 0.2f) tiempoFaseCarga = 0.2f;
         if (tiempoFaseDisparo < 0.2f) tiempoFaseDisparo = 0.2f;
         if (tiempoFaseParabola < 0.2f) tiempoFaseParabola = 0.2f;
+
+        this.offsetX = (float) ((Math.random() - 0.5f) * 2.0f * 100f); // +/- 50 px en X
+        this.offsetY = (float) ((Math.random() - 0.5f) * 2.0f * 75f); // +/- 30 px en Y
+
     }
 
     @Override
@@ -95,8 +103,8 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
 
     private void faseDisparo(float delta, Sprite sprite, Jugador jugador) {
         if (!direccionCalculada) {
-            objetivoX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
-            objetivoY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
+            objetivoX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f + offsetX;
+            objetivoY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + offsetY;
 
             calcularDireccion(sprite, objetivoX, objetivoY);
             direccionCalculada = true;
@@ -113,6 +121,7 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
             iniciarParabola(sprite, jugador);
         }
     }
+
 
     private boolean haSobrepasadoElObjetivo(Sprite sprite) {
         float enemigoCentroX = sprite.getX() + sprite.getWidth() / 2;
@@ -136,10 +145,10 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
         // Punto de partida: donde está el enemigo ahora
         inicioParabola = new Vector2(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
 
-        // Punto final: la posición del jugador en ese momento
-        float jugadorActualX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
-        float jugadorActualY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
-        finParabola = new Vector2(jugadorActualX , jugadorActualY);
+        // Punto final: la posición del jugador en ese momento con el offset aleatorio
+        float jugadorActualX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f + offsetX;
+        float jugadorActualY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + offsetY;
+        finParabola = new Vector2(jugadorActualX, jugadorActualY);
 
         // Control: para dar la curvatura “por encima”
         float xControl = (inicioParabola.x + finParabola.x) / 2f;
@@ -147,16 +156,13 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
         // Añadimos un factor aleatorio para que no todas las curvas sean iguales
         float randomExtra = (float) ((Math.random() - 0.5f) * 2.0f * CONTROL_POINT_RANDOM_OFFSET);
 
-        float yControl = Math.max(inicioParabola.y, finParabola.y)
-            + 100f  // la base de la curva
-            + randomExtra; // un plus aleatorio para que cada uno sea algo distinto
+        float yControl = Math.max(inicioParabola.y, finParabola.y) + 250 + randomExtra;
 
-        // Si vamos a la izquierda, también sumamos algo (o restamos) para variar
-        if (direccionX < 0) {
-            yControl += (float) (30f * (Math.random() - 0.5f));
-        }
+        // Añadimos un offset aleatorio extra para el control de la parábola
+        float controlOffsetX = (float) ((Math.random() - 0.5f) * 2.0f * 30f);
+        float controlOffsetY = (float) ((Math.random() - 0.5f) * 2.0f * 50f);
 
-        controlParabola = new Vector2(xControl, yControl);
+        controlParabola = new Vector2(xControl + controlOffsetX, yControl + controlOffsetY);
     }
 
     private void faseParabola(float delta, Sprite sprite, Jugador jugador) {
@@ -168,7 +174,6 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
 
         // Calculamos punto en la curva
         Vector2 nuevaPos = getPuntoBezierCuadratico(tParabola, inicioParabola, controlParabola, finParabola);
-        // Centramos el sprite
         sprite.setPosition(nuevaPos.x - sprite.getWidth() / 2f, nuevaPos.y - sprite.getHeight() / 2f);
 
         // Cuando acabamos la parábola (t >= 1)

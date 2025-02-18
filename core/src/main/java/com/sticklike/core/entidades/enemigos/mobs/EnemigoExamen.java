@@ -44,7 +44,7 @@ public class EnemigoExamen implements Enemigo {
 
         // Se crea el sprite utilizando la primera textura como estado inicial.
         sprite = new Sprite(enemigoExamen);
-        sprite.setSize(32f, 32f);
+        sprite.setSize(36f, 38f);
         sprite.setPosition(x, y);
 
         this.movimientoExamen = new MovimientoExamen();
@@ -157,7 +157,7 @@ public class EnemigoExamen implements Enemigo {
     @Override
     public ObjetosXP sueltaObjetoXP() {
         float randomXP = (float) (Math.random() * 100);
-        if (!haSoltadoXP && randomXP <= 5f) {
+        if (!haSoltadoXP && randomXP <= 0.75f) {
             haSoltadoXP = true;
             return new ObjetoVida(getX(), getY());
         }

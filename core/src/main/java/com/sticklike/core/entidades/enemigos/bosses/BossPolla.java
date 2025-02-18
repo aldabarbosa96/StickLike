@@ -1,6 +1,7 @@
 package com.sticklike.core.entidades.enemigos.bosses;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -38,7 +39,7 @@ public class BossPolla implements Enemigo {
     private boolean estaMuerto = false;
 
     // Textura de daño propia para el boss.
-    private final com.badlogic.gdx.graphics.Texture damageTexture;
+    private final Texture damageTexture;
 
     public BossPolla(Jugador jugador, float x, float y) {
         sprite = new Sprite(bossPolla);

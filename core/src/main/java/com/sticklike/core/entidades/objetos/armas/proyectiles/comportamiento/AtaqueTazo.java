@@ -44,6 +44,11 @@ public class AtaqueTazo {
         ControladorProyectiles cp = jugador.getControladorProyectiles();
         float separation = 360f / (NUM_TAZOS + incrementoNumTazos);
 
+        // Obtener el último tazo activo para copiar su fase y temporizador
+        ProyectilTazo referenciaTazo = cp.obtenerUltimoProyectilTazo();
+        ProyectilTazo.Phase faseInicial = referenciaTazo != null ? referenciaTazo.getPhase() : ProyectilTazo.Phase.GROWING;
+        float phaseTimerInicial = referenciaTazo != null ? referenciaTazo.getPhaseTimer() : 0;
+
         // Reajustar los ángulos de todos los tazos activos antes de generar el nuevo
         for (int i = 0; i < tazosActivos; i++) {
             ProyectilTazo tazo = cp.obtenerProyectilPorIndice(i);
@@ -54,11 +59,7 @@ public class AtaqueTazo {
 
         float offsetAngle = separation * tazosActivos;
 
-        // Obtener el último tazo para copiar su fase
-        ProyectilTazo referenciaTazo = cp.obtenerUltimoProyectilTazo();
-        ProyectilTazo.Phase faseInicial = referenciaTazo != null ? referenciaTazo.getPhase() : ProyectilTazo.Phase.GROWING;
-        float phaseTimerInicial = referenciaTazo != null ? referenciaTazo.getPhaseTimer() : 0;
-
+        // Crear el nuevo tazo y asignarle la fase y tiempo del tazo de referencia
         ProyectilTazo nuevoTazo = new ProyectilTazo(jugador, this, offsetAngle, radio, gestorDeAudio);
         nuevoTazo.setPhase(faseInicial, phaseTimerInicial);
         nuevoTazo.setActiveDuration(duracionActivaTazo);
@@ -66,6 +67,7 @@ public class AtaqueTazo {
 
         tazosActivos++;
     }
+
 
 
     public void aumentarVelocidadTazos(float incremento) {

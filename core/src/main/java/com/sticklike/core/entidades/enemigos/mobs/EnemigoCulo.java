@@ -141,7 +141,7 @@ public class EnemigoCulo implements Enemigo {
     @Override
     public ObjetosXP sueltaObjetoXP() {
         float randomXP = (float) (Math.random() * 100);
-        if (!haSoltadoXP && randomXP <= 1f) {
+        if (!haSoltadoXP && randomXP <= 0.25f) {
             haSoltadoXP = true;
             return new ObjetoVida(this.getX(), this.getY());
         }

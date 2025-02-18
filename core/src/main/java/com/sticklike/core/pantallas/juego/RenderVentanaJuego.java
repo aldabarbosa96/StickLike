@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class RenderVentanaJuego {
+public class RenderVentanaJuego { // usamos posion disk sampling para organizar los borrones
 
     private ShapeRenderer shapeRenderer;
     private final int tamanyoCeldas;

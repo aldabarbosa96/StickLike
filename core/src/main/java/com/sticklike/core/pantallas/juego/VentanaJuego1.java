@@ -145,7 +145,7 @@ public class VentanaJuego1 implements Screen {
     public void render(float delta) {
         menuPause.handleInput();
 
-        if (jugador.estaVivo()) {  // booleano invertido, no olvidar!
+        if (jugador.estaMuerto()) {  // booleano invertido, no olvidar!
             game.setScreen(new VentanaGameOver(game));
             return;
         }
@@ -254,6 +254,8 @@ public class VentanaJuego1 implements Screen {
         popUpMejoras.getUiStage().getViewport().update(width, height, true);
         hud.resize(width, height);
         menuPause.getViewport().update(width, height, true);
+
+        controladorEnemigos.setVentanaRedimensionada(true);
     }
 
     @Override
@@ -328,5 +330,9 @@ public class VentanaJuego1 implements Screen {
 
     public ControladorEnemigos getControladorEnemigos() {
         return controladorEnemigos;
+    }
+
+    public FitViewport getViewport() {
+        return viewport;
     }
 }

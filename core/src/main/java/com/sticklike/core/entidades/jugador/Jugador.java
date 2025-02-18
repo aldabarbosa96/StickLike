@@ -222,7 +222,7 @@ public class Jugador {
         return maxVidaJugador;
     }
 
-    public boolean estaVivo() {
+    public boolean estaMuerto() {
         return !estaVivo;
     }
 

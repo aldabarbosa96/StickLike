@@ -2,8 +2,10 @@ package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
@@ -26,8 +28,7 @@ public class EnemigoRegla implements Enemigo {
     private AnimacionesEnemigos animacionesEnemigos;
     private float damageAmount = DANYO_REGLA;
 
-    // Usaremos la misma textura de daño (damageCuloTexture) como placeholder.
-    private final com.badlogic.gdx.graphics.Texture damageTexture;
+    private final Texture damageTexture;
 
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         sprite = new Sprite(enemigoReglaCruzada);
@@ -102,8 +103,8 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public ObjetoVida sueltaObjetoXP() {
-        float corazonONo = (float)(Math.random());
-        if (!haSoltadoXP && corazonONo < 0.25f) {
+        float corazonONo = MathUtils.random(100);
+        if (!haSoltadoXP && corazonONo <= 1f) {
             haSoltadoXP = true;
             return new ObjetoVida(getX(), getY());
         }
@@ -113,7 +114,6 @@ public class EnemigoRegla implements Enemigo {
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
-        // Al morir, iniciamos el fade-out y activamos el parpadeo (si aún no se ha iniciado).
         if (vidaEnemigo <= 0) {
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);

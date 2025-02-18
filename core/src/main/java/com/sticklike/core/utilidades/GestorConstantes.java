@@ -56,9 +56,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Pop_up
     // -------------------------------------------------
-    public static final float POPUP_WIDTH = 300f * 1.4814814815f;
+    public static final float POPUP_WIDTH = 325f * 1.4814814815f;
     public static final float POPUP_HEIGHT = 375f * 1.09375f;
-    public static final float POPUP_HEADER_PADDING = 75f * 1.09375f;
+    public static final float POPUP_HEADER_PADDING = 75f;
     public static final float POPUP_ROW_PADDING = 8f;
     public static final float LABEL_WIDTH = 6f * 1.4814814815f;
     public static final float BUTTON_WIDTH = 225f * 1.4814814815f;
@@ -138,12 +138,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_CULO = 2f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
     public static final float COOLDOWN_POLLA = 1f;
-    public static final float VEL_BASE_CULO = 30f;
-    public static final float VIDA_ENEMIGOREGLA = 95f;
+    public static final float VEL_BASE_CULO = 38f;
+    public static final float VIDA_ENEMIGOREGLA = 80f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
-    public static final float VEL_BASE_POLLA = 65f;
-    public static final float VIDA_ENEMIGO_POLLA = 65f;
+    public static final float VEL_BASE_POLLA = 55f;
+    public static final float VIDA_ENEMIGO_POLLA = 23f;
     public static final float DANYO_POLLA = 1.25f;
     public static final float VIDA_ENEMIGO_EXAMEN = 27f;
     public static final float DANYO_EXAMEN = 1.5f;
@@ -159,7 +159,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ENEMY_MIN_MOVE_DURATION = 1.0f;
     public static final float ENEMY_MAX_MOVE_DURATION = 10.0f;
     public static final float BORDER_SPAWN_MARGIN = 200f;
-    public static final float INTERVALO_SPAWN = 0.75f;
+    public static final float INTERVALO_SPAWN = 0.9f;
     public static final float MAX_OFFSET = 100f;
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
@@ -240,8 +240,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_ATRACCION = 300f;
     public static final float OBJETO_VIDA_WIDTH = 12f * 1.09375f;
     public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;
-    public static final float OBJETO1_XP_WIDTH = 10f * 1.09375f;
-    public static final float OBJETO1_XP_HEIGHT = 10.5f * 1.09375f;
+    public static final float OBJETO1_XP_WIDTH = 12.5f;
+    public static final float OBJETO1_XP_HEIGHT = 14f;
     public static final float OBJETO_ORO_WIDTH = 10f * 1.09375f;
     public static final float OBJETO_ORO_HEIGHT = 10f * 1.09375f;
     public static final float OBJETO_PWUP_WIDTH = 7f;
@@ -259,8 +259,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO1_SPEED_MULT = 1.15f;
     public static final float EVENTO2_SPAWN_RATE = 0.25f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
-    public static final float EVENTO3_SPEED_MULT = 1.75f;
-    public static final float EVENTO3_SPAWN_RATE = 0.1f;
+    public static final float EVENTO3_SPEED_MULT = 2f;
+    public static final float EVENTO3_SPAWN_RATE = 0.2f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN","CULO"};

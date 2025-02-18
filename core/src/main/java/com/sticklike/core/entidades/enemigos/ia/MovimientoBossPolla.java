@@ -18,13 +18,18 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
     private float angulo;
     private float chargeDirX, chargeDirY;
     private boolean sentidoHorario;
+    private boolean ajustandoOrbita = false;
+    private float tiempoAjuste = 0.5f; // Duración de la interpolación
+    private float temporizadorAjuste = 0f;
+    private float startX, startY;
+    private float targetX, targetY;
 
     public MovimientoBossPolla(boolean puedeEmpujar) {
         super(puedeEmpujar);
         this.velocidadAproximacion = 150f;
-        this.distanciaOrbita = 175f;
+        this.distanciaOrbita = 150f;
         this.velocidadOrbital = 90f;
-        this.velocidadCarga = 295f;
+        this.velocidadCarga = 290f;
         this.tiempoOrbita = 3.5f;
         this.tiempoCarga = 1.5f;
 
@@ -45,6 +50,12 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
     @Override
     protected void actualizarMovimientoEspecifico(float delta, Sprite sprite, Jugador jugador) {
         if (jugador == null || sprite == null) return;
+
+        // Si estamos en el estado de ajuste, interpolamos la posición
+        if (ajustandoOrbita) {
+            ajustarOrbita(delta, sprite);
+            return; // No se procesa el resto hasta finalizar la interpolación
+        }
 
         // Centro actual del boss
         float bossCenterX = sprite.getX() + sprite.getWidth() / 2f;
@@ -117,30 +128,55 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
                 // EMBESTIDA
                 cargar(delta, sprite);
 
-                // Cuando termina la carga, volvemos a orbitar
+                // Cuando termina la carga, en vez de resetear inmediatamente, iniciamos la interpolación
                 if (temporizador >= tiempoCarga) {
-                    // -- IMPORTANTE: Volvemos a aproximarnos la próxima vez
-                    haAlcanzadoDistanciaOrbita = false;
-
-                    // Reiniciamos contador
                     temporizador = 0;
+                    ajustandoOrbita = true;
+                    temporizadorAjuste = 0;
 
-                    // Nuevo centro de órbita: si quieres que la órbita se mueva con el jugador,
-                    // puedes actualizarlo aquí
+                    // Actualizamos el centro de la órbita al centro actual del jugador
                     centroX = playerCenterX;
                     centroY = playerCenterY;
 
-                    // Ajustar el ángulo para no saltar
-                    float newBossCenterX = sprite.getX() + sprite.getWidth() / 2f;
-                    float newBossCenterY = sprite.getY() + sprite.getHeight() / 2f;
-                    float dx = newBossCenterX - centroX;
-                    float dy = newBossCenterY - centroY;
+                    // Obtenemos la posición actual del boss (centro)
+                    float currentBossCenterX = sprite.getX() + sprite.getWidth() / 2f;
+                    float currentBossCenterY = sprite.getY() + sprite.getHeight() / 2f;
+                    startX = currentBossCenterX;
+                    startY = currentBossCenterY;
+
+                    // Calculamos el ángulo actual respecto al centro de órbita
+                    float dx = currentBossCenterX - centroX;
+                    float dy = currentBossCenterY - centroY;
                     angulo = (float) Math.toDegrees(Math.atan2(dy, dx));
 
-                    // Cambiamos también el sentido de giro al azar
+                    // Calculamos la posición destino sobre la circunferencia (órbita)
+                    float rad = MathUtils.degreesToRadians * angulo;
+                    targetX = centroX + MathUtils.cos(rad) * distanciaOrbita;
+                    targetY = centroY + MathUtils.sin(rad) * distanciaOrbita;
+
+                    // Se elige un nuevo sentido de giro al azar
                     sentidoHorario = MathUtils.randomBoolean();
                 }
             }
+        }
+    }
+
+
+    private void ajustarOrbita(float delta, Sprite sprite) {
+        temporizadorAjuste += delta;
+        float t = Math.min(1, temporizadorAjuste / tiempoAjuste);
+        // Interpolación lineal entre la posición de inicio y la destino
+        float currentX = MathUtils.lerp(startX, targetX, t);
+        float currentY = MathUtils.lerp(startY, targetY, t);
+
+        // Colocamos el sprite de forma que su centro sea (currentX, currentY)
+        sprite.setPosition(currentX - sprite.getWidth() / 2f, currentY - sprite.getHeight() / 2f);
+
+        // Cuando finaliza la interpolación, volvemos al modo órbita
+        if (t >= 1) {
+            ajustandoOrbita = false;
+            enOrbita = true;
+            temporizador = 0;
         }
     }
 
@@ -163,7 +199,6 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
     private void cargar(float delta, Sprite sprite) {
         float moveX = chargeDirX * velocidadCarga * delta;
         float moveY = chargeDirY * velocidadCarga * delta;
-
         sprite.translate(moveX, moveY);
     }
 }
