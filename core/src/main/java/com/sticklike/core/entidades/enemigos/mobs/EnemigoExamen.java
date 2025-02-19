@@ -12,51 +12,44 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class EnemigoExamen implements Enemigo {
+/**
+ * Enemigo Examen; gestiona su comportamiento, daño y cambio de textura
+ */
 
+public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio de textura en animacionesEnemigos en un futuro)
     private Sprite sprite;
     private Jugador jugador;
-
     private float vidaEnemigo = VIDA_ENEMIGO_EXAMEN;
     private float damageAmount = DANYO_EXAMEN;
     private float coolDownDanyo = COOLDOWN_EXAMEN;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
-
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-
     private AnimacionesEnemigos animacionesEnemigos;
     private MovimientoExamen movimientoExamen;
-
     private static float velocidadBase = VEL_BASE_EXAMEN;
-
     private final Texture damageTexture;
-
     private float tiempoAcumulado = 0;
     private float tiempoCambio = 0.25f; // Tiempo entre cambios de frame
     private boolean usandoFrame2 = false;
 
     public EnemigoExamen(float x, float y, Jugador jugador, float velocidadEnemigo) {
         this.jugador = jugador;
-
-        // Se crea el sprite utilizando la primera textura como estado inicial.
         sprite = new Sprite(enemigoExamen);
         sprite.setSize(36f, 38f);
         sprite.setPosition(x, y);
-
         this.movimientoExamen = new MovimientoExamen();
         this.animacionesEnemigos = new AnimacionesEnemigos();
         setVelocidad(velocidadEnemigo);
-
         this.damageTexture = damageExamenTexture;
     }
 
     @Override
     public void actualizar(float delta) {
-        // Actualiza los efectos de parpadeo y fade en el sprite.
         animacionesEnemigos.actualizarParpadeo(sprite, delta);
         animacionesEnemigos.actualizarFade(delta);
 
@@ -65,7 +58,6 @@ public class EnemigoExamen implements Enemigo {
         }
 
         if (jugador != null) {
-            // Se ajusta la orientación (flip) del sprite según la posición del jugador.
             boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2
                 < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
             if (sprite.isFlipX() != estaALaIzquierda) {
@@ -83,10 +75,10 @@ public class EnemigoExamen implements Enemigo {
             if (tiempoAcumulado >= tiempoCambio) {
                 // Se alterna entre la primera y segunda textura para simular movimiento.
                 if (usandoFrame2) {
-                    sprite.setRegion(enemigoExamen); // Primer frame
+                    sprite.setRegion(enemigoExamen);
                     usandoFrame2 = false;
                 } else {
-                    sprite.setRegion(enemigoExamen2); // Segundo frame
+                    sprite.setRegion(enemigoExamen2);
                     usandoFrame2 = true;
                 }
                 tiempoAcumulado = 0;
@@ -96,12 +88,9 @@ public class EnemigoExamen implements Enemigo {
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        // Se renderiza mientras el enemigo tenga vida o se esté ejecutando el fade-out.
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
-
-            // Se aplica el efecto de daño: parpadeo (alfa 1) o fade (alfa variable)
             if (animacionesEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             } else if (animacionesEnemigos.estaEnFade()) {
@@ -119,11 +108,9 @@ public class EnemigoExamen implements Enemigo {
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
-        // Activa el efecto de daño (parpadeo) si aún no está activo.
         if (!animacionesEnemigos.estaEnParpadeo()) {
             animacionesEnemigos.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
         }
-        // Si la salud llega a 0, inicia el fade-out.
         if (vidaEnemigo <= 0) {
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);

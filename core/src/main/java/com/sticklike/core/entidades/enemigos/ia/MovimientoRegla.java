@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Movimiento del enemigo Regla; rota constantemente y se lanza en línea recta hacia el jugador tras una fase de carga.
+ */
+
 public class MovimientoRegla extends MovimientoBaseEnemigos {
     private final float velocidadEnFaseDisparo;
     private final float velocidadRotacion;

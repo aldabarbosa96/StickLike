@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
+/**
+ * Representa un objeto de experiencia recolectable (gema). Tiene una probabilidad baja de generarse en una versión más grande.
+ */
+
 public class ObjetoXp extends ObjetoBase {
 
     private final boolean esXPGorda;

@@ -5,6 +5,10 @@ import com.sticklike.core.utilidades.GestorDeAudio;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
+/**
+ * Representa un objeto de oro recolectable (caca dorada).
+ */
+
 public class ObjetoOro extends ObjetoBase {
 
     public ObjetoOro(float x, float y) {

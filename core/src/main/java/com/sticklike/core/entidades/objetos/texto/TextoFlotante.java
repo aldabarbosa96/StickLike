@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Representa un texto flotante en el juego. Se muestra temporalmente con animación de aparición y desplazamiento vertical.
+ */
+
 public class TextoFlotante {
     private String texto;
     private float x, y;

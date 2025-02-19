@@ -10,6 +10,9 @@ import java.util.Map;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Clase encargada de cargar y liberar los recursos de audio usados en el juego (música y efectos de sonido).
+ */
 public class GestorDeAudio {
     // Mantenemos una pista de música actualmente en reproducción.
     private Music musicaActual;

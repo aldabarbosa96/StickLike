@@ -19,9 +19,11 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
- * Gestiona el dibujado en pantalla del botón y texto PAUSA, además de gestionar sus inputs.
+ * Gestiona el botón y el menú de pausa en la interfaz del juego.
+ * Permite pausar y reanudar la partida mediante teclado o mando.
  */
-public class MenuPause extends ControllerAdapter {
+
+public class MenuPause extends ControllerAdapter { // todo --> implementar menú real próximamente
     private float pauseWidth;
     private float pauseHeight;
     private float pauseSpacing;
@@ -132,8 +134,7 @@ public class MenuPause extends ControllerAdapter {
     public void handleInput() {
         if (inputsBloqueados) return;
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) ||
-            Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             alternarPausa();
         }
     }

@@ -6,6 +6,10 @@ import com.sticklike.core.utilidades.GestorDeAudio;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
+/**
+ * Representa un objeto de vida recolectable (corazón).
+ */
+
 public class ObjetoVida extends ObjetoBase {
     private Sprite sprite;
     private boolean recolectado = false;

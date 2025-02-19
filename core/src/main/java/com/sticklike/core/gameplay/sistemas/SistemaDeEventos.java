@@ -13,6 +13,11 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 import java.util.PriorityQueue;
 
+/**
+ * Gestiona los eventos del juego basados en el progreso del jugador.
+ * Activa cambios en la aparición de enemigos, ajustes de dificultad y jefes según el nivel alcanzado.
+ */
+
 public class SistemaDeEventos {
     private PriorityQueue<Evento> eventos; // Cola de prioridad para eventos
     private RenderHUDComponents renderHUDComponents; // Para futuros eventos basados en timer

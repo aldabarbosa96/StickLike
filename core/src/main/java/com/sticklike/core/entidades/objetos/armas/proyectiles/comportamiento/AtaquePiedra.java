@@ -6,28 +6,23 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class AtaquePiedra {
+/**
+ * Gestiona ataque Piedra; dispara proyectiles de piedra en ráfagas hacia el enemigo más cercano dentro del rango.
+ */
 
-    // Temporizador para disparar ataques completos
+public class AtaquePiedra {
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
-
-    // Variables para disparar las "balas" de forma secuencial
     private int proyectilesPendientes = 0;
     private float temporizadorEntreBalas = 0f;
     private final float intervaloEntreBalas = 0.1f; // Retardo entre cada bala en segundos
-
-    // Almacenamos el objetivo (enemigo) encontrado al iniciar el ataque
     private Enemigo target;
 
     public AtaquePiedra(float intervaloDisparoInicial) {
         this.intervaloDisparo = intervaloDisparoInicial;
     }
 
-    /**
-     * Busca al enemigo más cercano y prepara el ataque.
-     * Devuelve true si se inicia el ataque, false en caso de que no haya ningún enemigo en rango.
-     */
+
     public boolean iniciarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         if (jug.getControladorEnemigos() == null) return false;
 
@@ -92,9 +87,6 @@ public class AtaquePiedra {
         }
     }
 
-    /**
-     * Busca al enemigo más cercano dentro del rango de ataque del jugador.
-     */
     private Enemigo encontrarEnemigoMasCercano(Jugador jug) {
         float closestDist = Float.MAX_VALUE;
         Enemigo closest = null;

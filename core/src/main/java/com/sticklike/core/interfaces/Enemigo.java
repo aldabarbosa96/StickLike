@@ -3,6 +3,11 @@ package com.sticklike.core.interfaces;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+/**
+ * Define el comportamiento base de un enemigo en el juego.
+ * Incluye métodos para actualizar, renderizar, recibir daño, soltar XP y gestionar interacciones con proyectiles.
+ */
+
 public interface Enemigo {
     void actualizar(float delta);
     void renderizar(SpriteBatch batch);

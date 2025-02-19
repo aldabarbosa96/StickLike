@@ -3,11 +3,15 @@ package com.sticklike.core.entidades.enemigos.ia;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
 
+/**
+ * Movimiento del enemigo Polla; se desplaza hacia el jugador con un patrón en zigzag.
+ */
+
 public class MovimientoPolla extends MovimientoBaseEnemigos {
     private float velocidadEnemigo;
     private float tiempo; // Tiempo acumulado para el zigzag
-    private float amplitudZigzag; // Amplitud del zigzag
-    private float frecuenciaZigzag; // Frecuencia del zigzag
+    private float amplitudZigzag;
+    private float frecuenciaZigzag;
     private float currentOffset;
 
     public MovimientoPolla(float velocidadEnemigo, float amplitudZigzag, float frecuenciaZigzag, boolean puedeEmpujar) {
@@ -22,15 +26,12 @@ public class MovimientoPolla extends MovimientoBaseEnemigos {
     protected void actualizarMovimientoEspecifico(float delta, Sprite sprite, Jugador jugador) {
         tiempo += delta;
 
-        // Posición actual
         float enemyPosX = sprite.getX();
         float enemyPosY = sprite.getY();
 
-        // Posición objetivo (jugador)
         float playerPosX = jugador.getSprite().getX();
         float playerPosY = jugador.getSprite().getY();
 
-        // Vector hacia el jugador (normalizado)
         float difX = playerPosX - enemyPosX;
         float difY = playerPosY - enemyPosY;
         float distancia = (float) Math.sqrt(difX * difX + difY * difY);

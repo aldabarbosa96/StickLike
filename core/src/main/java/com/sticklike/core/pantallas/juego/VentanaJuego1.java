@@ -33,6 +33,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.List;
 
+/**
+ * Representa la pantalla principal del juego donde se lleva a cabo la jugabilidad.
+ * Gestiona la actualización de la lógica del jugador, enemigos, proyectiles, experiencia, mejoras y eventos.
+ * Encapsula el renderizado de los elementos en pantalla mediante la clase RenderVentanaJuego.
+ */
+
 public class VentanaJuego1 implements Screen {
     public static final int worldWidth = (int) VIRTUAL_WIDTH;
     public static final int worldHeight = (int) VIRTUAL_HEIGHT;

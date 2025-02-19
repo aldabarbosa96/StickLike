@@ -15,6 +15,10 @@ import java.util.Set;
 import static com.sticklike.core.utilidades.GestorConstantes.DANYO_PEDO;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
+/**
+ * Proyectil NubePedo; genera una nube de gas que sigue al jugador y daña enemigos en pulsos vibratorios, aplicando knockback.
+ */
+
 public class NubePedo implements Proyectiles {
     private Texture texture;
     private Sprite sprite;

@@ -20,14 +20,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * La clase ProjectileManager gestiona todos los proyectiles disparados por el jugador (o potencialmente por enemigos en el futuro)
- * Se encarga de:
- * Añadir proyectiles nuevos con dirección y objetivo definidos
- * Actualizar su posición y verificar colisiones con enemigos
- * Aplicar el daño y generar textos flotantes (daño) al impactar
- * Renderizarlos y liberar recursos al morir
- * todo --> valorar refactorización en un futuro
+ * Gestiona los proyectiles disparados en el juego.
+ * Se encarga de su actualización, colisiones, daño aplicado y renderizado.
  */
+
 public class ControladorProyectiles {
     private ArrayList<Proyectiles> proyectiles;
     private float multiplicadorDeDanyo = MULT_DANYO;

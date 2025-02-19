@@ -8,6 +8,11 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Clase base abstracta para los objetos recolectables de experiencia.
+ * Controla su movimiento y comportamiento desde su estado inactivo hasta su recolección por el jugador.
+ */
+
 public abstract class ObjetoBase implements ObjetosXP {
 
     private Sprite sprite;
@@ -23,19 +28,12 @@ public abstract class ObjetoBase implements ObjetosXP {
 
     private EstadoRecolectable estado = EstadoRecolectable.INACTIVO;
 
-    // Constantes de movimiento
     private final float distanciaActivacion = DISTANCIA_ACTIVACION;
     private final float velocidadAtraccion = VEL_ATRACCION;
-
-    // Parámetros para el rebote
     private float tiempoRebote = 0f;
     private float duracionRebote = 0.1f;
     private float velocidadRebote = 200;
-
-    // Posiciones
     private float x, y;
-
-    // Dirección del rebote (se calcula solo una vez al iniciar el rebote)
     private float reboteDirX, reboteDirY;
 
     public ObjetoBase(float x, float y) {
@@ -53,11 +51,10 @@ public abstract class ObjetoBase implements ObjetosXP {
             return;
         }
 
-        // Coordenadas del jugador
         float jugadorX = jugador.getSprite().getX();
         float jugadorY = jugador.getSprite().getY();
 
-        // Calcula la distancia al jugador
+        // Calculamos distancia al jugador
         float distancia = (float) Math.sqrt(Math.pow(jugadorX - x, 2) + Math.pow(jugadorY - y, 2));
 
         switch (estado) {
@@ -74,7 +71,6 @@ public abstract class ObjetoBase implements ObjetosXP {
                         dirX /= longitud;
                         dirY /= longitud;
                     }
-                    // Guardamos la dirección para usarla en el rebote
                     reboteDirX = dirX;
                     reboteDirY = dirY;
                     tiempoRebote = 0f;
@@ -94,7 +90,6 @@ public abstract class ObjetoBase implements ObjetosXP {
                 break;
 
             case ATRACCION:
-                    // Movimiento hacia el jugador
                     float direccionX = jugadorX - x;
                     float direccionY = jugadorY - y;
                     float longitud = (float) Math.sqrt(direccionX * direccionX + direccionY * direccionY);
@@ -151,7 +146,6 @@ public abstract class ObjetoBase implements ObjetosXP {
         }
     }
 
-    // Métodos abstractos que deben implementarse en clases hijas:
     protected abstract Texture getTexture();
     protected abstract float getWidth();
     protected abstract float getHeight();

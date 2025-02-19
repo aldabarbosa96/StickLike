@@ -22,8 +22,6 @@ public class MovimientoJugador {
         // Aplicamos la velocidad del jugador
         float finalX = movX * jugador.getVelocidadJugador() * delta;
         float finalY = movY * jugador.getVelocidadJugador() * delta;
-
-        // Movemos el sprite
         jugador.getSprite().translate(finalX, finalY);
     }
 

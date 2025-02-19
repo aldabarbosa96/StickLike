@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Gestiona el sistema de mejoras en el juego.
+ * Permite seleccionar, aplicar y administrar mejoras globales y específicas de habilidades.
+ */
+
 public class SistemaDeMejoras {
     private final Jugador jugador;
     private final List<Mejora> todasLasMejoras;
@@ -34,16 +39,19 @@ public class SistemaDeMejoras {
 
     private void inicializarMejoras() {
         // Mejora global (no relacionada con una habilidad, idHabilidad = null)
-        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%",() -> jugador.aumentarVelocidad(0.13f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%",() -> jugador.aumentarRangoAtaque(1f), 1, null, null));
-        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 18%",() -> jugador.reducirIntervaloDisparo(0.16f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 19%",() -> jugador.aumentarDanyo(1.19f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1",() -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%",() -> jugador.aumentarRegVida(0.005f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%",() -> jugador.aumentarCritico(0.15f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 35%",() -> jugador.aumentarResistencia(0.35f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 30%",() -> jugador.aumentarPoderJugador(1.3f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);jugador.setVidaJugador(jugador.getVidaJugador() + 15);}, 5, null, null));
+        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, null, null));
+        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, null, null));
+        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 18%", () -> jugador.reducirIntervaloDisparo(0.16f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 19%", () -> jugador.aumentarDanyo(1.19f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, null, null));
+        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 35%", () -> jugador.aumentarResistencia(0.35f), 3, null, null));
+        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 30%", () -> jugador.aumentarPoderJugador(1.3f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
+            jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);
+            jugador.setVidaJugador(jugador.getVidaJugador() + 15);
+        }, 5, null, null));
 
         // Mejoras base para habilidades (se especifica el id de la habilidad; no contienen "_" en el id)
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!",
@@ -56,30 +64,48 @@ public class SistemaDeMejoras {
         // Upgrades específicos para las habilidades
         // Calcetín
         todasLasMejoras.add(new Mejora("¡CALCETÍN: ACARTONADO MÁX!",
-            "Aumenta el daño de los calcetines un 20%", () -> {jugador.getAtaqueCalcetin().aumentarDamage(0.2f);}, 5, null, "CALCETIN_damage"));
+            "Aumenta el daño de los calcetines un 20%", () -> {
+            jugador.getAtaqueCalcetin().aumentarDamage(0.2f);
+        }, 5, null, "CALCETIN_damage"));
         todasLasMejoras.add(new Mejora("¡CALCETÍN: MULTICALCETIN!",
-            "Aumenta el número de calcetines +1", () -> {jugador.getAtaqueCalcetin().incrementarNumeroProyectiles(1);}, 4, null, "CALCETIN_multi"));
+            "Aumenta el número de calcetines +1", () -> {
+            jugador.getAtaqueCalcetin().incrementarNumeroProyectiles(1);
+        }, 4, null, "CALCETIN_multi"));
         todasLasMejoras.add(new Mejora("¡CALCETÍN: PRECOZ!",
-            "Aumenta velocidad de lanzamiento un 25%", () -> {jugador.getAtaqueCalcetin().aumentarVelocidadDisparo(0.25f);}, 3, null, "CALCETIN_speed"));
+            "Aumenta velocidad de lanzamiento un 25%", () -> {
+            jugador.getAtaqueCalcetin().aumentarVelocidadDisparo(0.25f);
+        }, 3, null, "CALCETIN_speed"));
         // Calcetín-ULTIMATE todo --> balancear un poco la ulti del calcetín y buscar forma de optimizarla...
         /*todasLasMejoras.add(new Mejora("CALCETÍN: ULTIMATE",
             "?????", ()-> {jugador.getAtaqueCalcetin().ultimateCALCETIN(1.25f);},1,null,"CALCETIN_vel"));*/
 
         // Tazo
         todasLasMejoras.add(new Mejora("¡TAZO: ROTATAZO!",
-            "Aumenta la velocidad de rotación del tazo", () -> {jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);}, 3, null, "TAZO_rotacion"));
+            "Aumenta la velocidad de rotación del tazo", () -> {
+            jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);
+        }, 3, null, "TAZO_rotacion"));
         todasLasMejoras.add(new Mejora("¡TAZO: MULTITETAZO!",
-            "Aumenta el número de tazos +1", ()-> {jugador.getAtaqueTazo().aumentarNumTazos(1);},3,null,"TAZO_proyectil"));
+            "Aumenta el número de tazos +1", () -> {
+            jugador.getAtaqueTazo().aumentarNumTazos(1);
+        }, 3, null, "TAZO_proyectil"));
         todasLasMejoras.add(new Mejora("¡TAZO: TEMPOTAZO!",
-            "Aumenta el tiempo que dura la habilidad un 50%", ()-> {jugador.getAtaqueTazo().aumentarDuracionActivaTazos(4.25f);},3,null,"TAZO_duracion"));
+            "Aumenta el tiempo que dura la habilidad un 50%", () -> {
+            jugador.getAtaqueTazo().aumentarDuracionActivaTazos(4.25f);
+        }, 3, null, "TAZO_duracion"));
 
         // NubePedo
         todasLasMejoras.add(new Mejora("¡PEDO: ÁREA PESTOSA!",
-            "Aumenta el area de efecto del pedo un 100%", () -> {jugador.getAtaqueNubePedo().getNubePedo().setEscalaMax(2f);}, 2, null, "PEDO_maxArea"));
+            "Aumenta el area de efecto del pedo un 100%", () -> {
+            jugador.getAtaqueNubePedo().getNubePedo().setEscalaMax(2f);
+        }, 2, null, "PEDO_maxArea"));
         todasLasMejoras.add(new Mejora("¡PEDO: EMPUJE PEDORRO!",
-            "Aumenta el empuje del pedo un 30%", () -> {jugador.getAtaqueNubePedo().getNubePedo().setMaxKnockBack(1.3f);}, 2, null, "PEDO_maxEmpuje"));
+            "Aumenta el empuje del pedo un 30%", () -> {
+            jugador.getAtaqueNubePedo().getNubePedo().setMaxKnockBack(1.3f);
+        }, 2, null, "PEDO_maxEmpuje"));
         todasLasMejoras.add(new Mejora("¡PEDO: TRIIIPPPLEEE!",
-            "Añade una vibración pedorra extra", () -> {jugador.getAtaqueNubePedo().setEsTriple(true);}, 1, null, "PEDO_triple"));
+            "Añade una vibración pedorra extra", () -> {
+            jugador.getAtaqueNubePedo().setEsTriple(true);
+        }, 1, null, "PEDO_triple"));
 
     }
 
@@ -93,17 +119,17 @@ public class SistemaDeMejoras {
             String idHabilidad = mejora.getIdHabilidad();
             if (idHabilidad != null) {
                 if (idHabilidad.contains("_")) {
-                    // Upgrade específico: se muestra solo si la habilidad base (antes del "_") está activa.
+                    // Upgrade específico: se muestra solo si la habilidad base (antes del "_") está activa
                     String baseId = idHabilidad.split("_")[0];
                     if (habilidadesActivasIds.contains(baseId)) {
                         mejorasDisponibles.add(mejora);
                     }
                 } else {
-                    // Es una habilidad base: se añade sin restricciones.
+                    // Es una habilidad base: se añade sin restricciones
                     mejorasDisponibles.add(mejora);
                 }
             } else {
-                // Es una mejora global.
+                // Es una mejora global
                 mejorasDisponibles.add(mejora);
             }
         }

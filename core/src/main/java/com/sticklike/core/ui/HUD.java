@@ -11,9 +11,10 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 /**
- * Clase responsable de dibujar la información de interfaz del jugador en pantalla (vida, experiencia, nivel, etc.)
- * El renderizado de los elementos del HUD se encapsula a través de RenderHUDComponents
+ * Clase responsable de dibujar la información de interfaz del jugador en pantalla (vida, experiencia, nivel, etc.).
+ * Encapsula el renderizado de los elementos del HUD mediante la clase RenderHUDComponents.
  */
+
 public class HUD {
     private RenderHUDComponents renderHUDComponents;
     private final ShapeRenderer shapeRenderer;

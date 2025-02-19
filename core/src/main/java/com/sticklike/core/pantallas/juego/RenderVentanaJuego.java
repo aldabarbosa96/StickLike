@@ -20,6 +20,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Renderiza la ventana de juego, incluyendo el fondo, entidades y HUD.
+ * Genera de forma procedural los elementos visuales del mapa.
+ */
+
 public class RenderVentanaJuego { // usamos posion disk sampling para organizar los borrones
 
     private ShapeRenderer shapeRenderer;

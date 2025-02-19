@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño y el fade de muerte.
+ */
+
 public class AnimacionesEnemigos {
     private boolean enParpadeo = false;
     private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
@@ -23,7 +27,6 @@ public class AnimacionesEnemigos {
         sprite.setTexture(damageTexture);
     }
 
-
     public void actualizarParpadeo(Sprite sprite, float delta) {
         if (enParpadeo) {
             tiempoParpadeoRestante -= delta;
@@ -37,8 +40,6 @@ public class AnimacionesEnemigos {
     public boolean estaEnParpadeo() {
         return enParpadeo;
     }
-
-
 
     public void iniciarFadeMuerte(float duracion) {
         enFade = true;

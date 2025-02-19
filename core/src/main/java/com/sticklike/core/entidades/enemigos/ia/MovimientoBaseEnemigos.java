@@ -5,11 +5,10 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
- * Clase base para manejar movimiento de enemigos
- * Incluye lógica de knockback opcional y un método abstracto para la IA específica de cada enemigo
+ * Clase base para el movimiento de los enemigos; gestiona knockback y delega el movimiento específico a las subclases.
  */
+
 public abstract class MovimientoBaseEnemigos {
-    // Knockback
     private boolean canKnockback;
     protected float knockbackVelX = VELOCIDAD_EMPUJE;
     protected float knockbackVelY = VELOCIDAD_EMPUJE;
@@ -20,14 +19,8 @@ public abstract class MovimientoBaseEnemigos {
         this.canKnockback = canKnockback;
     }
 
-    /**
-     * Método principal que actualiza el movimiento.
-     * - Si hay knockback activo, aplica su lógica.
-     * - Si no, llama al método abstracto de la IA concreta
-     */
     public final void actualizarMovimiento(float delta, Sprite sprite, Jugador jugador) {
         if (knockbackTimer > 0) {
-            // Aplicamos empuje
             float moveX = knockbackVelX * delta;
             float moveY = knockbackVelY * delta;
             sprite.translate(moveX, moveY);
@@ -42,17 +35,10 @@ public abstract class MovimientoBaseEnemigos {
         }
     }
 
-    /**
-     * Método abstracto que cada subclase debe implementar para su IA de movimiento concreta
-     */
     protected abstract void actualizarMovimientoEspecifico(float delta, Sprite sprite, Jugador jugador);
 
-    /**
-     * Aplica knockback si el enemigo lo permite
-     */
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
         if (!canKnockback) {
-            // Si este enemigo no sufre knockback, ignoramos.
             return;
         }
         knockbackVelX = dirX * fuerza;

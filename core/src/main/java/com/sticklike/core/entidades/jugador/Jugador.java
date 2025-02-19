@@ -17,6 +17,11 @@ import com.sticklike.core.utilidades.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Representa al jugador en el juego. Contiene sus atributos, ataques, estado y delega la gestión del movimiento,
+ * colisiones y animaciones a clases especializadas.
+ */
+
 public class Jugador {
     private Sprite sprite;
     private ControladorEnemigos controladorEnemigos;
@@ -123,8 +128,7 @@ public class Jugador {
 
     public void muere() {
         estaVivo = false;
-        System.out.println("GAME OVER (player died)");
-        // todo --> implementar ventana de "vida extra" en un futuro
+        // todo --> valorar si se implementa ventana de "vida extra" en un futuro
 
     }
 
@@ -173,7 +177,6 @@ public class Jugador {
         poderJugador *= amount;
     }
 
-    // Getters y Setters básicos
     public float getRangoAtaqueJugador() {
         return rangoAtaqueJugador;
     }

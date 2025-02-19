@@ -1,7 +1,7 @@
 package com.sticklike.core.utilidades;
 
 /**
- * Clase para manejar de forma cómoda las constantes del juego
+ * Clase que gestiona las constantes globales del juego para facilitar su mantenimiento y modificación.
  */
 public class GestorConstantes { // todo -> si escala demasiado habrá que gestionarlo con clases internas
 
@@ -113,12 +113,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración del jugador
     // -------------------------------------------------
-    public static final float VEL_MOV_JUGADOR = 120.0f;
+    public static final float VEL_MOV_JUGADOR = 125;
     public static final float DANYO = 25f;
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
     public static final int VIDA_JUGADOR = 75;
     public static final int VIDAMAX_JUGADOR = 75;
-    public static final float RANGO_ATAQUE = 175.0f;
+    public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
     public static final float INTERVALO_MIN_DISPARO = 0.1f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;

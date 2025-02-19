@@ -27,6 +27,10 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa un pop-up que muestra mejoras disponibles para el jugador.
+ * Permite al usuario seleccionar una mejora usando teclado, ratón o mando.
+ */
 
 public class PopUpMejoras {
     private Stage uiStage;

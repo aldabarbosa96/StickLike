@@ -33,6 +33,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Gestiona y renderiza los componentes del HUD en el juego.
+ * Se encarga de la visualización de información del jugador, incluyendo la salud, experiencia, mejoras activas,
+ * temporizador, estadísticas y otros elementos de la interfaz.
+ * También maneja la interacción con los elementos del HUD y el procesamiento de eventos de entrada relacionados.
+ */
+
 public class RenderHUDComponents {
     private ShapeRenderer shapeRenderer;
     private GlyphLayout layout;

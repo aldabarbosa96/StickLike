@@ -15,6 +15,10 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import com.sticklike.core.interfaces.Enemigo;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Enemigo Regla; gestiona su comportamiento y daño.
+ */
+
 public class EnemigoRegla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
@@ -35,29 +39,10 @@ public class EnemigoRegla implements Enemigo {
         sprite.setSize(23, 23);
         sprite.setPosition(x, y);
         this.jugador = jugador;
-        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, false);
+        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, true);
         this.orthographicCamera = orthographicCamera;
         this.animacionesEnemigos = new AnimacionesEnemigos();
         this.damageTexture = damageReglaTexture;
-    }
-
-    @Override
-    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
-        movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
-    }
-
-    @Override
-    public float getVida() {
-        return vidaEnemigo;
-    }
-
-    @Override
-    public float getDamageAmount() {
-        return damageAmount;
-    }
-
-    public void setDamageAmount(float damage) {
-        this.damageAmount = damage;
     }
 
     @Override
@@ -65,16 +50,14 @@ public class EnemigoRegla implements Enemigo {
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
-            // Si se está en fade-out, aplicamos el alfa calculado.
             if (animacionesEnemigos.estaEnFade()) {
                 float alphaFade = animacionesEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             }
-            // Si se está en parpadeo (efecto de daño), dejamos el alfa en 1.
             else if (animacionesEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
-            // Caso por defecto: sin efectos, se muestra con alfa 1.
+
             else {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
@@ -85,7 +68,6 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public void actualizar(float delta) {
-        // Actualizamos los efectos de parpadeo y fade con el delta de tiempo.
         animacionesEnemigos.actualizarParpadeo(sprite, delta);
         animacionesEnemigos.actualizarFade(delta);
         movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
@@ -120,6 +102,24 @@ public class EnemigoRegla implements Enemigo {
                 activarParpadeo(0.15f);
             }
         }
+    }
+    @Override
+    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
+        movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
+    }
+
+    @Override
+    public float getVida() {
+        return vidaEnemigo;
+    }
+
+    @Override
+    public float getDamageAmount() {
+        return damageAmount;
+    }
+
+    public void setDamageAmount(float damage) {
+        this.damageAmount = damage;
     }
 
     @Override

@@ -5,6 +5,10 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.NubePedo;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Ataque Nube Pedo; genera una nube dañina de forma periódica y permite activar su versión triple.
+ */
+
 public class AtaqueNubePedo {
     private NubePedo nubePedo;
     private Jugador jugador;

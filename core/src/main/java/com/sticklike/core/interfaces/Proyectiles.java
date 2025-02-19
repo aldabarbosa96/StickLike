@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- * Interfaz base para todos los proyectiles del juego.
- * Cada proyectil define su daño y fuerza de empuje de forma independiente.
+ * Define el comportamiento base de los proyectiles en el juego.
+ * Cada proyectil gestiona su daño y fuerza de empuje de forma independiente.
  */
 public interface Proyectiles {
     void actualizarProyectil(float delta);

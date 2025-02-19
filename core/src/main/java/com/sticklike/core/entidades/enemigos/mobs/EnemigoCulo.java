@@ -17,7 +17,11 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
-public class EnemigoCulo implements Enemigo {
+/**
+ * Enemigo Culo; puede aparecer con o sin ojo, alterando su vida y animación. Gestiona su comportamiento y daño.
+ */
+
+public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de textura en animacionesEnemigos en un futuro)
     private Sprite sprite;
     private Sprite spriteOjoAbierto;
     private Sprite spriteOjoCerrado;
@@ -31,14 +35,13 @@ public class EnemigoCulo implements Enemigo {
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
     private float damageAmount = DANYO_CULO;
-
     private boolean tieneOjo = false;
     private boolean ojoCerrado = false;
     private float tiempoAcumulado = 0;
     private float tiempoParpadeo = 0.5f; // referente al pestañeo de los ojos
     private float duracionCerrado = 0.1f;
-
     private final Texture damageTexture;
+    private boolean recibeImpacto = false; // puede ser útil
 
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         esConOjo();
@@ -89,7 +92,6 @@ public class EnemigoCulo implements Enemigo {
             }
 
             sprite.draw(batch);
-            // Restauramos el color original
             animacionesEnemigos.restaurarColor(sprite, originalColor);
         }
     }
@@ -97,7 +99,6 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public void actualizar(float delta) {
-        // Actualizamos el parpadeo (daño y fade) para todos los enemigos
         animacionesEnemigos.actualizarParpadeo(sprite, delta);
         animacionesEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
@@ -119,9 +120,7 @@ public class EnemigoCulo implements Enemigo {
             }
         }
 
-        // Control de dirección del sprite según la posición del jugador
         boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2 > jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
-
         if (sprite.isFlipX() != estaALaIzquierda) {
             sprite.flip(true, false);
         }
@@ -135,6 +134,7 @@ public class EnemigoCulo implements Enemigo {
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
+        recibeImpacto = true;
         return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
     }
 
@@ -156,7 +156,6 @@ public class EnemigoCulo implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // Inicia fade-out y activa el parpadeo de daño (para ambos tipos de enemigos)
             if (!animacionesEnemigos.estaEnFade()) {
                 animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
@@ -242,5 +241,9 @@ public class EnemigoCulo implements Enemigo {
 
     public float getFadeAlpha() {
         return animacionesEnemigos.getAlphaActual();
+    }
+
+    public AnimacionesEnemigos getAnimacionesEnemigos() {
+        return animacionesEnemigos;
     }
 }

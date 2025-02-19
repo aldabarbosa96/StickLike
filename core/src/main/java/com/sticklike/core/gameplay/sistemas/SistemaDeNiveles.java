@@ -3,9 +3,10 @@ package com.sticklike.core.gameplay.sistemas;
 import com.sticklike.core.entidades.jugador.Jugador;
 
 /**
- * Esta clase gestiona la experiencia y los niveles del {@link Jugador}
- * Cada vez que el jugador acumula la suficiente XP para subir de nivel, se llama al {@link SistemaDeMejoras} para ofrecer nuevas mejoras
+ * Gestiona la experiencia y el nivel del jugador.
+ * Al subir de nivel, aumenta la vida y activa el sistema de mejoras.
  */
+
 public class SistemaDeNiveles {
     private final Jugador jugador;
     private final SistemaDeMejoras sistemaDeMejoras;

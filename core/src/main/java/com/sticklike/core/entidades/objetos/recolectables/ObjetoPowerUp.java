@@ -8,6 +8,11 @@ import com.sticklike.core.utilidades.GestorDeAudio;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
+/**
+ * Representa un objeto recolectable de tipo Power-Up en el juego (lápiz).
+ * Se genera en ubicaciones aleatorias dentro de un rango definido.
+ */
+
 public class ObjetoPowerUp extends ObjetoBase {
     private static int contador = 0;
 
@@ -37,6 +42,7 @@ public class ObjetoPowerUp extends ObjetoBase {
     protected float getHeight() {
         return OBJETO_PWUP_HEIGHT;
     }
+
     public static Array<ObjetoPowerUp> crearPowerUps(int cantidad, float minX, float maxX, float minY, float maxY) {
         Array<ObjetoPowerUp> powerUps = new Array<>();
         for (int i = 0; i < cantidad; i++) {

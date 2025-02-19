@@ -14,6 +14,10 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Proyectil Calcetín; se lanza en línea recta con rotación, causando daño y knockback a los enemigos en su trayectoria.
+ */
+
 public class ProyectilCalcetin implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;

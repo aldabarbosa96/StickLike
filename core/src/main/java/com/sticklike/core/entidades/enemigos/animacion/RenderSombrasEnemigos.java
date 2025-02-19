@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.enemigos.animacion;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
@@ -11,8 +12,12 @@ import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class RenderSombrasEnemigos {
+/**
+ * Clase encargada de renderizar las sombras de los enemigos; ajustamos la forma y tamaño de la sombra según el tipo.
+ */
 
+public class RenderSombrasEnemigos {
+    // todo --> mover a la interfaz de enemigos en un futuro para que cada uno gestione el dibujado de su sombra individualmente (evitamos uso excesivo de instanceOf)
     public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer, Array<Enemigo> enemigos, OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
@@ -61,7 +66,11 @@ public class RenderSombrasEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - SHADOW_OFFSET;
 
-        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+        if (enemigo instanceof EnemigoCulo) {
+            if (((EnemigoCulo) enemigo).getAnimacionesEnemigos().estaEnParpadeo()) {
+                shapeRenderer.setColor(Color.WHITE);
+            } else shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+        }
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
@@ -107,7 +116,6 @@ public class RenderSombrasEnemigos {
         float shadowSize = ((w + h) / 2f) * 0.55f;
         float centerX = x + w / 2f + 1.5f;
         float shadowX = centerX - shadowSize / 2f;
-        // Colocamos la sombra unos píxeles debajo del sprite (ajusta el offset a tus necesidades)
         float shadowY = y;
 
         shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);

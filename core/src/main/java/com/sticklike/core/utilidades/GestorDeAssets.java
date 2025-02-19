@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.HashMap;
 
 /**
- * Clase encargada de cargar y liberar los recursos gráficos usados en el juego (texturas y animaciones)
+ * Clase encargada de cargar y liberar los recursos gráficos usados en el juego (texturas y animaciones).
  */
 public class GestorDeAssets {
     public static Texture stickman, enemigoCulo, enemigoCuloOjo,enemigoCuloOjoCerrado, enemigoRegla, enemigoReglaCruzada, enemigoPolla, enemigoExamen, enemigoExamen2,

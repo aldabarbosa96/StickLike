@@ -16,8 +16,11 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
-public class EnemigoPolla implements Enemigo {
+/**
+ * Enemigo Polla; gestiona su comportamiento, daño.
+ */
 
+public class EnemigoPolla implements Enemigo {
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGO_POLLA;
@@ -25,13 +28,10 @@ public class EnemigoPolla implements Enemigo {
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private MovimientoPolla movimientoPolla;
     private static float velocidadBase = VEL_BASE_POLLA;
-
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesEnemigos animacionesEnemigos;
     private float damageAmount = DANYO_POLLA;
-
-    // Usamos la misma textura de daño de EnemigoCulo como placeholder.
     private final Texture damageTexture;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
@@ -64,22 +64,18 @@ public class EnemigoPolla implements Enemigo {
         }
     }
 
-
     @Override
     public void renderizar(SpriteBatch batch) {
         boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
-            // Si se está en fade-out, aplicamos el alfa calculado
             if (animacionesEnemigos.estaEnFade()) {
                 float alphaFade = animacionesEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             }
-            // Si no está en fade pero sí en parpadeo, mantenemos el alfa a 1 (la textura ya es la de daño)
             else if (animacionesEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
-            // Caso por defecto: alfa 1
             else {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }

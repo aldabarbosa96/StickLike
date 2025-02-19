@@ -41,7 +41,6 @@ public class ColisionesJugador {
 
         // Creamos la "caja de colisión" reducida
         Rectangle enemyHitbox = new Rectangle(fullRect.x + offsetX, fullRect.y + offsetY, newWidth, newHeight);
-
         // Caja del jugador (valorar si se modifica en un futuro)
         Rectangle playerRect = jugador.getSprite().getBoundingRectangle();
 

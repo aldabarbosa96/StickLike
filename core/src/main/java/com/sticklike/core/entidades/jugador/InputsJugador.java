@@ -33,13 +33,12 @@ public class InputsJugador extends ControllerAdapter {
         movX = tecladoX + mandoX;
         movY = tecladoY + mandoY;
 
-        // Normalizar valores para evitar que la suma sea mayor a 1 en diagonal
+        // NormalizaMOS valores para evitar que la suma sea mayor a 1 en diagonal
         if (movX > 1) movX = 1;
         if (movX < -1) movX = -1;
         if (movY > 1) movY = 1;
         if (movY < -1) movY = -1;
 
-        // Decidir la dirección en función del último input activo
         if (movX < 0) {
             direction = Direction.LEFT;
         } else if (movX > 0) {

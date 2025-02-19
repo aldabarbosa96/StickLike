@@ -11,6 +11,10 @@ import com.sticklike.core.interfaces.Proyectiles;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Proyectil Piedra; se lanza en línea recta con velocidad ajustable, causando daño y knockback a los enemigos impactados.
+ */
+
 public class ProyectilPiedra implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
@@ -95,7 +99,6 @@ public class ProyectilPiedra implements Proyectiles {
             return base;
         }
     }
-
 
     @Override
     public float getKnockbackForce() {

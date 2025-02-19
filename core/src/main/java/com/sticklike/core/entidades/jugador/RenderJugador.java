@@ -9,6 +9,11 @@ import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import static com.sticklike.core.entidades.jugador.InputsJugador.Direction.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Renderiza al jugador, incluyendo su animación y barra de salud.
+ * Gestiona el cambio de animaciones según la dirección del movimiento y aplica el efecto de parpadeo cuando el jugador recibe daño.
+ */
+
 public class RenderJugador {
     private Direction direccionActual = IDLE;
 
@@ -59,9 +64,8 @@ public class RenderJugador {
         float barWidth = 15f;
         float barHeight = 2.5f;
 
-        // Calcula la posición de la barra en función de la posición del jugador
         float barX = jugador.getSprite().getX() + (jugador.getSprite().getWidth() - barWidth) / 2f;
-        float barY = jugador.getSprite().getY() - barHeight - 1.75f; // margen inferior
+        float barY = jugador.getSprite().getY() - barHeight - 1.75f;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 

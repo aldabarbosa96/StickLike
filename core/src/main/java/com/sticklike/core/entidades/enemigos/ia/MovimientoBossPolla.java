@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
 
+/**
+ * Movimiento del jefe BossPolla; gestiona su aproximación, órbita y embestidas contra el jugador.
+ */
+
 public class MovimientoBossPolla extends MovimientoBaseEnemigos {
     private float velocidadAproximacion;
     private float distanciaOrbita;
@@ -57,11 +61,9 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
             return; // No se procesa el resto hasta finalizar la interpolación
         }
 
-        // Centro actual del boss
         float bossCenterX = sprite.getX() + sprite.getWidth() / 2f;
         float bossCenterY = sprite.getY() + sprite.getHeight() / 2f;
 
-        // Centro del jugador
         float playerCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
         float playerCenterY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
 
@@ -95,8 +97,6 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
                 float dx = bossCenterX - centroX;
                 float dy = bossCenterY - centroY;
                 angulo = (float) Math.toDegrees(Math.atan2(dy, dx));
-
-                // Escogemos el sentido de giro al azar
                 sentidoHorario = MathUtils.randomBoolean();
             }
         }
@@ -153,8 +153,6 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
                     float rad = MathUtils.degreesToRadians * angulo;
                     targetX = centroX + MathUtils.cos(rad) * distanciaOrbita;
                     targetY = centroY + MathUtils.sin(rad) * distanciaOrbita;
-
-                    // Se elige un nuevo sentido de giro al azar
                     sentidoHorario = MathUtils.randomBoolean();
                 }
             }
@@ -169,7 +167,7 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         float currentX = MathUtils.lerp(startX, targetX, t);
         float currentY = MathUtils.lerp(startY, targetY, t);
 
-        // Colocamos el sprite de forma que su centro sea (currentX, currentY)
+        // Colocamos el sprite de forma que su centro sea currentX y currentY
         sprite.setPosition(currentX - sprite.getWidth() / 2f, currentY - sprite.getHeight() / 2f);
 
         // Cuando finaliza la interpolación, volvemos al modo órbita
@@ -184,10 +182,7 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         float ajusteAngulo = velocidadOrbital * delta;
         angulo += sentidoHorario ? ajusteAngulo : -ajusteAngulo;
 
-        // Convertimos ángulo a radianes
         float rad = (float) Math.toRadians(angulo);
-
-        // Radio de la órbita
         float radio = distanciaOrbita;
 
         float posX = centroX + MathUtils.cos(rad) * radio;

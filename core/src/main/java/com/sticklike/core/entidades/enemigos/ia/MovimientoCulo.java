@@ -4,19 +4,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Movimiento del enemigo Culo; alterna entre pausas y desplazamientos hacia el jugador con oscilación rotacional.
+ */
+
 public class MovimientoCulo extends MovimientoBaseEnemigos {
     private float velocidadEnemigo;
     private float tempMovimiento;
     private float duracionPausa;
     private float duracionMovimiento;
     private boolean seMueve;
-
-    // Variables para la oscilación de rotación asimétrica
     private float currentRotationAngle = 0f;
-    private int rotationDirection = 1;       // 1 para incrementar, -1 para decrementar
-    private final float rotationSpeed = 250;   // Velocidad de rotación en grados por segundo
-
-    // Límites asimétricos: mayor inclinación hacia los grados positivos (derecha) que hacia los negativos (izquierda)
+    private int rotationDirection = 1;
+    private final float rotationSpeed = 250;
+    // Límites asimétricos: mayor inclinación hacia los grados positivos (derecha) que hacia los negativos (izquierda) debido al dibujo del sprite
     private final float rotationMaxPositive = 25f;
     private final float rotationMaxNegative = -5f;
 
@@ -41,7 +42,6 @@ public class MovimientoCulo extends MovimientoBaseEnemigos {
                 seMueve = false;
                 tempMovimiento = 0;
                 calcularDuracionPausa();
-                // Al detenerse, reiniciamos la oscilación a 0
                 currentRotationAngle = 0;
                 sprite.setRotation(0);
             } else {
@@ -54,17 +54,11 @@ public class MovimientoCulo extends MovimientoBaseEnemigos {
                 tempMovimiento = 0;
                 calcularDuracionMovimiento();
             }
-            // Durante la pausa, centramos la rotación
             currentRotationAngle = 0;
             sprite.setRotation(0);
         }
     }
 
-    /**
-     * Actualiza la oscilación de la rotación del sprite de forma asimétrica.
-     * El sprite oscilará entre rotationMaxNegative y rotationMaxPositive, pero se invertirá el efecto si el enemigo está a la izquierda del jugador, para que
-     * la animación se mantenga consistente en cuanto al "paso" (por ejemplo, que la nalga levantada sea la correcta)
-     */
     private void actualizarOscilacionRotacion(float delta, Sprite sprite, Jugador jugador) {
         // Actualizamos el ángulo acumulado según la velocidad y la dirección
         currentRotationAngle += rotationDirection * rotationSpeed * delta;
@@ -83,7 +77,6 @@ public class MovimientoCulo extends MovimientoBaseEnemigos {
         // Determinamos el ángulo efectivo en función de la posición del enemigo respecto al jugador
         // Si el enemigo está a la izquierda del jugador, invertimos el efecto para que la inclinación "del paso" se mantenga coherente
         float effectiveRotation = currentRotationAngle;
-        // Suponiendo que el eje X aumenta hacia la derecha:
         if (sprite.getX() < jugador.getSprite().getX()) {
             effectiveRotation = -currentRotationAngle;
         }

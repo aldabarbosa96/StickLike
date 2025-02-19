@@ -13,6 +13,11 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Gestiona la pantalla de Game Over.
+ * Permite reiniciar la partida o cerrar el juego mediante entradas del usuario.
+ */
+
 public class VentanaGameOver implements Screen {
     private final MainGame game;
     private SpriteBatch spriteBatch;

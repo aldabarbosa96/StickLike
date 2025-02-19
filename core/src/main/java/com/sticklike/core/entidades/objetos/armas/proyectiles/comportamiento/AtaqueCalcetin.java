@@ -6,6 +6,11 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Gestiona ataque Calcetín; genera proyectiles en múltiples direcciones y permite mejoras en el número de proyectiles, daño e intervalo de disparo.
+ */
+
+
 public class AtaqueCalcetin {
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo = 2.5f;

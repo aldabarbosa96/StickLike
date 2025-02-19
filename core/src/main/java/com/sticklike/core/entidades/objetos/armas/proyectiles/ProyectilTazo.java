@@ -16,6 +16,10 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Proyectil Tazo; orbita alrededor del jugador causando daño en ciclos alternos de crecimiento, fase activa y cooldown.
+ */
+
 public class ProyectilTazo implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
@@ -30,22 +34,16 @@ public class ProyectilTazo implements Proyectiles {
     private float rotacionSprite = 0f;
     private GestorDeAudio gestorDeAudio;
     private boolean esCritico;
-
-    // --- Campos para el efecto de "crecer" ---
     private static final float MIN_GROWTH_SCALE = 0.1f;
     private static final float MAX_GROWTH_SCALE = 0.9f;
-    private static final float GROW_DURATION = 0.5f;  // Duración del efecto de crecimiento (y del fade-out)
+    private static final float GROW_DURATION = 0.5f;  // Duración del efecto de crecimiento y fade-out
 
     // --- fases del ciclo del tazo ---
     public enum Phase {GROWING, ACTIVE, COOLDOWN}
-
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0f;  // Temporizador para la fase actual
-
-    // Duraciones para la fase ACTIVE y la fase COOLDOWN
     private float activeDuration = 8.5f;
     private static final float COOLDOWN_DURATION = 3.5f;
-
     private float growthTimer = 0f;
     private float powerFactor;
 
@@ -72,10 +70,8 @@ public class ProyectilTazo implements Proyectiles {
     @Override
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
-
         phaseTimer += delta;
 
-        // Calcula la posición base relativa al jugador
         float jugadorCentroX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
         float jugadorCentroY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2 - 5f;
 
@@ -92,7 +88,6 @@ public class ProyectilTazo implements Proyectiles {
                 float progress = Math.min(growthTimer / GROW_DURATION, 1f);
                 float currentScale = MIN_GROWTH_SCALE + progress * (MAX_GROWTH_SCALE - MIN_GROWTH_SCALE);
                 sprite.setScale(currentScale);
-                // Actualizamos la rotación
                 rotacionSprite += 720f * delta;
                 sprite.setRotation(rotacionSprite);
                 // Posicionamos el sprite centrado
@@ -161,7 +156,6 @@ public class ProyectilTazo implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        // Solo se activa la colisión en la fase ACTIVE
         if (phase != Phase.ACTIVE) {
             return new Rectangle(0, 0, 0, 0);
         }
@@ -197,7 +191,6 @@ public class ProyectilTazo implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        // Se aplica daño únicamente en la fase ACTIVE
         if (phase == Phase.ACTIVE) {
             if (Math.random() < jugador.getCritico()) {
                 esCritico = true;
@@ -211,7 +204,6 @@ public class ProyectilTazo implements Proyectiles {
         }
         return 0f;
     }
-
 
     @Override
     public float getKnockbackForce() {
@@ -227,7 +219,7 @@ public class ProyectilTazo implements Proyectiles {
     public void registrarImpacto(Enemigo enemigo) {
         gestorDeAudio.reproducirEfecto("tazo", 0.4f);
         enemigosImpactados.add(enemigo);
-        sprite.setColor(0.8f, 0, 0.2f, 1);
+        sprite.setColor(1f, 0, 0f, 1);
     }
 
     @Override

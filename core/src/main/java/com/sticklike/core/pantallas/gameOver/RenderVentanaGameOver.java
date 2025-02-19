@@ -12,6 +12,11 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Renderiza la pantalla de Game Over.
+ * Muestra animaciones de texto y estadísticas de la partida al finalizar el juego.
+ */
+
 public class RenderVentanaGameOver {
     private float sceneTime = 0f;
 

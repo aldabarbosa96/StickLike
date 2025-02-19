@@ -16,6 +16,10 @@ import com.sticklike.core.utilidades.GestorDeAudio;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
+/**
+ * Primer jefe enemigo del juego; gestiona su comportamiento, animaciones, daño y muerte.
+ */
+
 public class BossPolla implements Enemigo {
     private Sprite sprite;
     private Sprite spriteBocaAbierta;
@@ -23,22 +27,17 @@ public class BossPolla implements Enemigo {
     private Jugador jugador;
     private AnimacionesEnemigos animaciones;
     private MovimientoBossPolla movimientoBoss;
-
     private float vida = 1250f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private float damageAmount = 12.5f;
     private float coolDownDanyo = 1.2f;
     private float temporizadorDanyo = 0f;
-
     private boolean bocaCerrada = false;
     private float tiempoAcumuladoBoca = 0;
     private float tiempoBocaAbierta = 0.5f;
     private float duracionBocaCerrada = 2.5f;
-
     private boolean estaMuerto = false;
-
-    // Textura de daño propia para el boss.
     private final Texture damageTexture;
 
     public BossPolla(Jugador jugador, float x, float y) {

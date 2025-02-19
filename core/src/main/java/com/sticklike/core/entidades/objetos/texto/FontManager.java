@@ -2,6 +2,10 @@ package com.sticklike.core.entidades.objetos.texto;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+/**
+ * Gestiona las fuentes utilizadas en el juego. Inicializa y libera la fuente principal para los textos de daño.
+ */
+
 public class FontManager {
 
     // Fuente principal para los textos de daño

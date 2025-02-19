@@ -7,6 +7,10 @@ import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
+/**
+ * Gestiona ataque Tazo; genera tazos orbitando alrededor del jugador, dañando enemigos y aumentando en número, velocidad y duración con mejoras.
+ */
+
 public class AtaqueTazo {
     private float temporizador;
     private int tazosActivos;
