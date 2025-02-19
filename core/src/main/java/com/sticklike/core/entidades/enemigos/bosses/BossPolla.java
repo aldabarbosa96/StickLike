@@ -218,6 +218,10 @@ public class BossPolla implements Enemigo {
         return estaMuerto;
     }
 
+    public AnimacionesEnemigos getAnimaciones() {
+        return animaciones;
+    }
+
     @Override
     public void dispose() {
         sprite = null;

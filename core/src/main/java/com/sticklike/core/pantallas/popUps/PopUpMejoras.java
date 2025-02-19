@@ -104,7 +104,7 @@ public class PopUpMejoras {
             final Mejora mejora = mejoras.get(i);
 
             TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
-            TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora(), tbs);
+            TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora() + POPUP_FOOTER2, tbs);
             btn.getLabel().setWrap(true);
             btn.getLabel().setAlignment(Align.center);
             btn.getLabel().setColor(Color.BLACK);
@@ -113,20 +113,16 @@ public class PopUpMejoras {
             rowTable.pad(POPUP_ROW_PADDING + 5f);
             rowTable.defaults().center();
 
-            rowTable.add().width(20);
-
-            rowTable.add(btn).expandX().fillX().center();
+            rowTable.add().width(25).padLeft(10).padRight(-5f); //espaciado a la izquierda para centrar elementos
+            rowTable.add(btn).expandX().fillX().center(); // centramos el botón
 
             if (mejora.getIcono() != null) {
                 Image iconImage = new Image(mejora.getIcono());
                 //iconImage.setSize(30, 30);
                 Container<Image> iconContainer = new Container<>(iconImage);
-                // Alineamos el contenido a la izquierda y desplazamos el icono hacia la izquierda
-                iconContainer.align(Align.left);
-                iconContainer.padLeft(-10f);
-                rowTable.add(iconContainer).width(20).center().padRight(10f).height(25);
+                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-5f).height(25); // a la derecha el icono
             } else {
-                rowTable.add().width(20);
+                rowTable.add().width(25);
             }
 
 

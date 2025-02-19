@@ -207,6 +207,11 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
         return damageAmount;
     }
 
+    @Override
+    public AnimacionesEnemigos getAnimaciones() {
+        return animacionesEnemigos;
+    }
+
     public void setDamageAmount(float newDamageAmount) {
         this.damageAmount = newDamageAmount;
     }
@@ -227,6 +232,10 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
         if (movimientoExamen != null) {
             movimientoExamen.setVelocidadEnemigo(nuevaVelocidad);
         }
+    }
+
+    public AnimacionesEnemigos getAnimacionesEnemigos() {
+        return animacionesEnemigos;
     }
 
     public MovimientoExamen getMovimientoExamen() {

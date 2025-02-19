@@ -231,6 +231,11 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         return damageAmount;
     }
 
+    @Override
+    public AnimacionesEnemigos getAnimaciones() {
+        return animacionesEnemigos;
+    }
+
     public static void resetStats() {
         velocidadBase = VEL_BASE_CULO;
     }

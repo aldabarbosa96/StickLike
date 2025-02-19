@@ -181,6 +181,11 @@ public class EnemigoPolla implements Enemigo {
         return damageAmount;
     }
 
+    @Override
+    public AnimacionesEnemigos getAnimaciones() {
+        return animacionesEnemigos;
+    }
+
     public void setDamageAmount(float damage) {
         this.damageAmount = damage;
     }
@@ -207,6 +212,10 @@ public class EnemigoPolla implements Enemigo {
 
     public float getFadeAlpha() {
         return animacionesEnemigos.getAlphaActual();
+    }
+
+    public AnimacionesEnemigos getAnimacionesEnemigos() {
+        return animacionesEnemigos;
     }
 
     @Override

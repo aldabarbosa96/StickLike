@@ -118,6 +118,11 @@ public class EnemigoRegla implements Enemigo {
         return damageAmount;
     }
 
+    @Override
+    public AnimacionesEnemigos getAnimaciones() {
+        return animacionesEnemigos;
+    }
+
     public void setDamageAmount(float damage) {
         this.damageAmount = damage;
     }

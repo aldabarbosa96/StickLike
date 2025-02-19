@@ -23,9 +23,9 @@ public class RenderSombrasEnemigos {
 
         for (Enemigo enemigo : enemigos) {
             if (enemigo instanceof BossPolla) {
-                dibujarSombraBossPolla(enemigo, shapeRenderer);
+                dibujarSombraBossPolla((BossPolla) enemigo, shapeRenderer);
             } else if (enemigo instanceof EnemigoCulo) {
-                dibujarSombraCulo(enemigo, shapeRenderer);
+                dibujarSombraCulo((EnemigoCulo) enemigo, shapeRenderer);
             } else if (enemigo instanceof EnemigoPolla) {
                 dibujarSombraPolla((EnemigoPolla) enemigo, shapeRenderer);
             } else if (enemigo instanceof EnemigoExamen) {
@@ -36,11 +36,19 @@ public class RenderSombrasEnemigos {
         }
     }
 
-    private void dibujarSombraBossPolla(Enemigo enemigo, ShapeRenderer shapeRenderer) {
-        float x = enemigo.getX();
-        float y = enemigo.getY();
-        float w = enemigo.getSprite().getWidth();
-        float h = enemigo.getSprite().getHeight();
+    private void dibujarParpadeoSombra(Enemigo enemigo, ShapeRenderer shapeRenderer){
+        if (enemigo.getAnimaciones().estaEnParpadeo()){
+            shapeRenderer.setColor(Color.WHITE);
+        } else if (enemigo.getAnimaciones().estaEnFade()) {
+            shapeRenderer.setColor(0.8f,0.8f,0.8f,1);
+        } else shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+    }
+
+    private void dibujarSombraBossPolla(BossPolla bossPolla, ShapeRenderer shapeRenderer) {
+        float x = bossPolla.getX();
+        float y = bossPolla.getY();
+        float w = bossPolla.getSprite().getWidth();
+        float h = bossPolla.getSprite().getHeight();
 
         float centerX = x + w / 2f;
 
@@ -49,16 +57,16 @@ public class RenderSombrasEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - 8f;
 
-        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+        dibujarParpadeoSombra(bossPolla, shapeRenderer);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
 
     }
 
-    private void dibujarSombraCulo(Enemigo enemigo, ShapeRenderer shapeRenderer) {
-        float x = enemigo.getX();
-        float y = enemigo.getY();
-        float w = enemigo.getSprite().getWidth();
-        float h = enemigo.getSprite().getHeight();
+    private void dibujarSombraCulo(EnemigoCulo culo, ShapeRenderer shapeRenderer) {
+        float x = culo.getX();
+        float y = culo.getY();
+        float w = culo.getSprite().getWidth();
+        float h = culo.getSprite().getHeight();
 
         float centerX = x + w / 2f;
         float shadowWidth = w * SHADOW_WIDTH_CULO;
@@ -66,11 +74,8 @@ public class RenderSombrasEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - SHADOW_OFFSET;
 
-        if (enemigo instanceof EnemigoCulo) {
-            if (((EnemigoCulo) enemigo).getAnimacionesEnemigos().estaEnParpadeo()) {
-                shapeRenderer.setColor(Color.WHITE);
-            } else shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
-        }
+        dibujarParpadeoSombra(culo,shapeRenderer);
+
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
@@ -103,7 +108,7 @@ public class RenderSombrasEnemigos {
         float finalShadowHeight = baseShadowHeight * factor;
         float finalShadowX = centerX - finalShadowWidth / 2f;
 
-        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+        dibujarParpadeoSombra(polla,shapeRenderer);
         shapeRenderer.ellipse(finalShadowX, baseShadowY, finalShadowWidth, finalShadowHeight);
     }
 
@@ -118,7 +123,8 @@ public class RenderSombrasEnemigos {
         float shadowX = centerX - shadowSize / 2f;
         float shadowY = y;
 
-        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+        dibujarParpadeoSombra(examen,shapeRenderer);
+
         shapeRenderer.ellipse(shadowX, shadowY, shadowSize + 1f, shadowSize - 10f);
     }
 
@@ -137,4 +143,5 @@ public class RenderSombrasEnemigos {
         shapeRenderer.setColor(0.35f, 0.35f, 0.35f, 0.5f);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
+
 }
