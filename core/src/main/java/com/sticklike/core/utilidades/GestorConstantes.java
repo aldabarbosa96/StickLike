@@ -36,6 +36,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float NUMBER_Y_CORRECTION = 9.75f * 1.09375f;
     public static final float XPBAR_Y_CORRECTION = 25f * 1.09375f;
     public static final float BASIC_OFFSET = 1f;
+    public static final float BASIC_OFFSET2 = 2f;
     public static final float UNDER_OFFSET = 0.8f;
     public static final float GROSOR_MARCO = 0.9f * 1.09375f;
     public static final float GROSOR_SOMBRA = 0.7f * 1.09375f;

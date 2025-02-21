@@ -51,7 +51,7 @@ public class ProyectilTazo implements Proyectiles {
 
     public ProyectilTazo(Jugador jugador, AtaqueTazo ataqueTazo, float offsetAngle, float radio, GestorDeAudio gestorDeAudio) {
         if (textura == null) {
-            textura = armaTazos;
+            textura = manager.get(ARMA_TAZOS, Texture.class);
         }
         this.jugador = jugador;
         this.sprite = new Sprite(textura);

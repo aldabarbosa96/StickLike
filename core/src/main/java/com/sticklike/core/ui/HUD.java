@@ -1,6 +1,7 @@
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -11,8 +12,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 /**
- * Clase que encapsula el renderizado del HUD del juego.
- * Aquí se centralizan las llamadas a begin()/end() de los renderizadores
+ * Clase que encapsula el renderizado del HUD del juego. Se centralizan las llamadas a begin()/end() de los renderizadores.
  */
 public class HUD {
     private RenderHUDComponents renderHUDComponents;
@@ -57,9 +57,9 @@ public class HUD {
         renderHUDComponents.renderizarTextoNivelPlayer();
         renderHUDComponents.renderizarTemporizador(delta);
         renderHUDComponents.renderizarBarraXPInfo();
-        renderHUDComponents.renderizarStatsJugador();
-        renderHUDComponents.renderizarMasStatsJugador();
-        renderHUDComponents.dibujarAtaqueBasico(armaPiedra);
+        renderHUDComponents.renderizarStatsJugadorBloque1();
+        renderHUDComponents.renderizarStatsJugadorBloque2();
+        renderHUDComponents.dibujarAtaqueBasico(manager.get(ARMA_PIEDRA, Texture.class));
         renderHUDComponents.renderizarMarcosMejoras();
         spriteBatch.end();
 

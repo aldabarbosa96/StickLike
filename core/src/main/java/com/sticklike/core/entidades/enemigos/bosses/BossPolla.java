@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
@@ -13,7 +12,6 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
-import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
@@ -40,11 +38,11 @@ public class BossPolla implements Enemigo {
     private final Texture damageTexture;
 
     public BossPolla(Jugador jugador, float x, float y) {
-        sprite = new Sprite(bossPolla);
-        sprite.setSize(90,125);
-        spriteBocaAbierta = new Sprite(bossPolla);
+        sprite = new Sprite(manager.get(BOSS_POLLA, Texture.class));
+        sprite.setSize(90, 125);
+        spriteBocaAbierta = new Sprite(manager.get(BOSS_POLLA, Texture.class));
         spriteBocaAbierta.setSize(90, 125);
-        spriteBocaCerrada = new Sprite(bossPollaBocaCerrada);
+        spriteBocaCerrada = new Sprite(manager.get(BOSS_POLLA_BOCACERRADA, Texture.class));
         spriteBocaCerrada.setSize(90, 125);
         sprite.setRegion(spriteBocaCerrada);
         sprite.setPosition(x, y);
@@ -53,7 +51,7 @@ public class BossPolla implements Enemigo {
         this.animaciones = new AnimacionesBaseEnemigos();
         this.movimientoBoss = new MovimientoBossPolla(true);
         this.animacionBossPolla = new AnimacionBossPolla(spriteBocaAbierta, spriteBocaCerrada, 0.5f, 2.5f);
-        this.damageTexture = damageBossPollaTexture;
+        this.damageTexture = manager.get(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
     }
 
     @Override
@@ -65,8 +63,8 @@ public class BossPolla implements Enemigo {
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
-        animacionBossPolla.actualizarAnimacion(delta,sprite);
-        animaciones.flipearEnemigo(jugador,sprite);
+        animacionBossPolla.actualizarAnimacion(delta, sprite);
+        animaciones.flipearEnemigo(jugador, sprite);
     }
 
 

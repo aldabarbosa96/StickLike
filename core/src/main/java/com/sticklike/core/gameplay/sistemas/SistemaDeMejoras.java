@@ -1,5 +1,6 @@
 package com.sticklike.core.gameplay.sistemas;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
@@ -55,11 +56,11 @@ public class SistemaDeMejoras {
 
         // Mejoras base para habilidades (se especifica el id de la habilidad; no contienen "_" en el id)
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!",
-            "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, armaCalcetin, "CALCETIN"));
+            "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!",
-            "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, armaTazos, "TAZO"));
+            "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!",
-            "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, armaNubePedo, "PEDO"));
+            "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO, Texture.class), "PEDO"));
 
         // Upgrades específicos para las habilidades
         // Calcetín

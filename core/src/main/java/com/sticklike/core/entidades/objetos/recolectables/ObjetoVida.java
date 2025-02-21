@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.objetos.recolectables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.utilidades.GestorDeAudio;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -15,7 +16,7 @@ public class ObjetoVida extends ObjetoBase {
     private boolean recolectado = false;
 
     public ObjetoVida(float x, float y) {
-        super(x,y);
+        super(x, y);
     }
 
 
@@ -28,7 +29,7 @@ public class ObjetoVida extends ObjetoBase {
 
     @Override
     protected Texture getTexture() {
-        return recolectableVida;
+        return manager.get(RECOLECTABLE_VIDA, Texture.class);
     }
 
     @Override

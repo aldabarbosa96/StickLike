@@ -30,7 +30,7 @@ public class ObjetoPowerUp extends ObjetoBase {
     }
     @Override
     protected Texture getTexture() {
-        return recolectablePowerUp;
+        return manager.get(RECOLECTABLE_POWER_UP, Texture.class);
     }
 
     @Override

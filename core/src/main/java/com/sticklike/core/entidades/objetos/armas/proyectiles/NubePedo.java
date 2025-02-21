@@ -51,7 +51,7 @@ public class NubePedo implements Proyectiles {
     private static final float ROTATION_SPEED = 2500f;
 
     public NubePedo(Jugador jugador) {
-        this.texture = armaNubePedo;
+        this.texture = manager.get(ARMA_NUBE_PEDO, Texture.class);
         this.sprite = new Sprite(texture);
         sprite.setSize(50f, 50f);
         sprite.setOriginCenter();

@@ -11,8 +11,11 @@ import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
+
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
+
 import com.sticklike.core.interfaces.Enemigo;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
@@ -35,14 +38,14 @@ public class EnemigoRegla implements Enemigo {
     private final Texture damageTexture;
 
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
-        sprite = new Sprite(enemigoReglaCruzada);
+        sprite = new Sprite(manager.get(ENEMIGO_REGLA_CRUZADA, Texture.class));
         sprite.setSize(23, 23);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, true);
         this.orthographicCamera = orthographicCamera;
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
-        this.damageTexture = damageReglaTexture;
+        this.damageTexture = manager.get(DAMAGE_REGLA_TEXTURE, Texture.class);
     }
 
     @Override
@@ -53,12 +56,9 @@ public class EnemigoRegla implements Enemigo {
             if (animacionesBaseEnemigos.estaEnFade()) {
                 float alphaFade = animacionesBaseEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
-            }
-            else if (animacionesBaseEnemigos.estaEnParpadeo()) {
+            } else if (animacionesBaseEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            }
-
-            else {
+            } else {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
             sprite.draw(batch);
@@ -103,6 +103,7 @@ public class EnemigoRegla implements Enemigo {
             }
         }
     }
+
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
         movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);

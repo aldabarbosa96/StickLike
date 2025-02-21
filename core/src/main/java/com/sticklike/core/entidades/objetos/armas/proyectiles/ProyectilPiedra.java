@@ -28,7 +28,7 @@ public class ProyectilPiedra implements Proyectiles {
 
     public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad, Jugador jugador) {
         if (textura == null) {
-            textura = armaPiedra;
+            textura = manager.get(ARMA_PIEDRA, Texture.class);
         }
         sprite = new Sprite(textura);
         sprite.setSize(PIEDRA_SIZE, PIEDRA_SIZE);

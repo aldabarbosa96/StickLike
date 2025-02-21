@@ -97,8 +97,8 @@ public class PopUpMejoras {
         // ESTILO DE BOTÓN SELECCIONADO PARA MEJORAS SIN ICONO (verde)
         TextButton.TextButtonStyle selectedButtonGreenStyle = new TextButton.TextButtonStyle();
         selectedButtonGreenStyle.font = font;
-        selectedButtonGreenStyle.up = highlightDrawable; // Puedes usar el mismo drawable
-        selectedButtonGreenStyle.fontColor = new Color(0f,0.6f,0f,1);
+        selectedButtonGreenStyle.up = highlightDrawable;
+        selectedButtonGreenStyle.fontColor = new Color(0f,0.5f,0f,1);
         skin.add("selected-button-green", selectedButtonGreenStyle);
 
         return skin;

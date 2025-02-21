@@ -35,13 +35,13 @@ public class EnemigoPolla implements Enemigo {
     private final Texture damageTexture;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
-        sprite = new Sprite(enemigoPolla);
+        sprite = new Sprite(manager.get(ENEMIGO_POLLA, Texture.class));
         sprite.setSize(26f, 26f);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
-        this.damageTexture = damagePollaTexture;
+        this.damageTexture = manager.get(DAMAGE_POLLA_TEXTURE, Texture.class);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class EnemigoPolla implements Enemigo {
         animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
         movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
-        animacionesBaseEnemigos.flipearEnemigo(jugador,sprite);
+        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
 
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
@@ -64,11 +64,9 @@ public class EnemigoPolla implements Enemigo {
             if (animacionesBaseEnemigos.estaEnFade()) {
                 float alphaFade = animacionesBaseEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
-            }
-            else if (animacionesBaseEnemigos.estaEnParpadeo()) {
+            } else if (animacionesBaseEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            }
-            else {
+            } else {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
             sprite.draw(batch);

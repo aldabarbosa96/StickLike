@@ -23,7 +23,7 @@ public class ObjetoXp extends ObjetoBase {
 
     @Override
     public Texture getTexture() {
-        return esXPGorda ? recolectableXP2 : recolectableXP;
+        return esXPGorda ? manager.get(RECOLECTABLE_XP2, Texture.class) : manager.get(RECOLECTABLE_XP, Texture.class);
     }
 
     public boolean isEsXPGorda() {

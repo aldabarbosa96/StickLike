@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.jugador;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,6 +14,7 @@ import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
+
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -70,7 +72,7 @@ public class Jugador {
         this.oroGanado = 0;
 
         // Inicializar el sprite del jugador
-        this.sprite = new Sprite(stickman);
+        this.sprite = new Sprite(manager.get(STICKMAN, Texture.class));
         this.sprite.setSize(WIDTH_JUGADOR, HEIGHT_JUGADOR);
         this.sprite.setPosition(startX, startY);
 
@@ -173,6 +175,7 @@ public class Jugador {
     public void aumentarProyectilesPorDisparo(int amount) {
         proyectilesPorDisparo += amount;
     }
+
     public void aumentarPoderJugador(float amount) {
         poderJugador *= amount;
     }
@@ -194,6 +197,7 @@ public class Jugador {
         float criticalAmount = (percentage * criticoJugador) * 10;
         this.criticoJugador += criticalAmount;
     }
+
     public void aumentarResistencia(float percentage) {
         float resistenciaAmount = (percentage * resistenciaJugador) * 10;
         this.resistenciaJugador += resistenciaAmount;

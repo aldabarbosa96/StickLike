@@ -51,8 +51,6 @@ public class RenderHUDComponents {
     private boolean pausadoTemporizador = false;
     private Stage hudStage;
     private Set<String> upgradeStats = new HashSet<>();
-
-    // --- NUEVA CAMARA Y VIEWPORT PARA EL HUD ---
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
 
@@ -65,8 +63,8 @@ public class RenderHUDComponents {
         this.fuente = new BitmapFont();
         this.spriteBatch = spriteBatch;
         this.jugador = jugador;
-        this.texturaCorazonVida = corazonVida;
-        this.texturaLapizXP = iconoXP;
+        this.texturaCorazonVida = manager.get(RECOLECTABLE_VIDA, Texture.class);
+        this.texturaLapizXP = manager.get(RECOLECTABLE_POWER_UP, Texture.class);
         this.controladorProyectiles = jugador.getControladorProyectiles();
         this.controladorEnemigos = jugador.getControladorEnemigos();
 
@@ -77,10 +75,6 @@ public class RenderHUDComponents {
         hudViewport.apply();
         hudStage = new Stage(hudViewport, spriteBatch);
     }
-
-    // ────────────────────────────────
-    // MÉTODOS DE DIBUJO (SIN begin()/end())
-    // ────────────────────────────────
 
     public void renderizarTemporizador(float delta) {
         if (!pausadoTemporizador) {
@@ -189,14 +183,14 @@ public class RenderHUDComponents {
         float barHeight = HUD_BAR_HEIGHT;
         float barX = HUD_BAR_X;
         float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
-        renderizarTextoBarraXP(barX, barY - BASIC_OFFSET, barWidth, barHeight);
+        renderizarTextoBarraXP(barX, barY - BASIC_OFFSET2, barWidth, barHeight);
 
         float centerX = barX + barWidth * 0.49f;
         float posY = barY - 35f;
         float offset = 60f;
-        renderizarIconoConTexto(recolectableCacaDorada, 22f, 22f, centerX - offset, posY, String.valueOf((int) jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
-        renderizarIconoConTexto(iconoCalaveraKills, 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
-        renderizarIconoConTexto(recolectablePowerUp, 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf((int) jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(ICONO_CALEAVELA_KILLS, Texture.class), 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
     }
 
     private void renderizarTextoBarraXP(float barX, float barY, float barWidth, float barHeight) {
@@ -210,11 +204,10 @@ public class RenderHUDComponents {
         float textX = barX + (barWidth - textWidth) / 2;
         float textY = barY + (barHeight + textHeight) / 2 + XPTEXT_Y_CORRECTION;
         fuente.getData().setScale(0.8f);
-        dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, UNDER_OFFSET, Color.DARK_GRAY, Color.WHITE);
+        dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, UNDER_OFFSET, Color.BLACK, Color.WHITE);
     }
 
     public void renderizarIconoConTexto(Texture iconTexture, float iconWidth, float iconHeight, float posX, float posY, String texto, float scaleFuente, Color colorTexto, Color colorReborde) {
-        // Dibujar el icono centrado
         spriteBatch.draw(iconTexture, posX - iconWidth * 0.5f, posY - iconHeight * 0.5f, iconWidth, iconHeight);
         fuente.getData().setScale(scaleFuente);
         float textX = posX + (iconWidth * 0.5f) + 5f;
@@ -222,7 +215,7 @@ public class RenderHUDComponents {
         dibujarTextoConReborde(spriteBatch, texto, textX, textY, 1f, colorReborde, colorTexto);
     }
 
-    public void renderizarStatsJugador() {
+    public void renderizarStatsJugadorBloque1() {
         DecimalFormat df = new DecimalFormat("#.##");
         String valorVelocidad = df.format(jugador.getVelocidadJugador());
         String valorRango = df.format(jugador.getRangoAtaqueJugador());
@@ -231,13 +224,15 @@ public class RenderHUDComponents {
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
         String[] descripciones = {VEL_MOV, RANGO, VEL_ATAQUE, FUERZA, NUM_PROYECTILES};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
-        Texture[] iconos = {iconoVelMov, iconoRango, iconoVelAt, iconoFuerza, iconoProyectiles};
+        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class),
+            manager.get(ICONO_RANGO, Texture.class), manager.get(ICONO_VEL_ATAQUE, Texture.class),
+            manager.get(ICONO_FUERZA, Texture.class), manager.get(ICONO_PROYECTILES, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION + 10;
         float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC1);
     }
 
-    public void renderizarMasStatsJugador() {
+    public void renderizarStatsJugadorBloque2() {
         DecimalFormat df = new DecimalFormat("#.#");
         String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + df.format(jugador.getMaxVidaJugador());
         String valorRegeneracionVida = df.format(jugador.getRegVidaJugador() * 100) + " %";
@@ -246,7 +241,9 @@ public class RenderHUDComponents {
         String valorCritico = df.format(jugador.getCritico() * 100) + " %";
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
-        Texture[] iconos = {iconoVida, iconoRegeneracion, iconoPoder, iconoResistencia, iconoCritico};
+        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class),
+            manager.get(ICONO_REGENERACION, Texture.class), manager.get(ICONO_PODER, Texture.class),
+            manager.get(ICONO_RESISTENCIA, Texture.class), manager.get(ICONO_CRITICO, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2 + 10f;
         float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
@@ -268,7 +265,7 @@ public class RenderHUDComponents {
                 spriteBatch.draw(icono, iconX, iconY, iconSize, iconSize);
             }
 
-            // Determinar colores según si el stat está mejorado
+            // Determinar colores según si el stat ha sido mejorado
             Color textColor;
             Color borderColor;
             if (upgradeStats.contains(descripciones[i])) {
@@ -289,15 +286,14 @@ public class RenderHUDComponents {
         float baseX = VIRTUAL_WIDTH - 450f - offsetX;
         float baseY = 65f;
 
-        // Dibujar el marco y el arma
-        spriteBatch.draw(texturaMarco, baseX, baseY, attackSlotSize, attackSlotSize);
+        // Dibujamos marco, arma y texto
+        spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), baseX, baseY, attackSlotSize, attackSlotSize);
         if (texturaArma != null) {
             float iconSize = attackSlotSize * 0.725f;
             float iconX = baseX + (attackSlotSize - iconSize) / 2;
             float iconY = baseY + (attackSlotSize - iconSize) / 2 + 0.5f;
             spriteBatch.draw(texturaArma, iconX, iconY, iconSize, iconSize);
         }
-        // Dibujar el texto "ARMA" debajo del recuadro
         String textoAtaque = "ARMA";
         layout.setText(fuente, textoAtaque);
         float textX = baseX + (attackSlotSize - layout.width) / 2 + 2.5f;
@@ -353,7 +349,7 @@ public class RenderHUDComponents {
         fuente.getData().setScale(0.65f);
         for (int i = 0; i < slotsList.size(); i++) {
             Rectangle rect = slotsList.get(i);
-            spriteBatch.draw(texturaMarco, rect.x, rect.y, rect.width, rect.height);
+            spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rect.x, rect.y, rect.width, rect.height);
             if (i >= sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas().size()) {
                 String textoNumero = String.valueOf(i + 1);
                 GlyphLayout layoutNumero = new GlyphLayout(fuente, textoNumero);
@@ -396,7 +392,7 @@ public class RenderHUDComponents {
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         fuente.setColor(colorReborde);
-        // Dibujar el "reborde" en ocho direcciones
+
         fuente.draw(batch, texto, x - offset, y);
         fuente.draw(batch, texto, x + offset, y);
         fuente.draw(batch, texto, x, y - offset);
@@ -405,7 +401,7 @@ public class RenderHUDComponents {
         fuente.draw(batch, texto, x + offset, y - offset);
         fuente.draw(batch, texto, x - offset, y + offset);
         fuente.draw(batch, texto, x + offset, y + offset);
-        // Dibujar el texto principal encima
+
         fuente.setColor(colorTexto);
         fuente.draw(batch, texto, x, y);
     }

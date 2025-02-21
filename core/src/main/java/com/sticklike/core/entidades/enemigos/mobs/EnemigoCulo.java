@@ -48,19 +48,19 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.animacionCulo = new AnimacionCulo(this, animacionesBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
-        this.damageTexture = damageCuloTexture;
+        this.damageTexture = manager.get(DAMAGE_CULO_TEXTURE, Texture.class);
     }
 
     private void esConOjo() {
         float random = MathUtils.random(10);
         if (random >= 2.5f) {
-            sprite = new Sprite(enemigoCulo);
+            sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
             sprite.setSize(26, 22);
         } else {
             tieneOjo = true;
-            spriteOjoAbierto = new Sprite(enemigoCuloOjo);
+            spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
             spriteOjoAbierto.setSize(30, 26);
-            spriteOjoCerrado = new Sprite(enemigoCuloOjoCerrado);
+            spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
             spriteOjoCerrado.setSize(30, 26);
             sprite = new Sprite(spriteOjoAbierto);
             vidaEnemigo = VIDA_ENEMIGOCULO * 2;

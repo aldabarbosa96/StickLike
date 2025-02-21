@@ -37,7 +37,7 @@ public class ProyectilCalcetin implements Proyectiles {
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad,
                              float poderJugador, float extraDamage, Jugador jugador) {
         if (textura == null) {
-            textura = armaCalcetin;
+            textura = manager.get(ARMA_CALCETIN, Texture.class);
         }
         this.distanciaMaxima = MAX_DISTANCIA;
         this.distanciaRecorrida = 0; // inicializamos en 0
@@ -111,10 +111,10 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        if(MathUtils.random() < jugador.getCritico()) {
+        if (MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return damageEscalado * 1.5f;
-        }else {
+        } else {
             esCritico = false;
             return damageEscalado;
         }

@@ -24,7 +24,7 @@ public class ObjetoOro extends ObjetoBase {
 
     @Override
     protected Texture getTexture() {
-        return recolectableCacaDorada;
+        return manager.get(RECOLECTABLE_CACA_DORADA, Texture.class);
     }
 
     @Override
