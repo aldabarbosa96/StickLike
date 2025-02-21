@@ -98,7 +98,7 @@ public class PopUpMejoras {
         TextButton.TextButtonStyle selectedButtonGreenStyle = new TextButton.TextButtonStyle();
         selectedButtonGreenStyle.font = font;
         selectedButtonGreenStyle.up = highlightDrawable;
-        selectedButtonGreenStyle.fontColor = new Color(0f,0.5f,0f,1);
+        selectedButtonGreenStyle.fontColor = new Color(0f,0.4f,0f,1);
         skin.add("selected-button-green", selectedButtonGreenStyle);
 
         return skin;

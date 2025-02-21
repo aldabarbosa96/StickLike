@@ -43,6 +43,8 @@ public class ControladorEnemigos {
     private float temporizadorRedimension = 0f;
     private static final float TIEMPO_ESPERA_REDIMENSION = 0.5f;
     private boolean necesitaOrdenar = false;
+    private float temporizadorGruposExamen = 0f;
+    private static final float INTERVALO_GRUPO_EXAMEN = 5f;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;
@@ -58,6 +60,9 @@ public class ControladorEnemigos {
             return;
         }
 
+        if (temporizadorGruposExamen > 0) {
+            temporizadorGruposExamen -= delta;
+        }
         // Temporizador para spawnear enemigos de manera periódica
         temporizadorDeAparicion += delta;
         if (temporizadorDeAparicion >= intervaloDeAparicion) {
@@ -115,20 +120,38 @@ public class ControladorEnemigos {
     private void spawnEnemigo() {
         if (enemigos.size >= MAX_ENEMIGOS) return;
 
-        //spawnCounter++;
-        //Gdx.app.log("EnemyCounter", "Número enemigos actuales: " + getEnemigosActuales());
-
-        Vector2 spawnPos = getRandomSpawnPosition();
-
-        float randomSpeed = MathUtils.random(35f, 80f);
         String tipoElegido = tiposDeEnemigos[MathUtils.random(tiposDeEnemigos.length - 1)];
+        float randomSpeed = MathUtils.random(45f, 55f); // todo --> valorar si se gestiona individualmente para cada enemigo
+        seleccionarTipoSpawn(tipoElegido,randomSpeed);
 
-        // Construimos el enemigo mediante la fábrica
-        Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
-        enemigos.add(enemigo);
         necesitaOrdenar = true;
     }
 
+    private void seleccionarTipoSpawn(String tipoElegido, float randomSpeed){ // todo --> hacer más flexible en un futuro para manejar los diferentes tipos de enemigos
+        if ("EXAMEN".equals(tipoElegido)) {
+            if (temporizadorGruposExamen > 0) {
+                return;
+            }
+            temporizadorGruposExamen = INTERVALO_GRUPO_EXAMEN;
+
+            int groupSize = 18;
+            if (enemigos.size + groupSize > MAX_ENEMIGOS) {
+                groupSize = MAX_ENEMIGOS - enemigos.size;
+            }
+
+            Vector2 basePos = getRandomSpawnPosition();
+            for (int i = 0; i < groupSize; i++) {
+                Vector2 spawnPos = new Vector2(basePos.x , basePos.y );
+                Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
+                enemigos.add(enemigo);
+            }
+        } else {
+            // Para los demás enemigos se usa el spawn normal
+            Vector2 spawnPos = getRandomSpawnPosition();
+            Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
+            enemigos.add(enemigo);
+        }
+    }
 
     private Vector2 getRandomSpawnPosition() {
         float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;

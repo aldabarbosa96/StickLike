@@ -54,8 +54,7 @@ public class Jugador {
     private int oroGanado;
     private Direction direccionActual = Direction.IDLE;
 
-    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador,
-                   MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles) {
+    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles) {
         this.danyoAtaqueJugador = DANYO;
         this.velocidadJugador = VEL_MOV_JUGADOR;
         this.vidaJugador = VIDA_JUGADOR;
