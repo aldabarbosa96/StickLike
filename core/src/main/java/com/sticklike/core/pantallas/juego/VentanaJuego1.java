@@ -121,7 +121,7 @@ public class VentanaJuego1 implements Screen {
     private void inicializarSistemasYControladores() {
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
         this.popUpMejoras = new PopUpMejoras(sistemaDeMejoras, this);
-        sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras);
+        sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras, popUpMejoras);
 
         controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
@@ -315,8 +315,8 @@ public class VentanaJuego1 implements Screen {
         }
     }
 
-    public SpriteBatch getSpriteBatch() {
-        return spriteBatch;
+    public SistemaDeNiveles getSistemaDeNiveles() {
+        return sistemaDeNiveles;
     }
 
     public Jugador getJugador() {

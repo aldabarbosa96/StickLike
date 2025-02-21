@@ -50,24 +50,20 @@ public class MenuPause extends ControllerAdapter { // todo --> implementar menú
         this.font = new BitmapFont();
         this.spriteBatch = new SpriteBatch();
 
-        // Inicializar la cámara y viewport para el HUD (fijos en la "lona virtual" 1600x900)
         hudCamera = new OrthographicCamera();
         hudCamera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply();
 
-        // Nos registramos como listener global de mando para recibir inputs en esta clase
         Controllers.addListener(this);
     }
 
     public void render(ShapeRenderer shapeRenderer) {
-        // Usar la cámara del HUD (no la del juego)
+        // Usamos la cámara del HUD (no la del juego)
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
 
-        // Extra vertical (en unidades virtuales) para el botón de pausa.
         float extraVerticalOffset = -50f;
-        // Posición virtual del botón de pausa:
         float pauseButtonX = VIRTUAL_WIDTH - marginRight - menuWidth;
         float pauseButtonY = VIRTUAL_HEIGHT - marginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION - extraVerticalOffset;
 
@@ -76,7 +72,6 @@ public class MenuPause extends ControllerAdapter { // todo --> implementar menú
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        // Fondo del botón
         shapeRenderer.setColor(new Color(0.2f, 0.2f, 0.2f, 0.65f));
         shapeRenderer.rect(pauseButtonX, pauseButtonY, menuWidth, menuWidth);
 
@@ -115,12 +110,13 @@ public class MenuPause extends ControllerAdapter { // todo --> implementar menú
             float pauseTextX = (VIRTUAL_WIDTH - layoutPausa.width) / 2;
             float pauseTextY = (VIRTUAL_HEIGHT + layoutPausa.height) / 2 + 250f;
 
-            // Dibujar sombras (opcional, ajusta BASIC_OFFSET si lo necesitas)
+            // Dibujar sombras
             font.setColor(Color.WHITE);
             font.draw(spriteBatch, PAUSA, pauseTextX - BASIC_OFFSET, pauseTextY);
             font.draw(spriteBatch, PAUSA, pauseTextX + BASIC_OFFSET, pauseTextY);
             font.draw(spriteBatch, PAUSA, pauseTextX, pauseTextY - BASIC_OFFSET);
             font.draw(spriteBatch, PAUSA, pauseTextX, pauseTextY + BASIC_OFFSET);
+
             // Dibujar el texto principal
             font.setColor(Color.RED);
             font.draw(spriteBatch, PAUSA, pauseTextX, pauseTextY);
@@ -165,7 +161,7 @@ public class MenuPause extends ControllerAdapter { // todo --> implementar menú
     }
 
 
-    // Usamos el viewport del HUD para actualizar el tamaño cuando se hace resize
+    // Usamos el viewport del HUD para actualizar el tamaño cuando hacemos resize
     public Viewport getViewport() {
         return hudViewport;
     }

@@ -11,10 +11,9 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 /**
- * Clase responsable de dibujar la información de interfaz del jugador en pantalla (vida, experiencia, nivel, etc.).
- * Encapsula el renderizado de los elementos del HUD mediante la clase RenderHUDComponents.
+ * Clase que encapsula el renderizado del HUD del juego.
+ * Aquí se centralizan las llamadas a begin()/end() de los renderizadores
  */
-
 public class HUD {
     private RenderHUDComponents renderHUDComponents;
     private final ShapeRenderer shapeRenderer;
@@ -31,34 +30,44 @@ public class HUD {
         this.hudViewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
         this.hudCamara.update();
         renderHUDComponents.crearSlots();
-
-
-
     }
 
-    //todo -- > falta implementar elementos en el HUD (iconos stats player, mejoras obtenidas...)
     public void renderizarHUD(float delta) {
+        // Actualizamos viewport y proyectores
         hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamara.combined);
         shapeRenderer.setProjectionMatrix(hudCamara.combined);
-
         float hudHeight = HUD_HEIGHT + desplazamientoVertHUD;
+
+        // Dibujos con ShapeRenderer (tipo Filled)
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         renderHUDComponents.renderizarFondoHUD();
-        renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
-        renderHUDComponents.renderizarLineaVerticalCuadricula(hudHeight);
         renderHUDComponents.renderizarMarcoHUD();
-        renderHUDComponents.renderizarBarraXP();
+        renderHUDComponents.renderizarLineaVerticalCuadricula(hudHeight);
+        renderHUDComponents.renderizarBarraXPFondo();
+        shapeRenderer.end();
+
+        // Dibujos con ShapeRenderer (tipo Line)
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
+        shapeRenderer.end();
+
+        // Dibujos con SpriteBatch
+        spriteBatch.begin();
         renderHUDComponents.renderizarTextoNivelPlayer();
         renderHUDComponents.renderizarTemporizador(delta);
+        renderHUDComponents.renderizarBarraXPInfo();
         renderHUDComponents.renderizarStatsJugador();
         renderHUDComponents.renderizarMasStatsJugador();
         renderHUDComponents.dibujarAtaqueBasico(armaPiedra);
         renderHUDComponents.renderizarMarcosMejoras();
+        spriteBatch.end();
+
         renderHUDComponents.getHudStage().act(delta);
         renderHUDComponents.getHudStage().draw();
     }
 
-    public void resize(int width, int height) { // ajusta el viewport al redimensionar la ventana
+    public void resize(int width, int height) {
         hudViewport.update(width, height, true);
     }
 

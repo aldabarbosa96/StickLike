@@ -13,7 +13,7 @@ import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
@@ -70,7 +70,7 @@ public class Jugador {
         this.oroGanado = 0;
 
         // Inicializar el sprite del jugador
-        this.sprite = new Sprite(GestorDeAssets.stickman);
+        this.sprite = new Sprite(stickman);
         this.sprite.setSize(WIDTH_JUGADOR, HEIGHT_JUGADOR);
         this.sprite.setPosition(startX, startY);
 

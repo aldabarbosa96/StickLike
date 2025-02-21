@@ -79,7 +79,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String TEXTO_LVL = "LVL:  ";
     public static final String POPUP_HEADER = "\n\n<< < M E J O R A S > >> ";
     public static final String POPUP_FOOTER = "  \n";
-    public static final String POPUP_FOOTER2 = "  ";
+    public static final String POPUP_FOOTER2 = "   ";
     public static final String VEL_MOV = "Velocidad";
     public static final String RANGO = "Rango";
     public static final String VEL_ATAQUE = "Vel. Ataque";

@@ -1,6 +1,7 @@
 package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.pantallas.popUps.PopUpMejoras;
 
 /**
  * Gestiona la experiencia y el nivel del jugador.
@@ -10,13 +11,16 @@ import com.sticklike.core.entidades.jugador.Jugador;
 public class SistemaDeNiveles {
     private final Jugador jugador;
     private final SistemaDeMejoras sistemaDeMejoras;
+    private final PopUpMejoras popUpMejoras;
     private float xpActual = 0f;
     private float xpHastaSiguienteNivel = 100f;
     private int nivelActual = 1;
+    private int nivelesPendientes = 0;
 
-    public SistemaDeNiveles(Jugador jugador, SistemaDeMejoras sistemaDeMejoras) {
+    public SistemaDeNiveles(Jugador jugador, SistemaDeMejoras sistemaDeMejoras, PopUpMejoras popUpMejoras) {
         this.jugador = jugador;
         this.sistemaDeMejoras = sistemaDeMejoras;
+        this.popUpMejoras = popUpMejoras;
     }
 
     public void agregarXP(float amount) {
@@ -35,11 +39,21 @@ public class SistemaDeNiveles {
             jugador.setVidaJugador(jugador.getVidaJugador() + 2);
         } else if (jugador.getVidaJugador() > jugador.getMaxVidaJugador()) {
             jugador.setVidaJugador(jugador.getMaxVidaJugador());
-
         }
-        // Delegamos en ControladorMejoras para manejar las mejoras
-        if (sistemaDeMejoras != null) {
+
+        nivelesPendientes++;
+
+        if (!popUpMejoras.isPopUpAbierto()) {
             sistemaDeMejoras.anyadirMejorasAlPopUp();
+        }
+    }
+
+    public void procesarNivelPendiente() {
+        if (nivelesPendientes > 0) {
+            nivelesPendientes--;
+            if (nivelesPendientes > 0 && !popUpMejoras.isPopUpAbierto()) {
+                sistemaDeMejoras.anyadirMejorasAlPopUp();
+            }
         }
     }
 

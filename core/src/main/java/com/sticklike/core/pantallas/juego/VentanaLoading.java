@@ -32,9 +32,9 @@ public class VentanaLoading { // todo --> si el proyecto crece valorar en un fut
     }
 
     public void render(SpriteBatch spriteBatch, float delta) {
-        //  cada 0.25 s se suma 1
+        // cada 0.25 s se suma 1
         timer += delta;
-        int dotIndex = (int) (timer / 0.25f) % 4; // 0/1/2/3
+        int dotIndex = (int) (timer / 0.25f) % 4;
 
         Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

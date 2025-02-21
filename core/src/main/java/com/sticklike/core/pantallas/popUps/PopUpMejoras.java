@@ -40,9 +40,10 @@ public class PopUpMejoras {
     private VentanaJuego1 ventanaJuego1;
     private Window upgradeWindow;
     private GameInputHandler inputHandler;
-
     private List<TextButton> improvementButtons;
     private int selectedIndex = 0;
+    private boolean popUpAbierto = false;
+
 
     public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego1 ventanaJuego1) {
         this.ventanaJuego1 = ventanaJuego1;
@@ -107,6 +108,7 @@ public class PopUpMejoras {
         ventanaJuego1.setPausado(true);
         ventanaJuego1.getMenuPause().bloquearInputs(true);
         ventanaJuego1.getRenderHUDComponents().pausarTemporizador();
+        popUpAbierto = true;
 
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         upgradeWindow = new Window(POPUP_HEADER, wStyle);
@@ -147,9 +149,9 @@ public class PopUpMejoras {
             if (mejora.getIcono() != null) {
                 Image iconImage = new Image(mejora.getIcono());
                 Container<Image> iconContainer = new Container<>(iconImage);
-                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-5f).height(25);
+                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-5f).height(25); // Icono a la derecha
             } else {
-                rowTable.add().width(25);
+                rowTable.add().width(25); // Espacio adicional para centrar si no tiene icono la mejora
             }
 
             upgradeWindow.row();
@@ -208,10 +210,13 @@ public class PopUpMejoras {
         ventanaJuego1.setPausado(false);
         ventanaJuego1.getRenderHUDComponents().reanudarTemporizador();
         ventanaJuego1.getMenuPause().bloquearInputs(false);
+        popUpAbierto = false;
 
         // Desactivamos el input handler
         Gdx.input.setInputProcessor(null);
         Controllers.removeListener(inputHandler);
+
+        ventanaJuego1.getSistemaDeNiveles().procesarNivelPendiente();
     }
 
     public Stage getUiStage() {
@@ -220,6 +225,10 @@ public class PopUpMejoras {
 
     public Skin getUiSkin() {
         return uiSkin;
+    }
+
+    public boolean isPopUpAbierto() {
+        return popUpAbierto;
     }
 
     /**
