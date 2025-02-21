@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoPolla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -30,7 +30,7 @@ public class EnemigoPolla implements Enemigo {
     private static float velocidadBase = VEL_BASE_POLLA;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private AnimacionesEnemigos animacionesEnemigos;
+    private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private float damageAmount = DANYO_POLLA;
     private final Texture damageTexture;
 
@@ -40,24 +40,16 @@ public class EnemigoPolla implements Enemigo {
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
-        this.animacionesEnemigos = new AnimacionesEnemigos();
+        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = damagePollaTexture;
     }
 
     @Override
     public void actualizar(float delta) {
-        animacionesEnemigos.actualizarParpadeo(sprite, delta);
-        animacionesEnemigos.actualizarFade(delta);
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+        animacionesBaseEnemigos.actualizarFade(delta);
         movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
-
-        if (jugador != null) {
-            boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2
-                < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
-
-            if (sprite.isFlipX() != estaALaIzquierda) {
-                sprite.flip(true, false);
-            }
-        }
+        animacionesBaseEnemigos.flipearEnemigo(jugador,sprite);
 
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
@@ -66,21 +58,21 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
+        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
-            if (animacionesEnemigos.estaEnFade()) {
-                float alphaFade = animacionesEnemigos.getAlphaActual();
+            if (animacionesBaseEnemigos.estaEnFade()) {
+                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             }
-            else if (animacionesEnemigos.estaEnParpadeo()) {
+            else if (animacionesBaseEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
             else {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
             sprite.draw(batch);
-            animacionesEnemigos.restaurarColor(sprite, originalColor);
+            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
         }
     }
 
@@ -88,8 +80,8 @@ public class EnemigoPolla implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesEnemigos.estaEnFade()) {
-                animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO - 0.05f);
+            if (!animacionesBaseEnemigos.estaEnFade()) {
+                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO - 0.05f);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
@@ -97,7 +89,7 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        return vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade();
+        return vidaEnemigo <= 0 && !animacionesBaseEnemigos.estaEnFade();
     }
 
     @Override
@@ -163,7 +155,7 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesEnemigos.activarParpadeo(sprite, duracion, damageTexture);
+        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -182,8 +174,8 @@ public class EnemigoPolla implements Enemigo {
     }
 
     @Override
-    public AnimacionesEnemigos getAnimaciones() {
-        return animacionesEnemigos;
+    public AnimacionesBaseEnemigos getAnimaciones() {
+        return animacionesBaseEnemigos;
     }
 
     public void setDamageAmount(float damage) {
@@ -211,11 +203,11 @@ public class EnemigoPolla implements Enemigo {
     }
 
     public float getFadeAlpha() {
-        return animacionesEnemigos.getAlphaActual();
+        return animacionesBaseEnemigos.getAlphaActual();
     }
 
-    public AnimacionesEnemigos getAnimacionesEnemigos() {
-        return animacionesEnemigos;
+    public AnimacionesBaseEnemigos getAnimacionesEnemigos() {
+        return animacionesBaseEnemigos;
     }
 
     @Override

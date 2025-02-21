@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -29,7 +29,7 @@ public class EnemigoRegla implements Enemigo {
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private AnimacionesEnemigos animacionesEnemigos;
+    private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private float damageAmount = DANYO_REGLA;
 
     private final Texture damageTexture;
@@ -41,20 +41,20 @@ public class EnemigoRegla implements Enemigo {
         this.jugador = jugador;
         this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, true);
         this.orthographicCamera = orthographicCamera;
-        this.animacionesEnemigos = new AnimacionesEnemigos();
+        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = damageReglaTexture;
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
+        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
-            if (animacionesEnemigos.estaEnFade()) {
-                float alphaFade = animacionesEnemigos.getAlphaActual();
+            if (animacionesBaseEnemigos.estaEnFade()) {
+                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             }
-            else if (animacionesEnemigos.estaEnParpadeo()) {
+            else if (animacionesBaseEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
 
@@ -62,14 +62,14 @@ public class EnemigoRegla implements Enemigo {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
             sprite.draw(batch);
-            animacionesEnemigos.restaurarColor(sprite, originalColor);
+            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
         }
     }
 
     @Override
     public void actualizar(float delta) {
-        animacionesEnemigos.actualizarParpadeo(sprite, delta);
-        animacionesEnemigos.actualizarFade(delta);
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+        animacionesBaseEnemigos.actualizarFade(delta);
         movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
@@ -97,9 +97,9 @@ public class EnemigoRegla implements Enemigo {
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesEnemigos.estaEnFade()) {
-                animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                activarParpadeo(0.15f);
+            if (!animacionesBaseEnemigos.estaEnFade()) {
+                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+                activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
     }
@@ -119,8 +119,8 @@ public class EnemigoRegla implements Enemigo {
     }
 
     @Override
-    public AnimacionesEnemigos getAnimaciones() {
-        return animacionesEnemigos;
+    public AnimacionesBaseEnemigos getAnimaciones() {
+        return animacionesBaseEnemigos;
     }
 
     public void setDamageAmount(float damage) {
@@ -144,7 +144,7 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade());
+        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.estaEnFade());
     }
 
     @Override
@@ -174,7 +174,7 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesEnemigos.activarParpadeo(sprite, duracion, damageTexture);
+        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override

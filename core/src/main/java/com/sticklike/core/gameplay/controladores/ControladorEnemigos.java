@@ -33,16 +33,16 @@ public class ControladorEnemigos {
     private float intervaloDeAparicion;
     private float temporizadorDeAparicion;
     private int killCounter = 0;
-    private int spawnCounter = 0;
+    private int spawnCounter = 0; // seguramente lo necesite en un futuro
     private final Array<Enemigo> enemigosAEliminar = new Array<>();
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
     private boolean bossSpawned = false;
     private final RenderSombrasEnemigos renderSombrasEnemigos;
     private static final int MAX_ENEMIGOS = 300;
-
     private boolean ventanaRedimensionada = false;
     private float temporizadorRedimension = 0f;
     private static final float TIEMPO_ESPERA_REDIMENSION = 0.5f;
+    private boolean necesitaOrdenar = false;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;
@@ -75,8 +75,7 @@ public class ControladorEnemigos {
 
                 if (MathUtils.randomBoolean(0.01f)) {
                     ventanaJuego1.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
-                }
-                else {
+                } else {
                     ObjetosXP xpObject = enemigo.sueltaObjetoXP();
                     if (xpObject != null) {
                         ventanaJuego1.addXPObject(xpObject);
@@ -98,7 +97,6 @@ public class ControladorEnemigos {
             return;
         }
 
-        // Ordenar por Y descendente para simular Z-order
         enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
 
         for (Enemigo enemigo : enemigos) {
@@ -110,10 +108,6 @@ public class ControladorEnemigos {
         if (jugador.estaMuerto()) {
             return;
         }
-
-        // Ordenar por Y descendente
-        enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
-
         renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos, ventanaJuego1.getOrtographicCamera());
     }
 
@@ -121,9 +115,8 @@ public class ControladorEnemigos {
     private void spawnEnemigo() {
         if (enemigos.size >= MAX_ENEMIGOS) return;
 
-        spawnCounter++;
-        //Gdx.app.log("SpawnCounter", "Número enemigos generados: " + spawnCounter);
-        Gdx.app.log("EnemyCounter", "Número enemigos actuales: " + getEnemigosActuales());
+        //spawnCounter++;
+        //Gdx.app.log("EnemyCounter", "Número enemigos actuales: " + getEnemigosActuales());
 
         Vector2 spawnPos = getRandomSpawnPosition();
 
@@ -133,6 +126,7 @@ public class ControladorEnemigos {
         // Construimos el enemigo mediante la fábrica
         Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
         enemigos.add(enemigo);
+        necesitaOrdenar = true;
     }
 
 

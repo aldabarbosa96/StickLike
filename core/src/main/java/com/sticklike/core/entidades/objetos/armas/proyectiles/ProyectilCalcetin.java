@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
@@ -52,8 +53,7 @@ public class ProyectilCalcetin implements Proyectiles {
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
 
-        // Se calcula el daño base: se parte de DANYO_CALCETIN, se le suma la bonificación (extraDamage)
-        float baseDamage = (float) (DANYO_CALCETIN + extraDamage + Math.random() * 8);
+        float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
         this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
     }
 
@@ -111,7 +111,7 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        if(Math.random() < jugador.getCritico()) {
+        if(MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return damageEscalado * 1.5f;
         }else {

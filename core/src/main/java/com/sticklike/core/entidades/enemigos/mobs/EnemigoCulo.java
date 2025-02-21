@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionCulo;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -33,13 +34,10 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     private static float velocidadBase = VEL_BASE_CULO;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private AnimacionesEnemigos animacionesEnemigos;
+    private AnimacionesBaseEnemigos animacionesBaseEnemigos;
+    private AnimacionCulo animacionCulo;
     private float damageAmount = DANYO_CULO;
     private boolean tieneOjo = false;
-    private boolean ojoCerrado = false;
-    private float tiempoAcumulado = 0;
-    private float tiempoParpadeo = 0.5f; // referente al pestañeo de los ojos
-    private float duracionCerrado = 0.1f;
     private final Texture damageTexture;
     private boolean recibeImpacto = false; // puede ser útil
 
@@ -48,7 +46,8 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
-        this.animacionesEnemigos = new AnimacionesEnemigos();
+        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
+        this.animacionCulo = new AnimacionCulo(this, animacionesBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
         this.damageTexture = damageCuloTexture;
     }
 
@@ -75,16 +74,16 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
+        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
 
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
 
             // Si el fade está activo, aplicamos el alfa del fade
-            if (animacionesEnemigos.estaEnFade()) {
-                float alphaFade = animacionesEnemigos.getAlphaActual();
+            if (animacionesBaseEnemigos.estaEnFade()) {
+                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
-            } else if (animacionesEnemigos.estaEnParpadeo()) {
+            } else if (animacionesBaseEnemigos.estaEnParpadeo()) {
                 // Si está en parpadeo, se cambia la textura, pero el alfa se deja en 1
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             } else {
@@ -92,44 +91,27 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
             }
 
             sprite.draw(batch);
-            animacionesEnemigos.restaurarColor(sprite, originalColor);
+            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
         }
     }
 
 
     @Override
     public void actualizar(float delta) {
-        animacionesEnemigos.actualizarParpadeo(sprite, delta);
-        animacionesEnemigos.actualizarFade(delta);
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+        animacionesBaseEnemigos.actualizarFade(delta);
         movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
 
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
-
-        if (tieneOjo && !animacionesEnemigos.estaEnParpadeo()) {
-            tiempoAcumulado += delta;
-            if (!ojoCerrado && tiempoAcumulado >= tiempoParpadeo) {
-                sprite.setRegion(spriteOjoCerrado);
-                ojoCerrado = true;
-                tiempoAcumulado = 0;
-            } else if (ojoCerrado && tiempoAcumulado >= duracionCerrado) {
-                sprite.setRegion(spriteOjoAbierto);
-                ojoCerrado = false;
-                tiempoAcumulado = 0;
-            }
-        }
-
-        boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2 > jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
-        if (sprite.isFlipX() != estaALaIzquierda) {
-            sprite.flip(true, false);
-        }
-
+        animacionCulo.actualizarAnimacion(delta, jugador, sprite);
+        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesEnemigos.activarParpadeo(sprite, duracion, damageTexture);
+        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -156,8 +138,8 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesEnemigos.estaEnFade()) {
-                animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+            if (!animacionesBaseEnemigos.estaEnFade()) {
+                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
@@ -180,7 +162,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade());
+        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.estaEnFade());
     }
 
     @Override
@@ -232,8 +214,8 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     }
 
     @Override
-    public AnimacionesEnemigos getAnimaciones() {
-        return animacionesEnemigos;
+    public AnimacionesBaseEnemigos getAnimaciones() {
+        return animacionesBaseEnemigos;
     }
 
     public static void resetStats() {
@@ -245,10 +227,10 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     }
 
     public float getFadeAlpha() {
-        return animacionesEnemigos.getAlphaActual();
+        return animacionesBaseEnemigos.getAlphaActual();
     }
 
-    public AnimacionesEnemigos getAnimacionesEnemigos() {
-        return animacionesEnemigos;
+    public boolean isTieneOjo() {
+        return tieneOjo;
     }
 }

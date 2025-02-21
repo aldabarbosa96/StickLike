@@ -13,7 +13,6 @@ public class FontManager {
 
     public static void initFonts() {
         damageFont = new BitmapFont();
-
         damageFont.getData().setScale(1.0f);
     }
 

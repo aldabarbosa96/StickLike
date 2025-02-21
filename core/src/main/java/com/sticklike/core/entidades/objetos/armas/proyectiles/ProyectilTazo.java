@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -40,6 +41,7 @@ public class ProyectilTazo implements Proyectiles {
 
     // --- fases del ciclo del tazo ---
     public enum Phase {GROWING, ACTIVE, COOLDOWN}
+
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0f;  // Temporizador para la fase actual
     private float activeDuration = 8.5f;
@@ -77,9 +79,9 @@ public class ProyectilTazo implements Proyectiles {
 
         // Calcula la posición del tazo en función del ángulo global + offset
         float currentAngle = ataqueTazo.getGlobalAngle() + offsetAngle;
-        float radianes = (float) Math.toRadians(currentAngle);
-        float offsetX = (float) (Math.cos(radianes) * radio);
-        float offsetY = (float) (Math.sin(radianes) * radio);
+        float radianes = currentAngle * MathUtils.degreesToRadians;
+        float offsetX = MathUtils.cos(radianes) * radio;
+        float offsetY = MathUtils.sin(radianes) * radio;
 
         switch (phase) {
             case GROWING:
@@ -192,18 +194,20 @@ public class ProyectilTazo implements Proyectiles {
     @Override
     public float getBaseDamage() {
         if (phase == Phase.ACTIVE) {
-            if (Math.random() < jugador.getCritico()) {
+            if (MathUtils.random() < jugador.getCritico()) {
                 esCritico = true;
-                float baseDamage = (float) (DANYO_TAZOS + Math.random() * 3.5f) * 1.5f;
+                float baseDamage = DANYO_TAZOS + MathUtils.random(3.5f);
+                baseDamage *= 1.5f;
                 return baseDamage * powerFactor;
             } else {
                 esCritico = false;
-                float baseDamage = (float) (DANYO_TAZOS + Math.random() * 3.5f);
+                float baseDamage = DANYO_TAZOS + MathUtils.random(3.5f);
                 return baseDamage * powerFactor;
             }
         }
         return 0f;
     }
+
 
     @Override
     public float getKnockbackForce() {

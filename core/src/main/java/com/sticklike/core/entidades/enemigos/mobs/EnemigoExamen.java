@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionExamen;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoExamen;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -29,7 +30,8 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private AnimacionesEnemigos animacionesEnemigos;
+    private AnimacionesBaseEnemigos animacionesBaseEnemigos;
+    private AnimacionExamen animacionExamen;
     private MovimientoExamen movimientoExamen;
     private static float velocidadBase = VEL_BASE_EXAMEN;
     private final Texture damageTexture;
@@ -43,84 +45,59 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
         sprite.setSize(36f, 38f);
         sprite.setPosition(x, y);
         this.movimientoExamen = new MovimientoExamen();
-        this.animacionesEnemigos = new AnimacionesEnemigos();
+        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
+        this.animacionExamen = new AnimacionExamen(animacionesBaseEnemigos, enemigoExamen, enemigoExamen2, 0.25f);
         setVelocidad(velocidadEnemigo);
         this.damageTexture = damageExamenTexture;
     }
 
     @Override
     public void actualizar(float delta) {
-        animacionesEnemigos.actualizarParpadeo(sprite, delta);
-        animacionesEnemigos.actualizarFade(delta);
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+        animacionesBaseEnemigos.actualizarFade(delta);
 
-        if (movimientoExamen != null) {
-            movimientoExamen.actualizarMovimiento(delta, sprite, jugador);
-        }
+        if (temporizadorDanyo > 0) temporizadorDanyo -= delta;
 
-        if (jugador != null) {
-            boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2
-                < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
-            if (sprite.isFlipX() != estaALaIzquierda) {
-                sprite.flip(true, false);
-            }
-        }
+        if (movimientoExamen != null) movimientoExamen.actualizarMovimiento(delta, sprite, jugador);
 
-        if (temporizadorDanyo > 0) {
-            temporizadorDanyo -= delta;
-        }
-
-        // Si no está en parpadeo (efecto de daño), se alternan los frames de la animación.
-        if (!animacionesEnemigos.estaEnParpadeo()) {
-            tiempoAcumulado += delta;
-            if (tiempoAcumulado >= tiempoCambio) {
-                // Se alterna entre la primera y segunda textura para simular movimiento.
-                if (usandoFrame2) {
-                    sprite.setRegion(enemigoExamen);
-                    usandoFrame2 = false;
-                } else {
-                    sprite.setRegion(enemigoExamen2);
-                    usandoFrame2 = true;
-                }
-                tiempoAcumulado = 0;
-            }
-        }
+        animacionExamen.actualizarAnimacion(delta, jugador, sprite);
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesEnemigos.estaEnFade();
+        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
         if (mostrarSprite) {
             Color originalColor = sprite.getColor().cpy();
-            if (animacionesEnemigos.estaEnParpadeo()) {
+            if (animacionesBaseEnemigos.estaEnParpadeo()) {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            } else if (animacionesEnemigos.estaEnFade()) {
-                float alphaFade = animacionesEnemigos.getAlphaActual();
+            } else if (animacionesBaseEnemigos.estaEnFade()) {
+                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             } else {
                 sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             }
 
             sprite.draw(batch);
-            animacionesEnemigos.restaurarColor(sprite, originalColor);
+            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
         }
     }
 
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
-        if (!animacionesEnemigos.estaEnParpadeo()) {
-            animacionesEnemigos.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
+        if (!animacionesBaseEnemigos.estaEnParpadeo()) {
+            animacionesBaseEnemigos.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
         }
         if (vidaEnemigo <= 0) {
-            if (!animacionesEnemigos.estaEnFade()) {
-                animacionesEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+            if (!animacionesBaseEnemigos.estaEnFade()) {
+                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
             }
         }
     }
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesEnemigos.estaEnFade());
+        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.estaEnFade());
     }
 
     @Override
@@ -187,7 +164,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesEnemigos.activarParpadeo(sprite, duracion, damageTexture);
+        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -208,8 +185,8 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
     }
 
     @Override
-    public AnimacionesEnemigos getAnimaciones() {
-        return animacionesEnemigos;
+    public AnimacionesBaseEnemigos getAnimaciones() {
+        return animacionesBaseEnemigos;
     }
 
     public void setDamageAmount(float newDamageAmount) {
@@ -234,8 +211,8 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
         }
     }
 
-    public AnimacionesEnemigos getAnimacionesEnemigos() {
-        return animacionesEnemigos;
+    public AnimacionesBaseEnemigos getAnimacionesEnemigos() {
+        return animacionesBaseEnemigos;
     }
 
     public MovimientoExamen getMovimientoExamen() {
@@ -243,7 +220,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
     }
 
     public float getFadeAlpha() {
-        return animacionesEnemigos.getAlphaActual();
+        return animacionesBaseEnemigos.getAlphaActual();
     }
 
     @Override

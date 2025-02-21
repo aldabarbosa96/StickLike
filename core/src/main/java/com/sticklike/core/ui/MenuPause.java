@@ -35,13 +35,10 @@ public class MenuPause extends ControllerAdapter { // todo --> implementar menú
     private VentanaJuego1 ventanaJuego1;
     private boolean inputsBloqueados = false;
     private SpriteBatch spriteBatch;
-
-    // --- Para HUD (no se mueve con la cámara del juego) ---
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
 
     public MenuPause(VentanaJuego1 ventanaJuego1) {
-        // Los valores de posicionamiento siguen siendo los mismos (en unidades virtuales)
         this.pauseWidth = 4;
         this.pauseHeight = 12;
         this.pauseSpacing = 4;

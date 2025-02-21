@@ -1,7 +1,5 @@
 package com.sticklike.core.gameplay.progreso;
 
-import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
-
 /**
  * Clase base de los eventos del juego. Aplica los eventos según el nivel requerido por el jugador
  */
@@ -9,13 +7,11 @@ public class Evento implements Comparable<Evento> {
     private Runnable efectoEvento;
     private String nombreEvento;
     private int nivelRequerido;
-    private SistemaDeNiveles sistemaDeNiveles;
 
-    public Evento(String nombreEvento, SistemaDeNiveles sistemaDeNiveles, Runnable efectoEvento, int nivelRequerido) {
+    public Evento(String nombreEvento, Runnable efectoEvento, int nivelRequerido) {
         this.nombreEvento = nombreEvento;
         this.efectoEvento = efectoEvento;
         this.nivelRequerido = nivelRequerido;
-        this.sistemaDeNiveles = sistemaDeNiveles;
     }
 
     public void applyEvento() {

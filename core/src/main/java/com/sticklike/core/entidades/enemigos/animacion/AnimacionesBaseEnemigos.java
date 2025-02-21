@@ -3,13 +3,15 @@ package com.sticklike.core.entidades.enemigos.animacion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.sticklike.core.entidades.jugador.Jugador;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
  * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño y el fade de muerte.
  */
 
-public class AnimacionesEnemigos {
+public class AnimacionesBaseEnemigos {
     private boolean enParpadeo = false;
     private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
     private Texture texturaOriginal;
@@ -71,6 +73,16 @@ public class AnimacionesEnemigos {
     public void restaurarColor(Sprite sprite, Color originalColor) {
         if (enParpadeo || enFade) {
             sprite.setColor(originalColor);
+        }
+    }
+
+    public void flipearEnemigo(Jugador jugador, Sprite sprite) {
+        // Lógica para flipear el sprite del enemigo según la posición del jugador
+        if (jugador != null) {
+            boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2 > jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
+            if (sprite.isFlipX() != estaALaIzquierda) {
+                sprite.flip(true, false);
+            }
         }
     }
 }

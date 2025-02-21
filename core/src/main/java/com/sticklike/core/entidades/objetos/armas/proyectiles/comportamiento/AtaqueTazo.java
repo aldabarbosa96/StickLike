@@ -72,8 +72,6 @@ public class AtaqueTazo {
         tazosActivos++;
     }
 
-
-
     public void aumentarVelocidadTazos(float incremento) {
         velocidadRotacion *= incremento;
     }

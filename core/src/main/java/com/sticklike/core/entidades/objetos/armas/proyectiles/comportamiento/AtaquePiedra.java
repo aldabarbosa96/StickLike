@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
@@ -77,7 +78,7 @@ public class AtaquePiedra {
                 float targetY = target.getY() + target.getSprite().getHeight() / 2f;
                 float[] dir = calcularDireccionNormalizada(spawnX, spawnY, targetX, targetY);
 
-                float velocidadAleatoria = 1.5f + (float) Math.random() * (1.75f - 1.5f);
+                float velocidadAleatoria = MathUtils.random(1.5f, 1.75f);
                 ProyectilPiedra piedra = new ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria, jugador);
                 jugador.getControladorProyectiles().anyadirNuevoProyectil(piedra);
 

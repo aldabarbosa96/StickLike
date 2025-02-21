@@ -10,6 +10,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
@@ -112,7 +115,7 @@ public class RenderVentanaGameOver {
 
         float textWidth = layout.width;
         float textX = (VIRTUAL_WIDTH - textWidth) / 2f;
-        float textY = (VIRTUAL_HEIGHT / 2f) - 200;
+        float textY = (VIRTUAL_HEIGHT * 0.2f);
 
         font.draw(spriteBatch, optionsText, textX, textY);
 
@@ -120,36 +123,48 @@ public class RenderVentanaGameOver {
     }
 
     private void dibujarStatsVentanaGameOver(SpriteBatch batch, GlyphLayout layout, BitmapFont font, VentanaJuego1 ventanaJuego1) {
-
         float originalScale = font.getData().scaleX;
         font.getData().setScale(1f);
 
-        String[] lineas = {"Tiempo: " + ventanaJuego1.getRenderHUDComponents().formatearTiempo(ventanaJuego1.getRenderHUDComponents().getTiempoTranscurrido()), "Kills: " + ventanaJuego1.getControladorEnemigos().getKillCounter(), "Oro: " + ventanaJuego1.getJugador().getOroGanado(), "Trazos: " + ObjetoPowerUp.getContador()};
+        String[] lineas = {
+            "Tiempo: " + ventanaJuego1.getRenderHUDComponents().formatearTiempo(ventanaJuego1.getRenderHUDComponents().getTiempoTranscurrido()),
+            "Kills: " + ventanaJuego1.getControladorEnemigos().getKillCounter(),
+            "Oro: " + ventanaJuego1.getJugador().getOroGanado(),
+            "Trazos: " + ObjetoPowerUp.getContador()
+        };
 
         float totalAltura = 0f;
         float espacioEntreLineas = 20f;
 
+        // Usamos LinkedHashMap para almacenar la altura de cada línea y evitar cálculos repetidos
+        Map<String, Float> lineHeights = new LinkedHashMap<>();
+
         for (String linea : lineas) {
             layout.setText(font, linea);
-            totalAltura += layout.height + espacioEntreLineas;
+            float height = layout.height;
+            lineHeights.put(linea, height);
+            totalAltura += height + espacioEntreLineas;
         }
         totalAltura -= espacioEntreLineas;
 
         float startY = (VIRTUAL_HEIGHT / 2f) + 100;
-
         float y = startY;
-        for (String linea : lineas) {
+
+        for (Map.Entry<String, Float> entry : lineHeights.entrySet()) {
+            String linea = entry.getKey();
+            float lineHeight = entry.getValue();
+
             layout.setText(font, linea);
             float lineWidth = layout.width;
-            float lineHeight = layout.height;
-
             float x = (VIRTUAL_WIDTH - lineWidth) / 2f;
+
             font.draw(batch, linea, x, y);
             y -= (lineHeight + espacioEntreLineas);
         }
 
         font.getData().setScale(originalScale);
     }
+
 
     private float lerp(float start, float end, float alpha) {
         return start + (end - start) * alpha;

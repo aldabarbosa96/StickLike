@@ -19,11 +19,10 @@ public class SistemaDeNiveles {
         this.sistemaDeMejoras = sistemaDeMejoras;
     }
 
-    public void agregarXP(float amount ) {
+    public void agregarXP(float amount) {
         xpActual += amount;
-        if (xpActual >= xpHastaSiguienteNivel) {
+        while (xpActual >= xpHastaSiguienteNivel) {
             subirDeNivel();
-
         }
     }
 
@@ -31,11 +30,13 @@ public class SistemaDeNiveles {
         xpActual -= xpHastaSiguienteNivel;
         nivelActual++;
         xpHastaSiguienteNivel *= 1.5f;
-        //jugador.setVidaMax(jugador.getMaxVidaJugador() + 5); todo --> valorar si se le incrementa también la vida máxima
-        if (!(jugador.getVidaJugador() >= jugador.getMaxVidaJugador())) {
+        jugador.setVidaMax(jugador.getMaxVidaJugador() + 1.5f);
+        if (jugador.getVidaJugador() < jugador.getMaxVidaJugador()) {
             jugador.setVidaJugador(jugador.getVidaJugador() + 2);
-        }
+        } else if (jugador.getVidaJugador() > jugador.getMaxVidaJugador()) {
+            jugador.setVidaJugador(jugador.getMaxVidaJugador());
 
+        }
         // Delegamos en ControladorMejoras para manejar las mejoras
         if (sistemaDeMejoras != null) {
             sistemaDeMejoras.anyadirMejorasAlPopUp();

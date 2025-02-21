@@ -95,9 +95,7 @@ public class VentanaGameOver implements Screen {
 
     @Override
     public void hide() { // se llama cuando se oculta la pantalla, liberamos recursos para no malgastar memoria
-        spriteBatch.dispose();
-        font.dispose();
-
+        dispose();
         Gdx.input.setInputProcessor(null);
     }
 

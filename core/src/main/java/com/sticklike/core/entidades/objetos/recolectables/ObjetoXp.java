@@ -1,6 +1,8 @@
 package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -14,7 +16,7 @@ public class ObjetoXp extends ObjetoBase {
 
     public ObjetoXp(float x, float y) {
         super(x, y);
-        float randomXP = (float) (Math.random() * 100f);
+        float randomXP = MathUtils.random(100);
         esXPGorda = randomXP >= 95f;  // Aprox 5% de que sea gorda
         setSpriteTexture(getTexture());
     }

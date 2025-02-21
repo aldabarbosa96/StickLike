@@ -1,12 +1,12 @@
 package com.sticklike.core.gameplay.controladores;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.interfaces.Enemigo;
@@ -25,12 +25,12 @@ import java.util.Map;
  */
 
 public class ControladorProyectiles {
-    private ArrayList<Proyectiles> proyectiles;
+    private Array<Proyectiles> proyectiles;
     private float multiplicadorDeDanyo = MULT_DANYO;
     private Map<Enemigo, Float> ultimaYTexto = new HashMap<>();
 
     public ControladorProyectiles() {
-        proyectiles = new ArrayList<>();
+        proyectiles = new Array<>();
     }
 
     public void anyadirNuevoProyectil(Proyectiles proyectil) {
@@ -49,7 +49,7 @@ public class ControladorProyectiles {
             for (Enemigo enemigo : enemies) {
                 boolean esNubePedo = proyectil instanceof ProyectilTazo;
                 boolean colision = esNubePedo ?
-                    estaEnRadio(enemigo, proyectil) :
+                    estaEnRadioTazo(enemigo, proyectil) :
                     enemigo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), proyectil.getRectanguloColision().width, proyectil.getRectanguloColision().height);
 
                 if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
@@ -131,30 +131,32 @@ public class ControladorProyectiles {
 
     public void aumentarDanyoProyectil(float multiplier) {
         multiplicadorDeDanyo *= multiplier;
-        System.out.println("Multiplicador de daño actualizado a: " + multiplicadorDeDanyo);
+        Gdx.app.log("DamageMultiplier", "Multiplicador de daño actualizado a: " + multiplicadorDeDanyo);
     }
 
-    private boolean estaEnRadio(Enemigo enemigo, Proyectiles proyectil) {
+    private boolean estaEnRadioTazo(Enemigo enemigo, Proyectiles proyectil) {
         if (!(proyectil instanceof ProyectilTazo)) return false;
 
         float enemigoX = enemigo.getX() + enemigo.getSprite().getWidth() / 2;
         float enemigoY = enemigo.getY() + enemigo.getSprite().getHeight() / 2;
 
-        Rectangle areaNube = proyectil.getRectanguloColision();
-        float centroNubeX = areaNube.x + areaNube.width / 2;
-        float centroNubeY = areaNube.y + areaNube.height / 2;
+        Rectangle areaTazos = proyectil.getRectanguloColision();
+        float centroTazoX = areaTazos.x + areaTazos.width / 2;
+        float centroTazoY = areaTazos.y + areaTazos.height / 2;
 
-        // Distancia entre centros
-        float distancia = (float) Math.sqrt(
-            Math.pow(enemigoX - centroNubeX, 2) +
-                Math.pow(enemigoY - centroNubeY, 2)
-        );
+        float dx = enemigoX - centroTazoX;
+        float dy = enemigoY - centroTazoY;
+        float distanciaSq = dx * dx + dy * dy;
 
-        return distancia <= areaNube.width / 2;
+        float radio = areaTazos.width / 2;
+        float radioSq = radio * radio;
+
+        return distanciaSq <= radioSq;
     }
 
+
     public ProyectilTazo obtenerUltimoProyectilTazo() {
-        for (int i = proyectiles.size() - 1; i >= 0; i--) {
+        for (int i = proyectiles.size - 1; i >= 0; i--) {
             if (proyectiles.get(i) instanceof ProyectilTazo) {
                 return (ProyectilTazo) proyectiles.get(i);
             }

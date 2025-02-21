@@ -192,8 +192,6 @@ public class SistemaDeMejoras {
             }
             habilidadesActivas.add(mejoraSeleccionada);
         }
-
-        mejorasMostradas.clear();
     }
 
     public List<Mejora> getMejorasMostradas() {

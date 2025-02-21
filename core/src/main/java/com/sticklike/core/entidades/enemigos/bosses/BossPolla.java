@@ -6,13 +6,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBossPolla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.GestorDeAudio;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -25,7 +27,8 @@ public class BossPolla implements Enemigo {
     private Sprite spriteBocaAbierta;
     private Sprite spriteBocaCerrada;
     private Jugador jugador;
-    private AnimacionesEnemigos animaciones;
+    private AnimacionesBaseEnemigos animaciones;
+    private AnimacionBossPolla animacionBossPolla;
     private MovimientoBossPolla movimientoBoss;
     private float vida = 1250f;
     private boolean haSoltadoXP = false;
@@ -33,27 +36,23 @@ public class BossPolla implements Enemigo {
     private float damageAmount = 12.5f;
     private float coolDownDanyo = 1.2f;
     private float temporizadorDanyo = 0f;
-    private boolean bocaCerrada = false;
-    private float tiempoAcumuladoBoca = 0;
-    private float tiempoBocaAbierta = 0.5f;
-    private float duracionBocaCerrada = 2.5f;
     private boolean estaMuerto = false;
     private final Texture damageTexture;
 
     public BossPolla(Jugador jugador, float x, float y) {
         sprite = new Sprite(bossPolla);
-        sprite.setSize(90, 125);
-        sprite.setPosition(x, y);
-
+        sprite.setSize(90,125);
         spriteBocaAbierta = new Sprite(bossPolla);
         spriteBocaAbierta.setSize(90, 125);
         spriteBocaCerrada = new Sprite(bossPollaBocaCerrada);
         spriteBocaCerrada.setSize(90, 125);
         sprite.setRegion(spriteBocaCerrada);
+        sprite.setPosition(x, y);
 
         this.jugador = jugador;
-        this.animaciones = new AnimacionesEnemigos();
+        this.animaciones = new AnimacionesBaseEnemigos();
         this.movimientoBoss = new MovimientoBossPolla(true);
+        this.animacionBossPolla = new AnimacionBossPolla(spriteBocaAbierta, spriteBocaCerrada, 0.5f, 2.5f);
         this.damageTexture = damageBossPollaTexture;
     }
 
@@ -66,42 +65,8 @@ public class BossPolla implements Enemigo {
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
-
-        // Animación de apertura/cierre de boca
-        tiempoAcumuladoBoca += delta;
-        if (!bocaCerrada && tiempoAcumuladoBoca >= tiempoBocaAbierta) {
-            sprite.setRegion(spriteBocaCerrada);
-            bocaCerrada = true;
-            tiempoAcumuladoBoca = 0;
-        } else if (bocaCerrada && tiempoAcumuladoBoca >= duracionBocaCerrada) {
-            sprite.setRegion(spriteBocaAbierta);
-            int sonidoRandom = MathUtils.random(3);
-            switch (sonidoRandom) {
-                case 0:
-                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla2", 0.65f);
-                    break;
-                case 1:
-                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla", 0.65f);
-                    break;
-                case 2:
-                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla3", 0.65f);
-                    break;
-                case 3:
-                    GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla4", 0.65f);
-                    break;
-            }
-            bocaCerrada = false;
-            tiempoAcumuladoBoca = 0;
-        }
-
-        if (jugador != null) {
-            boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2
-                < jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
-
-            if (sprite.isFlipX() != estaALaIzquierda) {
-                sprite.flip(true, false);
-            }
-        }
+        animacionBossPolla.actualizarAnimacion(delta,sprite);
+        animaciones.flipearEnemigo(jugador,sprite);
     }
 
 
@@ -110,7 +75,6 @@ public class BossPolla implements Enemigo {
         boolean mostrarSprite = (vida > 0) || animaciones.estaEnFade();
         if (!mostrarSprite) return;
         Color originalColor = sprite.getColor().cpy();
-        // Si se está en fade-out, se aplica el alfa calculado; si se está en parpadeo, se mantiene alfa 1.
         if (animaciones.estaEnFade()) {
             float alphaFade = animaciones.getAlphaActual();
             sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
@@ -218,7 +182,7 @@ public class BossPolla implements Enemigo {
         return estaMuerto;
     }
 
-    public AnimacionesEnemigos getAnimaciones() {
+    public AnimacionesBaseEnemigos getAnimaciones() {
         return animaciones;
     }
 

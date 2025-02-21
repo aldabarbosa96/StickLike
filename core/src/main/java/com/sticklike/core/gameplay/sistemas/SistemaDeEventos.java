@@ -33,11 +33,11 @@ public class SistemaDeEventos {
     }
 
     private void inicializarEventos() {
-        eventos.add(new Evento("Aumenta nº enemigos", sistemaDeNiveles, this::eventoAumentaEnemigos1, LVL_EVENTO1));
-        eventos.add(new Evento("Aumenta nº enemigos 2", sistemaDeNiveles, this::eventoAumentaEnemigos2, LVL_EVENTO2));
-        eventos.add(new Evento("Aparecen las pollas", sistemaDeNiveles, this::entraEnemigoPolla, LVL_EVENTO3));
-        eventos.add(new Evento("BOSSPOLLA Aparece", sistemaDeNiveles, this::spawnPrimerBoss, LVL_EVENTO4));
-        eventos.add(new Evento("Examen Aparece", sistemaDeNiveles, this::spawnExamen, LVL_EVENTO4));
+        eventos.add(new Evento("Aumenta nº enemigos", this::eventoAumentaEnemigos1, LVL_EVENTO1));
+        eventos.add(new Evento("Aumenta nº enemigos 2",  this::eventoAumentaEnemigos2, LVL_EVENTO2));
+        eventos.add(new Evento("Aparecen las pollas",  this::entraEnemigoPolla, LVL_EVENTO3));
+        eventos.add(new Evento("BOSSPOLLA Aparece",  this::spawnPrimerBoss, LVL_EVENTO4));
+        eventos.add(new Evento("Examen Aparece",  this::spawnExamen, LVL_EVENTO4));
     }
 
     private void eventoAumentaEnemigos1() {
@@ -101,10 +101,8 @@ public class SistemaDeEventos {
         }
     }
 
-
     public void dispose() {
         eventos.clear();
-        eventos = null;
     }
 
     private boolean comprobarBossPollaMuerto(Evento siguienteEvento) {

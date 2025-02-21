@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
@@ -43,10 +44,7 @@ public class ProyectilPiedra implements Proyectiles {
     @Override
     public void actualizarProyectil(float delta) {
         if (proyectilActivo) {
-            sprite.translate(
-                direccionX * velocidadProyectil * multiplicadorVelocidad * delta,
-                direccionY * velocidadProyectil * multiplicadorVelocidad * delta
-            );
+            sprite.translate(direccionX * velocidadProyectil * multiplicadorVelocidad * delta, direccionY * velocidadProyectil * multiplicadorVelocidad * delta);
         }
     }
 
@@ -90,8 +88,8 @@ public class ProyectilPiedra implements Proyectiles {
     @Override
     public float getBaseDamage() {
         // Daño base aleatorio entre 21 y 31
-        float base = 21 + (float) Math.random() * 10;
-        if (Math.random() < jugador.getCritico()) {
+        float base = 21 + MathUtils.random() * 10;
+        if (MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return base * 1.5f;
         } else {

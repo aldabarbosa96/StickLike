@@ -42,39 +42,29 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
 
     public MovimientoExamen() {
         super(true);
-
         this.tiempoFaseCarga = tiempoFaseCargaBase + (float) ((Math.random() - 0.5f) * 2.0f * CARGA_RANDOM_OFFSET);
         this.tiempoFaseDisparo = tiempoFaseDisparoBase + (float) ((Math.random() - 0.5f) * 2.0f * DISPARO_RANDOM_OFFSET);
         this.tiempoFaseParabola = tiempoFaseParabolaBase + (float) ((Math.random() - 0.5f) * 2.0f * PARABOLA_RANDOM_OFFSET);
+        ajustarOffset();
+    }
 
-        // Evitamos que salgan tiempos negativos si el offset es grande
+    private void ajustarOffset() {
         if (tiempoFaseCarga < 0.2f) tiempoFaseCarga = 0.2f;
         if (tiempoFaseDisparo < 0.2f) tiempoFaseDisparo = 0.2f;
         if (tiempoFaseParabola < 0.2f) tiempoFaseParabola = 0.2f;
 
         this.offsetX = (float) ((Math.random() - 0.5f) * 2.0f * 100f);
         this.offsetY = (float) ((Math.random() - 0.5f) * 2.0f * 75f);
-
     }
 
     @Override
     protected void actualizarMovimientoEspecifico(float delta, Sprite sprite, Jugador jugador) {
-        manejarAnimacionSprite(delta);
-
         if (enFaseCarga) {
             faseCarga(delta);
         } else if (enFaseDisparo) {
             faseDisparo(delta, sprite, jugador);
         } else if (enFaseParabola) {
             faseParabola(delta, sprite, jugador);
-        }
-    }
-
-    private void manejarAnimacionSprite(float delta) {
-        temporizadorAnimacion += delta;
-        if (temporizadorAnimacion >= intervaloAnimacion) {
-            usandoSprite2 = !usandoSprite2;
-            temporizadorAnimacion = 0f;
         }
     }
 

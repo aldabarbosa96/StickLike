@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
@@ -35,7 +36,7 @@ public class NubePedo implements Proyectiles {
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0;
 
-    private static final float GROW_DURATION = 0.3f;
+    private static final float GROW_DURATION = 0.15f;
     private static final float VIBRATE1_DURATION = 0.3f;
     private static final float PAUSE_DURATION = 0.25f;
     private static final float VIBRATE2_DURATION = 0.3f;
@@ -94,8 +95,8 @@ public class NubePedo implements Proyectiles {
                     enemigosImpactados.clear();
                 }
 
-                float offsetX1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
-                float offsetY1 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
+                float offsetX1 = MathUtils.random(-1f, 1f) * VIBRATE_RANGE;
+                float offsetY1 = MathUtils.random(-1f, 1f) * VIBRATE_RANGE;
                 sprite.setScale(maxScale);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX1, jugadorCenterY + offsetY1);
@@ -124,8 +125,8 @@ public class NubePedo implements Proyectiles {
                     enemigosImpactados.clear();
                 }
 
-                float offsetX2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
-                float offsetY2 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE;
+                float offsetX2 = MathUtils.random(-1f, 1f) * VIBRATE_RANGE;
+                float offsetY2 = MathUtils.random(-1f, 1f) * VIBRATE_RANGE;
                 sprite.setScale(maxScale);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX2, jugadorCenterY + offsetY2);
@@ -149,8 +150,8 @@ public class NubePedo implements Proyectiles {
                     enemigosImpactados.clear();
                 }
 
-                float offsetX3 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE + 2f;
-                float offsetY3 = ((float) Math.random() * 2 - 1) * VIBRATE_RANGE + 2f;
+                float offsetX3 = MathUtils.random(-1f, 1f) * VIBRATE_RANGE + 2f;
+                float offsetY3 = MathUtils.random(-1f, 1f) * VIBRATE_RANGE + 2f;
                 sprite.setScale(maxScale);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(jugadorCenterX + offsetX3, jugadorCenterY + offsetY3);
@@ -238,12 +239,13 @@ public class NubePedo implements Proyectiles {
         float baseDamage = 0;
 
         if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2 || phase == Phase.VIBRATE3) {
-            if (Math.random() < jugador.getCritico()) {
+            if (MathUtils.random() < jugador.getCritico()) {
                 esCritico = true;
-                baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f) * 1.5f;
+                baseDamage = DANYO_PEDO + MathUtils.random(3.35f);
+                baseDamage *= 1.5f;
             } else {
                 esCritico = false;
-                baseDamage = (float) (DANYO_PEDO + Math.random() * 3.35f);
+                baseDamage = DANYO_PEDO + MathUtils.random(3.35f);
             }
 
         } else {

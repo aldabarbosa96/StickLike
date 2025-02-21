@@ -28,6 +28,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 public class RenderVentanaJuego { // usamos posion disk sampling para organizar los borrones
 
     private ShapeRenderer shapeRenderer;
+    private VentanaLoading ventanaLoading;
     private final int tamanyoCeldas;
     private Array<Borron> borronesMapa;
     private AtomicBoolean borronesListos = new AtomicBoolean(false);
@@ -47,11 +48,13 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
             this.posY = posY;
             this.scale = scale;
             this.rotation = rotation;
+
         }
     }
 
     public RenderVentanaJuego(int tamanyoCeldas, Jugador jugador) {
         this.shapeRenderer = new ShapeRenderer();
+        this.ventanaLoading = new VentanaLoading();
         this.tamanyoCeldas = tamanyoCeldas;
 
         final Vector2 posicionInicialJugador = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
@@ -62,10 +65,9 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
                 long startTime = System.currentTimeMillis();
                 generarBorronesRandom(CANTIDAD_BORRONES, posicionInicialJugador);
                 long elapsed = System.currentTimeMillis() - startTime;
-                // Si la generación ha tardado menos de 1 segundo, esperamos el tiempo restante.
-                if (elapsed < 500) {
+                if (elapsed < 1500) {
                     try {
-                        Thread.sleep(500 - elapsed);
+                        Thread.sleep(1500 - elapsed);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -82,9 +84,7 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
         ventanaJuego1.actualizarPosCamara();
 
         if (!borronesListos.get()) {
-            spriteBatch.begin();
-            spriteBatch.draw(loadingTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            spriteBatch.end();
+            ventanaLoading.render(spriteBatch,delta);
             return;
         }
         // 1) Limpiamos la pantalla
@@ -232,15 +232,16 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
      * @param k número máximo de intentos por punto activo
      * @return Array de puntos generados
      */
+
     private Array<Vector2> generatePoissonPoints(float minX, float minY, float maxX, float maxY, float r, int k) {
         Array<Vector2> points = new Array<>();
         Array<Vector2> activeList = new Array<>();
 
         float width = maxX - minX;
         float height = maxY - minY;
-        float cellSize = r / (float)Math.sqrt(2);
-        int gridCols = (int)Math.ceil(width / cellSize);
-        int gridRows = (int)Math.ceil(height / cellSize);
+        float cellSize = r / (float) Math.sqrt(2);
+        int gridCols = (int) Math.ceil(width / cellSize);
+        int gridRows = (int) Math.ceil(height / cellSize);
         Vector2[][] grid = new Vector2[gridCols][gridRows];
 
         // Elegir un punto inicial aleatorio
@@ -249,8 +250,8 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
         Vector2 initial = new Vector2(initialX, initialY);
         points.add(initial);
         activeList.add(initial);
-        int gridX = (int)((initial.x - minX) / cellSize);
-        int gridY = (int)((initial.y - minY) / cellSize);
+        int gridX = (int) ((initial.x - minX) / cellSize);
+        int gridY = (int) ((initial.y - minY) / cellSize);
         grid[gridX][gridY] = initial;
 
         while (activeList.size > 0) {
@@ -264,8 +265,8 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
                 float newY = point.y + distance * MathUtils.sin(angle);
                 if (newX < minX || newX >= maxX || newY < minY || newY >= maxY) continue;
                 Vector2 newPoint = new Vector2(newX, newY);
-                int newGridX = (int)((newX - minX) / cellSize);
-                int newGridY = (int)((newY - minY) / cellSize);
+                int newGridX = (int) ((newX - minX) / cellSize);
+                int newGridY = (int) ((newY - minY) / cellSize);
                 boolean ok = true;
                 // Comprobar vecinos en el grid
                 for (int ix = Math.max(0, newGridX - 2); ix <= Math.min(gridCols - 1, newGridX + 2); ix++) {
@@ -292,7 +293,6 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
         }
         return points;
     }
-
 
     private boolean seSolapaConOtroBorron(float x, float y, float width, float height) {
         float leftA = x;
@@ -347,5 +347,6 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
 
     public void dispose() {
         shapeRenderer.dispose();
+        ventanaLoading.dispose();
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
@@ -151,7 +152,7 @@ public class VentanaJuego1 implements Screen {
     public void render(float delta) {
         menuPause.handleInput();
 
-        if (jugador.estaMuerto()) {  // booleano invertido, no olvidar!
+        if (jugador.estaMuerto()) {
             game.setScreen(new VentanaGameOver(game));
             return;
         }
@@ -192,14 +193,15 @@ public class VentanaJuego1 implements Screen {
                 if (xp instanceof ObjetoXp objetoXp) {
                     float xpOtorgada;
                     if (objetoXp.isEsXPGorda()) {
-                        xpOtorgada = 50f + (float) (Math.random() * 50f);  // 50 a 100
+                        xpOtorgada = 50f + MathUtils.random(50f);  // 50 a 100
                     } else {
-                        xpOtorgada = 10f + (float) (Math.random() * 15f);  // 10 a 25
+                        xpOtorgada = 10f + MathUtils.random(15f);  // 10 a 25
                     }
+
                     sistemaDeNiveles.agregarXP(xpOtorgada);
 
                 } else if (xp instanceof ObjetoVida) {
-                    float vidaExtra = 6f + (float) (Math.random() * 10f); // 6 a 16
+                    float vidaExtra = 6f + MathUtils.random(10f); // 6 a 16
                     float nuevaVida = jugador.getVidaJugador() + vidaExtra;
                     if (nuevaVida > jugador.getMaxVidaJugador()) {
                         nuevaVida = jugador.getMaxVidaJugador();
@@ -260,7 +262,6 @@ public class VentanaJuego1 implements Screen {
         popUpMejoras.getUiStage().getViewport().update(width, height, true);
         hud.resize(width, height);
         menuPause.getViewport().update(width, height, true);
-
         controladorEnemigos.setVentanaRedimensionada(true);
     }
 
@@ -312,6 +313,10 @@ public class VentanaJuego1 implements Screen {
             gestorDeAudio.reproducirMusica();
             renderHUDComponents.reanudarTemporizador();
         }
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return spriteBatch;
     }
 
     public Jugador getJugador() {

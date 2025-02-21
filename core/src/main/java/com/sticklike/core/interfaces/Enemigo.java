@@ -2,7 +2,7 @@ package com.sticklike.core.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 
 /**
  * Define el comportamiento base de un enemigo en el juego.
@@ -29,5 +29,5 @@ public interface Enemigo {
     void aplicarKnockback(float fuerza, float dirX, float dirY);
     float getVida();
     float getDamageAmount();
-    AnimacionesEnemigos getAnimaciones();
+    AnimacionesBaseEnemigos getAnimaciones();
 }
