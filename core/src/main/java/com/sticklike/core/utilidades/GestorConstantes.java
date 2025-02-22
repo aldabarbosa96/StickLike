@@ -137,17 +137,18 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración de los enemigos
     // -------------------------------------------------
     public static final float VIDA_ENEMIGOCULO = 35f;
+    public static final float VIDA_ENEMIGO_POLLA = 23f;
+    public static final float VIDA_ENEMIGOREGLA = 80f;
+    public static final float VIDA_ENEMIGO_EXAMEN = 27f;
+    public static final float VIDA_ENEMIGO_VATER = 300f;
     public static final float DANYO_CULO = 2f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
     public static final float COOLDOWN_POLLA = 1f;
     public static final float VEL_BASE_CULO = 38f;
-    public static final float VIDA_ENEMIGOREGLA = 80f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
     public static final float VEL_BASE_POLLA = 55f;
-    public static final float VIDA_ENEMIGO_POLLA = 23f;
     public static final float DANYO_POLLA = 1.25f;
-    public static final float VIDA_ENEMIGO_EXAMEN = 27f;
     public static final float DANYO_EXAMEN = 1.5f;
     public static final float COOLDOWN_EXAMEN = 1.2f;
     public static final float VEL_BASE_EXAMEN = 100f;

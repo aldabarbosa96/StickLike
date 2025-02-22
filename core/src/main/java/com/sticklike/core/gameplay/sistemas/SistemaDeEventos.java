@@ -36,7 +36,7 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Aumenta nº enemigos", this::eventoAumentaEnemigos1, LVL_EVENTO1));
         eventos.add(new Evento("Aumenta nº enemigos 2",  this::eventoAumentaEnemigos2, LVL_EVENTO2));
         eventos.add(new Evento("Aparecen las pollas",  this::entraEnemigoPolla, LVL_EVENTO3));
-        eventos.add(new Evento("BOSSPOLLA Aparece",  this::spawnPrimerBoss, LVL_EVENTO4));
+        eventos.add(new Evento("BOSSPOLLA Aparece",  this::spawnPrimerBoss, 1));
         eventos.add(new Evento("Examen Aparece",  this::spawnExamen, LVL_EVENTO4));
     }
 

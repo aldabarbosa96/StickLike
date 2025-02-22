@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionExamen;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoExamen;
+import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
@@ -38,6 +39,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
     private float tiempoAcumulado = 0;
     private float tiempoCambio = 0.25f; // Tiempo entre cambios de frame
     private boolean usandoFrame2 = false;
+    private RenderBaseEnemigos renderBaseEnemigos;
 
     public EnemigoExamen(float x, float y, Jugador jugador, float velocidadEnemigo) {
         this.jugador = jugador;
@@ -49,6 +51,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
         this.animacionExamen = new AnimacionExamen(animacionesBaseEnemigos, manager.get(ENEMIGO_EXAMEN, Texture.class), manager.get(ENEMIGO_EXAMEN2, Texture.class), 0.25f);
         setVelocidad(velocidadEnemigo);
         this.damageTexture = manager.get(DAMAGE_EXAMEN_TEXTURE, Texture.class);
+        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
@@ -65,21 +68,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
-        if (mostrarSprite) {
-            Color originalColor = sprite.getColor().cpy();
-            if (animacionesBaseEnemigos.estaEnParpadeo()) {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            } else if (animacionesBaseEnemigos.estaEnFade()) {
-                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
-            } else {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            }
-
-            sprite.draw(batch);
-            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
-        }
+        renderBaseEnemigos.dibujarEnemigos(batch, this);
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionCulo;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
+import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
@@ -40,6 +41,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     private boolean tieneOjo = false;
     private final Texture damageTexture;
     private boolean recibeImpacto = false; // puede ser útil
+    private RenderBaseEnemigos renderBaseEnemigos;
 
     public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
         esConOjo();
@@ -49,6 +51,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.animacionCulo = new AnimacionCulo(this, animacionesBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
         this.damageTexture = manager.get(DAMAGE_CULO_TEXTURE, Texture.class);
+        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     private void esConOjo() {
@@ -68,31 +71,8 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     }
 
     @Override
-    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
-        movimientoCulo.aplicarKnockback(fuerza, dirX, dirY);
-    }
-
-    @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
-
-        if (mostrarSprite) {
-            Color originalColor = sprite.getColor().cpy();
-
-            // Si el fade está activo, aplicamos el alfa del fade
-            if (animacionesBaseEnemigos.estaEnFade()) {
-                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
-            } else if (animacionesBaseEnemigos.estaEnParpadeo()) {
-                // Si está en parpadeo, se cambia la textura, pero el alfa se deja en 1
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            } else {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            }
-
-            sprite.draw(batch);
-            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
-        }
+        renderBaseEnemigos.dibujarEnemigos(batch,this);
     }
 
 
@@ -143,6 +123,10 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
+    }
+    @Override
+    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
+        movimientoCulo.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override

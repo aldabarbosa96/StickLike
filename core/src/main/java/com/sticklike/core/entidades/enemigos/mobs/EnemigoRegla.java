@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
+import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 
@@ -34,6 +35,7 @@ public class EnemigoRegla implements Enemigo {
     private boolean procesado = false;
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private float damageAmount = DANYO_REGLA;
+    private RenderBaseEnemigos renderBaseEnemigos;
 
     private final Texture damageTexture;
 
@@ -46,24 +48,12 @@ public class EnemigoRegla implements Enemigo {
         this.orthographicCamera = orthographicCamera;
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_REGLA_TEXTURE, Texture.class);
+        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
-        if (mostrarSprite) {
-            Color originalColor = sprite.getColor().cpy();
-            if (animacionesBaseEnemigos.estaEnFade()) {
-                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
-            } else if (animacionesBaseEnemigos.estaEnParpadeo()) {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            } else {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            }
-            sprite.draw(batch);
-            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
-        }
+        renderBaseEnemigos.dibujarEnemigos(batch, this);
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.enemigos.animacion.RenderSombrasEnemigos;
+import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
@@ -37,7 +37,7 @@ public class ControladorEnemigos {
     private final Array<Enemigo> enemigosAEliminar = new Array<>();
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
     private boolean bossSpawned = false;
-    private final RenderSombrasEnemigos renderSombrasEnemigos;
+    private final RenderBaseEnemigos renderBaseEnemigos;
     private static final int MAX_ENEMIGOS = 300;
     private boolean ventanaRedimensionada = false;
     private float temporizadorRedimension = 0f;
@@ -51,7 +51,7 @@ public class ControladorEnemigos {
         this.intervaloDeAparicion = intervaloDeAparicion;
         this.temporizadorDeAparicion = 0;
         this.ventanaJuego1 = ventanaJuego1;
-        this.renderSombrasEnemigos = new RenderSombrasEnemigos();
+        this.renderBaseEnemigos = new RenderBaseEnemigos();
     }
 
 
@@ -113,7 +113,7 @@ public class ControladorEnemigos {
         if (jugador.estaMuerto()) {
             return;
         }
-        renderSombrasEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos, ventanaJuego1.getOrtographicCamera());
+        renderBaseEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos, ventanaJuego1.getOrtographicCamera());
     }
 
 
@@ -256,6 +256,10 @@ public class ControladorEnemigos {
 
     public int getEnemigosActuales() {
         return enemigos.size;
+    }
+
+    public RenderBaseEnemigos getRenderBaseEnemigos() {
+        return renderBaseEnemigos;
     }
 
     public void setVentanaRedimensionada(boolean ventanaRedimensionada) {

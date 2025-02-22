@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoPolla;
+import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
@@ -33,6 +34,7 @@ public class EnemigoPolla implements Enemigo {
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private float damageAmount = DANYO_POLLA;
     private final Texture damageTexture;
+    private RenderBaseEnemigos renderBaseEnemigos;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         sprite = new Sprite(manager.get(ENEMIGO_POLLA, Texture.class));
@@ -42,6 +44,7 @@ public class EnemigoPolla implements Enemigo {
         this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_POLLA_TEXTURE, Texture.class);
+        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
@@ -58,20 +61,7 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        boolean mostrarSprite = (vidaEnemigo > 0) || animacionesBaseEnemigos.estaEnFade();
-        if (mostrarSprite) {
-            Color originalColor = sprite.getColor().cpy();
-            if (animacionesBaseEnemigos.estaEnFade()) {
-                float alphaFade = animacionesBaseEnemigos.getAlphaActual();
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
-            } else if (animacionesBaseEnemigos.estaEnParpadeo()) {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            } else {
-                sprite.setColor(originalColor.r, originalColor.g, originalColor.b, 1);
-            }
-            sprite.draw(batch);
-            animacionesBaseEnemigos.restaurarColor(sprite, originalColor);
-        }
+        renderBaseEnemigos.dibujarEnemigos(batch, this);
     }
 
     @Override

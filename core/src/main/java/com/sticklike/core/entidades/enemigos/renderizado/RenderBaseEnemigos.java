@@ -1,7 +1,8 @@
-package com.sticklike.core.entidades.enemigos.animacion;
+package com.sticklike.core.entidades.enemigos.renderizado;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
@@ -16,7 +17,29 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
  * Clase encargada de renderizar las sombras de los enemigos; ajustamos la forma y tamaño de la sombra según el tipo.
  */
 
-public class RenderSombrasEnemigos {
+public class RenderBaseEnemigos {
+
+    public void dibujarEnemigos(SpriteBatch batch, Enemigo enemigo){
+        float vidaEnemigo = enemigo.getVida();
+        boolean mostrarSprite = (vidaEnemigo > 0) || enemigo.getAnimaciones().estaEnFade();
+        if (mostrarSprite) {
+            Color originalColor = enemigo.getSprite().getColor().cpy();
+
+            // Si el fade está activo, aplicamos el alfa del fade
+            if (enemigo.getAnimaciones().estaEnFade()) {
+                float alphaFade = enemigo.getAnimaciones().getAlphaActual();
+                enemigo.getSprite().setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
+            } else if (enemigo.getAnimaciones().estaEnParpadeo()) {
+                // Si está en parpadeo, se cambia la textura, pero el alfa se deja en 1
+                enemigo.getSprite().setColor(originalColor.r, originalColor.g, originalColor.b, 1);
+            } else {
+                enemigo.getSprite().setColor(originalColor.r, originalColor.g, originalColor.b, 1);
+            }
+
+            enemigo.getSprite().draw(batch);
+            enemigo.getAnimaciones().restaurarColor(enemigo.getSprite(), originalColor);
+        }
+    }
     // todo --> mover a la interfaz de enemigos en un futuro para que cada uno gestione el dibujado de su sombra individualmente (evitamos uso excesivo de instanceOf)
     public void dibujarSombrasEnemigos(ShapeRenderer shapeRenderer, Array<Enemigo> enemigos, OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);

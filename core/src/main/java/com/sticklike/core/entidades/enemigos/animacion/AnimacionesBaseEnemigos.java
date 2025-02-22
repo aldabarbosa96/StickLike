@@ -8,7 +8,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
- * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño y el fade de muerte.
+ * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño, el fade de muerte y el volteo.
  */
 
 public class AnimacionesBaseEnemigos {
