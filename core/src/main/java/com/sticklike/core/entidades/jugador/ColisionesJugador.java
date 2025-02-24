@@ -29,8 +29,8 @@ public class ColisionesJugador {
         Rectangle fullRect = enemigo.getSprite().getBoundingRectangle();
 
         // Factores de escalado para los nuevos boundingRectangle
-        float scaleX = 0.85f;
-        float scaleY = 0.85f;
+        float scaleX = 0.75f;
+        float scaleY = 0.75f;
 
         float newWidth = fullRect.width * scaleX;
         float newHeight = fullRect.height * scaleY;

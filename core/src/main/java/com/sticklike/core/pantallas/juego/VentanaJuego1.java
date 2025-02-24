@@ -29,7 +29,9 @@ import com.sticklike.core.ui.HUD;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.ui.MenuPause;
 import com.sticklike.core.ui.RenderHUDComponents;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.List;
@@ -133,7 +135,7 @@ public class VentanaJuego1 implements Screen {
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
 
-        menuPause = new MenuPause( this);
+        menuPause = new MenuPause(this);
     }
 
     private void inicializarListas() {
@@ -211,8 +213,10 @@ public class VentanaJuego1 implements Screen {
 
                 } else if (xp instanceof ObjetoOro) {
                     jugador.setOroGanado(jugador.getOroGanado() + 1);
-                    Gdx.app.log("Recolección", "ObjetoOro recolectado. Oro extra otorgado: " + 1
-                        + ". Total oro: " + jugador.getOroGanado());
+                    Gdx.app.log("Recolección", "ObjetoOro recolectado. Oro extra otorgado: " + 1 + ". Total oro: " + jugador.getOroGanado());
+                } else if (xp instanceof ObjetoPowerUp) {
+                    jugador.setCacasRecogidas(jugador.getCacasRecogidas() + 1);
+                    Gdx.app.log("PowerUps", "ObjetoPowerUp recolectado. Total trazos: " + jugador.getCacasRecogidas());
                 }
             }
         }
@@ -266,13 +270,16 @@ public class VentanaJuego1 implements Screen {
     }
 
     @Override
-    public void pause() { }
+    public void pause() {
+    }
 
     @Override
-    public void resume() { }
+    public void resume() {
+    }
 
     @Override
-    public void hide() { }
+    public void hide() {
+    }
 
     @Override
     public void dispose() {

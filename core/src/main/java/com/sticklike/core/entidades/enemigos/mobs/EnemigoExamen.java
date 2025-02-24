@@ -44,7 +44,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
     public EnemigoExamen(float x, float y, Jugador jugador, float velocidadEnemigo) {
         this.jugador = jugador;
         sprite = new Sprite(manager.get(ENEMIGO_EXAMEN, Texture.class));
-        sprite.setSize(36f, 38f);
+        sprite.setSize(40f, 42f);
         sprite.setPosition(x, y);
         this.movimientoExamen = new MovimientoExamen();
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();

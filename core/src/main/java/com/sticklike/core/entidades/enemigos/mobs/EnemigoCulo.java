@@ -15,6 +15,7 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
@@ -43,7 +44,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     private boolean recibeImpacto = false; // puede ser útil
     private RenderBaseEnemigos renderBaseEnemigos;
 
-    public EnemigoCulo(float x, float y, Jugador jugador, float velocidadEnemigo) {
+    public EnemigoCulo(float x, float y, Jugador jugador) {
         esConOjo();
         sprite.setPosition(x, y);
         this.jugador = jugador;
@@ -72,7 +73,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch,this);
+        renderBaseEnemigos.dibujarEnemigos(batch, this);
     }
 
 
@@ -85,7 +86,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         if (temporizadorDanyo > 0) {
             temporizadorDanyo -= delta;
         }
-        animacionCulo.actualizarAnimacion(delta, jugador, sprite);
+        animacionCulo.actualizarAnimacion(delta, sprite);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
@@ -124,6 +125,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
             }
         }
     }
+
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
         movimientoCulo.aplicarKnockback(fuerza, dirX, dirY);

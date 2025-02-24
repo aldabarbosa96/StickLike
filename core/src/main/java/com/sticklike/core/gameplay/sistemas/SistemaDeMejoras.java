@@ -47,8 +47,8 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
         todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 35%", () -> jugador.aumentarResistencia(0.35f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 30%", () -> jugador.aumentarPoderJugador(1.3f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 30%", () -> jugador.aumentarResistencia(0.3f), 3, null, null));
+        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
             jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);
             jugador.setVidaJugador(jugador.getVidaJugador() + 15);
@@ -60,7 +60,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!",
             "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!",
-            "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO, Texture.class), "PEDO"));
+            "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
 
         // Upgrades específicos para las habilidades
         // Calcetín

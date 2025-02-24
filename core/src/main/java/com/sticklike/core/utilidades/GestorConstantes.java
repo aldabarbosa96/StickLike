@@ -122,7 +122,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int VIDAMAX_JUGADOR = 75;
     public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
-    public static final float INTERVALO_MIN_DISPARO = 0.1f;
+    public static final float INTERVALO_MIN_DISPARO = 0.11f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float RESISTENCIA = 0.05f;
@@ -142,16 +142,19 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VIDA_ENEMIGO_EXAMEN = 27f;
     public static final float VIDA_ENEMIGO_VATER = 300f;
     public static final float DANYO_CULO = 2f;
-    public static final float COOLDOWN_ENEMIGOCULO = 1f;
-    public static final float COOLDOWN_POLLA = 1f;
-    public static final float VEL_BASE_CULO = 38f;
     public static final float DANYO_REGLA = 3.5f;
-    public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
-    public static final float VEL_BASE_POLLA = 55f;
     public static final float DANYO_POLLA = 1.25f;
     public static final float DANYO_EXAMEN = 1.5f;
+    public static final float DANYO_VATER = 50f;
+    public static final float COOLDOWN_ENEMIGOCULO = 1f;
+    public static final float COOLDOWN_POLLA = 1f;
+    public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
     public static final float COOLDOWN_EXAMEN = 1.2f;
-    public static final float VEL_BASE_EXAMEN = 100f;
+    public static final float COOLDOWN_VATER = 1f;
+    public static final float VEL_BASE_CULO = 35f;
+    public static final float VEL_BASE_POLLA = 45f;
+    public static final float VEL_BASE_EXAMEN = 90f;
+    public static final float VEL_BASE_VATER = 25f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
     public static final float MULT_VELOCIDAD_POLLA = 1.5f;
@@ -162,7 +165,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ENEMY_MIN_MOVE_DURATION = 1.0f;
     public static final float ENEMY_MAX_MOVE_DURATION = 10.0f;
     public static final float BORDER_SPAWN_MARGIN = 200f;
-    public static final float INTERVALO_SPAWN = 0.9f;
+    public static final float INTERVALO_SPAWN = 1f;
     public static final float MAX_OFFSET = 100f;
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
@@ -172,14 +175,15 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TIEMPO_PARABOLA_EXAMEN = 3;
     public static final float CORRECCION_SPAWN = 50f;
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
-    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO","CULO", "CULO", "CULO", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
 
     // -------------------------------------------------
     // Sombras enemigos
     // -------------------------------------------------
     public static final float SHADOW_WIDTH_CULO = 0.9f;
-    public static final float SHADOW_HEIGHT_CULO = 0.3f;
-    public static final float SHADOW_OFFSET = 2f;
+    public static final float SHADOW_HEIGHT_CULO = 0.35f;
+    public static final float SHADOW_OFFSET = 2.25f;
     public static final float SHADOW_OFFSET_POLLA = 2f;
 
     // -------------------------------------------------
@@ -217,7 +221,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TAZO_SIZE = 14f;
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 52.5f;
-    public static final float RADIO_TAZOS_JUGADOR = 65f;
+    public static final float RADIO_TAZOS_JUGADOR = 75f;
     public static final float VEL_ROTACION = 180f;
     public static final float INTERVALO_TAZOS = 0.1f;
     public static final float DANYO_TAZOS = 3.5f;
@@ -239,7 +243,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración recolectables
     // -------------------------------------------------
-    public static final float DISTANCIA_ACTIVACION = 45f;
+    public static final float DISTANCIA_ACTIVACION = 60f;
     public static final float VEL_ATRACCION = 300f;
     public static final float OBJETO_VIDA_WIDTH = 12f * 1.09375f;
     public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;
@@ -258,16 +262,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 9;
     public static final int LVL_EVENTO5 = 10;
-    public static final float EVENTO1_SPAWN_RATE = 0.5f;
+    public static final float EVENTO1_SPAWN_RATE = 0.65f;
     public static final float EVENTO1_SPEED_MULT = 1.15f;
-    public static final float EVENTO2_SPAWN_RATE = 0.25f;
+    public static final float EVENTO2_SPAWN_RATE = 0.35f;
+    public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
     public static final float EVENTO2_SPEED_MULT = 1.35f;
     public static final float EVENTO3_SPEED_MULT = 2f;
-    public static final float EVENTO3_SPAWN_RATE = 0.2f;
+    public static final float EVENTO3_SPAWN_RATE = 0.15f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN","CULO"};
-    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.15f;
+    public static final double EVENTO_POLLAS_SPAWN_RATE = 0.000000001f;
 
     // -------------------------------------------------
     // Configuración borrones

@@ -52,6 +52,7 @@ public class Jugador {
     private float poderJugador;
     private boolean estaVivo;
     private int oroGanado;
+    private int cacasRecogidas;
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles) {
@@ -69,6 +70,7 @@ public class Jugador {
         this.poderJugador = PODER_JUGADOR;
         this.estaVivo = true;
         this.oroGanado = 0;
+        this.cacasRecogidas = 0;
 
         // Inicializar el sprite del jugador
         this.sprite = new Sprite(manager.get(STICKMAN, Texture.class));
@@ -193,13 +195,12 @@ public class Jugador {
 
 
     public void aumentarCritico(float percentage) {
-        float criticalAmount = (percentage * criticoJugador) * 10;
-        this.criticoJugador += criticalAmount;
+        this.criticoJugador += percentage;
     }
 
     public void aumentarResistencia(float percentage) {
-        float resistenciaAmount = (percentage * resistenciaJugador) * 10;
-        this.resistenciaJugador += resistenciaAmount;
+        float criticalAmount = (percentage * criticoJugador) * 10;
+        this.resistenciaJugador += criticalAmount;
     }
 
     public float getVelocidadJugador() {
@@ -325,4 +326,12 @@ public class Jugador {
         return renderJugador;
     }
 
+
+    public int getCacasRecogidas() {
+        return cacasRecogidas;
+    }
+
+    public void setCacasRecogidas(int cacasRecogidas) {
+        this.cacasRecogidas = cacasRecogidas;
+    }
 }

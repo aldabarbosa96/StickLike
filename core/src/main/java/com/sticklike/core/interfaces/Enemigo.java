@@ -30,4 +30,5 @@ public interface Enemigo {
     float getVida();
     float getDamageAmount();
     AnimacionesBaseEnemigos getAnimaciones();
+
 }

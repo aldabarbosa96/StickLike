@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
+import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -110,6 +111,7 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
+        GestorDeAudio.getInstance().reproducirEfecto("impactoBase",0.25f);
     }
 
     @Override

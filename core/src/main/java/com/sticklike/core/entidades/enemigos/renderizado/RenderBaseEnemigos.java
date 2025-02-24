@@ -9,6 +9,7 @@ import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
@@ -18,6 +19,10 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
  */
 
 public class RenderBaseEnemigos {
+    private float x;
+    private float y;
+    private float w;
+    private float h;
 
     public void dibujarEnemigos(SpriteBatch batch, Enemigo enemigo){
         float vidaEnemigo = enemigo.getVida();
@@ -53,8 +58,10 @@ public class RenderBaseEnemigos {
                 dibujarSombraPolla((EnemigoPolla) enemigo, shapeRenderer);
             } else if (enemigo instanceof EnemigoExamen) {
                 dibujarSombraExamen((EnemigoExamen) enemigo, shapeRenderer);
+            } else if (enemigo instanceof EnemigoRegla) {
+                dibujarSombraRegla((EnemigoRegla) enemigo,shapeRenderer);
             } else {
-                dibujarSombraDefault(enemigo, shapeRenderer);
+                dibujarSombraVater(enemigo, shapeRenderer);
             }
         }
     }
@@ -68,15 +75,13 @@ public class RenderBaseEnemigos {
     }
 
     private void dibujarSombraBossPolla(BossPolla bossPolla, ShapeRenderer shapeRenderer) {
-        float x = bossPolla.getX();
-        float y = bossPolla.getY();
-        float w = bossPolla.getSprite().getWidth();
-        float h = bossPolla.getSprite().getHeight();
+
+        getEnemyCenter(bossPolla,x,y,w,h);
 
         float centerX = x + w / 2f;
 
         float shadowWidth = w;
-        float shadowHeight = h * 0.2f;
+        float shadowHeight = h * 0.25f;
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - 8f;
 
@@ -86,10 +91,7 @@ public class RenderBaseEnemigos {
     }
 
     private void dibujarSombraCulo(EnemigoCulo culo, ShapeRenderer shapeRenderer) {
-        float x = culo.getX();
-        float y = culo.getY();
-        float w = culo.getSprite().getWidth();
-        float h = culo.getSprite().getHeight();
+       getEnemyCenter(culo,x,y,w,h);
 
         float centerX = x + w / 2f;
         float shadowWidth = w * SHADOW_WIDTH_CULO;
@@ -105,10 +107,7 @@ public class RenderBaseEnemigos {
     private void dibujarSombraPolla(EnemigoPolla polla, ShapeRenderer shapeRenderer) {
         float offset = polla.getMovimientoPolla().getCurrentOffset();
 
-        float x = polla.getX();
-        float y = polla.getY();
-        float w = polla.getSprite().getWidth();
-        float h = polla.getSprite().getHeight();
+        getEnemyCenter(polla,x,y,w,h);
 
         float centerX = x + w / SHADOW_OFFSET_POLLA;
 
@@ -136,10 +135,7 @@ public class RenderBaseEnemigos {
     }
 
     private void dibujarSombraExamen(EnemigoExamen examen, ShapeRenderer shapeRenderer) {
-        float x = examen.getX();
-        float y = examen.getY();
-        float w = examen.getSprite().getWidth();
-        float h = examen.getSprite().getHeight();
+        getEnemyCenter(examen,x,y,w,h);
 
         float shadowSize = ((w + h) / 2f) * 0.55f;
         float centerX = x + w / 2f + 1.5f;
@@ -151,20 +147,36 @@ public class RenderBaseEnemigos {
         shapeRenderer.ellipse(shadowX, shadowY, shadowSize + 1f, shadowSize - 10f);
     }
 
-    private void dibujarSombraDefault(Enemigo enemigo, ShapeRenderer shapeRenderer) {
-        float x = enemigo.getX();
-        float y = enemigo.getY();
-        float w = enemigo.getSprite().getWidth();
-        float h = enemigo.getSprite().getHeight();
+    private void dibujarSombraRegla(EnemigoRegla regla, ShapeRenderer shapeRenderer) {
+        getEnemyCenter(regla,x,y,w,h);
 
         float centerX = x + w / 2f;
         float shadowWidth = w * 0.75f;
         float shadowHeight = h * 0.3f;
         float shadowX = centerX - (shadowWidth / 2f);
-        float shadowY = y - 2.5f;
+        float shadowY = y - 3.5f;
 
-        shapeRenderer.setColor(0.35f, 0.35f, 0.35f, 0.5f);
+        dibujarParpadeoSombra(regla,shapeRenderer);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
+    private void dibujarSombraVater(Enemigo enemigo, ShapeRenderer shapeRenderer) {
+        getEnemyCenter(enemigo,x,y,w,h);
+        float centerX = x + w / 2f;
+        float shadowWidth = w * 0.65f;
+        float shadowHeight = h * 0.2f;
+        float shadowX = centerX - (shadowWidth / 2f);
+        float shadowY = y - 12.5f;
+
+       dibujarParpadeoSombra(enemigo,shapeRenderer);
+        shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
+    }
+
+    private void getEnemyCenter(Enemigo enemigo, float x, float y, float w, float h){
+        this.x = enemigo.getX();
+        this.y = enemigo.getY();
+        this.w = enemigo.getSprite().getWidth();
+        this.h = enemigo.getSprite().getHeight();
+
+    }
 }

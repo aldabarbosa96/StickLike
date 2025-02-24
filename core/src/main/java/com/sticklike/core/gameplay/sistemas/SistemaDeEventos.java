@@ -1,6 +1,7 @@
 package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.gameplay.progreso.Evento;
@@ -23,6 +24,9 @@ public class SistemaDeEventos {
     private RenderHUDComponents renderHUDComponents; // Para futuros eventos basados en timer
     private ControladorEnemigos controladorEnemigos;
     private SistemaDeNiveles sistemaDeNiveles;
+    private long pollaEventStartTime;
+    private boolean pollaEventActive = false;
+
 
     public SistemaDeEventos(RenderHUDComponents renderHUDComponents, ControladorEnemigos controladorEnemigos, SistemaDeNiveles sistemaDeNiveles) {
         this.eventos = new PriorityQueue<>();
@@ -34,10 +38,10 @@ public class SistemaDeEventos {
 
     private void inicializarEventos() {
         eventos.add(new Evento("Aumenta nº enemigos", this::eventoAumentaEnemigos1, LVL_EVENTO1));
-        eventos.add(new Evento("Aumenta nº enemigos 2",  this::eventoAumentaEnemigos2, LVL_EVENTO2));
-        eventos.add(new Evento("Aparecen las pollas",  this::entraEnemigoPolla, LVL_EVENTO3));
-        eventos.add(new Evento("BOSSPOLLA Aparece",  this::spawnPrimerBoss, 1));
-        eventos.add(new Evento("Examen Aparece",  this::spawnExamen, LVL_EVENTO4));
+        eventos.add(new Evento("Aumenta nº enemigos 2", this::eventoAumentaEnemigos2, LVL_EVENTO2));
+        eventos.add(new Evento("Aparecen las pollas", this::entraEnemigoPolla, LVL_EVENTO3));
+        eventos.add(new Evento("BOSSPOLLA Aparece", this::spawnPrimerBoss, LVL_EVENTO4));
+        eventos.add(new Evento("Examen Aparece", this::spawnExamen, LVL_EVENTO4));
     }
 
     private void eventoAumentaEnemigos1() {
@@ -65,15 +69,26 @@ public class SistemaDeEventos {
     }
 
     private void entraEnemigoPolla() {
-        controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
-        controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
-        Gdx.app.log("Polla", "Enemigo polla aparece");
+        if (!pollaEventActive) {
+            controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
+            controladorEnemigos.setIntervaloDeAparicion((float) EVENTO_POLLAS_SPAWN_RATE);
+            Gdx.app.log("Polla", "Enemigo polla aparece");
+            pollaEventStartTime = TimeUtils.millis();
+            pollaEventActive = true;
+        } else {
+            long elapsedTime = TimeUtils.timeSinceMillis(pollaEventStartTime);
+            if (elapsedTime >= 6500) {
+                controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS2);
+                controladorEnemigos.setIntervaloDeAparicion(EVENTO2YMEDIO_SPAWN_RATE);
+                pollaEventActive = false;
+            }
+        }
     }
 
     private void spawnPrimerBoss() {
         controladorEnemigos.spawnBossPollaAleatorio();
         GestorDeAudio.getInstance().cambiarMusica("fondo3");
-        Gdx.app.log("BossPolla", "¡Ha aparecido el PollaBOSS en el nivel 10!");
+        Gdx.app.log("BossPolla", "¡Ha aparecido el PollaBOSS en el nivel 9!");
     }
 
 
@@ -84,7 +99,6 @@ public class SistemaDeEventos {
         incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
         Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
-
     public void actualizar() {
         if (!eventos.isEmpty()) {
             Evento siguienteEvento = eventos.peek();
@@ -96,8 +110,12 @@ public class SistemaDeEventos {
                 assert evento != null;
                 Gdx.app.log("Act. Eventos.", "Activando evento: " + evento.getNombreEvento() + " [nivel requerido: " + evento.getNivelRequerido() + "]");
                 evento.applyEvento();
+
                 return;
             }
+        }
+        if (pollaEventActive ) {
+            entraEnemigoPolla();
         }
     }
 

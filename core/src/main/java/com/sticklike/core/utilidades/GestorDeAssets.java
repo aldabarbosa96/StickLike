@@ -26,11 +26,14 @@ public class GestorDeAssets {
     public static final String ENEMIGO_POLLA = "enemigos/05polla2.png";
     public static final String ENEMIGO_EXAMEN = "enemigos/examen.png";
     public static final String ENEMIGO_EXAMEN2 = "enemigos/examen2.png";
+    public static final String ENEMIGO_VATER = "enemigos/water.png";
+    public static final String ENEMIGO_VATER2 = "enemigos/water2.png";
     public static final String CORAZON_VIDA = "hud/life.png";
     public static final String ARMA_PIEDRA = "armas/01piedra.png";
     public static final String ARMA_CALCETIN = "armas/02calcetin.png";
     public static final String ARMA_TAZOS = "armas/04tetazo.png";
     public static final String ARMA_NUBE_PEDO = "armas/03nubePedo.png";
+    public static final String ARMA_NUBE_PEDO_HUD = "armas/03nubePedoHUD.png";
     // Drops y HUD
     public static final String RECOLECTABLE_XP = "drops/01xp1.png";
     public static final String RECOLECTABLE_XP2 = "drops/01xp2.png";
@@ -60,6 +63,7 @@ public class GestorDeAssets {
     public static final String DAMAGE_POLLA_TEXTURE = "enemigos/damageSprites/05polla2D.png";
     public static final String DAMAGE_REGLA_TEXTURE = "enemigos/damageSprites/03reglaCruzadaD.png";
     public static final String DAMAGE_EXAMEN_TEXTURE = "enemigos/damageSprites/06examenD.png";
+    public static final String DAMAGE_VATER_TEXTURE = "enemigos/damageSprites/07waterD.png";
     public static final String DAMAGE_BOSS_POLLA_TEXTURE = "enemigos/damageSprites/bossPollaD.png";
 
     public static void cargarRecursos() {
@@ -79,11 +83,14 @@ public class GestorDeAssets {
         manager.load(ENEMIGO_POLLA, Texture.class);
         manager.load(ENEMIGO_EXAMEN, Texture.class);
         manager.load(ENEMIGO_EXAMEN2, Texture.class);
+        manager.load(ENEMIGO_VATER,Texture.class);
+        manager.load(ENEMIGO_VATER2,Texture.class);
         manager.load(CORAZON_VIDA, Texture.class);
         manager.load(ARMA_PIEDRA, Texture.class);
         manager.load(ARMA_CALCETIN, Texture.class);
         manager.load(ARMA_TAZOS, Texture.class);
         manager.load(ARMA_NUBE_PEDO, Texture.class);
+        manager.load(ARMA_NUBE_PEDO_HUD, Texture.class);
 
         manager.load(RECOLECTABLE_XP, Texture.class);
         manager.load(RECOLECTABLE_XP2, Texture.class);
@@ -112,6 +119,7 @@ public class GestorDeAssets {
         manager.load(DAMAGE_POLLA_TEXTURE, Texture.class);
         manager.load(DAMAGE_REGLA_TEXTURE, Texture.class);
         manager.load(DAMAGE_EXAMEN_TEXTURE, Texture.class);
+        manager.load(DAMAGE_VATER_TEXTURE, Texture.class);
         manager.load(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
 
         manager.load("acciones/movement/stickman_idle00.png", Texture.class);
@@ -154,7 +162,6 @@ public class GestorDeAssets {
 
     public static void cargarAnimaciones() {
         animations = new HashMap<>();
-        // IMPORTANTE: Asegúrate de que manager.finishLoading() se haya llamado antes de crear las animaciones
         animations.put("idle", crearAnimacion("acciones/movement/stickman_idle", 3, 0.125f));
         animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.05f));
         animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.05f));
@@ -165,7 +172,6 @@ public class GestorDeAssets {
         for (int i = 0; i < contadorFrames; i++) {
             // Se construye la ruta para cada frame
             String framePath = ruta + "0" + i + ".png";
-            // Se obtiene la textura cargada con AssetManager
             Texture frameTexture = manager.get(framePath, Texture.class);
             frames[i] = new TextureRegion(frameTexture);
         }
@@ -192,7 +198,6 @@ public class GestorDeAssets {
     }
 
     public static void dispose() {
-        // Con AssetManager, basta con llamar a dispose() en el manager para liberar todos los recursos
         manager.dispose();
     }
 }

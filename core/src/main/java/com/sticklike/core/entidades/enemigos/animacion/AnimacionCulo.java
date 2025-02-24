@@ -23,7 +23,7 @@ public class AnimacionCulo {
 
     }
 
-    public void actualizarAnimacion(float delta, Jugador jugador, Sprite sprite) {
+    public void actualizarAnimacion(float delta, Sprite sprite) {
         // Animación de parpadeo del ojo
         if (enemigo.isTieneOjo() && !animacionesBaseEnemigos.estaEnParpadeo()) {
             tiempoAcumulado += delta;

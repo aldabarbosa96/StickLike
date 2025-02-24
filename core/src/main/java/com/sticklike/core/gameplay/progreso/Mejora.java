@@ -49,4 +49,8 @@ public class Mejora {
     public Texture getIcono() {
         return texture;
     }
+
+    public void setIcono(Texture texture){
+        this.texture = texture;
+    }
 }

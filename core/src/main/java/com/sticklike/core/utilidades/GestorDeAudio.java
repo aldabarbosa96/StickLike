@@ -53,6 +53,7 @@ public class GestorDeAudio {
         efectosSonido.put("recogerPowerUP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPowerUp.wav")));
         efectosSonido.put("upgrade", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoUpgrade.wav")));
         efectosSonido.put("pausa", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPausa.wav")));
+        efectosSonido.put("impactoBase", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoImpactoBase2.wav")));
         efectosSonido.put("sonidoBossPolla", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla.wav")));
         efectosSonido.put("sonidoBossPolla2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla2.wav")));
         efectosSonido.put("sonidoBossPolla3", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla3.wav")));

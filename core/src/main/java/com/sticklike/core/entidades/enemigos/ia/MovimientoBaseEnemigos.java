@@ -20,7 +20,7 @@ public abstract class MovimientoBaseEnemigos {
     }
 
     public final void actualizarMovimiento(float delta, Sprite sprite, Jugador jugador) {
-        if (knockbackTimer > 0) {
+        if (knockbackTimer > 0) { // se comprueba si puede aplicarse el knock-back
             float moveX = knockbackVelX * delta;
             float moveY = knockbackVelY * delta;
             sprite.translate(moveX, moveY);
@@ -30,7 +30,7 @@ public abstract class MovimientoBaseEnemigos {
                 knockbackTimer = 0;
             }
         } else {
-            // Movimiento específico
+            // si no hay knock-back realiza movimiento específico
             actualizarMovimientoEspecifico(delta, sprite, jugador);
         }
     }

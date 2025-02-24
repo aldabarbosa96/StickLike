@@ -83,6 +83,7 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
 
         ventanaJuego1.actualizarPosCamara();
 
+        // todo --> el orden de renderizado parece el correcto (revisar en un futuro si algo del dibujado falla)
         if (!borronesListos.get()) {
             ventanaLoading.render(spriteBatch,delta);
             return;
@@ -102,10 +103,8 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
             }
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
         spriteBatch.setProjectionMatrix(camara.combined);
-
         // 3) Dibujamos borrones
         spriteBatch.begin();
         for (Borron b : borronesMapa) {
@@ -114,34 +113,29 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
             float originX = drawWidth / 2f;
             float originY = drawHeight / 2f;
 
-            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation,
-                0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
+            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
         }
         spriteBatch.end();
-
         // 4) Renderizamos la cuadrícula
         renderizarLineasCuadricula(camara, jugador);
-
         // 5) Dibujar sombras de los enemigos
         shapeRenderer.setProjectionMatrix(camara.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         controladorEnemigos.dibujarSombrasEnemigos(shapeRenderer);
         shapeRenderer.end();
-
         // 6) Dibujo de entidades (usando SpriteBatch)
         spriteBatch.begin();
         // Objetos XP
         for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
-        // Proyectiles
-        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         // Jugador
         jugador.aplicarRenderizadoAlJugador(spriteBatch, shapeRenderer);
         // Enemigos
         controladorEnemigos.renderizarEnemigos(spriteBatch);
+        // Proyectiles
+        jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         // Textos flotantes
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();
-
         // 7) Renderizar HUD
         hud.renderizarHUD(delta);
     }

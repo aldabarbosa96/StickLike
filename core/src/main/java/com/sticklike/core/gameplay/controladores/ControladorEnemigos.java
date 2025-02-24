@@ -8,12 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.enemigos.mobs.*;
 import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.interfaces.Enemigo;
@@ -45,6 +42,9 @@ public class ControladorEnemigos {
     private boolean necesitaOrdenar = false;
     private float temporizadorGruposExamen = 0f;
     private static final float INTERVALO_GRUPO_EXAMEN = 5f;
+    private float temporizadorVaterSpawn = 0f;
+    private static float intervaloVaterSpawn = 30f;
+
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;
@@ -63,11 +63,19 @@ public class ControladorEnemigos {
         if (temporizadorGruposExamen > 0) {
             temporizadorGruposExamen -= delta;
         }
-        // Temporizador para spawnear enemigos de manera periódica
+
+        // Temporizador para spawnear enemigos de manera periódica (general)
         temporizadorDeAparicion += delta;
         if (temporizadorDeAparicion >= intervaloDeAparicion) {
             spawnEnemigo();
             temporizadorDeAparicion = 0;
+        }
+
+        // Temporizador específico para EnemigoVater
+        temporizadorVaterSpawn += delta;
+        if (temporizadorVaterSpawn >= intervaloVaterSpawn) {
+            spawnVaterEnemigo();
+            temporizadorVaterSpawn = 0;
         }
 
         // Actualizamos cada enemigo
@@ -77,14 +85,9 @@ public class ControladorEnemigos {
             // Si un enemigo muere, procesamos su XP / drop
             if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
                 killCounter++;
-
-                if (MathUtils.randomBoolean(0.01f)) {
-                    ventanaJuego1.addXPObject(new ObjetoOro(enemigo.getX() + 10f, enemigo.getY() + 10f));
-                } else {
-                    ObjetosXP xpObject = enemigo.sueltaObjetoXP();
-                    if (xpObject != null) {
-                        ventanaJuego1.addXPObject(xpObject);
-                    }
+                ObjetosXP xpObject = enemigo.sueltaObjetoXP();
+                if (xpObject != null) {
+                    ventanaJuego1.addXPObject(xpObject);
                 }
 
                 enemigo.setProcesado(true);
@@ -116,35 +119,19 @@ public class ControladorEnemigos {
         renderBaseEnemigos.dibujarSombrasEnemigos(shapeRenderer, enemigos, ventanaJuego1.getOrtographicCamera());
     }
 
-
     private void spawnEnemigo() {
         if (enemigos.size >= MAX_ENEMIGOS) return;
 
         String tipoElegido = tiposDeEnemigos[MathUtils.random(tiposDeEnemigos.length - 1)];
         float randomSpeed = MathUtils.random(45f, 55f); // todo --> valorar si se gestiona individualmente para cada enemigo
-        seleccionarTipoSpawn(tipoElegido,randomSpeed);
+        seleccionarTipoSpawn(tipoElegido, randomSpeed);
 
         necesitaOrdenar = true;
     }
 
-    private void seleccionarTipoSpawn(String tipoElegido, float randomSpeed){ // todo --> hacer más flexible en un futuro para manejar los diferentes tipos de enemigos
+    private void seleccionarTipoSpawn(String tipoElegido, float randomSpeed) { // todo --> hacer más flexible en un futuro para manejar los diferentes tipos de enemigos
         if ("EXAMEN".equals(tipoElegido)) {
-            if (temporizadorGruposExamen > 0) {
-                return;
-            }
-            temporizadorGruposExamen = INTERVALO_GRUPO_EXAMEN;
-
-            int groupSize = 18;
-            if (enemigos.size + groupSize > MAX_ENEMIGOS) {
-                groupSize = MAX_ENEMIGOS - enemigos.size;
-            }
-
-            Vector2 basePos = getRandomSpawnPosition();
-            for (int i = 0; i < groupSize; i++) {
-                Vector2 spawnPos = new Vector2(basePos.x , basePos.y );
-                Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
-                enemigos.add(enemigo);
-            }
+            spawnEnGrupo(tipoElegido, randomSpeed);
         } else {
             // Para los demás enemigos se usa el spawn normal
             Vector2 spawnPos = getRandomSpawnPosition();
@@ -170,17 +157,45 @@ public class ControladorEnemigos {
         };
     }
 
+    private void spawnEnGrupo(String tipoElegido, float randomSpeed) {
+        if (temporizadorGruposExamen > 0) {
+            return;
+        }
+        temporizadorGruposExamen = INTERVALO_GRUPO_EXAMEN;
+
+        int groupSize = 18;
+        if (enemigos.size + groupSize > MAX_ENEMIGOS) {
+            groupSize = MAX_ENEMIGOS - enemigos.size;
+        }
+
+        Vector2 basePos = getRandomSpawnPosition();
+        for (int i = 0; i < groupSize; i++) {
+            Vector2 spawnPos = new Vector2(basePos.x, basePos.y);
+            Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
+            enemigos.add(enemigo);
+        }
+    }
+
+    private void spawnVaterEnemigo() {
+        if (enemigos.size >= MAX_ENEMIGOS) return;
+        Vector2 spawnPos = getRandomSpawnPosition();
+        Enemigo enemigo = fabricaEnemigos("VATER", spawnPos.x, spawnPos.y, jugador, 0, ventanaJuego1.getOrtographicCamera());
+        enemigos.add(enemigo);
+    }
+
 
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
         switch (tipoEnemigo) {
             case "CULO":
-                return new EnemigoCulo(x, y, jugador, velocidad * MULT_VELOCIDAD_CULO);
+                return new EnemigoCulo(x, y, jugador);
             case "REGLA":
                 return new EnemigoRegla(x, y, jugador, velocidad * MULT_VELOCIDAD_REGLA, camera);
             case "POLLA":
                 return new EnemigoPolla(x, y, jugador, velocidad * MULT_VELOCIDAD_POLLA);
             case "EXAMEN":
                 return new EnemigoExamen(x, y, jugador, velocidad * MULT_VELOCIDAD_EXAMEN);
+            case "VATER":
+                return new EnemigoVater(x, y, jugador);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
@@ -195,7 +210,7 @@ public class ControladorEnemigos {
             ventanaRedimensionada = false;
         }
 
-        float margin = 50f;
+        float margin = 175f;
         float leftBound = ventanaJuego1.getOrtographicCamera().position.x - (ventanaJuego1.getViewport().getWorldWidth() / 2) - margin;
         float rightBound = ventanaJuego1.getOrtographicCamera().position.x + (ventanaJuego1.getViewport().getWorldWidth() / 2) + margin;
         float bottomBound = ventanaJuego1.getOrtographicCamera().position.y - (ventanaJuego1.getViewport().getWorldHeight() / 2) - margin;
@@ -266,4 +281,5 @@ public class ControladorEnemigos {
         this.ventanaRedimensionada = ventanaRedimensionada;
         this.temporizadorRedimension = 0f;
     }
+
 }

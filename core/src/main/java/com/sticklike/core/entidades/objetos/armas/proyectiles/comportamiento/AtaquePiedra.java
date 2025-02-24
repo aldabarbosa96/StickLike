@@ -10,7 +10,6 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
 /**
  * Gestiona ataque Piedra; dispara proyectiles de piedra en ráfagas hacia el enemigo más cercano dentro del rango.
  */
-
 public class AtaquePiedra {
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo;
@@ -22,7 +21,6 @@ public class AtaquePiedra {
     public AtaquePiedra(float intervaloDisparoInicial) {
         this.intervaloDisparo = intervaloDisparoInicial;
     }
-
 
     public boolean iniciarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         if (jug.getControladorEnemigos() == null) return false;
@@ -40,52 +38,51 @@ public class AtaquePiedra {
         return true;
     }
 
-    /**
-     * Se llama cada frame para gestionar el disparo.
-     * Se verifica si se ha cumplido el intervalo acumulado, y solo entonces se intenta iniciar un ataque
-     * comprobando la presencia de un enemigo en rango.
-     */
     public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
-        // Acumula el tiempo transcurrido
         temporizadorDisparo += delta;
 
-        // Si no hay una ráfaga en curso y ya se cumplió (o superó) el intervalo...
+        // Si no hay proyectiles pendientes y ha pasado el intervalo, se intenta iniciar el ataque.
         if (proyectilesPendientes == 0 && temporizadorDisparo >= intervaloDisparo) {
-            // Se intenta iniciar el ataque: si hay enemigo en rango, se inicia y se reinicia el temporizador
             if (iniciarAtaque(jugador, gestorDeAudio)) {
-                temporizadorDisparo = 0; // Reiniciamos el temporizador solo si se ha disparado
+                temporizadorDisparo = 0;
+                // Dispara el primer proyectil de inmediato.
+                if (target != null && !target.estaMuerto()) {
+                    dispararProyectil(jugador);
+                    proyectilesPendientes--;
+                }
+                temporizadorEntreBalas = 0f;
             }
-            // Si no hay enemigo, no reiniciamos el temporizador: se seguirá acumulando
         }
 
-        // Si ya se ha iniciado un ataque (existen proyectiles pendientes)
         if (proyectilesPendientes > 0) {
-            // Si el objetivo se ha vuelto nulo o ha muerto, se aborta la ráfaga
+            // Si el objetivo se ha vuelto nulo o ha muerto, se aborta la ráfaga.
             if (target == null || target.estaMuerto()) {
                 proyectilesPendientes = 0;
                 return;
             }
 
-            // Dispara cada proyectil secuencialmente con un retardo entre ellos
+            // Dispara cada proyectil secuencialmente con un retardo entre ellos.
             temporizadorEntreBalas += delta;
             if (temporizadorEntreBalas >= intervaloEntreBalas) {
-                // Posición de spawn (centro del sprite del jugador)
-                float spawnX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
-                float spawnY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
-
-                // Recalcula la dirección hacia el centro actual del enemigo
-                float targetX = target.getX() + target.getSprite().getWidth() / 2f;
-                float targetY = target.getY() + target.getSprite().getHeight() / 2f;
-                float[] dir = calcularDireccionNormalizada(spawnX, spawnY, targetX, targetY);
-
-                float velocidadAleatoria = MathUtils.random(1.5f, 1.75f);
-                ProyectilPiedra piedra = new ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria, jugador);
-                jugador.getControladorProyectiles().anyadirNuevoProyectil(piedra);
-
+                dispararProyectil(jugador);
                 proyectilesPendientes--;
                 temporizadorEntreBalas = 0f;
             }
         }
+    }
+
+    private void dispararProyectil(Jugador jugador) {
+        float spawnX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
+        float spawnY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
+
+        // Recalcula la dirección hacia el centro actual del enemigo
+        float targetX = target.getX() + target.getSprite().getWidth() / 2f;
+        float targetY = target.getY() + target.getSprite().getHeight() / 2f;
+        float[] dir = calcularDireccionNormalizada(spawnX, spawnY, targetX, targetY);
+
+        float velocidadAleatoria = MathUtils.random(1.5f, 1.75f);
+        ProyectilPiedra piedra = new ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria, jugador);
+        jugador.getControladorProyectiles().anyadirNuevoProyectil(piedra);
     }
 
     private Enemigo encontrarEnemigoMasCercano(Jugador jug) {
@@ -122,4 +119,3 @@ public class AtaquePiedra {
         this.intervaloDisparo = nuevoIntervaloNuevo;
     }
 }
-
