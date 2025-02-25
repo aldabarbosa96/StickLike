@@ -34,6 +34,7 @@ public class GestorDeAssets {
     public static final String ARMA_TAZOS = "armas/04tetazo.png";
     public static final String ARMA_NUBE_PEDO = "armas/03nubePedo.png";
     public static final String ARMA_NUBE_PEDO_HUD = "armas/03nubePedoHUD.png";
+    public static final String ARMA_PAPELCULO = "armas/05papelCulo.png";
     // Drops y HUD
     public static final String RECOLECTABLE_XP = "drops/01xp1.png";
     public static final String RECOLECTABLE_XP2 = "drops/01xp2.png";
@@ -91,6 +92,11 @@ public class GestorDeAssets {
         manager.load(ARMA_TAZOS, Texture.class);
         manager.load(ARMA_NUBE_PEDO, Texture.class);
         manager.load(ARMA_NUBE_PEDO_HUD, Texture.class);
+        manager.load(ARMA_PAPELCULO, Texture.class);
+
+        manager.load("armas/05papelCuloImpacto00.png", Texture.class);
+        manager.load("armas/05papelCuloImpacto01.png", Texture.class);
+        manager.load("armas/05papelCuloImpacto02.png", Texture.class);
 
         manager.load(RECOLECTABLE_XP, Texture.class);
         manager.load(RECOLECTABLE_XP2, Texture.class);
@@ -165,6 +171,7 @@ public class GestorDeAssets {
         animations.put("idle", crearAnimacion("acciones/movement/stickman_idle", 3, 0.125f));
         animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.05f));
         animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.05f));
+        animations.put("papelCuloImpacto", crearAnimacion("armas/05papelCuloImpacto", 3, 0.05f));
     }
 
     private static Animation<TextureRegion> crearAnimacion(String ruta, int contadorFrames, float duracionContador) {

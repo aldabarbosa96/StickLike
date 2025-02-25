@@ -3,10 +3,10 @@ package com.sticklike.core.gameplay.controladores;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import java.util.ArrayList;
-
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPapelCulo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.interfaces.Enemigo;
@@ -20,8 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Gestiona los proyectiles disparados en el juego.
- * Se encarga de su actualización, colisiones, daño aplicado y renderizado.
+ * Gestiona los proyectiles disparados en el juego. Se encarga de su actualización, colisiones, daño aplicado y renderizado.
  */
 
 public class ControladorProyectiles {
@@ -47,10 +46,31 @@ public class ControladorProyectiles {
             proyectil.actualizarProyectil(delta);
 
             for (Enemigo enemigo : enemies) {
-                boolean esNubePedo = proyectil instanceof ProyectilTazo;
-                boolean colision = esNubePedo ?
-                    estaEnRadioTazo(enemigo, proyectil) :
-                    enemigo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), proyectil.getRectanguloColision().width, proyectil.getRectanguloColision().height);
+                boolean colision = false;
+
+                if (proyectil instanceof ProyectilTazo) {
+                    colision = estaEnRadioTazo(enemigo, proyectil);
+                }
+                // Si es ProyectilPapelCulo, comprobamos si está en explosión
+                else if (proyectil instanceof ProyectilPapelCulo) {
+                    ProyectilPapelCulo ppc = (ProyectilPapelCulo) proyectil;
+                    if (ppc.isImpactoAnimacionActiva()) {
+                        // Usar el área circular de la explosión
+                        Circle explosionArea = ppc.getCirculoColision();
+                        float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
+                        float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
+                        colision = explosionArea.contains(enemyCenterX, enemyCenterY);
+                    } else {
+                        // Si no está en explosión, usar el rectángulo normal
+                        Rectangle rect = proyectil.getRectanguloColision();
+                        colision = enemigo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), rect.width, rect.height);
+                    }
+                }
+                // Para los demás proyectiles, usamos la colisión rectangular
+                else {
+                    Rectangle rect = proyectil.getRectanguloColision();
+                    colision = enemigo.esGolpeadoPorProyectil(proyectil.getX(), proyectil.getY(), rect.width, rect.height);
+                }
 
                 if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
                     !proyectil.yaImpacto(enemigo) && colision) {
@@ -62,22 +82,20 @@ public class ControladorProyectiles {
                     // 2) Aplicar daño y parpadeo
                     enemigo.reducirSalud(damage);
                     enemigo.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
-                    aplicarKnockback(enemigo, proyectil);
 
+                    // Aplicar knockback solo si no es ProyectilPapelCulo (ya se aplicará internamente en la explosión)
+                    if (!(proyectil instanceof ProyectilPapelCulo)) {
+                        aplicarKnockback(enemigo, proyectil);
+                    }
 
-                    // 4) Generar texto flotante
+                    // 3) Generar texto flotante
                     float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
                     float posicionTextoY = enemigo.getY() + enemigo.getSprite().getHeight() + DESPLAZAMIENTOY_TEXTO2;
-
-                    // Ajustar posición vertical si hay múltiples textos
                     Float ultimaY = ultimaYTexto.get(enemigo);
                     if (ultimaY != null) {
                         posicionTextoY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
                     }
-                    // Determinar si el golpe fue crítico
                     boolean golpeCritico = proyectil.esCritico();
-
-                    // Crear el texto flotante
                     TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO, FontManager.damageFont, golpeCritico);
                     dmgText.add(damageText);
 
@@ -102,6 +120,7 @@ public class ControladorProyectiles {
             }
         }
     }
+
 
     private void aplicarKnockback(Enemigo enemigo, Proyectiles proyectil) {
         float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;

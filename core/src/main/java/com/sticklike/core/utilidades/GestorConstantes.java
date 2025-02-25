@@ -207,10 +207,15 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float PROJECTILE_CALCETIN_SPEED = 185f;
     public static final int VEL_ROTACION_CALCETIN = 1080;
     public static final float DANYO_CALCETIN = 13f;
+    public static final float DANYO_PAPELCULO = 45f;
+    public static final float EMPUJE_BASE_PAPELCULO = 250f;
     public static final float SPEED_MULT = 1.8f;
     public static final float PIEDRA_SIZE = 6f;
     public static final float CALCETIN_W_SIZE = 18f;
     public static final float CALCETIN_H_SIZE = 22f;
+    public static final float PAPELCULO_W_SIZE = 16;
+    public static final float PAPELCULO_H_SIZE = 19;
+    public static final float PAPELCULO_SPEED = 666f;
     public static final float PROJECTILE_BASE_DAMAGE = 8f; //todo --> gestionar en un futuro
     public static final float TEMPORIZADOR_DISPARO = 0f;
     public static final float MAX_DISTANCIA = 350f;

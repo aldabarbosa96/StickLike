@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePapelCulo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
@@ -40,15 +41,15 @@ public class SistemaDeMejoras {
 
     private void inicializarMejoras() {
         // Mejora global (no relacionada con una habilidad, idHabilidad = null)
-        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, null, null));
-        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 18%", () -> jugador.reducirIntervaloDisparo(0.16f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 19%", () -> jugador.aumentarDanyo(1.19f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 30%", () -> jugador.aumentarResistencia(0.3f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, null, null));
+        //todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, null, null));
+        //todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, null, null));
+        //todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 18%", () -> jugador.reducirIntervaloDisparo(0.16f), 5, null, null));
+        //todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 19%", () -> jugador.aumentarDanyo(1.19f), 5, null, null));
+        //todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
+        //todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, null, null));
+        //todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, null, null));
+        //todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 30%", () -> jugador.aumentarResistencia(0.3f), 3, null, null));
+        //todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
             jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);
             jugador.setVidaJugador(jugador.getVidaJugador() + 15);
@@ -61,6 +62,8 @@ public class SistemaDeMejoras {
             "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!",
             "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
+        todasLasMejoras.add(new Mejora("¡PAPELCULO!",
+            "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()),1, manager.get(ARMA_PAPELCULO, Texture.class),"PAPEL"));
 
         // Upgrades específicos para las habilidades
         // Calcetín
@@ -107,6 +110,9 @@ public class SistemaDeMejoras {
             "Añade una vibración pedorra extra", () -> {
             jugador.getAtaqueNubePedo().setEsTriple(true);
         }, 1, null, "PEDO_triple"));
+
+        // PapelCulo
+
 
     }
 

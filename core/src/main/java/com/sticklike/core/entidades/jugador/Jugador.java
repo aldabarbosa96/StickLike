@@ -5,11 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.*;
 import com.sticklike.core.utilidades.GestorDeAudio;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueCalcetin;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueNubePedo;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
@@ -33,6 +30,7 @@ public class Jugador {
     private AtaqueCalcetin calcetinazo;
     private AtaqueTazo ataqueTazo;
     private AtaqueNubePedo ataqueNubePedo;
+    private AtaquePapelCulo ataquePapelCulo;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
@@ -85,6 +83,7 @@ public class Jugador {
         this.calcetinazo = null;
         this.ataqueTazo = null;
         this.ataqueNubePedo = null;
+        this.ataquePapelCulo = new AtaquePapelCulo();
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
     }
@@ -106,6 +105,9 @@ public class Jugador {
             }
             if (ataqueNubePedo != null) {
                 ataqueNubePedo.procesarAtaque(delta);
+            }
+            if (ataquePapelCulo != null) {
+                ataquePapelCulo.manejarDisparo(delta, this, gestorDeAudio);
             }
 
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, gestorDeAudio);
@@ -333,5 +335,9 @@ public class Jugador {
 
     public void setCacasRecogidas(int cacasRecogidas) {
         this.cacasRecogidas = cacasRecogidas;
+    }
+
+    public void setPapelCulo(AtaquePapelCulo ataquePapelCulo) {
+        this.ataquePapelCulo = ataquePapelCulo;
     }
 }

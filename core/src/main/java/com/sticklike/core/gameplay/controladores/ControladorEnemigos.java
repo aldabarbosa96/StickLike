@@ -282,4 +282,7 @@ public class ControladorEnemigos {
         this.temporizadorRedimension = 0f;
     }
 
+    public VentanaJuego1 getVentanaJuego1() {
+        return ventanaJuego1;
+    }
 }
