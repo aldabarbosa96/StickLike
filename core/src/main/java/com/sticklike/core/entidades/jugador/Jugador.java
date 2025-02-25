@@ -13,7 +13,6 @@ import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
-
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 
 /**
@@ -83,7 +82,7 @@ public class Jugador {
         this.calcetinazo = null;
         this.ataqueTazo = null;
         this.ataqueNubePedo = null;
-        this.ataquePapelCulo = new AtaquePapelCulo();
+        this.ataquePapelCulo = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
     }

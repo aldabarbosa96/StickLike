@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
+import com.sticklike.core.utilidades.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
@@ -201,6 +202,7 @@ public class ProyectilPapelCulo implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
+        GestorDeAudio.getInstance().reproducirEfecto("explosion",1f);
         if (!enemigosImpactados.contains(enemigo)) {
             enemigosImpactados.add(enemigo);
             impactX = sprite.getX();
