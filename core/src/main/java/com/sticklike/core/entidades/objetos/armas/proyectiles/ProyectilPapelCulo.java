@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -8,7 +9,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas.RenderParticulas;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.GestorDeAudio;
@@ -38,7 +41,8 @@ public class ProyectilPapelCulo implements Proyectiles {
     private float damageEscalado;
     private boolean esCritico;
     private Jugador jugador;
-
+    private RenderParticulas renderParticulas;
+    private Vector2 centroSprite;
     private final float GRAVEDAD_ASCENSO = 450f;
     private final float GRAVEDAD_DESCENSO = 200f;
     private float rotationSpeed = 666f;
@@ -59,6 +63,8 @@ public class ProyectilPapelCulo implements Proyectiles {
         this.velocidadProyectil = velocidadProyectil;
         this.anguloLanzamiento = anguloLanzamiento;
         this.proyectilActivo = true;
+        this.renderParticulas = new RenderParticulas(20,7,new Color(0.8f,0.75f,0.85f,1));
+        this.centroSprite = new Vector2();
 
         this.velocidadVertical = velocidadProyectil * MathUtils.sinDeg(anguloLanzamiento);
         float factorHorizontal = 0.25f;
@@ -75,6 +81,9 @@ public class ProyectilPapelCulo implements Proyectiles {
     @Override
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
+
+        centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+        renderParticulas.update(centroSprite);
 
         // Si la animación de impacto está activa, actualizamos su temporizador y esperamos a que termine para desactivar el proyectil
         if (impactoAnimacionActiva) {
@@ -116,6 +125,7 @@ public class ProyectilPapelCulo implements Proyectiles {
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
+            renderParticulas.render(batch);
             if (!aterrizado && !impactoAnimacionActiva) {
                 sprite.draw(batch);
             } else if (impactoAnimacionActiva) {

@@ -111,7 +111,7 @@ public class GestorDeAudio {
 
         Sound sonido = efectosSonido.get(nombre);
         if (sonido == null) {
-            System.out.println("Sonido no encontrado: " + nombre);
+            Gdx.app.log("SoundNotFound","Sonido no encontrado: " + nombre);
             return;
         }
 
@@ -142,6 +142,7 @@ public class GestorDeAudio {
             efecto.dispose();
         }
         efectosSonido.clear();
+        contadorInstancias.clear();
     }
 
     public void resetearInstancias() {

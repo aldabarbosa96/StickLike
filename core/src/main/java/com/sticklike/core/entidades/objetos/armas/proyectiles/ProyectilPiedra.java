@@ -1,11 +1,14 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas.RenderParticulas;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.GestorDeAudio;
@@ -26,6 +29,8 @@ public class ProyectilPiedra implements Proyectiles {
     private boolean proyectilActivo;
     private boolean esCritico;
     private Jugador jugador;
+    private RenderParticulas renderParticulas;
+    private Vector2 center;
 
     public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad, Jugador jugador) {
         if (textura == null) {
@@ -40,18 +45,25 @@ public class ProyectilPiedra implements Proyectiles {
         this.proyectilActivo = true;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.jugador = jugador;
+        this.renderParticulas = new RenderParticulas(20, 3f, new Color(0.75f,0.75f,0.75f,1f));
+        center = new Vector2();
     }
 
     @Override
     public void actualizarProyectil(float delta) {
+        // Actualizamos movimiento del sprite
         if (proyectilActivo) {
             sprite.translate(direccionX * velocidadProyectil * multiplicadorVelocidad * delta, direccionY * velocidadProyectil * multiplicadorVelocidad * delta);
+            // Actualizamos rastro de partículas
+            center.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+            renderParticulas.update(center);
         }
     }
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
+            renderParticulas.render(batch);
             sprite.draw(batch);
         }
     }
@@ -59,6 +71,7 @@ public class ProyectilPiedra implements Proyectiles {
     @Override
     public void dispose() {
         textura = null;
+        renderParticulas.dispose();
     }
 
     @Override
@@ -111,7 +124,7 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        GestorDeAudio.getInstance().reproducirEfecto("impactoBase",0.25f);
+        GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 0.25f);
     }
 
     @Override

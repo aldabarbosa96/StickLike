@@ -83,11 +83,11 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
 
         ventanaJuego1.actualizarPosCamara();
 
-        // todo --> el orden de renderizado parece el correcto (revisar en un futuro si algo del dibujado falla)
         if (!borronesListos.get()) {
-            ventanaLoading.render(spriteBatch,delta);
+            ventanaLoading.render(spriteBatch, delta);
             return;
         }
+
         // 1) Limpiamos la pantalla
         if (jugador.getVidaJugador() <= 15) {
             if (jugador.getRenderJugador().isEnParpadeo()) {
@@ -103,8 +103,10 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
             }
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
         spriteBatch.setProjectionMatrix(camara.combined);
+
         // 3) Dibujamos borrones
         spriteBatch.begin();
         for (Borron b : borronesMapa) {
@@ -115,14 +117,17 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
 
             spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
         }
-        spriteBatch.end();
+        spriteBatch.end(); // Cerrar SpriteBatch después de dibujar borrones
+
         // 4) Renderizamos la cuadrícula
         renderizarLineasCuadricula(camara, jugador);
+
         // 5) Dibujar sombras de los enemigos
         shapeRenderer.setProjectionMatrix(camara.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         controladorEnemigos.dibujarSombrasEnemigos(shapeRenderer);
         shapeRenderer.end();
+
         // 6) Dibujo de entidades (usando SpriteBatch)
         spriteBatch.begin();
         // Objetos XP
@@ -136,10 +141,10 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
         // Textos flotantes
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();
+
         // 7) Renderizar HUD
         hud.renderizarHUD(delta);
     }
-
     public void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

@@ -1,11 +1,14 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas.RenderParticulas;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 
@@ -33,6 +36,8 @@ public class ProyectilCalcetin implements Proyectiles {
     private float damageEscalado;
     private boolean esCritico;
     private Jugador jugador;
+    private RenderParticulas renderParticulas;
+    private Vector2 centroSprite;
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad,
                              float poderJugador, float extraDamage, Jugador jugador) {
@@ -52,6 +57,8 @@ public class ProyectilCalcetin implements Proyectiles {
         this.direccionY = direccionY;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
+        this.renderParticulas = new RenderParticulas(20,7.5f, new Color(0,0.9f,0.9f,0.1f));
+        this.centroSprite = new Vector2();
 
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
         this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
@@ -60,6 +67,9 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
+
+        centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+        renderParticulas.update(centroSprite);
 
         float desplazamiento = velocidadProyectil * multiplicadorVelocidad * delta;
         sprite.translate(direccionX * desplazamiento, direccionY * desplazamiento);
@@ -75,6 +85,7 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
+            renderParticulas.render(batch);
             sprite.draw(batch);
         }
     }

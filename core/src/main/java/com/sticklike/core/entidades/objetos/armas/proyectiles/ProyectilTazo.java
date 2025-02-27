@@ -1,16 +1,18 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas.RenderParticulas;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
-
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -34,6 +36,8 @@ public class ProyectilTazo implements Proyectiles {
     private float radio;
     private float rotacionSprite = 0f;
     private GestorDeAudio gestorDeAudio;
+    private RenderParticulas renderParticulas;
+    private Vector2 centroSprite;
     private boolean esCritico;
     private static final float MIN_GROWTH_SCALE = 0.1f;
     private static final float MAX_GROWTH_SCALE = 0.9f;
@@ -64,6 +68,8 @@ public class ProyectilTazo implements Proyectiles {
         this.radio = radio;
         this.gestorDeAudio = gestorDeAudio;
         this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
+        this.renderParticulas = new RenderParticulas(15,5, Color.RED);
+        this.centroSprite = new Vector2();
         // Iniciamos con la escala mínima para el efecto de crecer
         sprite.setScale(MIN_GROWTH_SCALE);
 
@@ -147,11 +153,17 @@ public class ProyectilTazo implements Proyectiles {
                 }
                 break;
         }
+        centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+        renderParticulas.update(centroSprite);
     }
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
+
+            if (sprite.getColor().a > 0f) {
+                renderParticulas.render(batch);
+            }
             sprite.draw(batch);
         }
     }
