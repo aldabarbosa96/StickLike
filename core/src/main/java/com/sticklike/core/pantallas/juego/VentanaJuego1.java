@@ -8,12 +8,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
+import com.sticklike.core.entidades.objetos.recolectables.*;
+import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.utilidades.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
@@ -75,6 +73,8 @@ public class VentanaJuego1 implements Screen {
     private Array<TextoFlotante> textosDanyo;
     private Array<ObjetosXP> objetosXP;
     private Array<Enemigo> enemigosAEliminar;
+    private Array<Boost> boosts;
+
 
     private int currentScreenWidth;
     private int currentScreenHeight;
@@ -127,6 +127,7 @@ public class VentanaJuego1 implements Screen {
 
         controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
+
     }
 
     private void inicializarCuadriculaYHUD() {
@@ -142,6 +143,7 @@ public class VentanaJuego1 implements Screen {
         textosDanyo = new Array<>();
         objetosXP = new Array<>();
         enemigosAEliminar = new Array<>();
+        boosts = new Array<>();
     }
 
     @Override
@@ -184,43 +186,62 @@ public class VentanaJuego1 implements Screen {
     }
 
     private void actualizarRecogidaXP(float delta) {
+        // Primera pasada: actualizar cada objeto XP y procesar colisiones.
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
             xp.actualizarObjetoXP(delta, jugador, gestorDeAudio);
 
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
-                xp.recolectar(gestorDeAudio);
-                objetosXP.removeIndex(i);
-
-                if (xp instanceof ObjetoXp objetoXp) {
-                    float xpOtorgada;
-                    if (objetoXp.isEsXPGorda()) {
-                        xpOtorgada = 50f + MathUtils.random(50f);  // 50 a 100
-                    } else {
-                        xpOtorgada = 10f + MathUtils.random(15f);  // 10 a 25
+                if (xp instanceof Boost) {
+                    Boost boost = (Boost) xp;
+                    if (!boost.isCollected()) {
+                        // Aplica el efecto y marca el boost como recogido.
+                        boost.aplicarBoost(jugador);
+                        xp.recolectar(gestorDeAudio);
                     }
-
-                    sistemaDeNiveles.agregarXP(xpOtorgada);
-
-                } else if (xp instanceof ObjetoVida) {
-                    float vidaExtra = 6f + MathUtils.random(10f); // 6 a 16
-                    float nuevaVida = jugador.getVidaJugador() + vidaExtra;
-                    if (nuevaVida > jugador.getMaxVidaJugador()) {
-                        nuevaVida = jugador.getMaxVidaJugador();
+                    // Para los boosts, NO se elimina inmediatamente para que su tiempo siga contando.
+                } else {
+                    xp.recolectar(gestorDeAudio);
+                    // Procesar efectos específicos para otros objetos XP:
+                    if (xp instanceof ObjetoXp) {
+                        ObjetoXp objetoXp = (ObjetoXp) xp;
+                        float xpOtorgada = objetoXp.isEsXPGorda()
+                            ? 50f + MathUtils.random(50f)
+                            : 10f + MathUtils.random(15f);
+                        sistemaDeNiveles.agregarXP(xpOtorgada);
+                    } else if (xp instanceof ObjetoVida) {
+                        float vidaExtra = 6f + MathUtils.random(10f);
+                        float nuevaVida = jugador.getVidaJugador() + vidaExtra;
+                        if (nuevaVida > jugador.getMaxVidaJugador()) {
+                            nuevaVida = jugador.getMaxVidaJugador();
+                        }
+                        jugador.setVidaJugador(nuevaVida);
+                        Gdx.app.log("Recolección", "ObjetoVida recolectado. Vida extra otorgada: " + vidaExtra);
+                    } else if (xp instanceof ObjetoOro) {
+                        jugador.setOroGanado(jugador.getOroGanado() + 1);
+                        Gdx.app.log("Recolección", "ObjetoOro recolectado. Oro extra otorgado: 1. Total oro: " + jugador.getOroGanado());
+                    } else if (xp instanceof ObjetoPowerUp) {
+                        jugador.setCacasRecogidas(jugador.getCacasRecogidas() + 1);
+                        Gdx.app.log("PowerUps", "ObjetoPowerUp recolectado. Total trazos: " + jugador.getCacasRecogidas());
                     }
-                    jugador.setVidaJugador(nuevaVida);
-                    Gdx.app.log("Recolección", "ObjetoVida recolectado. Vida extra otorgada: " + vidaExtra);
+                    // Eliminamos inmediatamente los objetos XP que no sean boost.
+                    objetosXP.removeIndex(i);
+                }
+            }
+        }
 
-                } else if (xp instanceof ObjetoOro) {
-                    jugador.setOroGanado(jugador.getOroGanado() + 1);
-                    Gdx.app.log("Recolección", "ObjetoOro recolectado. Oro extra otorgado: " + 1 + ". Total oro: " + jugador.getOroGanado());
-                } else if (xp instanceof ObjetoPowerUp) {
-                    jugador.setCacasRecogidas(jugador.getCacasRecogidas() + 1);
-                    Gdx.app.log("PowerUps", "ObjetoPowerUp recolectado. Total trazos: " + jugador.getCacasRecogidas());
+        // Segunda pasada: eliminar boosts que ya fueron recogidos y cuyo efecto ha expirado.
+        for (int i = objetosXP.size - 1; i >= 0; i--) {
+            ObjetosXP xp = objetosXP.get(i);
+            if (xp instanceof Boost) {
+                Boost boost = (Boost) xp;
+                if (boost.isCollected() && !boost.isActivo()) {
+                    objetosXP.removeIndex(i);
                 }
             }
         }
     }
+
 
     private void actualizarTextoFlotante(float delta) {
         for (int i = textosDanyo.size - 1; i >= 0; i--) {
@@ -353,4 +374,5 @@ public class VentanaJuego1 implements Screen {
     public FitViewport getViewport() {
         return viewport;
     }
+
 }

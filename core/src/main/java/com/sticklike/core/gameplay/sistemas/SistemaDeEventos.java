@@ -2,6 +2,7 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.gameplay.progreso.Evento;
@@ -24,8 +25,7 @@ public class SistemaDeEventos {
     private RenderHUDComponents renderHUDComponents; // Para futuros eventos basados en timer
     private ControladorEnemigos controladorEnemigos;
     private SistemaDeNiveles sistemaDeNiveles;
-    private long pollaEventStartTime;
-    private boolean pollaEventActive = false;
+    private boolean efectoPollaEjecutado = false;
 
 
     public SistemaDeEventos(RenderHUDComponents renderHUDComponents, ControladorEnemigos controladorEnemigos, SistemaDeNiveles sistemaDeNiveles) {
@@ -69,20 +69,24 @@ public class SistemaDeEventos {
     }
 
     private void entraEnemigoPolla() {
-        if (!pollaEventActive) {
-            controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
-            controladorEnemigos.setIntervaloDeAparicion((float) EVENTO_POLLAS_SPAWN_RATE);
-            Gdx.app.log("Polla", "Enemigo polla aparece");
-            pollaEventStartTime = TimeUtils.millis();
-            pollaEventActive = true;
-        } else {
-            long elapsedTime = TimeUtils.timeSinceMillis(pollaEventStartTime);
-            if (elapsedTime >= 6500) {
-                controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS2);
-                controladorEnemigos.setIntervaloDeAparicion(EVENTO2YMEDIO_SPAWN_RATE);
-                pollaEventActive = false;
+        // Configura el efecto de spawn masivo
+        controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
+        controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
+        Gdx.app.log("Polla", "Modo pollas activado: spawn muy rápido");
+
+        Timer.schedule(new Timer.Task(){
+            @Override
+            public void run() {
+                restaurarSpawnNormal();
             }
-        }
+        }, 5); // 5 segundos de duración del efecto
+    }
+
+    private void restaurarSpawnNormal() {
+        controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS3);
+        controladorEnemigos.setIntervaloDeAparicion(EVENTO2_SPAWN_RATE);
+        Gdx.app.log("Polla", "Spawn restaurado a configuración normal");
+        efectoPollaEjecutado = true;
     }
 
     private void spawnPrimerBoss() {
@@ -100,24 +104,26 @@ public class SistemaDeEventos {
         Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
     public void actualizar() {
+        int nivelActual = sistemaDeNiveles.getNivelActual();
+
         if (!eventos.isEmpty()) {
             Evento siguienteEvento = eventos.peek();
-            if (sistemaDeNiveles.getNivelActual() >= siguienteEvento.getNivelRequerido()) {
+            if (nivelActual >= siguienteEvento.getNivelRequerido()) {
                 if (!comprobarBossPollaMuerto(siguienteEvento)) {
                     return;
                 }
                 Evento evento = eventos.poll();
-                assert evento != null;
                 Gdx.app.log("Act. Eventos.", "Activando evento: " + evento.getNombreEvento() + " [nivel requerido: " + evento.getNivelRequerido() + "]");
                 evento.applyEvento();
-
                 return;
             }
         }
-        if (pollaEventActive ) {
+
+        if (nivelActual >= LVL_EVENTO3 && !efectoPollaEjecutado) {
             entraEnemigoPolla();
         }
     }
+
 
     public void dispose() {
         eventos.clear();

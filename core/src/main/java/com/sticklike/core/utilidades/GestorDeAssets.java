@@ -41,6 +41,8 @@ public class GestorDeAssets {
     public static final String RECOLECTABLE_VIDA = "hud/life.png";
     public static final String RECOLECTABLE_CACA_DORADA = "drops/02cacaDorada.png";
     public static final String RECOLECTABLE_POWER_UP = "drops/03powerUp.png";
+    public static final String DESTRUCTIBLE = "destructibles/hamburguesa.png";
+    public static final String DESTRUCTIBLE_DMG = "destructibles/hamburguesaD.png";
     public static final String ICONO_VEL_MOV = "hud/vel_mov.png";
     public static final String ICONO_FUERZA = "hud/fuerza.png";
     public static final String ICONO_PODER = "hud/poder_ataque.png";
@@ -103,6 +105,8 @@ public class GestorDeAssets {
         manager.load(RECOLECTABLE_VIDA, Texture.class);
         manager.load(RECOLECTABLE_CACA_DORADA, Texture.class);
         manager.load(RECOLECTABLE_POWER_UP, Texture.class);
+        manager.load(DESTRUCTIBLE, Texture.class);
+        manager.load(DESTRUCTIBLE_DMG, Texture.class);
 
         manager.load(ICONO_VEL_MOV, Texture.class);
         manager.load(ICONO_FUERZA, Texture.class);

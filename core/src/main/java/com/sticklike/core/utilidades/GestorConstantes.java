@@ -254,10 +254,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;
     public static final float OBJETO1_XP_WIDTH = 12.5f;
     public static final float OBJETO1_XP_HEIGHT = 14f;
-    public static final float OBJETO_ORO_WIDTH = 10f * 1.09375f;
-    public static final float OBJETO_ORO_HEIGHT = 10f * 1.09375f;
-    public static final float OBJETO_PWUP_WIDTH = 7f;
-    public static final float OBJETO_PWUP_HEIGHT = 17.5f;
+    public static final float OBJETO_ORO_WIDTH = 14f ;
+    public static final float OBJETO_ORO_HEIGHT = 14f;
+    public static final float OBJETO_PWUP_WIDTH = 8f;
+    public static final float OBJETO_PWUP_HEIGHT = 20f;
+    public static final float VIDA_DESTRUCTIBLE = 250f;
+    public static final float ANCHO_DESTRUCT = 40f;
+    public static final float ALTO_DESTRUCT = 35f;
 
     // -------------------------------------------------
     // Controlador Evento
@@ -267,17 +270,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 9;
     public static final int LVL_EVENTO5 = 10;
-    public static final float EVENTO1_SPAWN_RATE = 0.65f;
-    public static final float EVENTO1_SPEED_MULT = 1.15f;
-    public static final float EVENTO2_SPAWN_RATE = 0.35f;
+    public static final float EVENTO1_SPAWN_RATE = 0.5f;
+    public static final float EVENTO1_SPEED_MULT = 1.25f;
+    public static final float EVENTO2_SPAWN_RATE = 0.3f;
     public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
-    public static final float EVENTO2_SPEED_MULT = 1.35f;
+    public static final float EVENTO2_SPEED_MULT = 1.45f;
     public static final float EVENTO3_SPEED_MULT = 2f;
     public static final float EVENTO3_SPAWN_RATE = 0.15f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN","CULO"};
-    public static final double EVENTO_POLLAS_SPAWN_RATE = 0.000000001f;
+    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000000001f;
 
     // -------------------------------------------------
     // Configuración borrones

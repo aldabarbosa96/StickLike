@@ -200,8 +200,7 @@ public class Jugador {
     }
 
     public void aumentarResistencia(float percentage) {
-        float criticalAmount = (percentage * criticoJugador) * 10;
-        this.resistenciaJugador += criticalAmount;
+        this.resistenciaJugador += percentage;
     }
 
     public float getVelocidadJugador() {
@@ -338,5 +337,21 @@ public class Jugador {
 
     public void setPapelCulo(AtaquePapelCulo ataquePapelCulo) {
         this.ataquePapelCulo = ataquePapelCulo;
+    }
+
+    public void setResistenciaJugador(float resistenciaJugador) {
+        this.resistenciaJugador = resistenciaJugador;
+    }
+
+    public void setVelocidadJugador(float velocidadJugador) {
+        this.velocidadJugador = velocidadJugador;
+    }
+
+    public void setDanyoAtaqueJugador(float danyoAtaqueJugador) {
+        this.danyoAtaqueJugador = danyoAtaqueJugador;
+    }
+
+    public void setProyectilesPorDisparo(int proyectilesPorDisparo) {
+        this.proyectilesPorDisparo = proyectilesPorDisparo;
     }
 }
