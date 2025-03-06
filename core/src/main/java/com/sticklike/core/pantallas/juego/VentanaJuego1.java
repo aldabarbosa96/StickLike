@@ -11,7 +11,7 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.Enemigo;
@@ -29,7 +29,7 @@ import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.ui.Pausa;
 import com.sticklike.core.ui.RenderHUDComponents;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 

@@ -2,9 +2,9 @@ package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 /**
  * MainGame es la clase principal del juego desarrollado con libGDX

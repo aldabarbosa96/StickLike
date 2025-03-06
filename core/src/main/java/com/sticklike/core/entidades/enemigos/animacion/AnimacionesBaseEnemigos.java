@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño, el fade de muerte y el volteo.

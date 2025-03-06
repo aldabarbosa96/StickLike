@@ -1,7 +1,6 @@
 package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
@@ -9,9 +8,9 @@ import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.RenderHUDComponents;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import java.util.PriorityQueue;
 

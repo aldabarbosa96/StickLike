@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Movimiento del enemigo Examen; alterna entre carga, disparo lineal y trayectoria en parábola.

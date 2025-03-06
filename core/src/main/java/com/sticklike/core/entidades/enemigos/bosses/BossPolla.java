@@ -1,22 +1,20 @@
 package com.sticklike.core.entidades.enemigos.bosses;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBossPolla;
-import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
+import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 /**
  * Primer jefe enemigo del juego; gestiona su comportamiento, animaciones, daño y muerte.

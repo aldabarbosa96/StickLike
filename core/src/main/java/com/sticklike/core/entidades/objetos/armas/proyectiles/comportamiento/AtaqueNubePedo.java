@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.NubePedo;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Ataque Nube Pedo; genera una nube dañina de forma periódica y permite activar su versión triple.

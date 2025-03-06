@@ -1,11 +1,11 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Gestiona ataque Tazo; genera tazos orbitando alrededor del jugador, dañando enemigos y aumentando en número, velocidad y duración con mejoras.

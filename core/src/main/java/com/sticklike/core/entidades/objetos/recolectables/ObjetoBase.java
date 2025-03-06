@@ -3,10 +3,10 @@ package com.sticklike.core.entidades.objetos.recolectables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public abstract class ObjetoBase implements ObjetosXP {
 

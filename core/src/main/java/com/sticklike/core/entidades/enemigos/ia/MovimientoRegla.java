@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.enemigos.ia;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Movimiento del enemigo Regla; rota constantemente y se lanza en línea recta hacia el jugador tras una fase de carga.

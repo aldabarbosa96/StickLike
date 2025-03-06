@@ -1,11 +1,11 @@
 package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Clase controladora de las colisiones del jugador. Verifica la colisión con escala ligeramente reducida y aplica el daño si procede

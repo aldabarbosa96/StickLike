@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.mobs.*;
-import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
+import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.enemigos.mobs.Destructibles;
@@ -19,7 +19,7 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.PoissonPoints;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Clase que gestiona el spawn, actualización y render de enemigos (se incluyen destructibles por tratarse como enemigos).

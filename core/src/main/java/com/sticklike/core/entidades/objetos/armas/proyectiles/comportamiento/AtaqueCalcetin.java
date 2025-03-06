@@ -1,10 +1,10 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Gestiona ataque Calcetín; genera proyectiles en múltiples direcciones y permite mejoras en el número de proyectiles, daño e intervalo de disparo.

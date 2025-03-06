@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.enemigos.ia;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
-import  static com.sticklike.core.utilidades.GestorConstantes.*;
+import  static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public class MovimientoVater extends MovimientoBaseEnemigos {
     private float velocidad;

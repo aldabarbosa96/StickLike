@@ -8,8 +8,8 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 /**
  * Clase que encapsula el renderizado del HUD del juego. Se centralizan las llamadas a begin()/end() de los renderizadores.

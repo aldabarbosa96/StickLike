@@ -24,7 +24,7 @@ import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,52 +57,61 @@ public class PopUpMejoras {
     public Skin crearAspectoUI() {
         Skin skin = new Skin();
         BitmapFont font = new BitmapFont();
+        // Registramos la fuente en el Skin para que también se libere al hacer skin.dispose()
         skin.add("default-font", font);
 
-        // FONDO DE LA VENTANA (pixmap amarillo):
+        // 1) Creamos Pixmap y su textura para el fondo de la ventana
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
         pixmap.fill();
         Texture pixmapTexture = new Texture(pixmap);
         pixmap.dispose();
-        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(pixmapTexture);
 
-        // Estilo de la ventana (título mejoras)
+        skin.add("windowBackgroundTexture", pixmapTexture, Texture.class);
+        // Usamos la textura registrada para crear el Drawable
+        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(skin.getRegion("windowBackgroundTexture"));
+
+        // 2) Creamos el estilo de la ventana
         Window.WindowStyle wStyle = new Window.WindowStyle(font, Color.BLUE, backgroundDrawable);
+        // Registramos el estilo en el Skin
         skin.add("default-window", wStyle);
 
-        // ESTILO DE BOTÓN POR DEFECTO
+        // 3) Estilo de botón por defecto
         TextButton.TextButtonStyle defaultButtonStyle = new TextButton.TextButtonStyle();
         defaultButtonStyle.font = font;
         defaultButtonStyle.fontColor = Color.BLACK;
         skin.add("default-button", defaultButtonStyle);
 
-        // ESTILO DE BOTÓN SELECCIONADO (azul)
+        // 4) Creamos Pixmap y textura para el estado "seleccionado"
         Pixmap highlightPixmap = new Pixmap(8, 12, Pixmap.Format.RGBA8888);
         highlightPixmap.setColor(new Color(0.8f, 0.8f, 0.8f, 0.33f));
         highlightPixmap.fill();
-
         Texture highlightTexture = new Texture(highlightPixmap);
         highlightPixmap.dispose();
 
-        NinePatch highlightNinePatch = new NinePatch(highlightTexture, 3, 3, 3, 3);
+        skin.add("highlightTexture", highlightTexture, Texture.class);
+        // Creamos el NinePatch a partir de la textura registrada
+        NinePatch highlightNinePatch =
+            new NinePatch(skin.get("highlightTexture", Texture.class), 3, 3, 3, 3);
         NinePatchDrawable highlightDrawable = new NinePatchDrawable(highlightNinePatch);
 
+        // 5) Estilo para botón seleccionado (azul)
         TextButton.TextButtonStyle selectedButtonStyle = new TextButton.TextButtonStyle();
         selectedButtonStyle.font = font;
         selectedButtonStyle.up = highlightDrawable;
         selectedButtonStyle.fontColor = Color.BLUE;
         skin.add("selected-button", selectedButtonStyle);
 
-        // ESTILO DE BOTÓN SELECCIONADO PARA MEJORAS SIN ICONO (verde)
+        // 6) Estilo para botón seleccionado (verde) cuando no hay icono
         TextButton.TextButtonStyle selectedButtonGreenStyle = new TextButton.TextButtonStyle();
         selectedButtonGreenStyle.font = font;
         selectedButtonGreenStyle.up = highlightDrawable;
-        selectedButtonGreenStyle.fontColor = new Color(0f,0.4f,0f,1);
+        selectedButtonGreenStyle.fontColor = new Color(0f, 0.4f, 0f, 1);
         skin.add("selected-button-green", selectedButtonGreenStyle);
 
         return skin;
     }
+
 
     public void mostrarPopUpMejoras(final List<Mejora> mejoras) {
         ventanaJuego1.setPausado(true);

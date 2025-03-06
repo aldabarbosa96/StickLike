@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.enemigos.ia;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Movimiento del enemigo Culo; alterna entre pausas y desplazamientos hacia el jugador con oscilación rotacional.

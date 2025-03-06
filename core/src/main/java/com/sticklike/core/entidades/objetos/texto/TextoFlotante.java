@@ -3,13 +3,15 @@ package com.sticklike.core.entidades.objetos.texto;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Representa un texto flotante en el juego. Se muestra temporalmente con animación de aparición y desplazamiento vertical.
  */
 
 public class TextoFlotante {
+    private static boolean alternarOffset = false; // Variable para alternar desplazamiento
+
     private String texto;
     private float x, y;
     private float duracion;
@@ -27,18 +29,19 @@ public class TextoFlotante {
 
     private boolean esCritico;
 
-    public TextoFlotante(String texto, float x, float y, float duracion, float extraOffsetX, float extraOffsetY,
-                         float finalScaleX, float finalScaleY, boolean esCritico, BitmapFont fuenteCompartida) {
+    public TextoFlotante(String texto, float x, float y, float duracion, float finalScaleX, float finalScaleY, boolean esCritico, BitmapFont fuenteCompartida) {
         this.texto = texto;
+        // Alternar extraOffset para evitar superposición
+        // Por ejemplo, 5 unidades a la izquierda o derecha
+        this.extraOffsetX = alternarOffset ? 4 : -4;
+        alternarOffset = !alternarOffset; // Cambia para el siguiente texto
+
         // Se suma el offset a la posición base para conseguir el efecto de apilado
-        this.x = x + extraOffsetX;
-        this.y = y + extraOffsetY;
+        this.x = x + this.extraOffsetX;
+        this.y = y; // Si se desea, también se puede alternar verticalmente
         this.duracion = duracion;
-        this.extraOffsetX = extraOffsetX;
-        this.extraOffsetY = extraOffsetY;
         this.tiempoTranscurrido = 0;
         this.esCritico = esCritico;
-
         this.fuente = fuenteCompartida;
 
         this.finalScaleX = finalScaleX;
@@ -50,27 +53,22 @@ public class TextoFlotante {
         fuente.getData().setScale(initialScaleX, initialScaleY);
     }
 
+    // Constructor simplificado
     public TextoFlotante(String texto, float x, float y, float duracion, BitmapFont fuenteCompartida, boolean esCritico) {
-        this(texto, x, y, duracion, 0, 0, TEXTO_WIDTH, TEXTO_HEIGHT, esCritico, fuenteCompartida);
+        this(texto, x, y, duracion, TEXTO_WIDTH, TEXTO_HEIGHT, esCritico, fuenteCompartida);
     }
-
 
     public boolean haDesaparecido() {
         return duracion <= 0;
     }
 
     public void actualizarTextoFlotante(float delta) {
-        // Reducir la duración del texto
         duracion -= delta;
-        // Actualizar el tiempo transcurrido para la animación
         tiempoTranscurrido += delta;
-        // Calcular el progreso de la animación (valor de 0 a 1)
         float t = Math.min(tiempoTranscurrido / animDuration, 1f);
-        // Interpolación lineal de la escala en X e Y
         float currentScaleX = initialScaleX + t * (finalScaleX - initialScaleX);
         float currentScaleY = initialScaleY + t * (finalScaleY - initialScaleY);
         fuente.getData().setScale(currentScaleX, currentScaleY);
-        // Actualizar la posición vertical (por ejemplo, subiendo)
         y += delta * DESPLAZAMIENTOY_TEXTO;
     }
 
@@ -85,16 +83,15 @@ public class TextoFlotante {
     }
 
     private void dibujarReborde(SpriteBatch batch) {
-        float offset = 1; // Desplazamiento para el borde
+        float offset = 1;
         fuente.setColor(0f, 0f, 0f, 1f);
-        fuente.draw(batch, texto, x - offset, y); // Izquierda
-        fuente.draw(batch, texto, x + offset, y); // Derecha
-        fuente.draw(batch, texto, x, y - offset); // Abajo
-        fuente.draw(batch, texto, x, y + offset); // Arriba
-        fuente.draw(batch, texto, x - offset, y - offset); // Esquina inferior izquierda
-        fuente.draw(batch, texto, x + offset, y - offset); // Esquina inferior derecha
-        fuente.draw(batch, texto, x - offset, y + offset); // Esquina superior izquierda
-        fuente.draw(batch, texto, x + offset, y + offset); // Esquina superior derecha
+        fuente.draw(batch, texto, x - offset, y);
+        fuente.draw(batch, texto, x + offset, y);
+        fuente.draw(batch, texto, x, y - offset);
+        fuente.draw(batch, texto, x, y + offset);
+        fuente.draw(batch, texto, x - offset, y - offset);
+        fuente.draw(batch, texto, x + offset, y - offset);
+        fuente.draw(batch, texto, x - offset, y + offset);
+        fuente.draw(batch, texto, x + offset, y + offset);
     }
-
 }

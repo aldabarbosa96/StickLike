@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
+import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class Destructibles implements Enemigo {
     private Sprite sprite;

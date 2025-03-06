@@ -9,8 +9,8 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.Ata
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

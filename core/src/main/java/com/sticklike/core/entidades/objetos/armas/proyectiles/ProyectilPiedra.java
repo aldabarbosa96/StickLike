@@ -8,13 +8,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas.RenderParticulas;
+import com.sticklike.core.entidades.renderizado.RenderParticulas;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Proyectil Piedra; se lanza en línea recta con velocidad ajustable, causando daño y knockback a los enemigos impactados.
@@ -45,7 +45,7 @@ public class ProyectilPiedra implements Proyectiles {
         this.proyectilActivo = true;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.jugador = jugador;
-        this.renderParticulas = new RenderParticulas(20, 3f, new Color(0.75f,0.75f,0.75f,1f));
+        this.renderParticulas = new RenderParticulas(18, 3f, new Color(0.75f,0.75f,0.75f,1f));
         center = new Vector2();
     }
 

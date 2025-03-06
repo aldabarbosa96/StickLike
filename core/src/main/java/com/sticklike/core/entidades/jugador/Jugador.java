@@ -6,14 +6,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.*;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.entidades.renderizado.RenderJugador;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Representa al jugador en el juego. Contiene sus atributos, ataques, estado y delega la gestión del movimiento,

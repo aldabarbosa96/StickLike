@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas;
+package com.sticklike.core.entidades.renderizado;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -36,7 +36,6 @@ public class RenderParticulas {
         batch.end();
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 
-        // Habilitar blending para efectos de transparencia
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -57,11 +56,11 @@ public class RenderParticulas {
             float x4 = p1.x + halfWidth * MathUtils.cos(angle + MathUtils.PI / 2);
             float y4 = p1.y + halfWidth * MathUtils.sin(angle + MathUtils.PI / 2);
 
-            // Calcular el valor alpha para la transparencia (fade)
+            // Calculamos el valor alpha para el fade
             float alpha = ((float) i / (positions.size - 1));
             shapeRenderer.setColor(color.r, color.g, color.b, alpha);
 
-            // Dibujar la forma como dos triángulos que forman un cuadrilátero
+            // Dibujamos la forma como dos triángulos que forman un cuadrilátero
             shapeRenderer.triangle(x1, y1, x2, y2, x3, y3);
             shapeRenderer.triangle(x1, y1, x3, y3, x4, y4);
         }

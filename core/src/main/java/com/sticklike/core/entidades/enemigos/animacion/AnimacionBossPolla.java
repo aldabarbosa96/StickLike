@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.enemigos.animacion;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 public class AnimacionBossPolla {
     private final Sprite spriteBocaAbierta;

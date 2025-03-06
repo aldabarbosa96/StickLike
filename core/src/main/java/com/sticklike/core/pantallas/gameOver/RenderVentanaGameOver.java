@@ -13,7 +13,7 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Renderiza la pantalla de Game Over.

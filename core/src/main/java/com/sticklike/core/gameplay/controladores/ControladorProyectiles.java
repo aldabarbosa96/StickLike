@@ -14,7 +14,7 @@ import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Proyectiles;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import java.util.HashMap;
 import java.util.Iterator;

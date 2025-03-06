@@ -8,12 +8,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas.RenderParticulas;
+import com.sticklike.core.entidades.renderizado.RenderParticulas;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,7 +57,7 @@ public class ProyectilCalcetin implements Proyectiles {
         this.direccionY = direccionY;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
-        this.renderParticulas = new RenderParticulas(17,6f, new Color(1,1,1,0.1f));
+        this.renderParticulas = new RenderParticulas(17, 6f, new Color(1, 1, 1, 0.1f));
         this.centroSprite = new Vector2();
 
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
@@ -93,6 +93,7 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public void dispose() {
         textura = null;
+        renderParticulas.dispose();
     }
 
     @Override

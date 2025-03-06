@@ -7,15 +7,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.renderParticulas.RenderParticulas;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.entidades.renderizado.RenderParticulas;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -182,6 +182,7 @@ public class ProyectilTazo implements Proyectiles {
     @Override
     public void dispose() {
         textura = null;
+        renderParticulas.dispose();
     }
 
     @Override

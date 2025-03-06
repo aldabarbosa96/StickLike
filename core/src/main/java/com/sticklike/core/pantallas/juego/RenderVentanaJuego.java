@@ -14,12 +14,13 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
+import com.sticklike.core.utilidades.DebugStats;
 import com.sticklike.core.utilidades.PoissonPoints;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Renderiza la ventana de juego, incluyendo el fondo, entidades y HUD.
@@ -30,6 +31,7 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
 
     private ShapeRenderer shapeRenderer;
     private VentanaLoading ventanaLoading;
+    private DebugStats debugStats;
     private final int tamanyoCeldas;
     private Array<Borron> borronesMapa;
     private AtomicBoolean borronesListos = new AtomicBoolean(false);
@@ -56,6 +58,7 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
     public RenderVentanaJuego(int tamanyoCeldas, Jugador jugador) {
         this.shapeRenderer = new ShapeRenderer();
         this.ventanaLoading = new VentanaLoading();
+        this.debugStats = new DebugStats();
         this.tamanyoCeldas = tamanyoCeldas;
 
         final Vector2 posicionInicialJugador = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
@@ -145,6 +148,13 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
         spriteBatch.end();
         // 7) Renderizar HUD
         hud.renderizarHUD(delta);
+
+        debugStats.update();
+        if (debugStats.isEnabled()) {
+            spriteBatch.begin();
+            debugStats.render(spriteBatch, VIRTUAL_HEIGHT);
+            spriteBatch.end();
+        }
     }
     public void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -275,5 +285,6 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
     public void dispose() {
         shapeRenderer.dispose();
         ventanaLoading.dispose();
+        debugStats.dispose();
     }
 }

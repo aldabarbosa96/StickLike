@@ -1,4 +1,4 @@
-package com.sticklike.core.utilidades;
+package com.sticklike.core.utilidades.gestores;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Timer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Clase encargada de cargar y liberar los recursos de audio usados en el juego (música y efectos de sonido).

@@ -1,4 +1,4 @@
-package com.sticklike.core.utilidades;
+package com.sticklike.core.utilidades.gestores;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;

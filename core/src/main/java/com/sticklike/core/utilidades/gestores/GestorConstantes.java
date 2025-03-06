@@ -1,4 +1,4 @@
-package com.sticklike.core.utilidades;
+package com.sticklike.core.utilidades.gestores;
 
 /**
  * Clase que gestiona las constantes globales del juego para facilitar su mantenimiento y modificación.

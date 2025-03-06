@@ -8,13 +8,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.sticklike.core.utilidades.GestorConstantes.DANYO_PEDO;
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.DANYO_PEDO;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 /**
  * Proyectil NubePedo; genera una nube de gas que sigue al jugador y daña enemigos en pulsos vibratorios, aplicando knockback.

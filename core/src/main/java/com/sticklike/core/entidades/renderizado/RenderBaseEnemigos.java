@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos.renderizado;
+package com.sticklike.core.entidades.renderizado;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -13,10 +13,10 @@ import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.entidades.enemigos.mobs.Destructibles;
 import com.sticklike.core.interfaces.Enemigo;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
- * Clase encargada de renderizar las sombras de los enemigos; ajustamos la forma y tamaño de la sombra según el tipo.
+ * Clase encargada de renderizar a los enemigos y sus sombras; ajustamos la forma y tamaño de la sombra según el tipo.
  */
 
 public class RenderBaseEnemigos {

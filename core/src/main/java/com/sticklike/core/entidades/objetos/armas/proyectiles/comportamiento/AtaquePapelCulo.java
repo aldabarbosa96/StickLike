@@ -2,9 +2,9 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPapelCulo;
-import com.sticklike.core.utilidades.GestorDeAudio;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public class AtaquePapelCulo {
     private float temporizadorDisparo = 0f;

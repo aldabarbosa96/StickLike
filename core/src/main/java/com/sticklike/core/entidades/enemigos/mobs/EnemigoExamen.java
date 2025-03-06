@@ -1,6 +1,5 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,15 +7,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionExamen;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoExamen;
-import com.sticklike.core.entidades.enemigos.renderizado.RenderBaseEnemigos;
+import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 
-import static com.sticklike.core.utilidades.GestorDeAssets.*;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Enemigo Examen; gestiona su comportamiento, daño y cambio de textura

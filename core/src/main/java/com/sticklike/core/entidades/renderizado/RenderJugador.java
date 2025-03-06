@@ -1,13 +1,14 @@
-package com.sticklike.core.entidades.jugador;
+package com.sticklike.core.entidades.renderizado;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.sticklike.core.utilidades.GestorDeAssets;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
 import static com.sticklike.core.entidades.jugador.InputsJugador.Direction.*;
-import static com.sticklike.core.utilidades.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Renderiza al jugador, incluyendo su animación y barra de salud.
