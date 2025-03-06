@@ -79,7 +79,7 @@ public class Jugador {
         this.colisionesJugador = colisionesJugador;
         this.movimientoJugador = movimientoJugador;
         this.pedrada = ataquePiedra;
-        this.calcetinazo = new AtaqueCalcetin();
+        this.calcetinazo = null;
         this.ataqueTazo = null;
         this.ataqueNubePedo = null;
         this.ataquePapelCulo = null;
