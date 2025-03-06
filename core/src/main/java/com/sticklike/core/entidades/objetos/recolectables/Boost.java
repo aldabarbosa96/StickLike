@@ -1,13 +1,17 @@
 package com.sticklike.core.entidades.objetos.recolectables;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.utilidades.GestorDeAudio;
 
-public class Boost implements ObjetosXP {
+import static com.sticklike.core.utilidades.GestorConstantes.*;
+
+public class Boost extends ObjetoBase {
 
     private Texture texture;
     private float duracion;
@@ -16,34 +20,30 @@ public class Boost implements ObjetosXP {
     private float tiempoRestante;
     private boolean aplicado;
     private float valorOriginal;
-    private float x;
-    private float y;
-    private float width;
-    private float height;
     private boolean collected;
+    private int totalBonus; // Acumulador del bonus aplicado
 
     public Boost(Texture texture, float duracion, BoostType tipo, float x, float y) {
+        super(x, y, texture);
+        setSpriteTexture(texture);
         this.texture = texture;
         this.duracion = duracion;
         this.tipo = tipo;
-        this.amount = getDefaultAmount(tipo);
+        this.amount = obtenerCantidadBase(tipo);
         this.tiempoRestante = duracion;
         this.aplicado = false;
         this.collected = false;
-        this.x = x;
-        this.y = y;
-        this.width = 16;
-        this.height = 16;
+        this.totalBonus = 0;
     }
 
-    private static int getDefaultAmount(BoostType tipo) {
+    private static int obtenerCantidadBase(BoostType tipo) {
         switch (tipo) {
             case VELOCIDAD:
                 return 75;
             case ATAQUE:
-                return 50;
+                return 666;
             case MUNICION:
-                return 6;
+                return 10;
             case INVULNERABILIDAD:
                 return 5;
             default:
@@ -51,30 +51,62 @@ public class Boost implements ObjetosXP {
         }
     }
 
-    public void aplicarBoost(Jugador jugador) {
+    public void aplicarBoost(Jugador jugador, GestorDeAudio gestorDeAudio) {
         if (!aplicado) {
+            // Primera aplicación: almacenar el valor original y fijar el nuevo valor sumando el bonus
             switch (tipo) {
                 case VELOCIDAD:
                     valorOriginal = jugador.getVelocidadJugador();
+                    totalBonus = amount;
                     jugador.setVelocidadJugador(valorOriginal + amount);
                     break;
                 case ATAQUE:
                     valorOriginal = jugador.getDanyoAtaqueJugador();
+                    totalBonus = amount;
+                    // Fijar el nuevo daño como el original + bonus
                     jugador.setDanyoAtaqueJugador(valorOriginal + amount);
                     break;
                 case MUNICION:
                     valorOriginal = jugador.getProyectilesPorDisparo();
-                    jugador.aumentarProyectilesPorDisparo((int) (valorOriginal + amount));
+                    totalBonus = amount;
+                    jugador.setProyectilesPorDisparo((int) (valorOriginal + amount));
                     break;
                 case INVULNERABILIDAD:
                     valorOriginal = jugador.getResistenciaJugador();
-                    jugador.setResistenciaJugador(valorOriginal + amount);
+                    totalBonus = amount;
+                    jugador.aumentarResistencia(amount);
                     break;
                 default:
                     break;
             }
             aplicado = true;
             collected = true;
+            recolectar(gestorDeAudio);
+        } else {
+            // Si ya está activo, acumulamos el bonus y extendemos el tiempo
+            switch (tipo) {
+                case VELOCIDAD:
+                    totalBonus += amount;
+                    jugador.setVelocidadJugador(jugador.getVelocidadJugador() + amount);
+                    break;
+                case ATAQUE:
+                    totalBonus += amount;
+                    jugador.setDanyoAtaqueJugador(jugador.getDanyoAtaqueJugador() + amount);
+                    break;
+                case MUNICION:
+                    totalBonus += amount;
+                    jugador.setProyectilesPorDisparo(jugador.getProyectilesPorDisparo() + amount);
+                    break;
+                case INVULNERABILIDAD:
+                    totalBonus += amount;
+                    jugador.aumentarResistencia(amount);
+                    break;
+                default:
+                    break;
+            }
+            tiempoRestante += duracion;
+            // Acumular tiempo en el efecto visual
+            BoostIconEffectManager.getInstance().getEffect().addTime(duracion);
         }
     }
 
@@ -88,18 +120,19 @@ public class Boost implements ObjetosXP {
 
     public void revertirBoost(Jugador jugador) {
         if (!aplicado) return;
+        // Al revertir, restamos únicamente el bonus acumulado, permitiendo conservar upgrades permanentes.
         switch (tipo) {
             case VELOCIDAD:
-                jugador.setVelocidadJugador(valorOriginal);
+                jugador.setVelocidadJugador(jugador.getVelocidadJugador() - totalBonus);
                 break;
             case ATAQUE:
-                jugador.setDanyoAtaqueJugador(valorOriginal);
+                jugador.setDanyoAtaqueJugador(jugador.getDanyoAtaqueJugador() - totalBonus);
                 break;
             case MUNICION:
-                jugador.setProyectilesPorDisparo((int) valorOriginal);
+                jugador.setProyectilesPorDisparo(jugador.getProyectilesPorDisparo() - totalBonus);
                 break;
             case INVULNERABILIDAD:
-                jugador.setResistenciaJugador(valorOriginal);
+                jugador.setResistenciaJugador(jugador.getResistenciaJugador() - totalBonus);
                 break;
             default:
                 break;
@@ -119,41 +152,70 @@ public class Boost implements ObjetosXP {
     public void actualizarObjetoXP(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         if (aplicado) {
             update(delta, jugador);
+            return;
+        }
+        super.actualizarObjetoXP(delta, jugador, gestorDeAudio);
+        if (colisionaConOtroSprite(jugador.getSprite())) {
+            aplicarBoost(jugador, gestorDeAudio);
         }
     }
 
     @Override
     public void renderizarObjetoXP(SpriteBatch batch) {
         if (!collected) {
-            batch.draw(texture, x, y, width, height);
+            super.renderizarObjetoXP(batch);
         }
     }
 
     @Override
     public void recolectar(GestorDeAudio gestorDeAudio) {
-        // todo --> gestionar efectos de sonido (y efectos de pantalla; brillos, cambio de color, etc)
+        float iconX = (float) VentanaJuego1.worldWidth / 2;
+        float desiredIconSize = 40f;
+        float iconY = 155 + (desiredIconSize / 2f);
+
+        switch (tipo) {
+            case VELOCIDAD:
+                gestorDeAudio.reproducirEfecto("boostVel", 0.75f);
+                BoostIconEffectManager.getInstance().getEffect().activate(
+                    texture, new Color(1, 1, 0, 1f), duracion, iconX, iconY, desiredIconSize);
+                break;
+            case ATAQUE:
+                gestorDeAudio.reproducirEfecto("boostAttack", 0.75f);
+                BoostIconEffectManager.getInstance().getEffect().activate(
+                    texture, new Color(1f, 0f, 1f, 1f), duracion, iconX, iconY, desiredIconSize);
+                break;
+            case MUNICION:
+                gestorDeAudio.reproducirEfecto("boostAmo", 0.75f);
+                BoostIconEffectManager.getInstance().getEffect().activate(
+                    texture, new Color(0.2f, 1f, 0.2f, 1f), duracion, iconX, iconY, desiredIconSize);
+                break;
+            case INVULNERABILIDAD:
+                gestorDeAudio.reproducirEfecto("boostRes", 0.75f);
+                BoostIconEffectManager.getInstance().getEffect().activate(
+                    texture, new Color(0.5f, 0.5f, 1f, 1f), duracion, iconX, iconY, desiredIconSize);
+                break;
+        }
+
+        super.recolectar(gestorDeAudio);
     }
 
     @Override
-    public boolean colisionaConOtroSprite(com.badlogic.gdx.graphics.g2d.Sprite sprite) {
-        Rectangle boostRect = new Rectangle(x, y, width, height);
-        return boostRect.overlaps(sprite.getBoundingRectangle());
+    protected Texture getTexture() {
+        return texture;
     }
 
     @Override
-    public void dispose() {
-        // No es necesario liberar la textura aquí; se gestiona desde el AssetManager
+    protected float getWidth() {
+        return ANCHO_BOOST;
+    }
+
+    @Override
+    protected float getHeight() {
+        return ALTO_BOOST;
     }
 
     public enum BoostType {
-        VELOCIDAD,
-        ATAQUE,
-        MUNICION,
-        INVULNERABILIDAD,
-    }
-
-    public Texture getTexture() {
-        return texture;
+        VELOCIDAD, ATAQUE, MUNICION, INVULNERABILIDAD,
     }
 
     public float getDuracion() {
@@ -166,26 +228,5 @@ public class Boost implements ObjetosXP {
 
     public BoostType getTipo() {
         return tipo;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setPosition(float x, float y) {
-        this.x = x;
-        this.y = y;
     }
 }

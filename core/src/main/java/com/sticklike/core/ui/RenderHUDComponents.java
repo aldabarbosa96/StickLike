@@ -405,4 +405,8 @@ public class RenderHUDComponents {
         fuente.setColor(colorTexto);
         fuente.draw(batch, texto, x, y);
     }
+
+    public boolean isPausadoTemporizador() {
+        return pausadoTemporizador;
+    }
 }

@@ -13,6 +13,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -68,7 +69,7 @@ public class ProyectilTazo implements Proyectiles {
         this.radio = radio;
         this.gestorDeAudio = gestorDeAudio;
         this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
-        this.renderParticulas = new RenderParticulas(15,5, Color.RED);
+        this.renderParticulas = new RenderParticulas(15, 5, Color.RED);
         this.centroSprite = new Vector2();
         // Iniciamos con la escala mínima para el efecto de crecer
         sprite.setScale(MIN_GROWTH_SCALE);
@@ -173,9 +174,9 @@ public class ProyectilTazo implements Proyectiles {
         if (phase != Phase.ACTIVE) {
             return new Rectangle(0, 0, 0, 0);
         }
-        return new Rectangle(sprite.getX() + sprite.getWidth() / 2 - radioColision / 2,
-            sprite.getY() + sprite.getHeight() / 2 - radioColision / 2,
-            radioColision, radioColision);
+        float visualWidth = sprite.getWidth() * sprite.getScaleX();
+        float visualHeight = sprite.getHeight() * sprite.getScaleY();
+        return new Rectangle(sprite.getX() + visualWidth / 2 - radioColision / 2, sprite.getY() + visualHeight / 2 - radioColision / 2, radioColision, radioColision);
     }
 
     @Override

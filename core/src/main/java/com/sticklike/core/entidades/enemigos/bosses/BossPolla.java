@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
@@ -32,7 +33,7 @@ public class BossPolla implements Enemigo {
     private float vida = 1250f;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private float damageAmount = 12.5f;
+    private float damageAmount = 9.5f;
     private float coolDownDanyo = 1.2f;
     private float temporizadorDanyo = 0f;
     private boolean estaMuerto = false;
@@ -74,6 +75,24 @@ public class BossPolla implements Enemigo {
     @Override
     public void renderizar(SpriteBatch batch) {
         renderBaseEnemigos.dibujarEnemigos(batch, this);
+
+        /* Finalizamos el SpriteBatch para dibujar con ShapeRenderer el rectángulo de colisión del enemigo para debug
+        batch.end();
+
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+
+        Rectangle baseRect = sprite.getBoundingRectangle();
+        float marginX = baseRect.width * 0.2f;
+        float marginY = baseRect.height * 0.5f;
+        Rectangle expandedRect = new Rectangle(baseRect.x - marginX / 2, baseRect.y - marginY / 2, baseRect.width + marginX, baseRect.height + marginY);
+
+        shapeRenderer.rect(expandedRect.x, expandedRect.y, expandedRect.width, expandedRect.height);
+        shapeRenderer.end();
+
+        batch.begin();*/
     }
 
     @Override
@@ -92,10 +111,9 @@ public class BossPolla implements Enemigo {
     }
 
     @Override
-    public boolean esGolpeadoPorProyectil(float px, float py, float pw, float ph) {
-        Rectangle bossRect = sprite.getBoundingRectangle();
-        Rectangle projRect = new Rectangle(px, py, pw, ph);
-        return bossRect.overlaps(projRect);
+    public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
+        Rectangle visualRect = sprite.getBoundingRectangle();
+        return visualRect.overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
     }
 
     @Override

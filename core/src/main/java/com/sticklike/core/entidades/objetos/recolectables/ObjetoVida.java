@@ -14,9 +14,10 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
 public class ObjetoVida extends ObjetoBase {
     private Sprite sprite;
     private boolean recolectado = false;
+    private final static Texture TEXTURE = manager.get(RECOLECTABLE_VIDA, Texture.class);
 
     public ObjetoVida(float x, float y) {
-        super(x, y);
+        super(x, y, TEXTURE);
     }
 
 
@@ -29,7 +30,7 @@ public class ObjetoVida extends ObjetoBase {
 
     @Override
     protected Texture getTexture() {
-        return manager.get(RECOLECTABLE_VIDA, Texture.class);
+        return TEXTURE;
     }
 
     @Override

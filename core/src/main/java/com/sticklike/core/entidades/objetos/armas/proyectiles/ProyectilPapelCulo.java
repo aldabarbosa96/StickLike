@@ -168,6 +168,7 @@ public class ProyectilPapelCulo implements Proyectiles {
         }
         return sprite.getBoundingRectangle();
     }
+
     public Circle getCirculoColision() {
         if (impactoAnimacionActiva) {
             float scaleFactorImpact = 7.5f;
@@ -212,13 +213,18 @@ public class ProyectilPapelCulo implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        GestorDeAudio.getInstance().reproducirEfecto("explosion",1f);
-        if (!enemigosImpactados.contains(enemigo)) {
-            enemigosImpactados.add(enemigo);
+        // Si la animación de impacto aún no se ha activado, se activa una única vez
+        if (!impactoAnimacionActiva) {
+            GestorDeAudio.getInstance().reproducirEfecto("explosion", 0.75f);
+            impactoAnimacionActiva = true;
+            animationStateTime = 0f;
             impactX = sprite.getX();
             impactY = sprite.getY();
             impactRotation = sprite.getRotation();
-
+        }
+        // Luego, para cada enemigo que impacte (y que aún no se haya procesado)
+        if (!enemigosImpactados.contains(enemigo)) {
+            enemigosImpactados.add(enemigo);
             float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
             float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
             float dx = enemyCenterX - impactX;
@@ -229,11 +235,9 @@ public class ProyectilPapelCulo implements Proyectiles {
                 dy /= dist;
             }
             enemigo.aplicarKnockback(getKnockbackForce(), dx, dy);
-
-            impactoAnimacionActiva = true;
-            animationStateTime = 0f;
         }
     }
+
 
     @Override
     public boolean yaImpacto(Enemigo enemigo) {

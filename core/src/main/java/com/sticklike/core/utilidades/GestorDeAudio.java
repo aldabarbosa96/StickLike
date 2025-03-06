@@ -59,6 +59,10 @@ public class GestorDeAudio {
         efectosSonido.put("sonidoBossPolla2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla2.wav")));
         efectosSonido.put("sonidoBossPolla3", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla3.wav")));
         efectosSonido.put("sonidoBossPolla4", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla4.wav")));
+        efectosSonido.put("boostVel", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostVel.wav")));
+        efectosSonido.put("boostAttack", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAttack.wav")));
+        efectosSonido.put("boostAmo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAmo.wav")));
+        efectosSonido.put("boostRes", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostRes.wav")));
 
         // Manejar tiempos de duración de los efectos
         duracionSonidos.put("tazo", 0.5f);
@@ -105,6 +109,10 @@ public class GestorDeAudio {
 
     public void reproducirEfecto(String nombre, float volumen) {
         int instancias = contadorInstancias.getOrDefault(nombre, 0);
+        if (nombre.equals("explosion") && instancias >= 1) {
+            return;
+        }
+
         if (instancias >= MAX_INSTANCIAS_SONIDO) {
             return;
         }

@@ -23,7 +23,7 @@ import static com.sticklike.core.utilidades.GestorConstantes.*;
  * Permite pausar y reanudar la partida mediante teclado o mando.
  */
 
-public class MenuPause extends ControllerAdapter { // todo --> implementar menú real próximamente
+public class Pausa extends ControllerAdapter { // todo --> implementar menú real próximamente
     private float pauseWidth;
     private float pauseHeight;
     private float pauseSpacing;
@@ -38,7 +38,7 @@ public class MenuPause extends ControllerAdapter { // todo --> implementar menú
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
 
-    public MenuPause(VentanaJuego1 ventanaJuego1) {
+    public Pausa(VentanaJuego1 ventanaJuego1) {
         this.pauseWidth = 4;
         this.pauseHeight = 12;
         this.pauseSpacing = 4;

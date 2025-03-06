@@ -57,7 +57,7 @@ public class ProyectilCalcetin implements Proyectiles {
         this.direccionY = direccionY;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
-        this.renderParticulas = new RenderParticulas(20,7.5f, new Color(0,0.9f,0.9f,0.1f));
+        this.renderParticulas = new RenderParticulas(17,6f, new Color(1,1,1,0.1f));
         this.centroSprite = new Vector2();
 
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);

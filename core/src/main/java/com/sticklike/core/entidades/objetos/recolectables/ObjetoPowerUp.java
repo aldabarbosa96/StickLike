@@ -14,10 +14,11 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
  */
 
 public class ObjetoPowerUp extends ObjetoBase {
+    private static final Texture TEXTURA = manager.get(RECOLECTABLE_POWER_UP, Texture.class);
     private static int contador = 0;
 
     public ObjetoPowerUp(float x, float y) {
-        super(x, y);
+        super(x, y, TEXTURA);
 
     }
 
@@ -30,7 +31,7 @@ public class ObjetoPowerUp extends ObjetoBase {
     }
     @Override
     protected Texture getTexture() {
-        return manager.get(RECOLECTABLE_POWER_UP, Texture.class);
+        return TEXTURA;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.sticklike.core.utilidades.GestorDeAudio;
+
 import static com.sticklike.core.utilidades.GestorConstantes.*;
 import static com.sticklike.core.utilidades.GestorDeAssets.*;
 
@@ -10,9 +11,10 @@ import static com.sticklike.core.utilidades.GestorDeAssets.*;
  */
 
 public class ObjetoOro extends ObjetoBase {
+    private static final Texture TEXTURE = manager.get(RECOLECTABLE_CACA_DORADA, Texture.class);
 
     public ObjetoOro(float x, float y) {
-        super(x, y);
+        super(x, y, TEXTURE);
         setSpriteTexture(getTexture()); // Sincroniza la textura
     }
 
@@ -24,7 +26,7 @@ public class ObjetoOro extends ObjetoBase {
 
     @Override
     protected Texture getTexture() {
-        return manager.get(RECOLECTABLE_CACA_DORADA, Texture.class);
+        return TEXTURE;
     }
 
     @Override

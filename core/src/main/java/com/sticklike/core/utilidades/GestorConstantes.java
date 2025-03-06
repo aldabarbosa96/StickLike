@@ -173,7 +173,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TIEMPO_CARGA_EXAMEN = 1;
     public static final float TIEMPO_LINEAL_EXAMEN = 5;
     public static final float TIEMPO_PARABOLA_EXAMEN = 3;
-    public static final float CORRECCION_SPAWN = 50f;
+    public static final float CORRECCION_SPAWN = 75f;
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO","CULO", "CULO", "CULO", "REGLA"};
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
@@ -211,8 +211,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_PAPELCULO = 250f;
     public static final float SPEED_MULT = 1.8f;
     public static final float PIEDRA_SIZE = 6f;
-    public static final float CALCETIN_W_SIZE = 18f;
-    public static final float CALCETIN_H_SIZE = 22f;
+    public static final float CALCETIN_W_SIZE = 20f;
+    public static final float CALCETIN_H_SIZE = 24f;
     public static final float PAPELCULO_W_SIZE = 16;
     public static final float PAPELCULO_H_SIZE = 19;
     public static final float PAPELCULO_SPEED = 666f;
@@ -258,9 +258,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_ORO_HEIGHT = 14f;
     public static final float OBJETO_PWUP_WIDTH = 8f;
     public static final float OBJETO_PWUP_HEIGHT = 20f;
-    public static final float VIDA_DESTRUCTIBLE = 250f;
+    public static final float VIDA_DESTRUCTIBLE = 1f;
     public static final float ANCHO_DESTRUCT = 40f;
     public static final float ALTO_DESTRUCT = 35f;
+    public static final float ANCHO_BOOST = 18f;
+    public static final float ALTO_BOOST = 18f;
 
     // -------------------------------------------------
     // Controlador Evento

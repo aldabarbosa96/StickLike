@@ -62,9 +62,10 @@ public class Destructibles implements Enemigo {
         int indiceAleatorio = MathUtils.random(tipos.length - 1);
         Boost.BoostType tipo = tipos[indiceAleatorio];
 
-        float duracion = 10f;
+        float duracion = 20f;
 
         Texture boostTexture = null;
+
         switch (tipo) {
             case VELOCIDAD:
                 boostTexture = manager.get(ICONO_VEL_MOV, Texture.class);

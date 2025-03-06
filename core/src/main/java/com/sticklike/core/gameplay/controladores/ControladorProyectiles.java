@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPapelCulo;
@@ -53,10 +54,10 @@ public class ControladorProyectiles {
                 }
                 // Si es ProyectilPapelCulo, comprobamos si está en explosión
                 else if (proyectil instanceof ProyectilPapelCulo) {
-                    ProyectilPapelCulo ppc = (ProyectilPapelCulo) proyectil;
-                    if (ppc.isImpactoAnimacionActiva()) {
+                    ProyectilPapelCulo proyectilPapelCulo = (ProyectilPapelCulo) proyectil;
+                    if (proyectilPapelCulo.isImpactoAnimacionActiva()) {
                         // Usar el área circular de la explosión
-                        Circle explosionArea = ppc.getCirculoColision();
+                        Circle explosionArea = proyectilPapelCulo.getCirculoColision();
                         float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
                         float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
                         colision = explosionArea.contains(enemyCenterX, enemyCenterY);
@@ -156,22 +157,19 @@ public class ControladorProyectiles {
     private boolean estaEnRadioTazo(Enemigo enemigo, Proyectiles proyectil) {
         if (!(proyectil instanceof ProyectilTazo)) return false;
 
-        float enemigoX = enemigo.getX() + enemigo.getSprite().getWidth() / 2;
-        float enemigoY = enemigo.getY() + enemigo.getSprite().getHeight() / 2;
-
+        // Obtenemos el rectángulo de colisión del tazo
         Rectangle areaTazos = proyectil.getRectanguloColision();
         float centroTazoX = areaTazos.x + areaTazos.width / 2;
         float centroTazoY = areaTazos.y + areaTazos.height / 2;
+        float radio = (areaTazos.width / 2) * 0.5f; // radio reducido para efectuar impacto real acorde con el visual
+        Circle tazoCircle = new Circle(centroTazoX, centroTazoY, radio);
 
-        float dx = enemigoX - centroTazoX;
-        float dy = enemigoY - centroTazoY;
-        float distanciaSq = dx * dx + dy * dy;
+        // Usamos el bounding rectangle del enemigo
+        Rectangle enemyRect = enemigo.getSprite().getBoundingRectangle();
 
-        float radio = areaTazos.width / 2;
-        float radioSq = radio * radio;
-
-        return distanciaSq <= radioSq;
+        return Intersector.overlaps(tazoCircle, enemyRect);
     }
+
 
 
     public ProyectilTazo obtenerUltimoProyectilTazo() {
