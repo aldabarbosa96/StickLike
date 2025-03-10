@@ -50,7 +50,7 @@ public class DebugStats {
         String fpsText = "FPS: " + fps;
         font.draw(batch, fpsText, x, y);
         font.setColor(Color.BLACK);
-        String otherStats = "\nDelta: " + String.format("%.3f", delta) + "\nHeap J: " + String.format("%.2f", javaHeapMB) + " MB" + "\nHeap N: " + String.format("%.2f", nativeHeapMB) + " MB";
+        String otherStats = "\nDelta: " + String.format("%.3f", delta) + "\nJavaH: " + String.format("%.2f", javaHeapMB) + " MB" + "\nNativeH: " + String.format("%.2f", nativeHeapMB) + " MB";
 
         GlyphLayout layout = new GlyphLayout(font, otherStats);
         font.draw(batch, layout, x, y);

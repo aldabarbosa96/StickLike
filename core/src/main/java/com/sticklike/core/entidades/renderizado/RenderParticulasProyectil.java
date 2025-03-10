@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-public class RenderParticulas {
+public class RenderParticulasProyectil {
 
     private Array<Vector2> positions;
     private int maxLength;
@@ -17,7 +17,7 @@ public class RenderParticulas {
     private Color color;
     private ShapeRenderer shapeRenderer;
 
-    public RenderParticulas(int maxLength, float width, Color color) {
+    public RenderParticulasProyectil(int maxLength, float width, Color color) {
         this.maxLength = maxLength;
         this.width = width;
         this.color = color;

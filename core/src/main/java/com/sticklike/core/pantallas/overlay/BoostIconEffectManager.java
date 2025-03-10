@@ -1,6 +1,8 @@
 package com.sticklike.core.pantallas.overlay;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.ui.RenderHUDComponents;
 
 public class BoostIconEffectManager {
@@ -26,8 +28,8 @@ public class BoostIconEffectManager {
         effect.update(delta, renderHUDComponents);
     }
 
-    public void render(SpriteBatch batch) {
-        effect.render(batch);
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        effect.render(batch, camera);
     }
 
     public void dispose() {

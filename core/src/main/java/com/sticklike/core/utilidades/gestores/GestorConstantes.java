@@ -122,7 +122,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int VIDAMAX_JUGADOR = 75;
     public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
-    public static final float INTERVALO_MIN_DISPARO = 0.11f;
+    public static final float INTERVALO_MIN_DISPARO = 0.09f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float RESISTENCIA = 0.05f;
@@ -175,7 +175,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TIEMPO_PARABOLA_EXAMEN = 3;
     public static final float CORRECCION_SPAWN = 75f;
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
-    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO","CULO", "CULO", "CULO", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
 
     // -------------------------------------------------
@@ -254,11 +254,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;
     public static final float OBJETO1_XP_WIDTH = 12.5f;
     public static final float OBJETO1_XP_HEIGHT = 14f;
-    public static final float OBJETO_ORO_WIDTH = 14f ;
+    public static final float OBJETO_ORO_WIDTH = 14f;
     public static final float OBJETO_ORO_HEIGHT = 14f;
     public static final float OBJETO_PWUP_WIDTH = 8f;
     public static final float OBJETO_PWUP_HEIGHT = 20f;
-    public static final float VIDA_DESTRUCTIBLE = 1f;
+    public static final float VIDA_DESTRUCTIBLE = 150f;
     public static final float ANCHO_DESTRUCT = 40f;
     public static final float ALTO_DESTRUCT = 35f;
     public static final float ANCHO_BOOST = 18f;
@@ -278,16 +278,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
     public static final float EVENTO2_SPEED_MULT = 1.45f;
     public static final float EVENTO3_SPEED_MULT = 2f;
-    public static final float EVENTO3_SPAWN_RATE = 0.15f;
+    public static final float EVENTO3_SPAWN_RATE = 0.05f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
-    public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN","CULO"};
+    public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN", "EXAMEN", "EXAMEN", "REGLA"};
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000000001f;
 
     // -------------------------------------------------
     // Configuración borrones
     // -------------------------------------------------
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;
+    public static final float MIN_DIST_SAME_TEXTURE2 = 500f;
     public static final int MAX_ATTEMPTS = 5;
     public static final int CANTIDAD_BORRONES = 1000; // todo --> dibujar más borrones
     public static final float MAP_MIN_X = -10000;

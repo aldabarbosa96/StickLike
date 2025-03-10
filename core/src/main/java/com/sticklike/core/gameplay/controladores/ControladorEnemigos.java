@@ -92,7 +92,7 @@ public class ControladorEnemigos {
                 // Si el enemigo es un destructible, suelta un boost
                 if (enemigo instanceof Destructibles) {
                     Destructibles destructible = (Destructibles) enemigo;
-                    Boost boost = destructible.sueltaBoost();
+                    Boost boost = destructible.sueltaBoost(ventanaJuego1.getRenderHUDComponents());
                     ventanaJuego1.addXPObject(boost);
                 } else {
                     // Para los demás enemigos, soltamos el objeto XP habitual
@@ -210,18 +210,16 @@ public class ControladorEnemigos {
                 continue;
             }
 
-            // Convertir el centro candidato a la esquina inferior izquierda
             float spawnX = candidateCenter.x - ANCHO_DESTRUCT / 2f;
             float spawnY = candidateCenter.y - ALTO_DESTRUCT / 2f;
 
-            // Verificar que el destructible quepa en el mapa
-            if (spawnX < MAP_MIN_X || spawnX + ANCHO_DESTRUCT > MAP_MAX_X ||
-                spawnY < MAP_MIN_Y || spawnY + ALTO_DESTRUCT > MAP_MAX_Y) {
+            // Verificamos que el destructible quepa en el mapa
+            if (spawnX < MAP_MIN_X || spawnX + ANCHO_DESTRUCT > MAP_MAX_X || spawnY < MAP_MIN_Y || spawnY + ALTO_DESTRUCT > MAP_MAX_Y) {
                 continue;
             }
 
             // Creamos el destructible y lo añadimos al array global de enemigos
-            Destructibles d = new Destructibles(spawnX, spawnY, jugador, renderBaseEnemigos);
+            Destructibles d = new Destructibles(spawnX, spawnY, renderBaseEnemigos);
             enemigos.add(d);
             count++;
 

@@ -11,6 +11,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -22,10 +23,9 @@ public class Destructibles implements Enemigo {
     private boolean procesado = false;
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private RenderBaseEnemigos renderBaseEnemigos;
-    private Jugador jugador;
     private Texture damageTexture;
 
-    public Destructibles(float x, float y, Jugador jugador, RenderBaseEnemigos renderBaseEnemigos) {
+    public Destructibles(float x, float y, RenderBaseEnemigos renderBaseEnemigos) {
         this.sprite = new Sprite(manager.get(DESTRUCTIBLE, Texture.class));
         this.damageTexture = manager.get(DESTRUCTIBLE_DMG, Texture.class);
         sprite.setSize(ANCHO_DESTRUCT, ALTO_DESTRUCT);
@@ -38,7 +38,6 @@ public class Destructibles implements Enemigo {
     public void actualizar(float delta) {
         animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class Destructibles implements Enemigo {
         }
     }
 
-    public Boost sueltaBoost() {
+    public Boost sueltaBoost(RenderHUDComponents renderHUDComponents) {
         Boost.BoostType[] tipos = Boost.BoostType.values();
         int indiceAleatorio = MathUtils.random(tipos.length - 1);
         Boost.BoostType tipo = tipos[indiceAleatorio];
@@ -79,10 +78,12 @@ public class Destructibles implements Enemigo {
             case INVULNERABILIDAD:
                 boostTexture = manager.get(ICONO_RESISTENCIA, Texture.class);
                 break;
+            case VELATAQUE:
+                boostTexture = manager.get(ICONO_VEL_ATAQUE, Texture.class);
             default:
                 break;
         }
-        return new Boost(boostTexture,duracion,tipo,getX(),getY());
+        return new Boost(boostTexture, duracion, tipo, getX(), getY(), renderHUDComponents);
     }
 
     @Override

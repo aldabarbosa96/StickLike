@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.*;
 import com.sticklike.core.entidades.renderizado.RenderJugador;
+import com.sticklike.core.entidades.renderizado.RenderParticulasSangre;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
@@ -34,6 +36,7 @@ public class Jugador {
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
+    private RenderParticulasSangre renderParticulasSangre;
 
     // Atributos de stats
     private float velocidadJugador;
@@ -51,6 +54,7 @@ public class Jugador {
     private boolean estaVivo;
     private int oroGanado;
     private int cacasRecogidas;
+    private boolean invulnerable = false;
     private Direction direccionActual = Direction.IDLE;
 
     public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles) {
@@ -86,6 +90,7 @@ public class Jugador {
         this.ataquePapelCulo = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
+        this.renderParticulasSangre = new RenderParticulasSangre();
     }
 
 
@@ -116,6 +121,10 @@ public class Jugador {
         }
         renderJugador.actualizarAnimacion(delta);
         controladorProyectiles.actualizarProyectiles(delta, (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
+
+        if (renderParticulasSangre != null) {
+            renderParticulasSangre.update(delta);
+        }
     }
 
 
@@ -128,6 +137,10 @@ public class Jugador {
         renderJugador.renderizarBarraDeSalud(shapeRenderer, this);
         // Vuelve a comenzar el SpriteBatch para el resto de las texturas
         batch.begin();
+
+        if (renderParticulasSangre != null) {
+            renderParticulasSangre.render(batch);
+        }
     }
 
 
@@ -154,8 +167,9 @@ public class Jugador {
     }
 
     public void aumentarVelocidad(float percentage) {
-        velocidadJugador += velocidadJugador * percentage;
+        velocidadJugador *= (1 + percentage);
     }
+
 
     public void aumentarRangoAtaque(float percentage) {
         rangoAtaqueJugador += rangoAtaqueJugador * percentage;
@@ -218,8 +232,17 @@ public class Jugador {
         return danyoAtaqueJugador;
     }
 
-    public void restarVidaJugador(float vidaJugador) {
-        this.vidaJugador -= vidaJugador;
+    public void restarVidaJugador(float damage) {
+        this.vidaJugador -= damage;
+        if (this.vidaJugador <= 0) {
+            muere();
+        } else {
+            if (renderParticulasSangre != null) {
+                float cx = sprite.getX() + sprite.getWidth() / 2;
+                float cy = sprite.getY() + sprite.getHeight() / 2;
+                renderParticulasSangre.spawnBlood(new Vector2(cx, cy), 8);
+            }
+        }
     }
 
     public void setVidaJugador(float vidaJugador) {
@@ -272,6 +295,10 @@ public class Jugador {
 
     public float getVelocidadAtaque() {
         return velocidadAtaque;
+    }
+
+    public AtaquePiedra getPedrada() {
+        return pedrada;
     }
 
     public float getIntervaloDisparo() {
@@ -354,5 +381,17 @@ public class Jugador {
 
     public void setProyectilesPorDisparo(int proyectilesPorDisparo) {
         this.proyectilesPorDisparo = proyectilesPorDisparo;
+    }
+
+    public boolean isInvulnerable() {
+        return invulnerable;
+    }
+
+    public void setInvulnerable(boolean invulnerable) {
+        this.invulnerable = invulnerable;
+    }
+
+    public void setIntervaloDisparo(float intervaloDisparo) {
+        this.intervaloDisparo = intervaloDisparo;
     }
 }

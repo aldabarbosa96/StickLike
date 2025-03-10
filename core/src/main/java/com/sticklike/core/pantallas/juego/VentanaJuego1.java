@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
+import com.sticklike.core.pantallas.overlay.BoostIconEffect;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
@@ -69,6 +70,7 @@ public class VentanaJuego1 implements Screen {
     private GestorDeAudio gestorDeAudio;
     private PopUpMejoras popUpMejoras;
     private Pausa pausa;
+    private Boost boostActivo;
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
@@ -117,8 +119,7 @@ public class VentanaJuego1 implements Screen {
 
         float playerStartX = worldWidth / 2f;
         float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador,
-            movimientoJugador, ataquePiedra, controladorProyectiles);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles);
     }
 
     private void inicializarSistemasYControladores() {
@@ -174,7 +175,7 @@ public class VentanaJuego1 implements Screen {
 
         BoostIconEffectManager.getInstance().update(delta, renderHUDComponents);
         spriteBatch.begin();
-        BoostIconEffectManager.getInstance().render(spriteBatch);
+        BoostIconEffectManager.getInstance().render(spriteBatch, camara);
         spriteBatch.end();
 
         popUpMejoras.getUiStage().act(delta);
@@ -194,29 +195,39 @@ public class VentanaJuego1 implements Screen {
     }
 
     private void actualizarRecogidaXP(float delta) {
-        // Primera pasada: actualizar cada objeto XP y procesar colisiones.
+        // 1) Primero, actualizamos cada objeto
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
             xp.actualizarObjetoXP(delta, jugador, gestorDeAudio);
 
+            // 2) Si colisionamos con cualquier objeto:
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
+
+                // 2a) Si es un Boost
                 if (xp instanceof Boost) {
-                    Boost boost = (Boost) xp;
-                    if (!boost.isCollected()) {
-                        // Aplica el efecto y marca el boost como recogido.
-                        boost.aplicarBoost(jugador, gestorDeAudio);
+                    Boost nuevoBoost = (Boost) xp;
+                    if (!nuevoBoost.isCollected() && !nuevoBoost.isActivo()) {
+                        // Desactivamos / revertimos el boost anterior si sigue activo
+                        if (boostActivo != null && boostActivo.isActivo()) {
+                            boostActivo.revertirBoost(jugador);
+                            objetosXP.removeValue(boostActivo, true);
+                        }
+
+                        // Asignamos y aplicamos el nuevo boost
+                        boostActivo = nuevoBoost;
+                        nuevoBoost.aplicarBoost(jugador, gestorDeAudio);
                         xp.recolectar(gestorDeAudio);
                     }
-                    // Para los boosts, NO se elimina inmediatamente para que su tiempo siga contando.
+
+                    // 2b) Si es algún otro tipo de objeto XP (XP, vida, oro, trazo, etc.)
                 } else {
                     xp.recolectar(gestorDeAudio);
-                    // Procesar efectos específicos para otros objetos XP:
+
                     if (xp instanceof ObjetoXp) {
                         ObjetoXp objetoXp = (ObjetoXp) xp;
-                        float xpOtorgada = objetoXp.isEsXPGorda()
-                            ? 50f + MathUtils.random(50f)
-                            : 10f + MathUtils.random(15f);
+                        float xpOtorgada = objetoXp.isEsXPGorda() ? 50f + MathUtils.random(50f) : 10f + MathUtils.random(15f);
                         sistemaDeNiveles.agregarXP(xpOtorgada);
+
                     } else if (xp instanceof ObjetoVida) {
                         float vidaExtra = 6f + MathUtils.random(10f);
                         float nuevaVida = jugador.getVidaJugador() + vidaExtra;
@@ -224,26 +235,27 @@ public class VentanaJuego1 implements Screen {
                             nuevaVida = jugador.getMaxVidaJugador();
                         }
                         jugador.setVidaJugador(nuevaVida);
-                        Gdx.app.log("Recolección", "ObjetoVida recolectado. Vida extra otorgada: " + vidaExtra);
+
                     } else if (xp instanceof ObjetoOro) {
                         jugador.setOroGanado(jugador.getOroGanado() + 1);
-                        Gdx.app.log("Recolección", "ObjetoOro recolectado. Oro extra otorgado: 1. Total oro: " + jugador.getOroGanado());
+
                     } else if (xp instanceof ObjetoPowerUp) {
                         jugador.setCacasRecogidas(jugador.getCacasRecogidas() + 1);
-                        Gdx.app.log("PowerUps", "ObjetoPowerUp recolectado. Total trazos: " + jugador.getCacasRecogidas());
                     }
-                    // Eliminamos inmediatamente los objetos XP que no sean boost.
                     objetosXP.removeIndex(i);
                 }
             }
         }
 
-        // Segunda pasada: eliminar boosts que ya fueron recogidos y cuyo efecto ha expirado.
+        // 3) Segunda pasada: eliminamos boosts que ya fueron recogidos y que expiraron
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
             if (xp instanceof Boost) {
                 Boost boost = (Boost) xp;
                 if (boost.isCollected() && !boost.isActivo()) {
+                    if (boost == boostActivo) {
+                        boostActivo = null;
+                    }
                     objetosXP.removeIndex(i);
                 }
             }
@@ -262,8 +274,7 @@ public class VentanaJuego1 implements Screen {
     }
 
     public void actualizarPosCamara() {
-        camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f,
-            jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY, 0);
+        camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f, jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY, 0);
         camara.update();
     }
 
@@ -296,6 +307,7 @@ public class VentanaJuego1 implements Screen {
         hud.resize(width, height);
         pausa.getViewport().update(width, height, true);
         controladorEnemigos.setVentanaRedimensionada(true);
+        BoostIconEffectManager.getInstance().getEffect().updateDimensions(camara);
     }
 
     @Override
@@ -318,6 +330,7 @@ public class VentanaJuego1 implements Screen {
         popUpMejoras.getUiStage().dispose();
         popUpMejoras.getUiSkin().dispose();
         pausa.dispose();
+        pausa = null;
 
         if (jugador != null) {
             jugador.dispose();

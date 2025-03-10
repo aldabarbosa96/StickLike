@@ -3,10 +3,14 @@ package com.sticklike.core.pantallas.overlay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.ui.RenderHUDComponents;
+
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Clase encargada de dibujar el icono y un overlay degradado cuando se recoge un boost.
@@ -17,6 +21,8 @@ public class BoostIconEffect {
     private float timeRemaining;
     private boolean active;
     private Color effectColor;
+    private Color topColor;
+    private Color bottomColor;
     private float scale;
     private float x;
     private float y;
@@ -25,16 +31,10 @@ public class BoostIconEffect {
 
     public BoostIconEffect() {
         active = false;
-        scale = 1f;
+        scale = 0.75f;
         effectColor = new Color(1, 1, 1, 1);
         iconAlpha = 1.0f;
         shapeRenderer = new ShapeRenderer();
-    }
-
-    // Permitimos extender la duración si se recogen boosts adicionales
-    public void addTime(float additionalTime) {
-        this.timeRemaining += additionalTime;
-        this.duration += additionalTime;
     }
 
     public void activate(Texture icon, Color effectColor, float duration, float x, float y, float desiredSize) {
@@ -49,6 +49,10 @@ public class BoostIconEffect {
         // Calculamos la escala en función del ancho original de la textura
         this.scale = desiredSize / icon.getWidth();
         this.iconAlpha = 1.0f;
+
+        // Inicializamos colores aquí para evitar repetidas creaciones de objetos en el render
+        topColor = new Color(effectColor.r, effectColor.g, effectColor.b, 0.20f);
+        bottomColor = new Color(effectColor.r, effectColor.g, effectColor.b, 0.00f);
     }
 
     public void update(float delta, RenderHUDComponents renderHUDComponents) {
@@ -63,22 +67,17 @@ public class BoostIconEffect {
             } else {
                 float blinkPeriod = (timeRemaining > 2.5f) ? 0.25f : 0.1f;
                 float blinkTime = 6f - timeRemaining;
-                if (((int)(blinkTime / blinkPeriod)) % 2 == 0) {
-                    iconAlpha = 1.0f;
-                } else {
-                    iconAlpha = 0.0f;
-                }
-            }
+                iconAlpha = (((int) (blinkTime / blinkPeriod)) % 2 == 0) ? 1.0f : 0.0f;
 
-            // Si se acaba el tiempo desactivamos
-            if (timeRemaining <= 0) {
-                active = false;
+
+                if (timeRemaining <= 0) {
+                    active = false;
+                }
             }
         }
     }
 
-
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
         if (!active || icon == null) return;
 
         // Terminamos el batch para poder usar shapeRenderer
@@ -88,20 +87,12 @@ public class BoostIconEffect {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        float hudHeight = 185f;
+        float screenWidth = Gdx.graphics.getWidth() ;
+        float screenHeight = Gdx.graphics.getHeight();
 
-        // Definimos dos colores para el degradado
-        Color topColor = new Color(effectColor.r, effectColor.g, effectColor.b, 0.20f);
-        Color bottomColor = new Color(effectColor.r, effectColor.g, effectColor.b, 0.00f);
+        float overlayBottom = HUD_HEIGHT + HUD_BAR_Y_OFFSET;
 
-        float screenW = Gdx.graphics.getWidth();
-        float screenH = Gdx.graphics.getHeight();
-
-        // Dibujamos dos triángulos que cubren toda el área por debajo del hudHeight
-        // 1er triángulo
-        shapeRenderer.triangle(0f, hudHeight, screenW, hudHeight, 0f, screenH, topColor, topColor, bottomColor);
-        // 2do triángulo
-        shapeRenderer.triangle(screenW, hudHeight, screenW, screenH, 0f, screenH, topColor, bottomColor, bottomColor);
+        shapeRenderer.rect(0, overlayBottom, screenWidth, screenHeight - overlayBottom, bottomColor, bottomColor, topColor, topColor);
 
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -109,14 +100,22 @@ public class BoostIconEffect {
         // Volvemos a comenzar el batch para dibujar el ícono
         batch.begin();
 
-        // Dibujamos el ícono con el alpha calculado (parpadeo)
         batch.setColor(1, 1, 1, iconAlpha);
         float width = icon.getWidth() * scale;
         float height = icon.getHeight() * scale;
         batch.draw(icon, x - width / 2f, y - height / 2f, width, height);
-
         batch.setColor(Color.WHITE);
     }
+
+    // Permitimos extender la duración si se recogen boosts adicionales
+    public void addTime(float additionalTime) {
+        this.timeRemaining += additionalTime;
+        this.duration += additionalTime;
+    }
+    public void updateDimensions(OrthographicCamera camera) {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+    }
+
 
     public void dispose() {
         shapeRenderer.dispose();

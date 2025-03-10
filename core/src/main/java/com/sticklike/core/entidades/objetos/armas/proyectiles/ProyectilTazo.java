@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sticklike.core.entidades.renderizado.RenderParticulas;
+import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
@@ -37,7 +37,7 @@ public class ProyectilTazo implements Proyectiles {
     private float radio;
     private float rotacionSprite = 0f;
     private GestorDeAudio gestorDeAudio;
-    private RenderParticulas renderParticulas;
+    private RenderParticulasProyectil renderParticulasProyectil;
     private Vector2 centroSprite;
     private boolean esCritico;
     private static final float MIN_GROWTH_SCALE = 0.1f;
@@ -69,7 +69,7 @@ public class ProyectilTazo implements Proyectiles {
         this.radio = radio;
         this.gestorDeAudio = gestorDeAudio;
         this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
-        this.renderParticulas = new RenderParticulas(15, 5, Color.RED);
+        this.renderParticulasProyectil = new RenderParticulasProyectil(15, 5, Color.RED);
         this.centroSprite = new Vector2();
         // Iniciamos con la escala mínima para el efecto de crecer
         sprite.setScale(MIN_GROWTH_SCALE);
@@ -155,7 +155,7 @@ public class ProyectilTazo implements Proyectiles {
                 break;
         }
         centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-        renderParticulas.update(centroSprite);
+        renderParticulasProyectil.update(centroSprite);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class ProyectilTazo implements Proyectiles {
         if (proyectilActivo) {
 
             if (sprite.getColor().a > 0f) {
-                renderParticulas.render(batch);
+                renderParticulasProyectil.render(batch);
             }
             sprite.draw(batch);
         }
@@ -182,7 +182,7 @@ public class ProyectilTazo implements Proyectiles {
     @Override
     public void dispose() {
         textura = null;
-        renderParticulas.dispose();
+        renderParticulasProyectil.dispose();
     }
 
     @Override

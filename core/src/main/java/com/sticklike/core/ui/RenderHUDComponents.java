@@ -53,8 +53,8 @@ public class RenderHUDComponents {
     private Set<String> upgradeStats = new HashSet<>();
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
-
     private List<Rectangle> slotsList = new ArrayList<>();
+    private Set<String> statBoosteada = new HashSet<>();
 
     public RenderHUDComponents(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, Jugador jugador, SistemaDeNiveles sistemaDeNiveles) {
         this.sistemaDeNiveles = sistemaDeNiveles;
@@ -224,9 +224,7 @@ public class RenderHUDComponents {
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
         String[] descripciones = {VEL_MOV, RANGO, VEL_ATAQUE, FUERZA, NUM_PROYECTILES};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
-        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class),
-            manager.get(ICONO_RANGO, Texture.class), manager.get(ICONO_VEL_ATAQUE, Texture.class),
-            manager.get(ICONO_FUERZA, Texture.class), manager.get(ICONO_PROYECTILES, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class), manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class), manager.get(ICONO_PROYECTILES, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION + 10;
         float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC1);
@@ -241,22 +239,23 @@ public class RenderHUDComponents {
         String valorCritico = df.format(jugador.getCritico() * 100) + " %";
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
-        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class),
-            manager.get(ICONO_REGENERACION, Texture.class), manager.get(ICONO_PODER, Texture.class),
-            manager.get(ICONO_RESISTENCIA, Texture.class), manager.get(ICONO_CRITICO, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class), manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class), manager.get(ICONO_CRITICO, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2 + 10f;
         float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
     }
 
     private void renderizarBloqueStatsConIconos(String[] descripciones, Texture[] iconos, String[] valores, float statsX, float statsY, float anchoDescripcion) {
+        // Ajustamos el tamaño de la fuente
         fuente.getData().setScale(0.8f);
+
         for (int i = 0; i < descripciones.length; i++) {
             float posicionY = statsY - i * ESPACIADO;
-            // Dibujar la descripción a la izquierda
+
+            // 1) Dibujamos la descripción de la stat (ej: "FUERZA")
             dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
 
-            // Dibujar el icono (si existe)
+            // 2) Dibujamos el icono si existe
             if (iconos != null && i < iconos.length && iconos[i] != null) {
                 Texture icono = iconos[i];
                 float iconSize = STATS_ICON_SIZE;
@@ -265,19 +264,29 @@ public class RenderHUDComponents {
                 spriteBatch.draw(icono, iconX, iconY, iconSize, iconSize);
             }
 
-            // Determinar colores según si el stat ha sido mejorado
-            Color textColor;
-            Color borderColor;
+            // 3) El valor por defecto y su color
+            String statValue = valores[i];
+            Color textColor = Color.WHITE;    // color normal por defecto
+            Color borderColor = Color.BLUE;   // color del reborde normal
+
+            // 4) Si tenías ya "upgradeStats" para stats subidas permanentemente
             if (upgradeStats.contains(descripciones[i])) {
                 textColor = Color.GREEN;
                 borderColor = Color.BLACK;
-            } else {
-                textColor = Color.WHITE;
-                borderColor = Color.BLUE;
             }
-            dibujarTextoConReborde(spriteBatch, valores[i], statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, borderColor, textColor);
+
+            // 5) Verificamos si la stat está en modo "boosted"
+            if (isStatBoosted(descripciones[i])) {
+                // Entonces mostramos ??? en rojo
+                statValue = "???";
+                textColor = Color.RED;
+            }
+
+            // 6) Finalmente dibujamos el valor real (o ???) con el color resultante
+            dibujarTextoConReborde(spriteBatch, statValue, statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, borderColor, textColor);
         }
     }
+
 
     public void dibujarAtaqueBasico(Texture texturaArma) {
         float slotSize = 40f;
@@ -363,8 +372,36 @@ public class RenderHUDComponents {
         }
     }
 
+    private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
+        fuente.setColor(colorReborde);
+
+        fuente.draw(batch, texto, x - offset, y);
+        fuente.draw(batch, texto, x + offset, y);
+        fuente.draw(batch, texto, x, y - offset);
+        fuente.draw(batch, texto, x, y + offset);
+        fuente.draw(batch, texto, x - offset, y - offset);
+        fuente.draw(batch, texto, x + offset, y - offset);
+        fuente.draw(batch, texto, x - offset, y + offset);
+        fuente.draw(batch, texto, x + offset, y + offset);
+
+        fuente.setColor(colorTexto);
+        fuente.draw(batch, texto, x, y);
+    }
+
     public void marcarStatComoMejorado(String statKey) {
         upgradeStats.add(statKey);
+    }
+
+    public void setStatBoosted(String statKey, boolean boosted) {
+        if (boosted) {
+            statBoosteada.add(statKey);
+        } else {
+            statBoosteada.remove(statKey);
+        }
+    }
+
+    public boolean isStatBoosted(String statKey) {
+        return statBoosteada.contains(statKey);
     }
 
     public void dispose() {
@@ -387,23 +424,6 @@ public class RenderHUDComponents {
 
     public float getTiempoTranscurrido() {
         return tiempoTranscurrido;
-    }
-
-
-    private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
-        fuente.setColor(colorReborde);
-
-        fuente.draw(batch, texto, x - offset, y);
-        fuente.draw(batch, texto, x + offset, y);
-        fuente.draw(batch, texto, x, y - offset);
-        fuente.draw(batch, texto, x, y + offset);
-        fuente.draw(batch, texto, x - offset, y - offset);
-        fuente.draw(batch, texto, x + offset, y - offset);
-        fuente.draw(batch, texto, x - offset, y + offset);
-        fuente.draw(batch, texto, x + offset, y + offset);
-
-        fuente.setColor(colorTexto);
-        fuente.draw(batch, texto, x, y);
     }
 
     public boolean isPausadoTemporizador() {

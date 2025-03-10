@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.renderizado.RenderParticulas;
+import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 
@@ -36,7 +36,7 @@ public class ProyectilCalcetin implements Proyectiles {
     private float damageEscalado;
     private boolean esCritico;
     private Jugador jugador;
-    private RenderParticulas renderParticulas;
+    private RenderParticulasProyectil renderParticulasProyectil;
     private Vector2 centroSprite;
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad,
@@ -57,7 +57,7 @@ public class ProyectilCalcetin implements Proyectiles {
         this.direccionY = direccionY;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
-        this.renderParticulas = new RenderParticulas(17, 6f, new Color(1, 1, 1, 0.1f));
+        this.renderParticulasProyectil = new RenderParticulasProyectil(17, 6f, new Color(1, 1, 1, 0.1f));
         this.centroSprite = new Vector2();
 
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
@@ -69,7 +69,7 @@ public class ProyectilCalcetin implements Proyectiles {
         if (!proyectilActivo) return;
 
         centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-        renderParticulas.update(centroSprite);
+        renderParticulasProyectil.update(centroSprite);
 
         float desplazamiento = velocidadProyectil * multiplicadorVelocidad * delta;
         sprite.translate(direccionX * desplazamiento, direccionY * desplazamiento);
@@ -85,7 +85,7 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
-            renderParticulas.render(batch);
+            renderParticulasProyectil.render(batch);
             sprite.draw(batch);
         }
     }
@@ -93,7 +93,7 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public void dispose() {
         textura = null;
-        renderParticulas.dispose();
+        renderParticulasProyectil.dispose();
     }
 
     @Override

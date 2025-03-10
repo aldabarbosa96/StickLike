@@ -63,6 +63,7 @@ public class GestorDeAudio {
         efectosSonido.put("boostAttack", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAttack.wav")));
         efectosSonido.put("boostAmo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAmo.wav")));
         efectosSonido.put("boostRes", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostRes.wav")));
+        efectosSonido.put("boostVelAttack", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostVelAttack.wav")));
 
         // Manejar tiempos de duración de los efectos
         duracionSonidos.put("tazo", 0.5f);

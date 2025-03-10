@@ -9,21 +9,13 @@ import com.sticklike.core.interfaces.Enemigo;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public class AtaquePiedra {
-    // Temporizador para el cooldown de la ráfaga (se cuenta desde que se termina la ráfaga)
     private float temporizadorDisparo = 0f;
-    // Intervalo de cooldown entre ráfagas (se inicia después de terminar la ráfaga)
     private float intervaloDisparo;
-    // Número de proyectiles pendientes para disparar en la ráfaga actual
     private int proyectilesPendientes = 0;
-    // Temporizador para disparar cada bala dentro de la ráfaga
     private float temporizadorEntreBalas = 0f;
-    // Intervalo entre cada bala de la ráfaga
     private final float intervaloEntreBalas = 0.1f;
-    // Target actual (en la primera bala se calcula y se almacena)
     private Enemigo target;
-    // Dirección almacenada al iniciar la ráfaga
     private float[] storedDirection;
-    // Flag para indicar que la ráfaga ha finalizado (ya se dispararon todos los proyectiles)
     private boolean volleyFinished = true;
 
     public AtaquePiedra(float intervaloDisparoInicial) {
@@ -31,11 +23,7 @@ public class AtaquePiedra {
         storedDirection = null;
     }
 
-    /**
-     * Intenta iniciar una nueva ráfaga.
-     * Se busca el enemigo más cercano y se almacena la dirección.
-     * @return true si se inicia la ráfaga, false si no se encontró enemigo.
-     */
+
     public boolean iniciarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         if (jug.getControladorEnemigos() == null) return false;
         target = encontrarEnemigoMasCercano(jug);
@@ -53,10 +41,7 @@ public class AtaquePiedra {
         return true;
     }
 
-    /**
-     * Maneja el disparo de la ráfaga. Si la ráfaga ya terminó, espera el cooldown.
-     * Una vez iniciada, dispara todas las balas pendientes, incluso si el target muere; pero si el target muere se intenta redirigir a un nuevo enemigo para los siguientes disparos.
-     */
+
     public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
         if (volleyFinished) {
             // Estando en cooldown, acumulamos tiempo hasta iniciar una nueva ráfaga
@@ -148,5 +133,9 @@ public class AtaquePiedra {
 
     public void setIntervaloDisparo(float nuevoIntervaloNuevo) {
         this.intervaloDisparo = nuevoIntervaloNuevo;
+    }
+
+    public float getIntervaloDisparo() {
+        return intervaloDisparo;
     }
 }

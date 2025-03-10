@@ -70,8 +70,8 @@ public class VentanaGameOver implements Screen {
         EnemigoCulo.resetStats();
         EnemigoPolla.resetStats();
         game.ventanaJuego1.dispose();
-        game.ventanaJuego1 = new VentanaJuego1(game, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        game.ventanaJuego1.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
+        game.ventanaJuego1.resize(VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
         game.setScreen(game.ventanaJuego1);
         game.gestorDeAudio.cambiarMusica("fondo2");
     }

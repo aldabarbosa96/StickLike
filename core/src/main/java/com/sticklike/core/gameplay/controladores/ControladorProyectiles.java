@@ -207,5 +207,12 @@ public class ControladorProyectiles {
         }
     }
 
+    public float getMultiplicadorDeDanyo() {
+        return multiplicadorDeDanyo;
+    }
+
+    public void setMultiplicadorDeDanyo(float multiplicadorDeDanyo) {
+        this.multiplicadorDeDanyo = multiplicadorDeDanyo;
+    }
 }
 

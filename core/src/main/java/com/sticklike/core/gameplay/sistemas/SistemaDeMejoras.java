@@ -44,7 +44,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, null, null));
         todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, null, null));
         todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 18%", () -> jugador.reducirIntervaloDisparo(0.16f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 19%", () -> jugador.aumentarDanyo(1.19f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 39%", () -> jugador.aumentarDanyo(1.39f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
         todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, null, null));
         todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, null, null));
@@ -112,8 +112,6 @@ public class SistemaDeMejoras {
         }, 1, null, "PEDO_triple"));
 
         // PapelCulo
-
-
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {
