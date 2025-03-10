@@ -43,6 +43,12 @@ public class GestorDeAssets {
     public static final String RECOLECTABLE_POWER_UP = "drops/03powerUp.png";
     public static final String DESTRUCTIBLE = "destructibles/hamburguesa.png";
     public static final String DESTRUCTIBLE_DMG = "destructibles/hamburguesaD.png";
+    public static final String DESTRUCTIBLE1 = "destructibles/palomitas.png";
+    public static final String DESTRUCTIBLE1_DMG = "destructibles/palomitasD.png";
+    public static final String DESTRUCTIBLE2 = "destructibles/patatas.png";
+    public static final String DESTRUCTIBLE2_DMG = "destructibles/patatasD.png";
+    public static final String DESTRUCTIBLE3 = "destructibles/pizza.png";
+    public static final String DESTRUCTIBLE3_DMG = "destructibles/pizzaD.png";
     public static final String ICONO_VEL_MOV = "hud/vel_mov.png";
     public static final String ICONO_FUERZA = "hud/fuerza.png";
     public static final String ICONO_PODER = "hud/poder_ataque.png";
@@ -107,6 +113,12 @@ public class GestorDeAssets {
         manager.load(RECOLECTABLE_POWER_UP, Texture.class);
         manager.load(DESTRUCTIBLE, Texture.class);
         manager.load(DESTRUCTIBLE_DMG, Texture.class);
+        manager.load(DESTRUCTIBLE1, Texture.class);
+        manager.load(DESTRUCTIBLE1_DMG, Texture.class);
+        manager.load(DESTRUCTIBLE2, Texture.class);
+        manager.load(DESTRUCTIBLE2_DMG, Texture.class);
+        manager.load(DESTRUCTIBLE3, Texture.class);
+        manager.load(DESTRUCTIBLE3_DMG, Texture.class);
 
         manager.load(ICONO_VEL_MOV, Texture.class);
         manager.load(ICONO_FUERZA, Texture.class);

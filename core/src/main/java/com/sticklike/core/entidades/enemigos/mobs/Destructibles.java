@@ -24,12 +24,77 @@ public class Destructibles implements Enemigo {
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private RenderBaseEnemigos renderBaseEnemigos;
     private Texture damageTexture;
+    private TipoDestructible tipo;
+
+    // Enum interno para definir los parámetros de cada tipo de destructible, incluyendo propiedades de sombra.
+    public enum TipoDestructible {
+        TIPO1(DESTRUCTIBLE, DESTRUCTIBLE_DMG, ANCHO_DESTRUCT, ALTO_DESTRUCT, 0.85f, 0.25f, -6f),
+        TIPO2(DESTRUCTIBLE1, DESTRUCTIBLE1_DMG, ANCHO_DESTRUCT1, ALTO_DESTRUCT1, 0.67f, 0.35f, -5f),
+        TIPO3(DESTRUCTIBLE2, DESTRUCTIBLE2_DMG, ANCHO_DESTRUCT2, ALTO_DESTRUCT2, 0.85f, 0.25f, -3.5f),
+        TIPO4(DESTRUCTIBLE3, DESTRUCTIBLE3_DMG, ANCHO_DESTRUCT3, ALTO_DESTRUCT3, 0.92f, 0.2f, -3.5f);
+
+        private final String textureKey;
+        private final String damageTextureKey;
+        private final float width;
+        private final float height;
+        private final float shadowWidthMultiplier;
+        private final float shadowHeightMultiplier;
+        private final float shadowYOffset;
+
+        TipoDestructible(String textureKey, String damageTextureKey, float width, float height,
+                         float shadowWidthMultiplier, float shadowHeightMultiplier, float shadowYOffset) {
+            this.textureKey = textureKey;
+            this.damageTextureKey = damageTextureKey;
+            this.width = width;
+            this.height = height;
+            this.shadowWidthMultiplier = shadowWidthMultiplier;
+            this.shadowHeightMultiplier = shadowHeightMultiplier;
+            this.shadowYOffset = shadowYOffset;
+        }
+
+        public String getTextureKey() {
+            return textureKey;
+        }
+
+        public String getDamageTextureKey() {
+            return damageTextureKey;
+        }
+
+        public float getWidth() {
+            return width;
+        }
+
+        public float getHeight() {
+            return height;
+        }
+
+        public float getShadowWidthMultiplier() {
+            return shadowWidthMultiplier;
+        }
+
+        public float getShadowHeightMultiplier() {
+            return shadowHeightMultiplier;
+        }
+
+        public float getShadowYOffset() {
+            return shadowYOffset;
+        }
+    }
 
     public Destructibles(float x, float y, RenderBaseEnemigos renderBaseEnemigos) {
-        this.sprite = new Sprite(manager.get(DESTRUCTIBLE, Texture.class));
-        this.damageTexture = manager.get(DESTRUCTIBLE_DMG, Texture.class);
-        sprite.setSize(ANCHO_DESTRUCT, ALTO_DESTRUCT);
+        // Seleccionar aleatoriamente un tipo de destructible de la enum interna.
+        TipoDestructible[] tipos = TipoDestructible.values();
+        int indiceAleatorio = MathUtils.random(tipos.length - 1);
+        this.tipo = tipos[indiceAleatorio];
+
+        // Asignar la textura y la textura de daño según el tipo seleccionado.
+        this.sprite = new Sprite(manager.get(tipo.getTextureKey(), Texture.class));
+        this.damageTexture = manager.get(tipo.getDamageTextureKey(), Texture.class);
+
+        // Configurar el tamaño y la posición del sprite.
+        sprite.setSize(tipo.getWidth(), tipo.getHeight());
         sprite.setPosition(x, y);
+
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.renderBaseEnemigos = renderBaseEnemigos;
     }
@@ -62,7 +127,6 @@ public class Destructibles implements Enemigo {
         Boost.BoostType tipo = tipos[indiceAleatorio];
 
         float duracion = 20f;
-
         Texture boostTexture = null;
 
         switch (tipo) {
@@ -108,7 +172,7 @@ public class Destructibles implements Enemigo {
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        return null; // todo --> se maneja desde el método sueltaBoost para mejor claridad del código (sirven para lo mismo)
+        return null; // Se maneja desde el método sueltaBoost para mantener claridad en el código.
     }
 
     @Override
@@ -152,7 +216,6 @@ public class Destructibles implements Enemigo {
 
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
-
     }
 
     @Override
@@ -168,5 +231,18 @@ public class Destructibles implements Enemigo {
     @Override
     public AnimacionesBaseEnemigos getAnimaciones() {
         return animacionesBaseEnemigos;
+    }
+
+    // Getters para los parámetros de la sombra, para usarlos en el renderizado individual.
+    public float getShadowWidthMultiplier() {
+        return tipo.getShadowWidthMultiplier();
+    }
+
+    public float getShadowHeightMultiplier() {
+        return tipo.getShadowHeightMultiplier();
+    }
+
+    public float getShadowYOffset() {
+        return tipo.getShadowYOffset();
     }
 }

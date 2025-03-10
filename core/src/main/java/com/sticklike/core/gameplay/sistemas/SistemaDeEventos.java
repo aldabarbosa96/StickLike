@@ -71,7 +71,6 @@ public class SistemaDeEventos {
         // Configura el efecto de spawn masivo
         controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
-        Gdx.app.log("Polla", "Modo pollas activado: spawn muy rápido");
 
         Timer.schedule(new Timer.Task(){
             @Override
