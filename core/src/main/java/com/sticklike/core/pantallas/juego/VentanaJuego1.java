@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
-import com.sticklike.core.pantallas.overlay.BoostIconEffect;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
@@ -53,7 +52,7 @@ public class VentanaJuego1 implements Screen {
     private ShapeRenderer shapeRenderer;
     private OrthographicCamera camara;
     private FitViewport viewport;
-    private RenderVentanaJuego renderVentanaJuego;
+    private RenderVentanaJuego1 renderVentanaJuego1;
     private RenderHUDComponents renderHUDComponents;
 
     // Jugador y sistemas
@@ -83,6 +82,8 @@ public class VentanaJuego1 implements Screen {
     private int currentScreenHeight;
 
     private boolean pausado = false;
+    private boolean musicChanged = false;
+
 
     public VentanaJuego1(MainGame game, int screenWidth, int screenHeight) {
         this.game = game;
@@ -133,7 +134,7 @@ public class VentanaJuego1 implements Screen {
     }
 
     private void inicializarCuadriculaYHUD() {
-        renderVentanaJuego = new RenderVentanaJuego((int) GRID_CELL_SIZE, jugador);
+        renderVentanaJuego1 = new RenderVentanaJuego1((int) GRID_CELL_SIZE, jugador);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
@@ -163,14 +164,17 @@ public class VentanaJuego1 implements Screen {
             return;
         }
 
-        if (!pausado && !pausa.isPaused() && renderVentanaJuego.isLoadingComplete()) {
+        if (!pausado && !pausa.isPaused() && renderVentanaJuego1.isLoadingComplete()) {
+            if (!musicChanged) {
+                gestorDeAudio.cambiarMusica("fondo2");
+                musicChanged = true;  // Se marca que ya se cambió la música
+            }
             actualizarLogica(delta, gestorDeAudio);
-            gestorDeAudio.reproducirMusica();
         } else {
             gestorDeAudio.pausarMusica();
         }
 
-        renderVentanaJuego.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
+        renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
         pausa.render(shapeRenderer);
 
         BoostIconEffectManager.getInstance().update(delta, renderHUDComponents);
@@ -326,7 +330,7 @@ public class VentanaJuego1 implements Screen {
     public void dispose() {
         spriteBatch.dispose();
         shapeRenderer.dispose();
-        renderVentanaJuego.dispose();
+        renderVentanaJuego1.dispose();
         popUpMejoras.getUiStage().dispose();
         popUpMejoras.getUiSkin().dispose();
         pausa.dispose();

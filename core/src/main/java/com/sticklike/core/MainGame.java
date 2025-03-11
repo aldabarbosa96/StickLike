@@ -2,6 +2,7 @@ package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
+import com.sticklike.core.pantallas.menus.MenuPrincipal;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
@@ -9,7 +10,7 @@ import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 /**
  * MainGame es la clase principal del juego desarrollado con libGDX
  * Extiende de {@link Game}, para poder administrar diversas pantallas simultáneamente.
- * Se encarga de la carga de recursos, la inicialización de la ventana principal y la gestión del ciclo de vida del juego.
+ * Se encarga de la carga de recursos, la inicialización del menú principal y la gestión del ciclo de vida del juego.
  */
 public class MainGame extends Game {
     public VentanaJuego1 ventanaJuego1;
@@ -21,8 +22,7 @@ public class MainGame extends Game {
         GestorDeAssets.cargarRecursos();
         FontManager.initFonts();
         gestorDeAudio = GestorDeAudio.getInstance();
-        ventanaJuego1 = new VentanaJuego1(this, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight); // Pasamos MainGame a la ventana principal (en un futuro el menú del juego)
-        setScreen(ventanaJuego1);
+        setScreen(new MenuPrincipal(this));
     }
 
     @Override
@@ -35,7 +35,9 @@ public class MainGame extends Game {
         super.dispose();
         FontManager.disposeFonts();
         GestorDeAssets.dispose();
-        ventanaJuego1.dispose();
+        if (ventanaJuego1 != null) {
+            ventanaJuego1.dispose();
+        }
         gestorDeAudio.dispose();
     }
 

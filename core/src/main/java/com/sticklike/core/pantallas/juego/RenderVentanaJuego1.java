@@ -27,7 +27,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Genera de forma procedural los elementos visuales del mapa.
  */
 
-public class RenderVentanaJuego { // usamos posion disk sampling para organizar los borrones
+public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar los borrones
 
     private ShapeRenderer shapeRenderer;
     private VentanaLoading ventanaLoading;
@@ -55,7 +55,7 @@ public class RenderVentanaJuego { // usamos posion disk sampling para organizar 
         }
     }
 
-    public RenderVentanaJuego(int tamanyoCeldas, Jugador jugador) {
+    public RenderVentanaJuego1(int tamanyoCeldas, Jugador jugador) {
         this.shapeRenderer = new ShapeRenderer();
         this.ventanaLoading = new VentanaLoading();
         this.debugStats = new DebugStats();

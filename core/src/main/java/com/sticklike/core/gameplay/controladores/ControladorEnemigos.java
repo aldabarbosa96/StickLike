@@ -37,7 +37,7 @@ public class ControladorEnemigos {
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
     private boolean bossSpawned = false;
     private final RenderBaseEnemigos renderBaseEnemigos;
-    private static final int MAX_ENEMIGOS = 666;
+    private static final int MAX_ENEMIGOS = 999;
     private static final int MAX_DESTRUCTIBLES = 250;
     private boolean destructiblesSpawned = false; // para asegurarnos que solo spawnean 1 vez
     private boolean ventanaRedimensionada = false;

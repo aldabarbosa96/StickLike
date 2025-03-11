@@ -89,4 +89,8 @@ public class VentanaLoading { // todo --> si el proyecto crece valorar en un fut
             dotTexture.dispose();
         }
     }
+    public float getTimer() {
+        return timer;
+    }
+
 }

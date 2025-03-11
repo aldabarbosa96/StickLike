@@ -171,4 +171,5 @@ public class EnemigoRegla implements Enemigo {
     public void dispose() {
         sprite = null;
     }
+
 }

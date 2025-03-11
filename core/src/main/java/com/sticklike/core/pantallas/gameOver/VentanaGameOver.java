@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -67,8 +69,9 @@ public class VentanaGameOver implements Screen {
 
     // En VentanaGameOver.java
     private void reiniciarJuego() {
-        EnemigoCulo.resetStats();
+        EnemigoCulo.resetStats(); // todo --> habría que gestionar el reseteo de stats de forma centralizada
         EnemigoPolla.resetStats();
+        EnemigoExamen.resetStats();
         game.ventanaJuego1.dispose();
         game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
         game.ventanaJuego1.resize(VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
@@ -77,7 +80,8 @@ public class VentanaGameOver implements Screen {
     }
 
     private void cerrarJuego() {
-        Gdx.app.exit();
+        game.ventanaJuego1.dispose();
+        game.create();
     }
 
     @Override
