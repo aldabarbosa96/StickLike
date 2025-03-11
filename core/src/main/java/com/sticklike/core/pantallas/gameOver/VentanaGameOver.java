@@ -12,6 +12,7 @@ import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.pantallas.menus.MenuPrincipal;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -80,8 +81,10 @@ public class VentanaGameOver implements Screen {
     }
 
     private void cerrarJuego() {
-        game.ventanaJuego1.dispose();
-        game.create();
+        if(game.ventanaJuego1 != null) {
+            game.ventanaJuego1.dispose();
+        }
+        game.setScreen(new MenuPrincipal(game));
     }
 
     @Override
@@ -100,7 +103,6 @@ public class VentanaGameOver implements Screen {
     @Override
     public void hide() { // se llama cuando se oculta la pantalla, liberamos recursos para no malgastar memoria
         dispose();
-        Gdx.input.setInputProcessor(null);
     }
 
     @Override
