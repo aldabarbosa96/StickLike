@@ -77,7 +77,6 @@ public class VentanaGameOver implements Screen {
         game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
         game.ventanaJuego1.resize(VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
         game.setScreen(game.ventanaJuego1);
-        game.gestorDeAudio.cambiarMusica("fondo2");
     }
 
     private void cerrarJuego() {

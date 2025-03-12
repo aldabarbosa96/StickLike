@@ -37,7 +37,7 @@ public class RenderBaseEnemigos {
                 float alphaFade = enemigo.getAnimaciones().getAlphaActual();
                 enemigo.getSprite().setColor(originalColor.r, originalColor.g, originalColor.b, alphaFade);
             } else if (enemigo.getAnimaciones().estaEnParpadeo()) {
-                // Si está en parpadeo, se cambia la textura, pero el alfa se deja en 1
+                // Si está en parpadeo, cambiamos la textura, pero el alfa lo dejamos en 1
                 enemigo.getSprite().setColor(originalColor.r, originalColor.g, originalColor.b, 1);
             } else {
                 enemigo.getSprite().setColor(originalColor.r, originalColor.g, originalColor.b, 1);
@@ -186,9 +186,9 @@ public class RenderBaseEnemigos {
         getEnemyCenter(enemigo, x, y, w, h);
         float centerX = x + w / 2f;
         float shadowWidth = w * 0.65f;
-        float shadowHeight = h * 0.2f;
+        float shadowHeight = h * 0.15f;
         float shadowX = centerX - (shadowWidth / 2f);
-        float shadowY = y - 12.5f;
+        float shadowY = y - 12f;
 
         dibujarParpadeoSombra(enemigo, shapeRenderer);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);

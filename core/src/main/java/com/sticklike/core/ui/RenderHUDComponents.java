@@ -185,7 +185,7 @@ public class RenderHUDComponents {
         float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET2, barWidth, barHeight);
 
-        float centerX = barX + barWidth * 0.49f;
+        float centerX = barX + barWidth * 0.5f;
         float posY = barY - 35f;
         float offset = 60f;
         renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf((int) jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
@@ -252,40 +252,41 @@ public class RenderHUDComponents {
         for (int i = 0; i < descripciones.length; i++) {
             float posicionY = statsY - i * ESPACIADO;
 
-            // 1) Dibujamos la descripción de la stat (ej: "FUERZA")
-            dibujarTextoConReborde(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
+            // 1) Dibujamos la descripción de la stat
+            fuente.setColor(Color.BLACK);
+            fuente.draw(spriteBatch, descripciones[i], statsX - anchoDescripcion, posicionY);
 
-            // 2) Dibujamos el icono si existe
+            // 2) Dibujamos el icono
             if (iconos != null && i < iconos.length && iconos[i] != null) {
                 Texture icono = iconos[i];
                 float iconSize = STATS_ICON_SIZE;
-                float iconX = statsX - (iconSize * 0.6f);
+                float iconX = statsX - iconSize;
                 float iconY = posicionY - iconSize / 2f - ICON_Y_CORRECTION;
                 spriteBatch.draw(icono, iconX, iconY, iconSize, iconSize);
             }
 
-            // 3) El valor por defecto y su color
+            // 3) Preparamos el valor a mostrar
             String statValue = valores[i];
-            Color textColor = Color.WHITE;    // color normal por defecto
-            Color borderColor = Color.BLUE;   // color del reborde normal
+            Color textColor = Color.WHITE;
+            Color borderColor = Color.BLUE;
 
-            // 4) Si tenías ya "upgradeStats" para stats subidas permanentemente
+            // Si la stat fue mejorada, cambiamos los colores
             if (upgradeStats.contains(descripciones[i])) {
                 textColor = Color.GREEN;
                 borderColor = Color.BLACK;
             }
 
-            // 5) Verificamos si la stat está en modo "boosted"
+            // Si la stat está en modo "boosted", mostramos "???" en rojo
             if (isStatBoosted(descripciones[i])) {
-                // Entonces mostramos ??? en rojo
                 statValue = "???";
                 textColor = Color.RED;
             }
 
-            // 6) Finalmente dibujamos el valor real (o ???) con el color resultante
+            // 4) Dibujamos el valor CON reborde
             dibujarTextoConReborde(spriteBatch, statValue, statsX + ESPACIADO_LATERAL, posicionY, BASIC_OFFSET, borderColor, textColor);
         }
     }
+
 
 
     public void dibujarAtaqueBasico(Texture texturaArma) {
@@ -357,15 +358,15 @@ public class RenderHUDComponents {
     public void renderizarMarcosMejoras() {
         fuente.getData().setScale(0.65f);
         for (int i = 0; i < slotsList.size(); i++) {
-            Rectangle rect = slotsList.get(i);
-            spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rect.x, rect.y, rect.width, rect.height);
+            Rectangle rectangle = slotsList.get(i);
+            spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rectangle.x, rectangle.y, rectangle.width, rectangle.height);
             if (i >= sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas().size()) {
                 String textoNumero = String.valueOf(i + 1);
                 GlyphLayout layoutNumero = new GlyphLayout(fuente, textoNumero);
                 float textWidth = layoutNumero.width;
                 float textHeight = layoutNumero.height;
-                float textX = rect.x + (rect.width - textWidth) / 2;
-                float textY = rect.y + (rect.height + textHeight) / 2;
+                float textX = rectangle.x + (rectangle.width - textWidth) / 2;
+                float textY = rectangle.y + (rectangle.height + textHeight) / 2;
                 fuente.setColor(Color.BLUE);
                 fuente.draw(spriteBatch, textoNumero, textX, textY);
             }

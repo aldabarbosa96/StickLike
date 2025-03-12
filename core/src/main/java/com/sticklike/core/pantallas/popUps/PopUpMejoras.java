@@ -84,7 +84,7 @@ public class PopUpMejoras {
 
         // 4) Creamos Pixmap y textura para el estado "seleccionado"
         Pixmap highlightPixmap = new Pixmap(8, 12, Pixmap.Format.RGBA8888);
-        highlightPixmap.setColor(new Color(0.8f, 0.8f, 0.8f, 0.33f));
+        highlightPixmap.setColor(new Color(0.9f, 0.9f, 0.9f, 0.5f));
         highlightPixmap.fill();
         Texture highlightTexture = new Texture(highlightPixmap);
         highlightPixmap.dispose();
@@ -94,6 +94,7 @@ public class PopUpMejoras {
         NinePatch highlightNinePatch =
             new NinePatch(skin.get("highlightTexture", Texture.class), 3, 3, 3, 3);
         NinePatchDrawable highlightDrawable = new NinePatchDrawable(highlightNinePatch);
+        highlightDrawable.setMinHeight(50);
 
         // 5) Estilo para botón seleccionado (azul)
         TextButton.TextButtonStyle selectedButtonStyle = new TextButton.TextButtonStyle();
@@ -106,7 +107,7 @@ public class PopUpMejoras {
         TextButton.TextButtonStyle selectedButtonGreenStyle = new TextButton.TextButtonStyle();
         selectedButtonGreenStyle.font = font;
         selectedButtonGreenStyle.up = highlightDrawable;
-        selectedButtonGreenStyle.fontColor = new Color(0f, 0.4f, 0f, 1);
+        selectedButtonGreenStyle.fontColor = new Color(0f, 0.5f, 0.25f, 1);
         skin.add("selected-button-green", selectedButtonGreenStyle);
 
         return skin;
@@ -152,7 +153,7 @@ public class PopUpMejoras {
             rowTable.pad(POPUP_ROW_PADDING + 5f);
             rowTable.defaults().center();
 
-            rowTable.add().width(25).padLeft(10).padRight(-5f); // Espaciado a la izquierda
+            rowTable.add().width(25).padLeft(8).padRight(-5f); // Espaciado a la izquierda
             rowTable.add(btn).expandX().fillX().center(); // Centrar el botón
 
             if (mejora.getIcono() != null) {

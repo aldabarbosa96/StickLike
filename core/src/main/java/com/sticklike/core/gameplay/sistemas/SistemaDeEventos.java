@@ -68,7 +68,7 @@ public class SistemaDeEventos {
     }
 
     private void entraEnemigoPolla() {
-        // Configura el efecto de spawn masivo
+        // Configuramos efecto de spawn masivo
         controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
 
@@ -77,13 +77,12 @@ public class SistemaDeEventos {
             public void run() {
                 restaurarSpawnNormal();
             }
-        }, 5); // 5 segundos de duración del efecto
+        }, 5); // duración efecto
     }
 
     private void restaurarSpawnNormal() {
         controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS3);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO2_SPAWN_RATE);
-        Gdx.app.log("Polla", "Spawn restaurado a configuración normal");
         efectoPollaEjecutado = true;
     }
 

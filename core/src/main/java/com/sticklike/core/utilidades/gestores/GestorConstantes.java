@@ -44,15 +44,15 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float BORDER_POSITIVE = 3f * 1.09375f;
     public static final float BORDER_CORRECTION = 2f * 1.09375f;
     public static final float XPTEXT_Y_CORRECTION = 2f * 1.09375f;
-    public static final float STATS_X_CORRECTION = 850f * 1.4814814815f;
-    public static final float STATS_X_CORRECTION2 = 690f * 1.4814814815f;
+    public static final float STATS_X_CORRECTION = 835f * 1.4814814815f;
+    public static final float STATS_X_CORRECTION2 = 680f * 1.4814814815f;
     public static final float STATS_Y_CORRECTION = 38f * 1.09375f;
     public static final float ESPACIADO = 18f * 1.09375f;
     public static final float ANCHO_DESC1 = 75f * 1.4814814815f;
     public static final float ANCHO_DESC2 = 75f * 1.4814814815f;
     public static final float STATS_ICON_SIZE = 16f * 1.09375f;
     public static final float ICON_Y_CORRECTION = 2f * 1.09375f;
-    public static final float ESPACIADO_LATERAL = 22.5f * 1.4814814815f;
+    public static final float ESPACIADO_LATERAL = 12.5f * 1.4814814815f;
 
     // -------------------------------------------------
     // Pop_up

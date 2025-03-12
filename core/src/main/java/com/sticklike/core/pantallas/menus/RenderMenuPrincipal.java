@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -30,6 +31,7 @@ public class RenderMenuPrincipal {
     private Container<?> buttonContainer;
     private ArrayList<TextButton> menuButtons;
     private int selectedIndex = 0;
+    private ShapeRenderer shapeRenderer;
 
     // Interfaz callback para notificar la selección del botón
     public interface MenuListener {
@@ -45,6 +47,7 @@ public class RenderMenuPrincipal {
         stage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
         menuButtons = new ArrayList<>();
+        shapeRenderer = new ShapeRenderer();
         crearElementosUI();
     }
 
@@ -64,7 +67,6 @@ public class RenderMenuPrincipal {
             }
         })));
 
-        // Crear botones del menú
         TextButton btnJugar = createMenuButton(1, "Jugar", "default-button");
         TextButton btnNiveles = createMenuButton(2, "Niveles", "default-button");
         TextButton btnPersonaje = createMenuButton(3, "Personaje", "default-button");
@@ -72,7 +74,7 @@ public class RenderMenuPrincipal {
         TextButton btnCreditos = createMenuButton(5, "Créditos", "default-button");
         TextButton btnSalir = createMenuButton(6, "Salir", "default-button");
 
-        // Agregar ClickListeners para ejecutar la acción (además de actualizar la selección)
+        // Agregamos ClickListeners para ejecutar la acción (además de actualizar la selección)
         btnJugar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -172,7 +174,7 @@ public class RenderMenuPrincipal {
         borderPixmap.drawRectangle(0, 0, 12, 12);
         Texture borderTex = new Texture(borderPixmap);
         borderPixmap.dispose();
-        NinePatch borderPatch = new NinePatch(borderTex, 4, 4, 4, 4);
+        NinePatch borderPatch = new NinePatch(borderTex, 1, 1, 1, 1);
         NinePatchDrawable borderDrawable = new NinePatchDrawable(borderPatch);
 
         buttonContainer = new Container<>(innerContainer);
@@ -187,6 +189,16 @@ public class RenderMenuPrincipal {
             Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2, 0.25f),
             Actions.fadeIn(0.5f)
         ));
+
+        // Agregar label de versión en la parte inferior
+        Label versionLabel = new Label("v1.10.8-dev", uiSkin);
+        versionLabel.setFontScale(0.95f);
+        versionLabel.setColor(Color.DARK_GRAY);
+        Table versionTable = new Table();
+        versionTable.setFillParent(true);
+        versionTable.bottom().right().padRight(22.5f).padBottom(17.5f);
+        versionTable.add(versionLabel);
+        stage.addActor(versionTable);
 
         addHoverEffect();
         updateButtonHighlight();
@@ -218,8 +230,31 @@ public class RenderMenuPrincipal {
     }
 
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.125f, 0.1f, 0.1f, 1);
+        // 1) Limpiar la pantalla con un fondo gris
+        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // 2) Dibujar la cuadrícula azul
+        shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
+        float cellSize = 75;
+        float startX = stage.getCamera().position.x - stage.getViewport().getWorldWidth() / 2;
+        float endX = stage.getCamera().position.x + stage.getViewport().getWorldWidth() / 2;
+        float startY = stage.getCamera().position.y - stage.getViewport().getWorldHeight() / 2;
+        float endY = stage.getCamera().position.y + stage.getViewport().getWorldHeight() / 2;
+
+        // Líneas verticales
+        for (float x = startX - (startX % cellSize); x <= endX; x += cellSize) {
+            shapeRenderer.line(x, startY, x, endY);
+        }
+        // Líneas horizontales
+        for (float y = startY - (startY % cellSize); y <= endY; y += cellSize) {
+            shapeRenderer.line(startX, y, endX, y);
+        }
+        shapeRenderer.end();
+
+        // 3) Actualizar y dibujar la escena (Stage)
         stage.act(delta);
         stage.draw();
     }
@@ -231,6 +266,7 @@ public class RenderMenuPrincipal {
     public void dispose() {
         stage.dispose();
         uiSkin.dispose();
+        shapeRenderer.dispose();
     }
 
     public Stage getStage() {
