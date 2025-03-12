@@ -1,7 +1,6 @@
 package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
@@ -58,7 +57,7 @@ public class ColisionesJugador {
             jugador.muere();
 
         } else {
-            jugador.getAnimacionesJugador().activarParpadeoJugador(PARPADEO_JUGADOR);
+            jugador.getAnimacionesJugador().activarParpadeoJugador(PARPADEO_JUGADOR_DANYO);
         }
     }
 

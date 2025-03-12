@@ -208,8 +208,7 @@ public class VentanaJuego1 implements Screen {
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
 
                 // 2a) Si es un Boost
-                if (xp instanceof Boost) {
-                    Boost nuevoBoost = (Boost) xp;
+                if (xp instanceof Boost nuevoBoost) {
                     if (!nuevoBoost.isCollected() && !nuevoBoost.isActivo()) {
                         // Desactivamos / revertimos el boost anterior si sigue activo
                         if (boostActivo != null && boostActivo.isActivo()) {
@@ -227,8 +226,7 @@ public class VentanaJuego1 implements Screen {
                 } else {
                     xp.recolectar(gestorDeAudio);
 
-                    if (xp instanceof ObjetoXp) {
-                        ObjetoXp objetoXp = (ObjetoXp) xp;
+                    if (xp instanceof ObjetoXp objetoXp) {
                         float xpOtorgada = objetoXp.isEsXPGorda() ? 50f + MathUtils.random(50f) : 10f + MathUtils.random(15f);
                         sistemaDeNiveles.agregarXP(xpOtorgada);
 
@@ -239,6 +237,8 @@ public class VentanaJuego1 implements Screen {
                             nuevaVida = jugador.getMaxVidaJugador();
                         }
                         jugador.setVidaJugador(nuevaVida);
+                        renderVentanaJuego1.triggerLifeFlash();
+
 
                     } else if (xp instanceof ObjetoOro) {
                         jugador.setOroGanado(jugador.getOroGanado() + 1);

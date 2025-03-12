@@ -132,7 +132,6 @@ public class PopUpMejoras {
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
         upgradeWindow.getTitleTable().padTop(15);
-        upgradeWindow.getTitleTable().padBottom(-15);
 
         improvementButtons.clear();
 

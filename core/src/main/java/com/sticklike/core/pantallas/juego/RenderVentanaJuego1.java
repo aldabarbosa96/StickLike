@@ -37,6 +37,10 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
     private AtomicBoolean borronesListos = new AtomicBoolean(false);
     private static final float POISSON_MIN_DISTANCE = 500f;
     private static final int POISSON_K = 30;
+    private boolean flashVidaActivo = false;
+    private float flashVidaTimer = 0f;
+    private final float FLASH_VIDA_DURATION = 0.25f;
+
 
     // Clase interna que gestiona los borrones del mapa
     private static class Borron { // todo --> (posteriormente se podría mover a una clase separada)
@@ -92,20 +96,28 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
             return;
         }
 
-        // 1) Limpiamos la pantalla
-        if (jugador.getVidaJugador() <= 15) {
-            if (jugador.getRenderJugador().isEnParpadeo()) {
-                Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
-            } else {
-                Gdx.gl.glClearColor(0.92f, 0.8f, 0.8f, 1);
+        if (flashVidaActivo) {
+            Gdx.gl.glClearColor(0.82f, 0.88f, 0.82f, 1); // todo --> revisar el color (no queda muy bien de momento)
+            flashVidaTimer -= Gdx.graphics.getDeltaTime();
+            if (flashVidaTimer <= 0) {
+                flashVidaActivo = false;
             }
-        } else {
-            if (jugador.getRenderJugador().isEnParpadeo()) {
-                Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
-            } else {
-                Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+        }else {
+                // 1) Limpiamos la pantalla
+                if (jugador.getVidaJugador() <= 15) {
+                    if (jugador.getRenderJugador().isEnParpadeo()) {
+                        Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
+                    } else {
+                        Gdx.gl.glClearColor(0.92f, 0.8f, 0.8f, 1);
+                    }
+                } else {
+                    if (jugador.getRenderJugador().isEnParpadeo()) {
+                        Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
+                    } else {
+                        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+                    }
+                }
             }
-        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
@@ -146,6 +158,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         // Textos flotantes
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();
+
         // 7) Renderizar HUD
         hud.renderizarHUD(delta);
 
@@ -279,6 +292,11 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
 
     public boolean isLoadingComplete() {
         return borronesListos.get();
+    }
+
+    public void triggerLifeFlash() {
+        flashVidaActivo = true;
+        flashVidaTimer = FLASH_VIDA_DURATION;
     }
 
 

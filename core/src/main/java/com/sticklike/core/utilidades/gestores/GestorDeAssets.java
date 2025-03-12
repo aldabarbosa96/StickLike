@@ -24,10 +24,10 @@ public class GestorDeAssets {
     public static final String ENEMIGO_CULO_OJO_CERRADO = "enemigos/04culoOjoCerrado.png";
     public static final String ENEMIGO_REGLA_CRUZADA = "enemigos/03reglaCruzada.png";
     public static final String ENEMIGO_POLLA = "enemigos/05polla2.png";
-    public static final String ENEMIGO_EXAMEN = "enemigos/examen.png";
-    public static final String ENEMIGO_EXAMEN2 = "enemigos/examen2.png";
-    public static final String ENEMIGO_VATER = "enemigos/water.png";
-    public static final String ENEMIGO_VATER2 = "enemigos/water2.png";
+    public static final String ENEMIGO_EXAMEN = "enemigos/06examen.png";
+    public static final String ENEMIGO_EXAMEN2 = "enemigos/06examen2.png";
+    public static final String ENEMIGO_VATER = "enemigos/07vater.png";
+    public static final String ENEMIGO_VATER2 = "enemigos/07vater2.png";
     public static final String CORAZON_VIDA = "hud/life.png";
     public static final String ARMA_PIEDRA = "armas/01piedra.png";
     public static final String ARMA_CALCETIN = "armas/02calcetin.png";
