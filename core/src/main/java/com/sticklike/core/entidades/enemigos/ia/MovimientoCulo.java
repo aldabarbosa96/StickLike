@@ -17,7 +17,7 @@ public class MovimientoCulo extends MovimientoBaseEnemigos {
     private float currentRotationAngle = 0f;
     private int rotationDirection = 1;
     private final float rotationSpeed = 250;
-    // Límites asimétricos: mayor inclinación hacia los grados positivos (derecha) que hacia los negativos (izquierda) debido al dibujo del sprite
+    // Límites asimétricos: añadimos mayor inclinación hacia los grados positivos (derecha) que hacia los negativos (izquierda) debido al dibujo del sprite
     private final float rotationMaxPositive = 25f;
     private final float rotationMaxNegative = -5f;
 

@@ -118,7 +118,7 @@ public class VentanaJuego1 implements Screen {
         ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
         controladorProyectiles = new ControladorProyectiles();
 
-        float playerStartX = worldWidth / 2f;
+        float playerStartX = worldWidth / 2f - CAMERA_JUGADOR_OFFSET_X;
         float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
         jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles);
     }

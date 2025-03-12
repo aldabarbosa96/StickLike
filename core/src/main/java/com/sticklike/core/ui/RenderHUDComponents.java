@@ -142,23 +142,29 @@ public class RenderHUDComponents {
     }
 
     public void renderizarTextoNivelPlayer() {
-        layout.setText(fuente, TEXTO_LVL + sistemaDeNiveles.getNivelActual());
-        float textX = (VIRTUAL_WIDTH - layout.width) / 2 - TEXT_X_CORRECTION;
-        float textY = HUD_HEIGHT - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
         fuente.getData().setScale(0.95f);
-        Color colorReborde = Color.BLACK;
-        Color colorTexto = Color.WHITE;
-        dibujarTextoConReborde(spriteBatch, TEXTO_LVL, textX, textY, BASIC_OFFSET, colorReborde, colorTexto);
+        GlyphLayout layoutLVL = new GlyphLayout(fuente, TEXTO_LVL);
+        float widthLVL = layoutLVL.width;
 
-        float levelTextWidth = new GlyphLayout(fuente, TEXTO_LVL).width;
-        float levelNumberX = textX + levelTextWidth + 2f;
-        float textYNumber = HUD_HEIGHT - NUMBER_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+        String nivelStr = String.valueOf(sistemaDeNiveles.getNivelActual());
         fuente.getData().setScale(1.4f);
-        colorReborde = Color.BLUE;
-        dibujarTextoConReborde(spriteBatch, String.valueOf(sistemaDeNiveles.getNivelActual()), levelNumberX, textYNumber, BASIC_OFFSET, colorReborde, colorTexto);
+        GlyphLayout layoutNumero = new GlyphLayout(fuente, nivelStr);
+
+        float widthNumero = layoutNumero.width;
+        float spacing = 2f;
+        float totalWidth = widthLVL + spacing + widthNumero;
+        float groupX = (VIRTUAL_WIDTH - totalWidth) / 2;
+        float textY = HUD_HEIGHT - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+        float textYNumber = HUD_HEIGHT - NUMBER_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+
+        fuente.getData().setScale(0.95f);
+        dibujarTextoConReborde(spriteBatch, TEXTO_LVL, groupX, textY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
+
+        fuente.getData().setScale(1.4f);
+        dibujarTextoConReborde(spriteBatch, nivelStr, groupX + widthLVL + spacing, textYNumber, BASIC_OFFSET, Color.BLUE, Color.WHITE);
     }
 
-    // Fondo de la barra XP (ShapeRenderer – Filled)
+
     public void renderizarBarraXPFondo() {
         float barWidth = HUD_BAR_WIDTH;
         float barHeight = HUD_BAR_HEIGHT;
@@ -177,7 +183,6 @@ public class RenderHUDComponents {
         shapeRenderer.rect(barX, barY, barWidth * experiencePercentage, barHeight);
     }
 
-    // Texto e íconos de la barra XP (SpriteBatch)
     public void renderizarBarraXPInfo() {
         float barWidth = HUD_BAR_WIDTH;
         float barHeight = HUD_BAR_HEIGHT;
@@ -188,7 +193,7 @@ public class RenderHUDComponents {
         float centerX = barX + barWidth * 0.5f;
         float posY = barY - 35f;
         float offset = 60f;
-        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf((int) jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf(jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
         renderizarIconoConTexto(manager.get(ICONO_CALEAVELA_KILLS, Texture.class), 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
         renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
     }
@@ -201,7 +206,7 @@ public class RenderHUDComponents {
         layout.setText(fuente, experienceText);
         float textWidth = layout.width;
         float textHeight = layout.height;
-        float textX = barX + (barWidth - textWidth) / 2;
+        float textX = barX + (barWidth) / 2;
         float textY = barY + (barHeight + textHeight) / 2 + XPTEXT_Y_CORRECTION;
         fuente.getData().setScale(0.8f);
         dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, UNDER_OFFSET, Color.BLACK, Color.WHITE);

@@ -39,7 +39,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     private float damageAmount = DANYO_CULO;
     private boolean tieneOjo = false;
     private final Texture damageTexture;
-    private boolean recibeImpacto = false; // puede ser útil
+    private boolean recibeImpacto = false; // puede ser útil en un futuro
     private RenderBaseEnemigos renderBaseEnemigos;
 
     public EnemigoCulo(float x, float y, Jugador jugador) {

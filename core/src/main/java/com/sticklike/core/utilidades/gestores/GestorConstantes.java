@@ -15,7 +15,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración de la cámara
     // -------------------------------------------------
     public static final float CAMERA_OFFSET_Y = -95f;
-    public static final float CAMERA_JUGADOR_OFFSET_Y = 125f;
+    public static final float CAMERA_JUGADOR_OFFSET_X = 7.5f;
+    public static final float CAMERA_JUGADOR_OFFSET_Y = 132.5f;
 
     // -------------------------------------------------
     // CONFIGURACIÓN DEL HUD
