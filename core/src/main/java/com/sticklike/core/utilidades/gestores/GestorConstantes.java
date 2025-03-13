@@ -143,6 +143,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VIDA_ENEMIGOREGLA = 80f;
     public static final float VIDA_ENEMIGO_EXAMEN = 27f;
     public static final float VIDA_ENEMIGO_VATER = 300f;
+    public static final float VIDA_ENEMIGO_ALARMA = 88f;
     public static final float DANYO_CULO = 2f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float DANYO_POLLA = 1.25f;
@@ -289,7 +290,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO3_SPAWN_RATE = 0.05f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
-    public static final String[] LISTA_EXAMEN = {"EXAMEN", "EXAMEN", "EXAMEN", "EXAMEN", "EXAMEN", "REGLA"};
+    public static final String[] LISTA_EXAMEN = {"EXAMEN", "ALARMA", "REGLA"};
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000000001f;
 
     // -------------------------------------------------

@@ -242,6 +242,8 @@ public class ControladorEnemigos {
                 return new EnemigoExamen(x, y, jugador, velocidad * MULT_VELOCIDAD_EXAMEN);
             case "VATER":
                 return new EnemigoVater(x, y, jugador);
+            case "ALARMA":
+                return new EnemigoAlarma(x, y, jugador);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }

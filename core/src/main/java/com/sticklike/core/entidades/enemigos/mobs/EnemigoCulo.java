@@ -70,12 +70,6 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     }
 
     @Override
-    public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch, this);
-    }
-
-
-    @Override
     public void actualizar(float delta) {
         animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
@@ -86,6 +80,11 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         }
         animacionCulo.actualizarAnimacion(delta, sprite);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+    }
+
+    @Override
+    public void renderizar(SpriteBatch batch) {
+        renderBaseEnemigos.dibujarEnemigos(batch, this);
     }
 
     @Override

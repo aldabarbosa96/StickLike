@@ -28,6 +28,7 @@ public class GestorDeAssets {
     public static final String ENEMIGO_EXAMEN2 = "enemigos/06examen2.png";
     public static final String ENEMIGO_VATER = "enemigos/07vater.png";
     public static final String ENEMIGO_VATER2 = "enemigos/07vater2.png";
+    public static final String ENEMIGO_ALARMA = "enemigos/08alarma.png";
     public static final String CORAZON_VIDA = "hud/life.png";
     public static final String ARMA_PIEDRA = "armas/01piedra.png";
     public static final String ARMA_CALCETIN = "armas/02calcetin.png";
@@ -74,6 +75,7 @@ public class GestorDeAssets {
     public static final String DAMAGE_EXAMEN_TEXTURE = "enemigos/damageSprites/06examenD.png";
     public static final String DAMAGE_VATER_TEXTURE = "enemigos/damageSprites/07waterD.png";
     public static final String DAMAGE_BOSS_POLLA_TEXTURE = "enemigos/damageSprites/bossPollaD.png";
+    public static final String DAMAGE_ALARMA_TEXTURE = "enemigos/damageSprites/08alarmaD.png";
 
     public static void cargarRecursos() {
         cargarTexturas();
@@ -92,8 +94,9 @@ public class GestorDeAssets {
         manager.load(ENEMIGO_POLLA, Texture.class);
         manager.load(ENEMIGO_EXAMEN, Texture.class);
         manager.load(ENEMIGO_EXAMEN2, Texture.class);
-        manager.load(ENEMIGO_VATER,Texture.class);
-        manager.load(ENEMIGO_VATER2,Texture.class);
+        manager.load(ENEMIGO_VATER, Texture.class);
+        manager.load(ENEMIGO_VATER2, Texture.class);
+        manager.load(ENEMIGO_ALARMA, Texture.class);
         manager.load(CORAZON_VIDA, Texture.class);
         manager.load(ARMA_PIEDRA, Texture.class);
         manager.load(ARMA_CALCETIN, Texture.class);
@@ -143,6 +146,7 @@ public class GestorDeAssets {
         manager.load(DAMAGE_EXAMEN_TEXTURE, Texture.class);
         manager.load(DAMAGE_VATER_TEXTURE, Texture.class);
         manager.load(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
+        manager.load(DAMAGE_ALARMA_TEXTURE, Texture.class);
 
         manager.load("acciones/movement/stickman_idle00.png", Texture.class);
         manager.load("acciones/movement/stickman_idle01.png", Texture.class);
@@ -200,6 +204,7 @@ public class GestorDeAssets {
         }
         return new Animation<>(duracionContador, frames);
     }
+
     public static void rellenarBorrones() {
         borrones = new Array<>();
         borrones.add(manager.get("fondo/borrones/borronPolla.png", Texture.class));
