@@ -37,6 +37,7 @@ public class RenderMenuPrincipal {
     public interface MenuListener {
         void onSelectButton(int index);
     }
+
     private MenuListener menuListener;
 
     public void setMenuListener(MenuListener listener) {
@@ -79,7 +80,7 @@ public class RenderMenuPrincipal {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setSelectedIndex(0);
-                if(menuListener != null) {
+                if (menuListener != null) {
                     menuListener.onSelectButton(0);
                 }
             }
@@ -88,7 +89,7 @@ public class RenderMenuPrincipal {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setSelectedIndex(1);
-                if(menuListener != null) {
+                if (menuListener != null) {
                     menuListener.onSelectButton(1);
                 }
             }
@@ -97,7 +98,7 @@ public class RenderMenuPrincipal {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setSelectedIndex(2);
-                if(menuListener != null) {
+                if (menuListener != null) {
                     menuListener.onSelectButton(2);
                 }
             }
@@ -106,7 +107,7 @@ public class RenderMenuPrincipal {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setSelectedIndex(3);
-                if(menuListener != null) {
+                if (menuListener != null) {
                     menuListener.onSelectButton(3);
                 }
             }
@@ -115,7 +116,7 @@ public class RenderMenuPrincipal {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setSelectedIndex(4);
-                if(menuListener != null) {
+                if (menuListener != null) {
                     menuListener.onSelectButton(4);
                 }
             }
@@ -124,7 +125,7 @@ public class RenderMenuPrincipal {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setSelectedIndex(5);
-                if(menuListener != null) {
+                if (menuListener != null) {
                     menuListener.onSelectButton(5);
                 }
             }
@@ -184,11 +185,7 @@ public class RenderMenuPrincipal {
         // Posicionar el contenedor fuera de pantalla y aplicar animación de entrada
         buttonContainer.setPosition((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, -buttonContainer.getHeight());
         stage.addActor(buttonContainer);
-        buttonContainer.addAction(Actions.sequence(
-            Actions.delay(0.75f),
-            Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2, 0.25f),
-            Actions.fadeIn(0.5f)
-        ));
+        buttonContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2, 0.25f), Actions.fadeIn(0.5f)));
 
         // Agregar label de versión en la parte inferior
         Label versionLabel = new Label("v1.10.8-dev", uiSkin);

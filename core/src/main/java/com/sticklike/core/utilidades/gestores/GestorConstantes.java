@@ -177,9 +177,6 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TIEMPO_LINEAL_EXAMEN = 5;
     public static final float TIEMPO_PARABOLA_EXAMEN = 3;
     public static final float CORRECCION_SPAWN = 75f;
-    public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
-    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
-    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
 
     // -------------------------------------------------
     // Sombras enemigos
@@ -291,6 +288,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN", "ALARMA", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000000001f;
 
     // -------------------------------------------------

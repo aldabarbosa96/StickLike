@@ -63,7 +63,9 @@ public class MenuPrincipal extends ScreenAdapter {
                 // Acción para Personaje
                 break;
             case 3: // Opciones
-                // Acción para Opciones
+                Controllers.removeListener(inputHandler);
+                Gdx.input.setInputProcessor(null);
+                game.setScreen(new MenuOpciones(game));
                 break;
             case 4: // Créditos
                 GestorDeAudio.getInstance().detenerMusica();
