@@ -8,7 +8,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Resolución virtual
     // -------------------------------------------------
-    public static final float VIRTUAL_WIDTH = 1440;
+    public static final float VIRTUAL_WIDTH = 1440f;
     public static final float VIRTUAL_HEIGHT = 810f;
 
     // -------------------------------------------------

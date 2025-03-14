@@ -49,7 +49,7 @@ public class DebugStats {
         font.setColor(Color.GREEN);
         String fpsText = "FPS: " + fps;
         font.draw(batch, fpsText, x, y);
-        font.setColor(Color.BLACK);
+        font.setColor(Color.DARK_GRAY);
         String otherStats = "\nDelta: " + String.format("%.3f", delta) + "\nJavaH: " + String.format("%.2f", javaHeapMB) + " MB" + "\nNativeH: " + String.format("%.2f", nativeHeapMB) + " MB";
 
         GlyphLayout layout = new GlyphLayout(font, otherStats);

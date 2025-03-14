@@ -17,7 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class RenderMenuPrincipal {
     }
 
     public RenderMenuPrincipal() {
-        stage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
+        stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
         menuButtons = new ArrayList<>();
         shapeRenderer = new ShapeRenderer();
@@ -188,7 +190,7 @@ public class RenderMenuPrincipal {
         buttonContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2, 0.25f), Actions.fadeIn(0.5f)));
 
         // Agregar label de versión en la parte inferior
-        Label versionLabel = new Label("v1.10.8-dev", uiSkin);
+        Label versionLabel = new Label("v1.10.9-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
         versionLabel.setColor(Color.DARK_GRAY);
         Table versionTable = new Table();

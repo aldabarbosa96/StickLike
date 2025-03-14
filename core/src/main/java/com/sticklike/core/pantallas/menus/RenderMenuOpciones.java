@@ -1,6 +1,7 @@
 package com.sticklike.core.pantallas.menus;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,10 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -39,7 +41,7 @@ public class RenderMenuOpciones {
     private TextButton btnVolver;
 
     public RenderMenuOpciones() {
-        stage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
+        stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         shapeRenderer = new ShapeRenderer();
         uiSkin = crearSkinBasico();
         crearElementosUI();
@@ -145,15 +147,17 @@ public class RenderMenuOpciones {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (chkPantallaCompleta.isChecked()) {
-                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                    Gdx.graphics.setWindowedMode(1920, 1080);
+
                 } else {
-                    Gdx.graphics.setWindowedMode((int) VIRTUAL_WIDTH, (int) VIRTUAL_HEIGHT);
+                    Graphics.DisplayMode dm = Gdx.graphics.getDisplayMode();
+                    Gdx.graphics.setWindowedMode((dm.width),(dm.height));
                 }
             }
         });
 
         Table checkTable = new Table();
-        Label chkLabel = new Label("Pantalla Completa", uiSkin);
+        Label chkLabel = new Label("Modo Ventana", uiSkin);
         chkLabel.setAlignment(Align.center);
         checkTable.add(chkLabel).width(140).height(40).padRight(10).left();
         checkTable.add(chkPantallaCompleta).size(40, 40).left();

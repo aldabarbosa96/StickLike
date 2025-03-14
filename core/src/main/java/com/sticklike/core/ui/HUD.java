@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 
@@ -19,7 +21,7 @@ public class HUD {
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch spriteBatch;
     private final OrthographicCamera hudCamara;
-    private final FillViewport hudViewport;
+    private final StretchViewport hudViewport;
     private static final float desplazamientoVertHUD = DESPLAZAMIENTO_VERTICAL_HUD;
 
     public HUD(Jugador jugador, SistemaDeNiveles sistemaDeNiveles, ShapeRenderer shapeRenderer, SpriteBatch spriteBatch) {
@@ -27,7 +29,7 @@ public class HUD {
         this.shapeRenderer = shapeRenderer;
         this.spriteBatch = spriteBatch;
         this.hudCamara = new OrthographicCamera();
-        this.hudViewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
+        this.hudViewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
         this.hudCamara.update();
         renderHUDComponents.crearSlots();
     }
