@@ -140,9 +140,9 @@ public class VentanaJuego1 implements Screen {
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
-
         pausa = new Pausa(this);
     }
+
 
     private void inicializarListas() {
         textosDanyo = new Array<>();
@@ -406,4 +406,11 @@ public class VentanaJuego1 implements Screen {
         return viewport;
     }
 
+    public MainGame getGame() {
+        return game;
+    }
+
+    public HUD getHud() {
+        return hud;
+    }
 }

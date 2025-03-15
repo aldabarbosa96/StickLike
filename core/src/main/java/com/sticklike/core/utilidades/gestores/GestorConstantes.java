@@ -54,6 +54,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float STATS_ICON_SIZE = 16f * 1.09375f;
     public static final float ICON_Y_CORRECTION = 2f * 1.09375f;
     public static final float ESPACIADO_LATERAL = 12.5f * 1.4814814815f;
+    public static final float START_BUTTON_CORRECTION = 2f;
+
 
     // -------------------------------------------------
     // Pop_up
@@ -176,7 +178,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TIEMPO_CARGA_EXAMEN = 1;
     public static final float TIEMPO_LINEAL_EXAMEN = 5;
     public static final float TIEMPO_PARABOLA_EXAMEN = 3;
-    public static final float CORRECCION_SPAWN = 75f;
+    public static final float CORRECCION_SPAWN = 25f;
 
     // -------------------------------------------------
     // Sombras enemigos
@@ -280,7 +282,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO5 = 10;
     public static final float EVENTO1_SPAWN_RATE = 0.5f;
     public static final float EVENTO1_SPEED_MULT = 1.25f;
-    public static final float EVENTO2_SPAWN_RATE = 0.3f;
+    public static final float EVENTO2_SPAWN_RATE = 0.25f;
     public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
     public static final float EVENTO2_SPEED_MULT = 1.45f;
     public static final float EVENTO3_SPEED_MULT = 2f;
@@ -290,8 +292,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] LISTA_EXAMEN = {"EXAMEN", "ALARMA", "REGLA"};
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
-    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
-    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000000001f;
+    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "POLLA", "CULO", "CULO", "CULO", "CULO"};
+    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000001f;
 
     // -------------------------------------------------
     // Configuración borrones

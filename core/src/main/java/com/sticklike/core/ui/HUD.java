@@ -29,7 +29,8 @@ public class HUD {
         this.shapeRenderer = shapeRenderer;
         this.spriteBatch = spriteBatch;
         this.hudCamara = new OrthographicCamera();
-        this.hudViewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamara);
+        this.hudViewport = new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT - 30, hudCamara);
+        this.hudViewport.apply();
         this.hudCamara.update();
         renderHUDComponents.crearSlots();
     }
@@ -41,17 +42,21 @@ public class HUD {
         shapeRenderer.setProjectionMatrix(hudCamara.combined);
         float hudHeight = HUD_HEIGHT + desplazamientoVertHUD;
 
-        // Dibujos con ShapeRenderer (tipo Filled)
+        // 1. Dibujar el fondo
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         renderHUDComponents.renderizarFondoHUD();
+        shapeRenderer.end();
+
+        // 2. Dibujar las líneas horizontales
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
+        shapeRenderer.end();
+
+        // 3. Dibujar el resto de los elementos HUD
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         renderHUDComponents.renderizarMarcoHUD();
         renderHUDComponents.renderizarLineaVerticalCuadricula(hudHeight);
         renderHUDComponents.renderizarBarraXPFondo();
-        shapeRenderer.end();
-
-        // Dibujos con ShapeRenderer (tipo Line)
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
         shapeRenderer.end();
 
         // Dibujos con SpriteBatch
@@ -68,6 +73,7 @@ public class HUD {
         renderHUDComponents.getHudStage().act(delta);
         renderHUDComponents.getHudStage().draw();
     }
+
 
     public void resize(int width, int height) {
         hudViewport.update(width, height, true);

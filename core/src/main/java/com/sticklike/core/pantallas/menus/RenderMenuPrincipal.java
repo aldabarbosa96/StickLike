@@ -74,8 +74,9 @@ public class RenderMenuPrincipal {
         TextButton btnNiveles = createMenuButton(2, "Niveles", "default-button");
         TextButton btnPersonaje = createMenuButton(3, "Personaje", "default-button");
         TextButton btnOpciones = createMenuButton(4, "Opciones", "default-button");
-        TextButton btnCreditos = createMenuButton(5, "Créditos", "default-button");
-        TextButton btnSalir = createMenuButton(6, "Salir", "default-button");
+        TextButton btnLogros = createMenuButton(5, "Logros", "default-button");
+        TextButton btnCreditos = createMenuButton(6, "Créditos", "default-button");
+        TextButton btnSalir = createMenuButton(7, "Salir", "default-button");
 
         // Agregamos ClickListeners para ejecutar la acción (además de actualizar la selección)
         btnJugar.addListener(new ClickListener() {
@@ -117,18 +118,18 @@ public class RenderMenuPrincipal {
         btnCreditos.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setSelectedIndex(4);
+                setSelectedIndex(5);
                 if (menuListener != null) {
-                    menuListener.onSelectButton(4);
+                    menuListener.onSelectButton(5);
                 }
             }
         });
         btnSalir.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setSelectedIndex(5);
+                setSelectedIndex(6);
                 if (menuListener != null) {
-                    menuListener.onSelectButton(5);
+                    menuListener.onSelectButton(6);
                 }
             }
         });
@@ -138,12 +139,12 @@ public class RenderMenuPrincipal {
         menuButtons.add(btnNiveles);
         menuButtons.add(btnPersonaje);
         menuButtons.add(btnOpciones);
+        menuButtons.add(btnLogros);
         menuButtons.add(btnCreditos);
         menuButtons.add(btnSalir);
 
         // Crear la tabla que contendrá los botones
         Table buttonTable = new Table();
-        buttonTable.center();
         buttonTable.add(btnJugar).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
         buttonTable.add(btnNiveles).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
@@ -151,6 +152,8 @@ public class RenderMenuPrincipal {
         buttonTable.add(btnPersonaje).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
         buttonTable.add(btnOpciones).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.row();
+        buttonTable.add(btnLogros).padBottom(12).center().width(VIRTUAL_WIDTH / 4).height(45);
         buttonTable.row();
         buttonTable.add(btnCreditos).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
@@ -187,7 +190,7 @@ public class RenderMenuPrincipal {
         // Posicionar el contenedor fuera de pantalla y aplicar animación de entrada
         buttonContainer.setPosition((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, -buttonContainer.getHeight());
         stage.addActor(buttonContainer);
-        buttonContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2, 0.25f), Actions.fadeIn(0.5f)));
+        buttonContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2.5f, 0.25f), Actions.fadeIn(0.5f)));
 
         // Agregar label de versión en la parte inferior
         Label versionLabel = new Label("v1.10.9-dev", uiSkin);
@@ -195,7 +198,7 @@ public class RenderMenuPrincipal {
         versionLabel.setColor(Color.DARK_GRAY);
         Table versionTable = new Table();
         versionTable.setFillParent(true);
-        versionTable.bottom().right().padRight(22.5f).padBottom(17.5f);
+        versionTable.bottom().right().padRight(22.5f).padBottom(22.5f);
         versionTable.add(versionLabel);
         stage.addActor(versionTable);
 

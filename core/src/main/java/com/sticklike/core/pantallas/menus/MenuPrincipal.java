@@ -57,23 +57,23 @@ public class MenuPrincipal extends ScreenAdapter {
                 game.setScreen(game.ventanaJuego1);
                 break;
             case 1:  // Niveles
-                // Acción para Niveles
                 break;
             case 2: // Personaje
-                // Acción para Personaje
                 break;
             case 3: // Opciones
                 Controllers.removeListener(inputHandler);
                 Gdx.input.setInputProcessor(null);
                 game.setScreen(new MenuOpciones(game));
                 break;
-            case 4: // Créditos
+            case 4: // Logros
+                break;
+            case 5: // Créditos
                 GestorDeAudio.getInstance().detenerMusica();
                 Controllers.removeListener(inputHandler);
                 Gdx.input.setInputProcessor(null);
                 game.setScreen(new Creditos(game));
                 break;
-            case 5: // Salir
+            case 6: // Salir
                 Controllers.removeListener(inputHandler);
                 Gdx.input.setInputProcessor(null);
                 Gdx.app.exit();

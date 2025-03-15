@@ -39,7 +39,7 @@ public class GestorDeAudio {
         musicasFondo.put("fondoMenu", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondoMenu.mp3")));
         musicasFondo.put("fondoMenu2", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondoMenu2.mp3")));
 
-        // fondo2 por defecto (música inicial)
+        // fondo2 por defecto (música nivel inicial)
         musicaActual = musicasFondo.get("fondo2");
 
         // Cargar efectos de sonido

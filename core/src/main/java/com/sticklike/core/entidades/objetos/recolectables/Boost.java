@@ -243,7 +243,7 @@ public class Boost extends ObjetoBase {
     public void recolectar(GestorDeAudio gestorDeAudio) {
         float iconX = (float) VentanaJuego1.worldWidth / 2;
         float desiredIconSize = 40f;
-        float iconY = 155 + (desiredIconSize / 2f);
+        float iconY = 200f;
         switch (tipo) {
             case VELOCIDAD:
                 gestorDeAudio.reproducirEfecto("boostVel", 0.75f);
