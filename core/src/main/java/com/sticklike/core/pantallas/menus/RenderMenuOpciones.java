@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -118,7 +119,7 @@ public class RenderMenuOpciones {
         // Slider de música
         sliderMusica = new Slider(0, 1, 0.01f, false, uiSkin);
         sliderMusica.setValue(1);
-        Table sliderMusicaTable = crearSliders(sliderMusica);
+        Table sliderMusicaTable = crearSliderMusica(sliderMusica);
         Label volMusicaLabel = new Label("Volumen Música:", uiSkin);
         volMusicaLabel.setAlignment(Align.center);
         optionsTable.add(volMusicaLabel).center().colspan(1).width(140);
@@ -129,7 +130,7 @@ public class RenderMenuOpciones {
         // Slider de efectos
         sliderEfectos = new Slider(0, 1, 0.01f, false, uiSkin);
         sliderEfectos.setValue(1);
-        Table sliderEfectosTable = crearSliders(sliderEfectos);
+        Table sliderEfectosTable = crearSliderEfectos(sliderEfectos);
         Label volEfectosLabel = new Label("Volumen Efectos:", uiSkin);
         volEfectosLabel.setAlignment(Align.center);
         optionsTable.add(volEfectosLabel).center().colspan(1).width(140);
@@ -171,18 +172,35 @@ public class RenderMenuOpciones {
         return optionsTable;
     }
 
-    private Table crearSliders(final Slider slider) {
-        // Crear etiqueta para mostrar el porcentaje
-        final Label percentageLabel = new Label(String.format("%d%%", (int) (slider.getValue() * 100)), uiSkin);
-        // Actualizar la etiqueta conforme cambia el valor del slider
+    private Table crearSliderMusica(final Slider slider) {
+        sliderMusica.setValue(GestorDeAudio.getInstance().getVolumenMusica());
+        final Label percentageLabel = new Label(String.format("%d%%", (int)(slider.getValue() * 100)), uiSkin);
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                int percentage = (int) (slider.getValue() * 100);
-                percentageLabel.setText(percentage + "%");
+                float sliderValue = slider.getValue();
+                percentageLabel.setText(String.format("%d%%", (int)(sliderValue * 100)));
+                GestorDeAudio.getInstance().setVolumenMusica(sliderValue);
             }
         });
-        // Organizar slider y etiqueta en una tabla
+        Table table = new Table();
+        table.add(slider).width(VIRTUAL_WIDTH / 4 - 40).padRight(10);
+        table.add(percentageLabel).width(40);
+        return table;
+    }
+
+    private Table crearSliderEfectos(final Slider slider) {
+        sliderEfectos.setValue(GestorDeAudio.getInstance().getVolumenEfectos());
+        final Label percentageLabel = new Label(String.format("%d%%", (int)(slider.getValue() * 100)), uiSkin);
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float sliderValue = slider.getValue();
+                percentageLabel.setText(String.format("%d%%", (int)(sliderValue * 100)));
+                // Aquí actualizamos el volumen de los efectos directamente
+                GestorDeAudio.getInstance().setVolumenEfectos(sliderValue);
+            }
+        });
         Table table = new Table();
         table.add(slider).width(VIRTUAL_WIDTH / 4 - 40).padRight(10);
         table.add(percentageLabel).width(40);

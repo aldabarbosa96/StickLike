@@ -160,6 +160,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_POLLA = 45f;
     public static final float VEL_BASE_EXAMEN = 90f;
     public static final float VEL_BASE_VATER = 25f;
+    public static final float VEL_BASE_ALARMA = 50f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
     public static final float MULT_VELOCIDAD_POLLA = 1.5f;

@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.pantallas.menus.MenuPrincipal;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -102,7 +103,7 @@ public class Pausa extends ControllerAdapter {
         BitmapFont skinFont = new BitmapFont();
         pauseSkin.add("default-font", skinFont);
 
-        // LabelStyle (para el menú principal y otros usos)
+        // LabelStyle
         Label.LabelStyle labelStyle = new Label.LabelStyle(skinFont, Color.WHITE);
         pauseSkin.add("default", labelStyle);
 
@@ -113,10 +114,8 @@ public class Pausa extends ControllerAdapter {
         btnStyle.overFontColor = Color.BLUE;
         pauseSkin.add("default-btn", btnStyle);
 
-        // Estilo específico para el botón "Volver" en la ventana de opciones: texto negro
         TextButton.TextButtonStyle volverStyle = new TextButton.TextButtonStyle(btnStyle);
         volverStyle.fontColor = Color.BLACK;
-        // Se mantiene el overFontColor (hover) del estilo por defecto
         pauseSkin.add("volver-btn", volverStyle);
 
         // SliderStyle
@@ -126,9 +125,12 @@ public class Pausa extends ControllerAdapter {
         Pixmap knobPixmap = new Pixmap(15, 15, Pixmap.Format.RGBA8888);
         knobPixmap.setColor(Color.BLUE);
         knobPixmap.fillCircle(7, 7, 7);
+        knobPixmap.setColor(Color.WHITE);
+        knobPixmap.fillCircle(7, 7, 5);
         Texture knobTexture = new Texture(knobPixmap);
         knobPixmap.dispose();
         sliderStyle.knob = new TextureRegionDrawable(new TextureRegion(knobTexture));
+
         pauseSkin.add("default-horizontal", sliderStyle, Slider.SliderStyle.class);
 
         // CheckBoxStyle
@@ -202,17 +204,37 @@ public class Pausa extends ControllerAdapter {
     // Crea una fila de control de volumen (Label, Slider y etiqueta de porcentaje)
     private Table createVolumeControlRow(String labelText) {
         Table row = new Table();
+
         Label label = new Label(labelText, pauseSkin);
-        // Ajuste: texto más pequeño y en negro
         label.setFontScale(0.7f);
         label.setColor(Color.BLACK);
 
         final Slider slider = new Slider(0, 1, 0.01f, false, pauseSkin);
-        slider.setValue(1);
 
-        final Label percentLabel = new Label("100%", pauseSkin);
+        if (labelText.contains("Música")) {
+            slider.setValue(GestorDeAudio.getInstance().getVolumenMusica());
+        } else if (labelText.contains("Efectos")) {
+            slider.setValue(GestorDeAudio.getInstance().getVolumenEfectos());
+        }
+
+        final Label percentLabel = new Label(String.format("%d%%", (int) (slider.getValue() * 100)), pauseSkin);
         percentLabel.setFontScale(0.7f);
         percentLabel.setColor(Color.BLACK);
+
+        // Listener para actualizar el porcentaje y el volumen
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float sliderValue = slider.getValue();
+                int porcentaje = (int) (sliderValue * 100);
+                percentLabel.setText(porcentaje + "%");
+                if (labelText.contains("Música")) {
+                    GestorDeAudio.getInstance().setVolumenMusica(sliderValue);
+                } else if (labelText.contains("Efectos")) {
+                    GestorDeAudio.getInstance().setVolumenEfectos(sliderValue);
+                }
+            }
+        });
 
         row.add(label).colspan(2).align(Align.left);
         row.row();
@@ -220,6 +242,7 @@ public class Pausa extends ControllerAdapter {
         row.add(percentLabel).width(40);
         return row;
     }
+
 
     private void crearVentanaOpciones() {
         // Se crea el estilo de la ventana con título en negro
@@ -266,7 +289,6 @@ public class Pausa extends ControllerAdapter {
             }
         });
 
-        // Se crea el botón "Volver" en la ventana de opciones con el estilo "volver-btn" para texto negro
         TextButton btnVolver = new TextButton("Volver", pauseSkin, "volver-btn");
         btnVolver.addListener(new ClickListener() {
             @Override

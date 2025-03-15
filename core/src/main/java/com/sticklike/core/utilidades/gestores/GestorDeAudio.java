@@ -16,6 +16,9 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 public class GestorDeAudio {
     // Mantenemos una pista de música actualmente en reproducción.
     private Music musicaActual;
+    private float efectosVolumen = 1.0f;
+    private float musicaVolumen = 0.25f;
+
     // Usamos un mapa para todas las pistas de música de fondo.
     private Map<String, Music> musicasFondo;
     private Map<String, Sound> efectosSonido;
@@ -74,14 +77,14 @@ public class GestorDeAudio {
     public void reproducirMusica() {
         if (musicaActual != null) {
             musicaActual.setLooping(true);
-            musicaActual.setVolume(MUSICA_VOLUMEN);
+            musicaActual.setVolume(musicaVolumen);
             musicaActual.play();
         }
     }
 
     public void pausarMusica() {
         if (musicaActual != null) {
-            musicaActual.setVolume(MUSICA_VOLUMEN_PAUSA);
+            musicaActual.setVolume(musicaVolumen * 0.5f);
         }
     }
 
@@ -106,7 +109,7 @@ public class GestorDeAudio {
         musicaActual = nuevaMusica;
         // Configuramos la nueva música
         musicaActual.setLooping(true);
-        musicaActual.setVolume(MUSICA_VOLUMEN);
+        musicaActual.setVolume(musicaVolumen);
         musicaActual.play();
     }
 
@@ -122,16 +125,16 @@ public class GestorDeAudio {
 
         Sound sonido = efectosSonido.get(nombre);
         if (sonido == null) {
-            Gdx.app.log("SoundNotFound","Sonido no encontrado: " + nombre);
+            Gdx.app.log("SoundNotFound", "Sonido no encontrado: " + nombre);
             return;
         }
 
-        sonido.play(volumen);
+        sonido.play(volumen * efectosVolumen);
         contadorInstancias.put(nombre, instancias + 1);
 
         // Programar la disminución del contador después de la duración estimada
         float duracion = duracionSonidos.getOrDefault(nombre, 0.5f);
-        Timer.schedule(new Timer.Task(){
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 int actual = contadorInstancias.getOrDefault(nombre, 0);
@@ -156,12 +159,32 @@ public class GestorDeAudio {
         contadorInstancias.clear();
     }
 
+    public void setVolumenMusica(float volumen) {
+        this.musicaVolumen = volumen;
+        if (musicaActual != null) {
+            musicaActual.setVolume(musicaVolumen);
+        }
+    }
+
+    public void setVolumenEfectos(float volumen) {
+        this.efectosVolumen = volumen;
+    }
+
+    public float getVolumenMusica() {
+        return musicaVolumen;
+    }
+
+    public float getVolumenEfectos() {
+        return efectosVolumen;
+    }
+
     public void resetearInstancias() {
         contadorInstancias.clear();
     }
 
     // Implementación del patrón singleton
     private static GestorDeAudio instance;
+
     public static GestorDeAudio getInstance() {
         if (instance == null) {
             instance = new GestorDeAudio();

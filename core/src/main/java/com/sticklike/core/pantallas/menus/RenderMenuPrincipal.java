@@ -198,7 +198,7 @@ public class RenderMenuPrincipal {
         versionLabel.setColor(Color.DARK_GRAY);
         Table versionTable = new Table();
         versionTable.setFillParent(true);
-        versionTable.bottom().right().padRight(22.5f).padBottom(22.5f);
+        versionTable.bottom().right().padRight(17.5f).padBottom(30);
         versionTable.add(versionLabel);
         stage.addActor(versionTable);
 

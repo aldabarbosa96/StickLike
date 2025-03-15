@@ -23,7 +23,7 @@ public class EnemigoAlarma implements Enemigo {
     private MovimientoCulo movimientoAlarma;
     private float cooldownDanyo = COOLDOWN_ENEMIGOCULO;
     private float tempDanyo = TEMPORIZADOR_DANYO;
-    private static float velocidadBase = VEL_BASE_CULO;
+    private static float velocidadBase = VEL_BASE_ALARMA;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;

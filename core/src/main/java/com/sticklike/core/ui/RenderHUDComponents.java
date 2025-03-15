@@ -22,6 +22,7 @@ import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -127,7 +128,7 @@ public class RenderHUDComponents {
         shapeRenderer.setColor(0.75f, 0.85f, 0.9f, 1);
         float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
         for (float y = 0; y <= alturaHUD; y += cellSize) {
-            shapeRenderer.rectLine(0, y, VIRTUAL_WIDTH, y,2);
+            shapeRenderer.rectLine(0, y, VIRTUAL_WIDTH, y, 2);
         }
     }
 
@@ -136,16 +137,27 @@ public class RenderHUDComponents {
         float margenIzquierdo = 40f;
         float grosorLinea = 1.5f;
         float espacioEntreLineas = 2.5f;
+
+        // Líneas en el lado izquierdo
         shapeRenderer.rect(margenIzquierdo, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2);
         shapeRenderer.rect(margenIzquierdo + grosorLinea + espacioEntreLineas, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2f);
 
-        float circleX = margenIzquierdo / 2f;
+        // Líneas en el lado derecho
+        float margenDerecho = 40f;
+        float xLinea1 = VIRTUAL_WIDTH - margenDerecho - grosorLinea;
+        float xLinea2 = xLinea1 - espacioEntreLineas - grosorLinea;
+        shapeRenderer.rect(xLinea1, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2);
+        shapeRenderer.rect(xLinea2, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2f);
+
         float circleRadius = 6f;
         float circleYBottom = 45f + EXTRA_HUD_HEIGHT;
         float circleYTop = 108f + EXTRA_HUD_HEIGHT;
+
+        // Círculos lado izquierdo
+        float circleXLeft = margenIzquierdo / 2f;
         shapeRenderer.setColor(new Color(0.85f, 0.85f, 0.85f, 1));
-        shapeRenderer.circle(circleX, circleYBottom, circleRadius);
-        shapeRenderer.circle(circleX, circleYTop, circleRadius);
+        shapeRenderer.circle(circleXLeft, circleYBottom, circleRadius);
+        shapeRenderer.circle(circleXLeft, circleYTop, circleRadius);
     }
 
     public void renderizarTextoNivelPlayer() {
@@ -176,7 +188,7 @@ public class RenderHUDComponents {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
         float barWidth = HUD_BAR_WIDTH;
         float barHeight = HUD_BAR_HEIGHT;
-        float barX = HUD_BAR_X;
+        float barX = (VentanaJuego1.worldWidth - HUD_BAR_WIDTH) / 2;
         float barY = effectiveHUDHeight - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
         float experiencePercentage = sistemaDeNiveles.getXpActual() / sistemaDeNiveles.getXpHastaSiguienteNivel();
 
@@ -310,8 +322,8 @@ public class RenderHUDComponents {
     public void dibujarAtaqueBasico(Texture texturaArma) {
         float slotSize = 40f;
         float attackSlotSize = slotSize / 1.8f;
-        float offsetX = 67.5f;
-        float baseX = VIRTUAL_WIDTH - 450f - offsetX;
+        float offsetX = 500;
+        float baseX = VIRTUAL_WIDTH - offsetX;
         float baseY = 65f + EXTRA_HUD_HEIGHT;
 
         // Dibujamos marco, arma y texto
@@ -333,7 +345,7 @@ public class RenderHUDComponents {
 
     public void crearSlots() {
         slotsList.clear();
-        float baseX = VIRTUAL_WIDTH - 450f;
+        float baseX = VIRTUAL_WIDTH - 435f;
         float baseY = 75f + EXTRA_HUD_HEIGHT;
         float colGap = 80f;
         float rowGap = 50f;
