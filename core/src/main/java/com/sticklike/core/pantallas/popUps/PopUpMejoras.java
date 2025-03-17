@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -43,6 +45,7 @@ public class PopUpMejoras {
     private List<TextButton> improvementButtons;
     private int selectedIndex = 0;
     private boolean popUpAbierto = false;
+    private FondoAnimadoPopUp fondoAnimadoPopUp;
 
 
     public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego1 ventanaJuego1) {
@@ -115,10 +118,12 @@ public class PopUpMejoras {
 
 
     public void mostrarPopUpMejoras(final List<Mejora> mejoras) {
+        this.fondoAnimadoPopUp = new FondoAnimadoPopUp();
         ventanaJuego1.setPausado(true);
         ventanaJuego1.getMenuPause().bloquearInputs(true);
         ventanaJuego1.getRenderHUDComponents().pausarTemporizador();
         popUpAbierto = true;
+        uiStage.addActor(fondoAnimadoPopUp);
 
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         upgradeWindow = new Window(POPUP_HEADER, wStyle);
@@ -216,6 +221,7 @@ public class PopUpMejoras {
         sistemaDeMejoras.aplicarMejora(mejoras.get(index));
         ventanaJuego1.getRenderHUDComponents().setHabilidadesActivas(sistemaDeMejoras.getHabilidadesActivas());
         upgradeWindow.remove();
+        fondoAnimadoPopUp.remove();
         ventanaJuego1.setPausado(false);
         ventanaJuego1.getRenderHUDComponents().reanudarTemporizador();
         ventanaJuego1.getMenuPause().bloquearInputs(false);
@@ -338,13 +344,44 @@ public class PopUpMejoras {
             return false;
         }
 
-        @Override public boolean keyUp(int keycode) { return false; }
-        @Override public boolean keyTyped(char character) { return false; }
-        @Override public boolean touchDown(int screenX, int screenY, int pointer, int button) { return false; }
-        @Override public boolean touchUp(int screenX, int screenY, int pointer, int button) { return false; }
-        @Override public boolean touchCancelled(int screenX, int screenY, int pointer, int button) { return false; }
-        @Override public boolean touchDragged(int screenX, int screenY, int pointer) { return false; }
-        @Override public boolean mouseMoved(int screenX, int screenY) { return false; }
-        @Override public boolean scrolled(float amountX, float amountY) { return false; }
+        @Override
+        public boolean keyUp(int keycode) {
+            return false;
+        }
+
+        @Override
+        public boolean keyTyped(char character) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDragged(int screenX, int screenY, int pointer) {
+            return false;
+        }
+
+        @Override
+        public boolean mouseMoved(int screenX, int screenY) {
+            return false;
+        }
+
+        @Override
+        public boolean scrolled(float amountX, float amountY) {
+            return false;
+        }
     }
 }
