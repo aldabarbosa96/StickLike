@@ -321,15 +321,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float MUSICA_VOLUMEN = 0.135f;
     public static final float MUSICA_VOLUMEN_PAUSA = 0.05f;
-    public static final float AUDIO_CALCETIN = 0.9f;
-    public static final float AUDIO_PIEDRA = 0.7f;
-    public static final float AUDIO_RECOLECCION_CACA = 1f;
-    public static final float AUDIO_RECOLECCION_VIDA = 0.7f;
-    public static final float AUDIO_RECOLECCION_ORO = 0.6f;
-    public static final float AUDIO_RECOLECCION_PWUP = 1f;
-    public static final float AUDIO_DANYO = 0.9f;
-    public static final float AUDIO_MUERTE = 0.7f;
-    public static final float AUDIO_UPGRADE = 0.5f;
-    public static final float AUDIO_PAUSA = 0.4f;
+    public static final float AUDIO_CALCETIN = 0.8f;
+    public static final float AUDIO_PAPEL = 1;
+    public static final float AUDIO_PIEDRA = 0.75f;
+    public static final float AUDIO_RECOLECCION_CACA = 0.9f;
+    public static final float AUDIO_RECOLECCION_VIDA = 0.85f;
+    public static final float AUDIO_RECOLECCION_ORO = 0.85f;
+    public static final float AUDIO_RECOLECCION_PWUP = 0.75f;
+    public static final float AUDIO_DANYO = 0.75f;
+    public static final float AUDIO_MUERTE = 0.85f;
+    public static final float AUDIO_UPGRADE = 0.75f;
+    public static final float AUDIO_PAUSA = 0.75f;
     public static final int MAX_INSTANCIAS_SONIDO = 3;
+    public static final int MAX_INSTANCIAS_SONIDO_EXPL = 1;
 }

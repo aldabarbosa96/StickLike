@@ -435,8 +435,6 @@ public class RenderHUDComponents {
     }
 
     public void dispose() {
-        if (texturaCorazonVida != null) texturaCorazonVida.dispose();
-        if (texturaLapizXP != null) texturaLapizXP.dispose();
         if (fuente != null) fuente.dispose();
     }
 

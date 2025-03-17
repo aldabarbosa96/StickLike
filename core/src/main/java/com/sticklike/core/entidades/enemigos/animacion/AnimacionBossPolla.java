@@ -39,16 +39,16 @@ public class AnimacionBossPolla {
         int sonidoRandom = MathUtils.random(3);
         switch (sonidoRandom) {
             case 0:
-                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla2", 0.65f);
+                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla2", 0.75f);
                 break;
             case 1:
-                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla", 0.65f);
+                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla", 0.75f);
                 break;
             case 2:
-                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla3", 0.65f);
+                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla3", 0.75f);
                 break;
             case 3:
-                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla4", 0.65f);
+                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPolla4", 0.75f);
                 break;
         }
     }

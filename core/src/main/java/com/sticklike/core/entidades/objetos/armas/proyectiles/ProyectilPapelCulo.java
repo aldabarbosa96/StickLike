@@ -216,7 +216,7 @@ public class ProyectilPapelCulo implements Proyectiles {
     public void registrarImpacto(Enemigo enemigo) {
         // Si la animación de impacto aún no se ha activado, se activa una única vez
         if (!impactoAnimacionActiva) {
-            GestorDeAudio.getInstance().reproducirEfecto("explosion", 0.75f);
+            GestorDeAudio.getInstance().reproducirEfecto("explosion", 1);
             impactoAnimacionActiva = true;
             animationStateTime = 0f;
             impactX = sprite.getX();

@@ -152,7 +152,6 @@ public class Pausa extends ControllerAdapter {
         return btn;
     }
 
-    // Crea la tabla del menú de pausa, colocando "Volver" debajo de "Salir del Juego"
     private void crearMenuPausa() {
         pauseTable = new Table();
         pauseTable.setFillParent(true);
@@ -189,7 +188,6 @@ public class Pausa extends ControllerAdapter {
         pauseTable.add(btnSalir).width(220).height(25).pad(10);
         pauseTable.row();
 
-        // En el menú principal el botón "Volver" se deja con el estilo por defecto (blanco)
         TextButton btnVolver = createButton("Volver", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -248,11 +246,12 @@ public class Pausa extends ControllerAdapter {
         // Se crea el estilo de la ventana con título en negro
         Window.WindowStyle windowStyle = new Window.WindowStyle(pauseSkin.getFont("default-font"), Color.BLACK, crearFondoPapelDrawable());
         windowOpciones = new Window("OPCIONES", windowStyle);
+        windowOpciones.getTitleTable().padTop(25);
         // Centrar el título y ajustar su alineación
         windowOpciones.getTitleTable().center();
         windowOpciones.getTitleLabel().setAlignment(Align.center);
         // Reducir la separación entre el título y el contenido
-        windowOpciones.padTop(20);
+        windowOpciones.padTop(25);
         windowOpciones.setModal(true);
         windowOpciones.setMovable(false);
 

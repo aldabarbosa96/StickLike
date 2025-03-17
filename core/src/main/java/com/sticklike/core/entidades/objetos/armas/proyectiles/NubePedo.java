@@ -90,7 +90,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE1:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -120,7 +120,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE2:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -145,7 +145,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE3:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.175f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }

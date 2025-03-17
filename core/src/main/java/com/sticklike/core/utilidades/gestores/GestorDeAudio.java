@@ -115,7 +115,7 @@ public class GestorDeAudio {
 
     public void reproducirEfecto(String nombre, float volumen) {
         int instancias = contadorInstancias.getOrDefault(nombre, 0);
-        if (nombre.equals("explosion") && instancias >= 1) {
+        if (nombre.equals("explosion") && instancias >= MAX_INSTANCIAS_SONIDO_EXPL) {
             return;
         }
 

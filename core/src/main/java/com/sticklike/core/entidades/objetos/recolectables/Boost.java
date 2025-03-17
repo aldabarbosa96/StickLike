@@ -246,23 +246,23 @@ public class Boost extends ObjetoBase {
         float iconY = 200f;
         switch (tipo) {
             case VELOCIDAD:
-                gestorDeAudio.reproducirEfecto("boostVel", 0.75f);
+                gestorDeAudio.reproducirEfecto("boostVel", 0.8f);
                 BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.75f, 0.75f, 0, 1f), duracion, iconX, iconY, desiredIconSize);
                 break;
             case ATAQUE:
-                gestorDeAudio.reproducirEfecto("boostAttack", 0.75f);
+                gestorDeAudio.reproducirEfecto("boostAttack", 0.8f);
                 BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.75f, 0f, 0.75f, 1f), duracion, iconX, iconY, desiredIconSize);
                 break;
             case MUNICION:
-                gestorDeAudio.reproducirEfecto("boostAmo", 0.75f);
+                gestorDeAudio.reproducirEfecto("boostAmo", 0.8f);
                 BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0f, 0.25f, 0f, 1f), duracion, iconX, iconY, desiredIconSize);
                 break;
             case INVULNERABILIDAD:
-                gestorDeAudio.reproducirEfecto("boostRes", 0.75f);
+                gestorDeAudio.reproducirEfecto("boostRes", 0.8f);
                 BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.5f, 0.5f, 1f, 1f), duracion, iconX, iconY, desiredIconSize);
                 break;
             case VELATAQUE:
-                gestorDeAudio.reproducirEfecto("boostVelAttack", 0.75f);
+                gestorDeAudio.reproducirEfecto("boostVelAttack", 0.8f);
                 BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.5f, 0.5f, 0f, 1f), duracion, iconX, iconY, desiredIconSize);
                 break;
             default:
@@ -273,10 +273,7 @@ public class Boost extends ObjetoBase {
 
     @Override
     public void dispose() {
-        if (texture != null) {
-            texture.dispose();
-            texture = null;
-        }
+        // no hace falta hacer dispose de las texturas aquí porque se encarga el assetManager todo --> testear a fondo
     }
 
     @Override

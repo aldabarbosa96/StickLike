@@ -40,7 +40,7 @@ public class AtaquePapelCulo {
         ProyectilPapelCulo papelCulo = new ProyectilPapelCulo(startX, startY, anguloLanzamiento, PAPELCULO_SPEED, poderHabilidad, extraDamage, jug, direccionHorizontal);
         jug.getControladorProyectiles().anyadirNuevoProyectil(papelCulo);
 
-        gestorDeAudio.reproducirEfecto("lanzarCalcetin", 1f);
+        gestorDeAudio.reproducirEfecto("lanzarCalcetin", AUDIO_PAPEL);
     }
 
     public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {

@@ -235,7 +235,7 @@ public class ProyectilTazo implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        gestorDeAudio.reproducirEfecto("tazo", 0.4f);
+        gestorDeAudio.reproducirEfecto("tazo", 1);
         enemigosImpactados.add(enemigo);
         sprite.setColor(1f, 0, 0f, 1);
     }
