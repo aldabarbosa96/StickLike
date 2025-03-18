@@ -1,6 +1,7 @@
 package com.sticklike.core.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,15 +11,17 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
- * Gestiona la animación y renderizado de la pantalla de carga.
+ * Gestiona la animación y renderizado de la pantalla de carga, implementando la interfaz Screen.
  */
-public class VentanaLoading { // todo --> si el proyecto crece valorar en un futuro gestionar esta clase como una Screen
+public class VentanaLoading implements Screen {
     private BitmapFont font;
     private float timer;
     private OrthographicCamera camera;
     private Texture dotTexture;
+    private SpriteBatch spriteBatch;
 
     public VentanaLoading() {
+        spriteBatch = new SpriteBatch();
         font = new BitmapFont();
         font.getData().setScale(3f);
         font.setColor(Color.BLUE);
@@ -31,14 +34,16 @@ public class VentanaLoading { // todo --> si el proyecto crece valorar en un fut
         dotTexture = new Texture("drops/02cacaDorada.png");
     }
 
-    public void render(SpriteBatch spriteBatch, float delta) {
-        // cada 0.25 s se suma 1
+    @Override
+    public void render(float delta) {
+        // Actualiza el timer y calcula cuántos "puntos" se deben mostrar
         timer += delta;
         int dotIndex = (int) (timer / 0.25f) % 4;
 
         Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
 
         // Texto base
@@ -47,8 +52,6 @@ public class VentanaLoading { // todo --> si el proyecto crece valorar en un fut
 
         float sw = camera.viewportWidth;
         float sh = camera.viewportHeight;
-
-        // Dimensiones del texto
         float textWidth = layout.width;
         float textHeight = layout.height;
 
@@ -56,41 +59,52 @@ public class VentanaLoading { // todo --> si el proyecto crece valorar en un fut
         float iconSpacing = 5;
         float spaceBetweenTextIcons = 10;
 
-        // Ancho total del bloque de iconos
+        // Calcula el ancho total del bloque de iconos
         float iconBlockWidth = dotIndex * (dotSize + iconSpacing);
         if (dotIndex > 0) {
             iconBlockWidth += spaceBetweenTextIcons;
         }
 
         float totalWidth = textWidth + iconBlockWidth;
-
         float xBlock = (sw - totalWidth) / 2f;
         float yText = (sh + textHeight) / 2f + 75f;
 
         spriteBatch.begin();
-
         font.draw(spriteBatch, layout, xBlock, yText);
 
         float iconStartX = xBlock + textWidth + (dotIndex > 0 ? spaceBetweenTextIcons : 0);
-
         float iconY = yText - textHeight;
 
         for (int i = 0; i < dotIndex; i++) {
             float xIcon = iconStartX + i * (dotSize + iconSpacing);
             spriteBatch.draw(dotTexture, xIcon, iconY, dotSize, dotSize);
         }
-
         spriteBatch.end();
     }
 
-    public void dispose() {
-        font.dispose();
-        if (dotTexture != null) {
-            dotTexture.dispose();
-        }
-    }
-    public float getTimer() {
-        return timer;
+    @Override
+    public void resize(int width, int height) {
+        camera.setToOrtho(false, width, height);
     }
 
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void pause() { }
+
+    @Override
+    public void resume() { }
+
+    @Override
+    public void dispose() {
+        font.dispose();
+        dotTexture.dispose();
+        spriteBatch.dispose();
+    }
 }

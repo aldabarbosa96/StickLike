@@ -39,6 +39,7 @@ public class GestorDeAssets {
     // Drops y HUD
     public static final String RECOLECTABLE_XP = "drops/01xp1.png";
     public static final String RECOLECTABLE_XP2 = "drops/01xp2.png";
+    public static final String RECOLECTABLE_XP3 = "drops/01xp3.png";
     public static final String RECOLECTABLE_VIDA = "hud/life.png";
     public static final String RECOLECTABLE_CACA_DORADA = "drops/02cacaDorada.png";
     public static final String RECOLECTABLE_POWER_UP = "drops/03powerUp.png";
@@ -111,6 +112,7 @@ public class GestorDeAssets {
 
         manager.load(RECOLECTABLE_XP, Texture.class);
         manager.load(RECOLECTABLE_XP2, Texture.class);
+        manager.load(RECOLECTABLE_XP3, Texture.class);
         manager.load(RECOLECTABLE_VIDA, Texture.class);
         manager.load(RECOLECTABLE_CACA_DORADA, Texture.class);
         manager.load(RECOLECTABLE_POWER_UP, Texture.class);

@@ -14,7 +14,6 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
-import com.sticklike.core.utilidades.DebugStats;
 import com.sticklike.core.utilidades.PoissonPoints;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +30,6 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
 
     private ShapeRenderer shapeRenderer;
     private VentanaLoading ventanaLoading;
-    private DebugStats debugStats;
     private final int tamanyoCeldas;
     private Array<Borron> borronesMapa;
     private AtomicBoolean borronesListos = new AtomicBoolean(false);
@@ -62,7 +60,6 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
     public RenderVentanaJuego1(int tamanyoCeldas, Jugador jugador) {
         this.shapeRenderer = new ShapeRenderer();
         this.ventanaLoading = new VentanaLoading();
-        this.debugStats = new DebugStats();
         this.tamanyoCeldas = tamanyoCeldas;
 
         final Vector2 posicionInicialJugador = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
@@ -92,7 +89,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         ventanaJuego1.actualizarPosCamara();
 
         if (!borronesListos.get()) {
-            ventanaLoading.render(spriteBatch, delta);
+            ventanaLoading.render(delta);
             return;
         }
 
@@ -161,13 +158,6 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
 
         // 7) Renderizar HUD
         hud.renderizarHUD(delta);
-
-        debugStats.update();
-        if (debugStats.isEnabled()) {
-            spriteBatch.begin();
-            debugStats.render(spriteBatch, VIRTUAL_HEIGHT);
-            spriteBatch.end();
-        }
     }
     public void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -303,6 +293,5 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
     public void dispose() {
         shapeRenderer.dispose();
         ventanaLoading.dispose();
-        debugStats.dispose();
     }
 }

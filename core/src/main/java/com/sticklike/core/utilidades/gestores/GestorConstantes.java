@@ -259,8 +259,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 14f;
     public static final float OBJETO_ORO_WIDTH = 14f;
     public static final float OBJETO_ORO_HEIGHT = 14f;
-    public static final float OBJETO_PWUP_WIDTH = 8f;
-    public static final float OBJETO_PWUP_HEIGHT = 20f;
+    public static final float OBJETO_PWUP_WIDTH = 10f;
+    public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
     public static final float ANCHO_DESTRUCT = 40f;
     public static final float ALTO_DESTRUCT = 36f;
