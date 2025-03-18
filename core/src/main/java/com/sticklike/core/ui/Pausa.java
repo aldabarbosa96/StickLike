@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sticklike.core.pantallas.menus.MenuPrincipal;
+import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 

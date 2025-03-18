@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
-import com.sticklike.core.pantallas.menus.MenuPrincipal;
+import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 import com.sticklike.core.utilidades.DebugStats;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;

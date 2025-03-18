@@ -1,4 +1,4 @@
-package com.sticklike.core.pantallas.menus;
+package com.sticklike.core.pantallas.menus.ventanas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;

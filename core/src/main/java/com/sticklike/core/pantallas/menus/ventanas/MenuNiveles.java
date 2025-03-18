@@ -1,0 +1,115 @@
+package com.sticklike.core.pantallas.menus.ventanas;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.controllers.Controllers;
+import com.sticklike.core.MainGame;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.pantallas.menus.InputsMenu;
+import com.sticklike.core.pantallas.menus.renders.RenderMenuNiveles;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
+
+public class MenuNiveles extends ScreenAdapter {
+    private MainGame game;
+    private RenderMenuNiveles renderMenu;
+    private InputsMenu inputsMenu;
+
+    public MenuNiveles(MainGame game) {
+        this.game = game;
+        renderMenu = new RenderMenuNiveles();
+        renderMenu.setMenuNivelesListener(new RenderMenuNiveles.MenuNivelesListener() {
+            @Override
+            public void onSelectNivel1() {
+                GestorDeAudio.getInstance().detenerMusica();
+                renderMenu.animateExit(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
+                        game.setScreen(game.ventanaJuego1);
+                    }
+                });
+            }
+
+            @Override
+            public void onSelectNivel2() {
+                // Implementar acción para Nivel 2
+                renderMenu.animateExit(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Cambiar a la pantalla de Nivel 2
+                    }
+                });
+            }
+
+            @Override
+            public void onSelectNivel3() {
+                // Implementar acción para Nivel 3
+                renderMenu.animateExit(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Cambiar a la pantalla de Nivel 3
+                    }
+                });
+            }
+
+            @Override
+            public void onBack() {
+                renderMenu.animateExit(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new MenuPrincipal(game));
+                    }
+                });
+            }
+        });
+
+        // Configurar InputsMenu para gestionar teclado, ratón y mando
+        inputsMenu = new InputsMenu(new InputsMenu.MenuInputListener() {
+            @Override
+            public void onNavigateUp() {
+                renderMenu.decrementSelectedIndex();
+            }
+
+            @Override
+            public void onNavigateDown() {
+                renderMenu.incrementSelectedIndex();
+            }
+
+            @Override
+            public void onSelect() {
+                renderMenu.activateSelectedButton();
+            }
+
+            @Override
+            public void onBack() {
+                renderMenu.animateExit(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new MenuPrincipal(game));
+                    }
+                });
+            }
+        });
+
+        InputMultiplexer im = new InputMultiplexer(renderMenu.getStage(), inputsMenu);
+        Gdx.input.setInputProcessor(im);
+        Controllers.addListener(inputsMenu);
+    }
+
+    @Override
+    public void render(float delta) {
+        renderMenu.render(delta);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        renderMenu.resize(width, height);
+    }
+
+    @Override
+    public void dispose() {
+        renderMenu.dispose();
+        Controllers.removeListener(inputsMenu);
+    }
+}

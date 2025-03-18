@@ -11,7 +11,7 @@ import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
-import com.sticklike.core.pantallas.menus.MenuPrincipal;
+import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
