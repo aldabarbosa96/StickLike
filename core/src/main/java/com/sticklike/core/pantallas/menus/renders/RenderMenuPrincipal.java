@@ -128,34 +128,56 @@ public class RenderMenuPrincipal extends RenderMenus {
 
         // Organizar los botones en una tabla
         Table buttonTable = new Table();
-        buttonTable.add(btnJugar).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.add(btnJugar).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
-        buttonTable.add(btnNiveles).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.add(btnNiveles).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
-        buttonTable.add(btnPersonaje).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.add(btnPersonaje).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
-        buttonTable.add(btnOpciones).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.add(btnOpciones).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
-        buttonTable.add(btnLogros).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.add(btnLogros).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
-        buttonTable.add(btnCreditos).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.add(btnCreditos).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
-        buttonTable.add(btnSalir).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.add(btnSalir).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
 
-        // Utilizar métodos comunes de la clase base para crear fondo "papel" y borde azul
+        // Crear el innerContainer con fondo "papel" y padding
         Container<Table> innerContainer = new Container<>(buttonTable);
         innerContainer.setBackground(papelFondo());
-        innerContainer.pad(20);
+        innerContainer.pad(22.5f, 41f, 22.5f, 40);
         innerContainer.pack();
 
-        buttonContainer = new Container<>(innerContainer);
-        buttonContainer.setBackground(bordeAzul());
+        // Encapsular la chincheta en un container para alinearla en la esquina superior derecha
+        Container<Actor> pushPinContainer = new Container<>(crearChincheta());
+        pushPinContainer.align(Align.topLeft);
+        pushPinContainer.pad(12.5f);
+
+        Container<Actor> bottomLeftContainer = new Container<>(crearChincheta());
+        bottomLeftContainer.align(Align.bottomLeft);
+        bottomLeftContainer.pad(12.5f);
+
+        // Combinar el innerContainer y la chincheta usando un Stack
+        Stack stack = new Stack();
+        stack.add(innerContainer);
+        stack.add(pushPinContainer);
+        stack.add(bottomLeftContainer);
+
+        // Crear el contenedor final con sombra, que contiene el Stack con botones y chincheta
+        buttonContainer = new Container<>(stack);
+        buttonContainer.setBackground(crearSombraDrawable(Color.BLACK, 150, 300, 18, 18));
         buttonContainer.pack();
 
         // Animar la entrada del contenedor (se posiciona inicialmente fuera de la pantalla y se desplaza a la posición final)
         buttonContainer.setPosition((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, -buttonContainer.getHeight());
         stage.addActor(buttonContainer);
-        buttonContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2.5f, 0.25f), Actions.fadeIn(0.5f))));
+        buttonContainer.addAction(Actions.sequence(
+            Actions.delay(0.75f),
+            Actions.parallel(
+                Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2.5f, 0.25f),
+                Actions.fadeIn(0.5f)
+            )
+        ));
 
         addHoverEffect();
         updateButtonHighlight();
@@ -307,9 +329,42 @@ public class RenderMenuPrincipal extends RenderMenus {
         return skin;
     }
 
+    private Actor crearChincheta() {
+        int size = 15;
+        int shadowOffset = (int) 2.75f;
+        int totalSize = size + shadowOffset * 2;  // Aseguramos margen por ambos lados
+        Pixmap pixmap = new Pixmap(totalSize, totalSize, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.SourceOver);
+
+        // Posicionar la chincheta dentro del pixmap con margen igual al offset
+        int mainCenterX = shadowOffset + size / 2;
+        int mainCenterY = shadowOffset + size / 2;
+
+        // La sombra se desplaza desde el centro principal
+        int shadowCenterX = mainCenterX + shadowOffset;
+        int shadowCenterY = mainCenterY + shadowOffset;
+        int radius = size / 2;
+
+        // Dibuja la sombra: un círculo negro semitransparente
+        pixmap.setColor(new Color(0, 0, 0, 0.85f));
+        pixmap.fillCircle(shadowCenterX, shadowCenterY, radius);
+
+        // Dibuja la chincheta principal en azul
+        pixmap.setColor(new Color(0, 0, 1, 0.85f));
+        pixmap.fillCircle(mainCenterX, mainCenterY, radius);
+
+        // Dibuja el círculo interno blanco
+        int innerRadius = (int)(size * 0.2f);
+        pixmap.setColor(new Color(1, 1, 1, 0.85f));
+        pixmap.fillCircle(mainCenterX, mainCenterY, innerRadius);
+
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new Image(texture);
+    }
+
     @Override
     public void animarSalida(Runnable callback) {
-
     }
 
     // Clase auxiliar para almacenar los labels del botón

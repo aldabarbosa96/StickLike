@@ -34,13 +34,14 @@ public abstract class RenderMenus {
     protected Skin crearSkinBasico() {
         Skin skin = new Skin();
         BitmapFont font = new BitmapFont();
-        skin.add("default-font", font);
 
-        // Agregamos estilos usando métodos específicos
+        skin.add("default-font", font);
         skin.add("default", crearLabelStyle(font, Color.GRAY), LabelStyle.class);
         skin.add("default-button", crearDefaultButtonStyle(font), TextButtonStyle.class);
         skin.add("hover-button", crearHoverButtonStyle(font), TextButtonStyle.class);
         skin.add("selected-button", crearSelectedButtonStyle(font), TextButtonStyle.class);
+        //skin.add("shadow-container", crearSombraDrawable(Color.BLACK, 30), NinePatchDrawable.class);
+
 
         return skin;
     }
@@ -197,6 +198,36 @@ public abstract class RenderMenus {
 
         stage.addActor(versionTable);
     }
+
+    protected NinePatchDrawable crearSombraDrawable(Color color, int width, int height, int offsetX, int offsetY) {
+        Pixmap pixmap = new Pixmap(width + offsetX, height + offsetY, Pixmap.Format.RGBA8888);
+
+        // Capa externa con menor intensidad
+        for (int i = 0; i < offsetX; i++) {
+            // Usamos un alpha menor: de 0 a 0.05 en lugar de 0 a 0.10
+            float alpha = 0.05f * ((float) i / offsetX);
+            pixmap.setColor(new Color(color.r, color.g, color.b, alpha));
+            pixmap.fillRectangle(i, i, width, height);
+        }
+
+        // Capa interna también con intensidad reducida
+        for (int i = 0; i < offsetX / 2; i++) {
+            // Ajuste proporcional para que el efecto sea sutil
+            float alpha = 0.05f - (0.075f * ((float) i / ((float) offsetX / 2)));
+            pixmap.setColor(new Color(color.r, color.g, color.b, alpha));
+            // Ajusta estos valores según el tamaño deseado; aquí se usa un offset y reducción fijos
+            pixmap.fillRectangle(i + 5, i + 5, width - 200, height - 200);
+        }
+
+        Texture shadowTexture = new Texture(pixmap);
+        pixmap.dispose();
+
+        NinePatch shadowPatch = new NinePatch(new TextureRegion(shadowTexture), offsetX / 3, offsetX / 2, offsetY / 3, offsetY / 2);
+        return new NinePatchDrawable(shadowPatch);
+    }
+
+
+
 
     protected void animarEntrada(Actor container) {
         container.setPosition((VIRTUAL_WIDTH - container.getWidth()) / 2, -container.getHeight());

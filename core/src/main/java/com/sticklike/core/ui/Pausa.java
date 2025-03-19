@@ -224,7 +224,7 @@ public class Pausa {
                 }
             }
         });
-        row.add(label).colspan(2).align(Align.left);
+        row.add(label).colspan(2).align(Align.left).padBottom(10);
         row.row();
         row.add(slider).width(200).padRight(10);
         row.add(percentLabel).width(40);
