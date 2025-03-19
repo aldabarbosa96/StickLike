@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -69,7 +70,11 @@ public class ProyectilTazo implements Proyectiles {
         this.radio = radio;
         this.gestorDeAudio = gestorDeAudio;
         this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
-        this.renderParticulasProyectil = new RenderParticulasProyectil(15, 5, Color.RED);
+
+        float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
+        int maxLength = (int) (15 * scaleFactor);
+        float scaledWidth = 5 * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaledWidth, Color.RED);
         this.centroSprite = new Vector2();
         // Iniciamos con la escala mínima para el efecto de crecer
         sprite.setScale(MIN_GROWTH_SCALE);

@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -57,7 +58,11 @@ public class ProyectilCalcetin implements Proyectiles {
         this.direccionY = direccionY;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(17, 6f, new Color(1, 1, 1, 0.1f));
+
+        float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
+        int maxLength = (int) (17 * scaleFactor);
+        float adjustWidth = 6f * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, adjustWidth, new Color(1, 1, 1, 0.1f));
         this.centroSprite = new Vector2();
 
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);

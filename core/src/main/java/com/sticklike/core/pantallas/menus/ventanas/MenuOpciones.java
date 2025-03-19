@@ -27,17 +27,11 @@ public class MenuOpciones extends ScreenAdapter {
         // Se utiliza InputsMenu para capturar el botón BACK (teclado o gamepad)
         inputsMenu = new InputsMenu(new InputsMenu.MenuInputListener() {
             @Override
-            public void onNavigateUp() {
-            }
-
+            public void onNavigateUp() { }
             @Override
-            public void onNavigateDown() {
-            }
-
+            public void onNavigateDown() { }
             @Override
-            public void onSelect() {
-            }
-
+            public void onSelect() { }
             @Override
             public void onBack() {
                 volverAlMenuPrincipal();
@@ -69,7 +63,7 @@ public class MenuOpciones extends ScreenAdapter {
         Controllers.removeListener(inputsMenu);
         Gdx.input.setInputProcessor(null);
         // Llamamos a la animación de salida y, al finalizar, cambiamos de pantalla
-        renderMenuOpciones.animateExit(new Runnable() {
+        renderMenuOpciones.animarSalida(new Runnable() {
             @Override
             public void run() {
                 game.setScreen(new MenuPrincipal(game));

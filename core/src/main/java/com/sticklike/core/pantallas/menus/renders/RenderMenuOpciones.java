@@ -4,33 +4,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-public class RenderMenuOpciones {
-    private Stage stage;
-    private ShapeRenderer shapeRenderer;
-    private Skin uiSkin;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
+
+public class RenderMenuOpciones extends RenderMenus {
     private MenuOpcionesListener listener;
-    // Contenedor principal doble, igual que en la versión original
     private Container<Container<Table>> mainContainer;
     private Slider sliderMusica;
     private Slider sliderEfectos;
@@ -46,83 +41,35 @@ public class RenderMenuOpciones {
     }
 
     public RenderMenuOpciones() {
-        stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
-        shapeRenderer = new ShapeRenderer();
-        uiSkin = crearSkinBasico();
+        super();
         crearElementosUI();
     }
 
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
-        shapeRenderer.begin(ShapeType.Line);
-        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
-        float cellSize = 75;
-        float startX = stage.getCamera().position.x - (VIRTUAL_WIDTH / 2f);
-        float endX = stage.getCamera().position.x + (VIRTUAL_WIDTH / 2f);
-        float startY = stage.getCamera().position.y - (VIRTUAL_HEIGHT / 2f);
-        float endY = stage.getCamera().position.y + (VIRTUAL_HEIGHT / 2f);
-        for (float x = startX - (startX % cellSize); x <= endX; x += cellSize)
-            shapeRenderer.line(x, startY, x, endY);
-        for (float y = startY - (startY % cellSize); y <= endY; y += cellSize)
-            shapeRenderer.line(startX, y, endX, y);
-        shapeRenderer.end();
-
-        stage.act(delta);
-        stage.draw();
-    }
-
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    public void dispose() {
-        stage.dispose();
-        uiSkin.dispose();
-        shapeRenderer.dispose();
-    }
-
-    public Stage getStage() {
-        return stage;
-    }
 
     private void crearElementosUI() {
-        // Crear y configurar el título
-        Actor titleActor = createTitleWithOutline();
+        Actor titleActor = tituloConReborde("OPCIONES", 2.25f);
         titleActor.getColor().a = 0;
         fadeInActor(titleActor, 0.25f, 0.25f);
         stage.addActor(crearTitulo(titleActor));
 
-        // Crear la tabla de opciones con sliders, checkbox y botón "Volver"
+        // Creamos tabla de opciones con sliders, checkbox y botón Volver
         Table optionsTable = crearTablaOpciones();
 
-        // Configurar contenedores y agregar al stage
+        // Usamos los métodos comunes de RenderMenus para fondo y borde
         Container<Table> innerContainer = new Container<>(optionsTable);
-        innerContainer.setBackground(crearFondoPapel());
+        innerContainer.setBackground(papelFondo());
         innerContainer.pad(20);
         innerContainer.pack();
 
         Container<Container<Table>> borderContainer = new Container<>(innerContainer);
-        borderContainer.setBackground(crearBordeAzul());
+        borderContainer.setBackground(bordeAzul());
         borderContainer.pack();
         mainContainer = borderContainer;
 
-        // --- Adaptación de la entrada para que aparezca desde abajo y quede a la misma altura que el menú principal ---
-        // Posicionar el contenedor fuera de la pantalla (abajo)
+        // Posicionamos el contenedor fuera de la pantalla para animar su entrada
         mainContainer.setPosition((VIRTUAL_WIDTH - mainContainer.getWidth()) / 2, -mainContainer.getHeight());
         stage.addActor(mainContainer);
-        // Luego, tras un retardo, moverlo a la posición final: se desplaza a (centro horizontal, (VIRTUAL_HEIGHT - altura)/2)
-        mainContainer.addAction(Actions.sequence(
-            Actions.delay(0.75f),
-            Actions.parallel(
-                Actions.moveTo((VIRTUAL_WIDTH - mainContainer.getWidth()) / 2,
-                    (VIRTUAL_HEIGHT - mainContainer.getHeight()) / 2f, 0.25f),
-                Actions.fadeIn(0.5f)
-            )
-        ));
-        // -----------------------------------------------------------------------------------------------
+        mainContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - mainContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - mainContainer.getHeight()) / 2f, 0.25f), Actions.fadeIn(0.5f))));
     }
 
     private Table crearTablaOpciones() {
@@ -151,7 +98,7 @@ public class RenderMenuOpciones {
         optionsTable.add(sliderEfectosTable).colspan(1);
         optionsTable.row();
 
-        // Checkbox de pantalla completa
+        // Checkbox de modo ventana
         chkPantallaCompleta = new CheckBox("", uiSkin);
         chkPantallaCompleta.getLabel().setAlignment(Align.center);
         chkPantallaCompleta.getImageCell().size(40, 40);
@@ -159,7 +106,7 @@ public class RenderMenuOpciones {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (chkPantallaCompleta.isChecked()) {
-                    Gdx.graphics.setWindowedMode(1920, 1080);
+                    Gdx.graphics.setWindowedMode((int) (Gdx.graphics.getWidth() / 1.33f), (int) (Gdx.graphics.getHeight() / 1.33f));
                 } else {
                     Graphics.DisplayMode dm = Gdx.graphics.getDisplayMode();
                     Gdx.graphics.setWindowedMode(dm.width, dm.height);
@@ -184,12 +131,12 @@ public class RenderMenuOpciones {
     }
 
     private Table crearSliderMusica(final Slider slider) {
-        final Label percentageLabel = new Label(String.format("%d%%", (int)(slider.getValue() * 100)), uiSkin);
+        final Label percentageLabel = new Label(String.format("%d%%", (int) (slider.getValue() * 100)), uiSkin);
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 float sliderValue = slider.getValue();
-                percentageLabel.setText(String.format("%d%%", (int)(sliderValue * 100)));
+                percentageLabel.setText(String.format("%d%%", (int) (sliderValue * 100)));
                 GestorDeAudio.getInstance().setVolumenMusica(sliderValue);
             }
         });
@@ -200,12 +147,12 @@ public class RenderMenuOpciones {
     }
 
     private Table crearSliderEfectos(final Slider slider) {
-        final Label percentageLabel = new Label(String.format("%d%%", (int)(slider.getValue() * 100)), uiSkin);
+        final Label percentageLabel = new Label(String.format("%d%%", (int) (slider.getValue() * 100)), uiSkin);
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 float sliderValue = slider.getValue();
-                percentageLabel.setText(String.format("%d%%", (int)(sliderValue * 100)));
+                percentageLabel.setText(String.format("%d%%", (int) (sliderValue * 100)));
                 GestorDeAudio.getInstance().setVolumenEfectos(sliderValue);
             }
         });
@@ -236,11 +183,12 @@ public class RenderMenuOpciones {
         button.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                button.setStyle(uiSkin.get("hover-button", TextButton.TextButtonStyle.class));
+                button.setStyle(uiSkin.get("hover-button", TextButtonStyle.class));
             }
+
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                button.setStyle(uiSkin.get("default-button", TextButton.TextButtonStyle.class));
+                button.setStyle(uiSkin.get("default-button", TextButtonStyle.class));
             }
         });
     }
@@ -257,63 +205,23 @@ public class RenderMenuOpciones {
         actor.addAction(Actions.sequence(Actions.delay(delay), Actions.fadeIn(duration)));
     }
 
-    private Actor createTitleWithOutline() {
-        Label.LabelStyle mainStyle = new Label.LabelStyle(getFont(), Color.WHITE);
-        Label mainLabel = new Label("OPCIONES", mainStyle);
-        mainLabel.setFontScale(2.25f);
-        Label.LabelStyle outlineStyle = new Label.LabelStyle(getFont(), Color.BLUE);
-        outlineStyle.font.getData().setScale(2.25f);
-        Group outlineGroup = new Group();
-        float offset = 2f;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                if (dx == 0 && dy == 0) continue;
-                Label outlineLabel = new Label("OPCIONES", outlineStyle);
-                outlineLabel.setPosition(dx * offset, dy * offset);
-                outlineGroup.addActor(outlineLabel);
-            }
-        }
-        Stack stack = new Stack();
-        stack.add(outlineGroup);
-        stack.add(mainLabel);
-        return stack;
-    }
-
-    private Drawable crearFondoPapel() {
-        Pixmap pixmap = new Pixmap(200, 40, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.985f, 0.91f, 0.7f, 1.0f));
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        return new TiledDrawable(new TextureRegion(texture));
-    }
-
-    private Drawable crearBordeAzul() {
-        Pixmap borderPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        borderPixmap.setColor(0, 0, 0, 0);
-        borderPixmap.fill();
-        borderPixmap.setColor(Color.BLUE);
-        borderPixmap.drawRectangle(0, 0, 12, 12);
-        Texture borderTex = new Texture(borderPixmap);
-        borderPixmap.dispose();
-        NinePatch borderPatch = new NinePatch(borderTex, 1, 1, 1, 1);
-        return new NinePatchDrawable(borderPatch);
-    }
-
-    private Skin crearSkinBasico() {
+    @Override
+    protected Skin crearSkinBasico() {
         Skin skin = new Skin();
         skin.add("default-font", getFont());
-        skin.add("default", new Label.LabelStyle(getFont(), Color.DARK_GRAY));
-        skin.add("default-button", crearBotonDefault());
-        skin.add("default-horizontal", crearEstiloSliders());
-        skin.add("default", crearEstiloCheckbox());
-        skin.add("hover-button", crearHoverButton());
-        skin.add("selected-button", crearSelectedButton());
+        skin.add("default", new Label.LabelStyle(getFont(), Color.DARK_GRAY), Label.LabelStyle.class);
+        skin.add("default-button", crearBotonDefault(), TextButton.TextButtonStyle.class);
+        skin.add("default-horizontal", crearEstiloSliders(), Slider.SliderStyle.class);
+        // Aquí se registra el estilo para CheckBox con el nombre "default"
+        skin.add("default", crearEstiloCheckbox(), CheckBox.CheckBoxStyle.class);
+        skin.add("hover-button", crearHoverButton(), TextButton.TextButtonStyle.class);
+        skin.add("selected-button", crearSelectedButton(), TextButton.TextButtonStyle.class);
         return skin;
     }
 
-    private TextButton.TextButtonStyle crearBotonDefault() {
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+
+    private TextButtonStyle crearBotonDefault() {
+        TextButtonStyle style = new TextButtonStyle();
         style.font = getFont();
         style.up = crearBotonDrawable();
         style.fontColor = Color.DARK_GRAY;
@@ -330,7 +238,7 @@ public class RenderMenuOpciones {
     }
 
     private SliderStyle crearEstiloSliders() {
-        SliderStyle style = new Slider.SliderStyle();
+        SliderStyle style = new SliderStyle();
 
         // Fondo del slider
         Pixmap sliderBgPixmap = new Pixmap(100, 4, Pixmap.Format.RGBA8888);
@@ -354,7 +262,7 @@ public class RenderMenuOpciones {
     }
 
     private CheckBoxStyle crearEstiloCheckbox() {
-        CheckBoxStyle style = new CheckBox.CheckBoxStyle();
+        CheckBoxStyle style = new CheckBoxStyle();
 
         Pixmap cbPixmapOff = new Pixmap(25, 25, Pixmap.Format.RGBA8888);
         cbPixmapOff.setColor(Color.WHITE);
@@ -380,7 +288,7 @@ public class RenderMenuOpciones {
     }
 
     private TextButtonStyle crearHoverButton() {
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        TextButtonStyle style = new TextButtonStyle();
         style.font = getFont();
         Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
@@ -393,7 +301,7 @@ public class RenderMenuOpciones {
     }
 
     private TextButtonStyle crearSelectedButton() {
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        TextButtonStyle style = new TextButtonStyle();
         style.font = getFont();
         Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
         glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
@@ -401,7 +309,7 @@ public class RenderMenuOpciones {
         Texture glowTexture = new Texture(glowPixmap);
         glowPixmap.dispose();
         NinePatch glowNinePatch = new NinePatch(glowTexture, 5, 5, 5, 5);
-        style.up = new NinePatchDrawable(glowNinePatch);
+        style.up = new com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable(glowNinePatch);
         style.fontColor = Color.BLUE;
         return style;
     }
@@ -410,19 +318,10 @@ public class RenderMenuOpciones {
         return new BitmapFont();
     }
 
-    /**
-     * Método para animar la salida del menú de opciones con efecto slide hacia abajo.
-     * Se ejecuta el callback al finalizar la animación.
-     */
-    public void animateExit(Runnable callback) {
+    @Override
+    public void animarSalida(Runnable callback) {
         float finalX = mainContainer.getX();
         float finalY = -mainContainer.getHeight();
-        mainContainer.addAction(Actions.sequence(
-            Actions.parallel(
-                Actions.moveTo(finalX, finalY, 0.25f),
-                Actions.fadeOut(0.25f)
-            ),
-            Actions.run(callback)
-        ));
+        mainContainer.addAction(Actions.sequence(Actions.parallel(Actions.moveTo(finalX, finalY, 0.25f), Actions.fadeOut(0.25f)), Actions.run(callback)));
     }
 }

@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -45,7 +46,11 @@ public class ProyectilPiedra implements Proyectiles {
         this.proyectilActivo = true;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.jugador = jugador;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(18, 3f, new Color(0.75f,0.75f,0.75f,1f));
+
+        float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
+        int maxLength = (int) (18 * scaleFactor);
+        float scaledWidth = 3 * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaledWidth, new Color(0.75f, 0.75f, 0.75f, 1f));
         center = new Vector2();
     }
 

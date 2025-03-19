@@ -6,10 +6,11 @@ package com.sticklike.core.utilidades.gestores;
 public class GestorConstantes { // todo -> si escala demasiado habrá que gestionarlo con clases internas
 
     // -------------------------------------------------
-    // Resolución virtual
+    // Resolución
     // -------------------------------------------------
     public static final float VIRTUAL_WIDTH = 1440f;
     public static final float VIRTUAL_HEIGHT = 810f;
+    public static final float REAL_WIDTH = 2560f;
 
     // -------------------------------------------------
     // Configuración de la cámara
@@ -259,7 +260,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 14f;
     public static final float OBJETO_ORO_WIDTH = 14f;
     public static final float OBJETO_ORO_HEIGHT = 14f;
-    public static final float OBJETO_PWUP_WIDTH = 10f;
+    public static final float OBJETO_PWUP_WIDTH = 9f;
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
     public static final float ANCHO_DESTRUCT = 40f;

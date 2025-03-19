@@ -1,0 +1,183 @@
+package com.sticklike.core.pantallas.menus.renders;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+
+public abstract class RenderMenus {
+    protected Stage stage;
+    protected Skin uiSkin;
+    protected ShapeRenderer shapeRenderer;
+
+    public RenderMenus() {
+        stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
+        uiSkin = crearSkinBasico();
+        shapeRenderer = new ShapeRenderer();
+    }
+
+    protected Skin crearSkinBasico() {
+        Skin skin = new Skin();
+        BitmapFont font = new BitmapFont();
+        skin.add("default-font", font);
+
+        Label.LabelStyle defaultLabelStyle = new Label.LabelStyle(font, Color.GRAY);
+        skin.add("default", defaultLabelStyle);
+
+        // Fondo para los botones
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
+        pixmap.fill();
+        Texture pixmapTexture = new Texture(pixmap);
+        pixmap.dispose();
+        skin.add("buttonBackground", pixmapTexture, Texture.class);
+
+        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(skin.getRegion("buttonBackground"));
+        TextButton.TextButtonStyle defaultButtonStyle = new TextButton.TextButtonStyle();
+        defaultButtonStyle.font = font;
+        defaultButtonStyle.up = backgroundDrawable;
+        defaultButtonStyle.fontColor = new Color(0.3f, 0.3f, 0.3f, 1);
+        skin.add("default-button", defaultButtonStyle);
+
+        // Estilo para hover
+        Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
+        hoverPixmap.fill();
+        Texture hoverTexture = new Texture(hoverPixmap);
+        hoverPixmap.dispose();
+        skin.add("hoverBackground", hoverTexture, Texture.class);
+        TextButton.TextButtonStyle hoverButtonStyle = new TextButton.TextButtonStyle();
+        hoverButtonStyle.font = font;
+        hoverButtonStyle.up = new TextureRegionDrawable(skin.getRegion("hoverBackground"));
+        hoverButtonStyle.fontColor = Color.DARK_GRAY;
+        skin.add("hover-button", hoverButtonStyle);
+
+        // Estilo para botón seleccionado (con efecto glow)
+        Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
+        glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
+        glowPixmap.fill();
+        Texture glowTexture = new Texture(glowPixmap);
+        glowPixmap.dispose();
+        skin.add("glowTexture", glowTexture, Texture.class);
+        NinePatch glowNinePatch = new NinePatch(skin.get("glowTexture", Texture.class), 5, 5, 5, 5);
+        NinePatchDrawable glowDrawable = new NinePatchDrawable(glowNinePatch);
+        TextButton.TextButtonStyle selectedButtonStyle = new TextButton.TextButtonStyle();
+        selectedButtonStyle.font = font;
+        selectedButtonStyle.up = glowDrawable;
+        selectedButtonStyle.fontColor = Color.BLUE;
+        skin.add("selected-button", selectedButtonStyle);
+
+        return skin;
+    }
+
+    public void render(float delta) {
+        // Limpieza de pantalla
+        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Dibujo de cuadrícula
+        shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
+        float cellSize = 75;
+        float startX = stage.getCamera().position.x - stage.getViewport().getWorldWidth() / 2;
+        float endX = stage.getCamera().position.x + stage.getViewport().getWorldWidth() / 2;
+        float startY = stage.getCamera().position.y - stage.getViewport().getWorldHeight() / 2;
+        float endY = stage.getCamera().position.y + stage.getViewport().getWorldHeight() / 2;
+        for (float x = startX - (startX % cellSize); x <= endX; x += cellSize) {
+            shapeRenderer.line(x, startY, x, endY);
+        }
+        for (float y = startY - (startY % cellSize); y <= endY; y += cellSize) {
+            shapeRenderer.line(startX, y, endX, y);
+        }
+        shapeRenderer.end();
+
+        // Actualización y dibujo del Stage
+        stage.act(delta);
+        stage.draw();
+    }
+
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+    }
+
+    public void dispose() {
+        stage.dispose();
+        uiSkin.dispose();
+        shapeRenderer.dispose();
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+
+    protected Actor tituloConReborde(String text, float fontScale) {
+        Stack stack = new Stack();
+        Label.LabelStyle mainStyle = new Label.LabelStyle(uiSkin.getFont("default-font"), Color.WHITE);
+        Label mainLabel = new Label(text, mainStyle);
+        mainLabel.setFontScale(fontScale);
+
+        Label.LabelStyle outlineStyle = new Label.LabelStyle(uiSkin.getFont("default-font"), Color.BLUE);
+        outlineStyle.font.getData().setScale(fontScale);
+
+        Group outlineGroup = new Group();
+        float offset = 2f;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                if (dx == 0 && dy == 0) continue;
+                Label outlineLabel = new Label(text, outlineStyle);
+                outlineLabel.setFontScale(fontScale);
+                outlineLabel.setPosition(dx * offset, dy * offset);
+                outlineGroup.addActor(outlineLabel);
+            }
+        }
+        stack.add(outlineGroup);
+        stack.add(mainLabel);
+        return stack;
+    }
+
+    protected Drawable papelFondo() {
+        Pixmap pixmap = new Pixmap(200, 40, Pixmap.Format.RGBA8888);
+        pixmap.setColor(new Color(0.985f, 0.91f, 0.7f, 1.0f));
+        pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new TiledDrawable(new TextureRegion(texture));
+    }
+
+    protected Drawable bordeAzul() {
+        Pixmap borderPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
+        borderPixmap.setColor(0, 0, 0, 0);
+        borderPixmap.fill();
+        borderPixmap.setColor(Color.BLUE);
+        borderPixmap.drawRectangle(0, 0, 12, 12);
+        Texture borderTex = new Texture(borderPixmap);
+        borderPixmap.dispose();
+        NinePatch borderPatch = new NinePatch(borderTex, 1, 1, 1, 1);
+        return new NinePatchDrawable(borderPatch);
+    }
+
+    protected void animarEntrada(Actor container) {
+        container.setPosition((VIRTUAL_WIDTH - container.getWidth()) / 2, -container.getHeight());
+        container.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - container.getWidth()) / 2, (VIRTUAL_HEIGHT - container.getHeight()) / 2f, 0.25f), Actions.fadeIn(0.5f))));
+        stage.addActor(container);
+    }
+
+    public void animarSalida(Actor container, Runnable callback) {
+        float finalX = container.getX();
+        float finalY = -container.getHeight();
+        container.addAction(Actions.sequence(Actions.parallel(Actions.moveTo(finalX, finalY, 0.25f), Actions.fadeOut(0.25f)), Actions.run(callback)));
+    }
+
+    public abstract void animarSalida(Runnable callback);
+}

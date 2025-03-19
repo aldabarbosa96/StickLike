@@ -1,37 +1,27 @@
 package com.sticklike.core.pantallas.menus.renders;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import java.util.ArrayList;
 
-public class RenderMenuNiveles {
-    private Stage stage;
-    private Skin uiSkin;
+public class RenderMenuNiveles extends RenderMenus {
     private Actor titleActor;
     private TextButton btnNivel1;
     private TextButton btnNivel2;
     private TextButton btnNivel3;
     private TextButton btnVolver;
-    private ShapeRenderer shapeRenderer;
     private Container<?> buttonContainer;
-
-    // Lista de botones y gestión de selección, similar al menú principal
     private ArrayList<TextButton> nivelButtons;
     private int selectedIndex = 0;
 
-    // Interfaz callback para notificar la acción de cada botón
+    // Interfaz callback para notificar las acciones
     public interface MenuNivelesListener {
         void onSelectNivel1();
         void onSelectNivel2();
@@ -45,15 +35,12 @@ public class RenderMenuNiveles {
     }
 
     public RenderMenuNiveles() {
-        stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
-        uiSkin = crearAspectoUI();
-        shapeRenderer = new ShapeRenderer();
+        super();
         crearElementosUI();
     }
 
     private void crearElementosUI() {
-        // Crear el título con contorno (como en el menú principal)
-        titleActor = createTitleWithOutline("NIVELES");
+        titleActor = tituloConReborde("NIVELES", 2.25f);
         titleActor.getColor().a = 0;
         Table titleTable = new Table();
         titleTable.setFillParent(true);
@@ -62,13 +49,13 @@ public class RenderMenuNiveles {
         stage.addActor(titleTable);
         titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
 
-        // Crear botones para cada nivel y para "Volver"
+        // Crear botones para cada nivel y "Volver"
         btnNivel1 = createMenuButton(1, "Nivel 1", "default-button");
         btnNivel2 = createMenuButton(2, "Nivel 2", "default-button");
         btnNivel3 = createMenuButton(3, "Nivel 3", "default-button");
         btnVolver = createMenuButton(4, "Volver", "default-button");
 
-        // Inicializar la lista y agregar cada botón
+        // Inicializar la lista de botones
         nivelButtons = new ArrayList<>();
         nivelButtons.add(btnNivel1);
         nivelButtons.add(btnNivel2);
@@ -109,10 +96,10 @@ public class RenderMenuNiveles {
             }
         });
 
-        // Efecto hover (mismo comportamiento que en el menú principal)
+        // Agregar efecto hover a los botones
         addHoverEffect();
 
-        // Organizar botones en una tabla
+        // Organizar los botones en una tabla
         Table buttonTable = new Table();
         buttonTable.add(btnNivel1).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
@@ -122,53 +109,23 @@ public class RenderMenuNiveles {
         buttonTable.row();
         buttonTable.add(btnVolver).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
 
-        // Crear fondo tipo "papel" para el contenedor
-        Pixmap bgPixmap = new Pixmap(200, 40, Pixmap.Format.RGBA8888);
-        bgPixmap.setColor(new Color(0.985f, 0.91f, 0.7f, 1.0f));
-        bgPixmap.fill();
-        Texture bgTexture = new Texture(bgPixmap);
-        bgPixmap.dispose();
-        TiledDrawable tiledDrawable = new TiledDrawable(new TextureRegion(bgTexture));
-
+        // Crear el fondo estilo "papel" y el borde azul usando los métodos comunes
         Container<Table> innerContainer = new Container<>(buttonTable);
-        innerContainer.setBackground(tiledDrawable);
+        innerContainer.setBackground(papelFondo());
         innerContainer.pad(20);
         innerContainer.pack();
 
-        // Crear un borde azul usando NinePatch (como en el menú principal)
-        Pixmap borderPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        borderPixmap.setColor(0, 0, 0, 0);
-        borderPixmap.fill();
-        borderPixmap.setColor(Color.BLUE);
-        borderPixmap.drawRectangle(0, 0, 12, 12);
-        Texture borderTex = new Texture(borderPixmap);
-        borderPixmap.dispose();
-        NinePatch borderPatch = new NinePatch(borderTex, 1, 1, 1, 1);
-        NinePatchDrawable borderDrawable = new NinePatchDrawable(borderPatch);
-
         buttonContainer = new Container<>(innerContainer);
-        buttonContainer.setBackground(borderDrawable);
+        buttonContainer.setBackground(bordeAzul());
         buttonContainer.pack();
 
-        // Posicionar el contenedor y aplicar animación de entrada:
-        // Inicia fuera de la pantalla (abajo) y se desplaza hasta su posición final con fadeIn.
-        buttonContainer.setPosition((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2,
-            -buttonContainer.getHeight());
-        stage.addActor(buttonContainer);
-        buttonContainer.addAction(Actions.sequence(
-            Actions.delay(0.75f),
-            Actions.parallel(
-                Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2,
-                    (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2f, 0.25f),
-                Actions.fadeIn(0.5f)
-            )
-        ));
+        // Posicionar el contenedor fuera de la pantalla (abajo) y animar su entrada
+        animarEntrada(buttonContainer);
 
-        // Asegurarse de que el primer botón aparezca seleccionado
+        // Asegurar que se resalte el primer botón
         updateButtonHighlight();
     }
 
-    // Método para crear un botón con estilo similar al menú principal
     private TextButton createMenuButton(int number, String text, String styleName) {
         TextButton button = new TextButton("", uiSkin, styleName);
         Table contentTable = new Table();
@@ -190,12 +147,12 @@ public class RenderMenuNiveles {
         button.clearChildren();
         button.add(contentTable).expand().fill();
 
-        // Guardar labels para actualizar estilos posteriormente
+        // Guardar labels para facilitar la actualización de estilos
         button.setUserObject(new ButtonLabels(numberLabel, textLabel));
         return button;
     }
 
-    // Agrega efecto hover a cada botón
+    // Aplica efecto hover a cada botón
     private void addHoverEffect() {
         for (final TextButton btn : nivelButtons) {
             btn.addListener(new InputListener() {
@@ -217,7 +174,7 @@ public class RenderMenuNiveles {
         }
     }
 
-    // Actualiza la apariencia de los botones según la selección
+    // Actualiza la apariencia de los botones según cuál está seleccionado
     private void updateButtonHighlight() {
         TextButton.TextButtonStyle defaultStyle = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
         TextButton.TextButtonStyle selectedStyle = uiSkin.get("selected-button", TextButton.TextButtonStyle.class);
@@ -266,7 +223,7 @@ public class RenderMenuNiveles {
 
     // Activa el botón actualmente seleccionado
     public void activateSelectedButton() {
-        switch(selectedIndex) {
+        switch (selectedIndex) {
             case 0:
                 if (listener != null) listener.onSelectNivel1();
                 break;
@@ -282,138 +239,8 @@ public class RenderMenuNiveles {
         }
     }
 
-    // Método para animar la salida (efecto de slide y fade out) de la ventana.
-    // Se ejecuta el callback al finalizar la animación.
-    public void animateExit(Runnable callback) {
-        float finalX = buttonContainer.getX();
-        float finalY = -buttonContainer.getHeight();
-        buttonContainer.addAction(Actions.sequence(
-            Actions.parallel(
-                Actions.moveTo(finalX, finalY, 0.25f),
-                Actions.fadeOut(0.25f)
-            ),
-            Actions.run(callback)
-        ));
-    }
-
-    // Métodos de utilidad para el título y fondos
-    private Actor createTitleWithOutline(String text) {
-        Stack stack = new Stack();
-        Label.LabelStyle mainStyle = new Label.LabelStyle(uiSkin.getFont("default-font"), Color.WHITE);
-        Label mainLabel = new Label(text, mainStyle);
-        mainLabel.setFontScale(2.25f);
-
-        Label.LabelStyle outlineStyle = new Label.LabelStyle(uiSkin.getFont("default-font"), Color.BLUE);
-        outlineStyle.font.getData().setScale(2.25f);
-
-        Group outlineGroup = new Group();
-        float offset = 2f;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                if (dx == 0 && dy == 0) continue;
-                Label outlineLabel = new Label(text, outlineStyle);
-                outlineLabel.setFontScale(2.25f);
-                outlineLabel.setPosition(dx * offset, dy * offset);
-                outlineGroup.addActor(outlineLabel);
-            }
-        }
-        stack.add(outlineGroup);
-        stack.add(mainLabel);
-        return stack;
-    }
-
-    // Crea el aspecto visual (skin) de la UI
-    private Skin crearAspectoUI() {
-        Skin skin = new Skin();
-        BitmapFont font = new BitmapFont();
-        skin.add("default-font", font);
-
-        Label.LabelStyle defaultLabelStyle = new Label.LabelStyle(font, Color.GRAY);
-        skin.add("default", defaultLabelStyle);
-
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
-        pixmap.fill();
-        Texture pixmapTexture = new Texture(pixmap);
-        pixmap.dispose();
-        skin.add("buttonBackground", pixmapTexture, Texture.class);
-
-        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(skin.getRegion("buttonBackground"));
-
-        TextButton.TextButtonStyle defaultButtonStyle = new TextButton.TextButtonStyle();
-        defaultButtonStyle.font = font;
-        defaultButtonStyle.up = backgroundDrawable;
-        defaultButtonStyle.fontColor = new Color(0.3f, 0.3f, 0.3f, 1);
-        skin.add("default-button", defaultButtonStyle);
-
-        Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
-        hoverPixmap.fill();
-        Texture hoverTexture = new Texture(hoverPixmap);
-        hoverPixmap.dispose();
-        skin.add("hoverBackground", hoverTexture, Texture.class);
-
-        TextButton.TextButtonStyle hoverButtonStyle = new TextButton.TextButtonStyle();
-        hoverButtonStyle.font = font;
-        hoverButtonStyle.up = new TextureRegionDrawable(skin.getRegion("hoverBackground"));
-        hoverButtonStyle.fontColor = Color.DARK_GRAY;
-        skin.add("hover-button", hoverButtonStyle);
-
-        Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
-        glowPixmap.fill();
-        Texture glowTexture = new Texture(glowPixmap);
-        glowPixmap.dispose();
-        skin.add("glowTexture", glowTexture, Texture.class);
-
-        NinePatch glowNinePatch = new NinePatch(skin.get("glowTexture", Texture.class), 5, 5, 5, 5);
-        NinePatchDrawable glowDrawable = new NinePatchDrawable(glowNinePatch);
-
-        TextButton.TextButtonStyle selectedButtonStyle = new TextButton.TextButtonStyle();
-        selectedButtonStyle.font = font;
-        selectedButtonStyle.up = glowDrawable;
-        selectedButtonStyle.fontColor = Color.BLUE;
-        skin.add("selected-button", selectedButtonStyle);
-
-        return skin;
-    }
-
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
-        float cellSize = 75;
-        float startX = stage.getCamera().position.x - stage.getViewport().getWorldWidth() / 2;
-        float endX = stage.getCamera().position.x + stage.getViewport().getWorldWidth() / 2;
-        float startY = stage.getCamera().position.y - stage.getViewport().getWorldHeight() / 2;
-        float endY = stage.getCamera().position.y + stage.getViewport().getWorldHeight() / 2;
-        for (float x = startX - (startX % cellSize); x <= endX; x += cellSize) {
-            shapeRenderer.line(x, startY, x, endY);
-        }
-        for (float y = startY - (startY % cellSize); y <= endY; y += cellSize) {
-            shapeRenderer.line(startX, y, endX, y);
-        }
-        shapeRenderer.end();
-
-        stage.act(delta);
-        stage.draw();
-    }
-
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    public void dispose() {
-        stage.dispose();
-        uiSkin.dispose();
-        shapeRenderer.dispose();
-    }
-
-    public Stage getStage() {
-        return stage;
+    public void animarSalida(final Runnable callback) {
+        super.animarSalida(buttonContainer, callback);
     }
 
     // Clase auxiliar para almacenar los labels del botón

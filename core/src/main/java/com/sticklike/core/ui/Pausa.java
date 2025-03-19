@@ -280,7 +280,7 @@ public class Pausa extends ControllerAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (chkVentana.isChecked()) {
-                    Gdx.graphics.setWindowedMode(1920, 1080);
+                    Gdx.graphics.setWindowedMode((int) (Gdx.graphics.getWidth() / 1.33f), (int) (Gdx.graphics.getHeight() / 1.33f));
                 } else {
                     Graphics.DisplayMode dm = Gdx.graphics.getDisplayMode();
                     Gdx.graphics.setWindowedMode(dm.width, dm.height);

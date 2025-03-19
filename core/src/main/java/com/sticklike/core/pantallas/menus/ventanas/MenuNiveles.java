@@ -22,7 +22,7 @@ public class MenuNiveles extends ScreenAdapter {
             @Override
             public void onSelectNivel1() {
                 GestorDeAudio.getInstance().detenerMusica();
-                renderMenu.animateExit(new Runnable() {
+                renderMenu.animarSalida(new Runnable() {
                     @Override
                     public void run() {
                         game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
@@ -34,7 +34,7 @@ public class MenuNiveles extends ScreenAdapter {
             @Override
             public void onSelectNivel2() {
                 // Implementar acción para Nivel 2
-                renderMenu.animateExit(new Runnable() {
+                renderMenu.animarSalida(new Runnable() {
                     @Override
                     public void run() {
                         // Cambiar a la pantalla de Nivel 2
@@ -45,7 +45,7 @@ public class MenuNiveles extends ScreenAdapter {
             @Override
             public void onSelectNivel3() {
                 // Implementar acción para Nivel 3
-                renderMenu.animateExit(new Runnable() {
+                renderMenu.animarSalida(new Runnable() {
                     @Override
                     public void run() {
                         // Cambiar a la pantalla de Nivel 3
@@ -55,7 +55,7 @@ public class MenuNiveles extends ScreenAdapter {
 
             @Override
             public void onBack() {
-                renderMenu.animateExit(new Runnable() {
+                renderMenu.animarSalida(new Runnable() {
                     @Override
                     public void run() {
                         game.setScreen(new MenuPrincipal(game));
@@ -83,7 +83,7 @@ public class MenuNiveles extends ScreenAdapter {
 
             @Override
             public void onBack() {
-                renderMenu.animateExit(new Runnable() {
+                renderMenu.animarSalida(new Runnable() {
                     @Override
                     public void run() {
                         game.setScreen(new MenuPrincipal(game));
