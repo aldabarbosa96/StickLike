@@ -108,7 +108,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // ManuPausa
     // -------------------------------------------------
-    public static final int BUTTON_START = 6; // se mantiene
+    public static final int BUTTON_START = 6;
     public static final float BUTTON_PAUSE_Y_CORRECTION = 25f * 1.09375f;
     public static final float START_TEXT_OFFSET_X = 0.18875f * VIRTUAL_WIDTH;
     public static final float START_TEXT_OFFSET_Y = 0.18333f * VIRTUAL_HEIGHT;

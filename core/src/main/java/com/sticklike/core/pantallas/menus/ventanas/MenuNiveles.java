@@ -90,6 +90,11 @@ public class MenuNiveles extends ScreenAdapter {
                     }
                 });
             }
+
+            @Override
+            public void onPauseToggle() {
+
+            }
         });
 
         InputMultiplexer im = new InputMultiplexer(renderMenu.getStage(), inputsMenu);

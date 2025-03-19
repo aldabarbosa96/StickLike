@@ -1,12 +1,10 @@
 package com.sticklike.core.pantallas.menus.renders;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -15,8 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
+
 import java.util.ArrayList;
 
 public class RenderMenuPrincipal extends RenderMenus {
@@ -25,23 +26,23 @@ public class RenderMenuPrincipal extends RenderMenus {
     private ArrayList<TextButton> menuButtons;
     private int selectedIndex = 0;
 
-    // Interfaz callback para notificar la selección del botón
     public interface MenuListener {
         void onSelectButton(int index);
     }
+
     private MenuListener menuListener;
+
     public void setMenuListener(MenuListener listener) {
         this.menuListener = listener;
     }
 
     public RenderMenuPrincipal() {
-        super(); // Se inicializa stage, shapeRenderer y uiSkin en la clase base
+        super();
         menuButtons = new ArrayList<>();
         crearElementosUI();
     }
 
     private void crearElementosUI() {
-        // Crear y configurar el título usando el método heredado createTitleWithOutline(text, fontScale)
         titleActor = tituloConReborde("STICK-LIKE", 2.25f);
         titleActor.getColor().a = 0;
         Table titleTable = new Table();
@@ -49,16 +50,12 @@ public class RenderMenuPrincipal extends RenderMenus {
         titleTable.top();
         titleTable.add(titleActor).padTop(75).padBottom(50).center();
         stage.addActor(titleTable);
-        titleActor.addAction(Actions.sequence(
-            Actions.delay(0.25f),
-            Actions.fadeIn(0.25f),
-            Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    GestorDeAudio.getInstance().cambiarMusica("fondoMenu2");
-                }
-            })
-        ));
+        titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f), Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                GestorDeAudio.getInstance().cambiarMusica("fondoMenu2");
+            }
+        })));
 
         // Crear botones del menú principal
         TextButton btnJugar = createMenuButton(1, "Jugar", "default-button");
@@ -158,24 +155,7 @@ public class RenderMenuPrincipal extends RenderMenus {
         // Animar la entrada del contenedor (se posiciona inicialmente fuera de la pantalla y se desplaza a la posición final)
         buttonContainer.setPosition((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, -buttonContainer.getHeight());
         stage.addActor(buttonContainer);
-        buttonContainer.addAction(Actions.sequence(
-            Actions.delay(0.75f),
-            Actions.parallel(
-                Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2,
-                    (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2.5f, 0.25f),
-                Actions.fadeIn(0.5f)
-            )
-        ));
-
-        // Agregar label de versión en la parte inferior
-        Label versionLabel = new Label("v1.10.9-dev", uiSkin);
-        versionLabel.setFontScale(0.95f);
-        versionLabel.setColor(Color.DARK_GRAY);
-        Table versionTable = new Table();
-        versionTable.setFillParent(true);
-        versionTable.bottom().right().padRight(17.5f).padBottom(30);
-        versionTable.add(versionLabel);
-        stage.addActor(versionTable);
+        buttonContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - buttonContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - buttonContainer.getHeight()) / 2.5f, 0.25f), Actions.fadeIn(0.5f))));
 
         addHoverEffect();
         updateButtonHighlight();
@@ -218,6 +198,7 @@ public class RenderMenuPrincipal extends RenderMenus {
                         btn.setStyle(uiSkin.get("hover-button", TextButtonStyle.class));
                     }
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     int idx = menuButtons.indexOf(btn);
@@ -280,7 +261,7 @@ public class RenderMenuPrincipal extends RenderMenus {
         BitmapFont font = new BitmapFont();
         skin.add("default-font", font);
 
-        Label.LabelStyle defaultLabelStyle = new Label.LabelStyle(font, Color.GRAY);
+        Label.LabelStyle defaultLabelStyle = new Label.LabelStyle(font, Color.BLACK);
         skin.add("default", defaultLabelStyle, Label.LabelStyle.class);
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -335,6 +316,7 @@ public class RenderMenuPrincipal extends RenderMenus {
     private class ButtonLabels {
         public Label number;
         public Label text;
+
         public ButtonLabels(Label number, Label text) {
             this.number = number;
             this.text = text;

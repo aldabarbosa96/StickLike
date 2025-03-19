@@ -51,6 +51,11 @@ public class MenuPrincipal extends ScreenAdapter {
                 // En el menú principal, BACK podría salir de la aplicación
                 Gdx.app.exit();
             }
+
+            @Override
+            public void onPauseToggle() {
+
+            }
         });
 
         InputMultiplexer im = new InputMultiplexer(renderMenu.getStage(), inputsMenu);

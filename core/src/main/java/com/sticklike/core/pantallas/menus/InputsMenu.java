@@ -5,6 +5,8 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.BUTTON_START;
+
 public class InputsMenu extends InputAdapter implements ControllerListener {
 
     public interface MenuInputListener {
@@ -12,6 +14,7 @@ public class InputsMenu extends InputAdapter implements ControllerListener {
         void onNavigateDown();
         void onSelect();
         void onBack();
+        void onPauseToggle();
     }
 
     private MenuInputListener listener;
@@ -23,6 +26,11 @@ public class InputsMenu extends InputAdapter implements ControllerListener {
 
     @Override
     public boolean keyDown(int keycode) {
+        // Detecta pausa con SPACE o P
+        if (keycode == Input.Keys.SPACE || keycode == Input.Keys.P) {
+            if (listener != null) listener.onPauseToggle();
+            return true;
+        }
         switch (keycode) {
             case Input.Keys.UP:
             case Input.Keys.LEFT:
@@ -65,11 +73,12 @@ public class InputsMenu extends InputAdapter implements ControllerListener {
         return false;
     }
 
-
-
     @Override
     public boolean buttonDown(Controller controller, int buttonIndex) {
-        // Asumimos: botón 0 (A) para seleccionar, botón 1 para volver
+        if (buttonIndex == BUTTON_START ) {
+            if (listener != null) listener.onPauseToggle();
+            return true;
+        }
         if (buttonIndex == 0) {
             if (listener != null) listener.onSelect();
             return true;
@@ -81,17 +90,15 @@ public class InputsMenu extends InputAdapter implements ControllerListener {
     }
 
     @Override
-    public boolean buttonUp(Controller controller, int i) {
+    public boolean buttonUp(Controller controller, int buttonIndex) {
         return false;
     }
 
     @Override
     public void connected(Controller controller) {
-
     }
 
     @Override
     public void disconnected(Controller controller) {
-
     }
 }

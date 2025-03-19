@@ -3,28 +3,28 @@ package com.sticklike.core.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.pantallas.menus.InputsMenu;
+import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-/**
- * Gestiona el menú de pausa del juego, mostrando botones de navegación y un popup de opciones.
- */
-public class Pausa extends ControllerAdapter {
+public class Pausa {
     private float pauseWidth, pauseHeight, pauseSpacing, menuWidth, marginRight, marginTop;
     private boolean isPaused;
     private boolean inputsBloqueados;
@@ -39,6 +39,9 @@ public class Pausa extends ControllerAdapter {
     private Window windowOpciones;
     private Texture blankTexture;
 
+    // Instancia de InputsMenu para manejar los eventos del mando
+    private InputsMenu inputsMenu;
+
     public Pausa(VentanaJuego1 ventanaJuego1) {
         // Parámetros del icono
         this.pauseWidth = 4;
@@ -47,7 +50,6 @@ public class Pausa extends ControllerAdapter {
         this.menuWidth = 22.5f;
         this.marginRight = 20;
         this.marginTop = 55;
-
         this.isPaused = false;
         this.inputsBloqueados = false;
         this.ventanaJuego1 = ventanaJuego1;
@@ -61,7 +63,6 @@ public class Pausa extends ControllerAdapter {
         hudCamera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply();
-
         pauseStage = new Stage(hudViewport);
 
         // Creamos una textura sólida para el overlay
@@ -72,7 +73,20 @@ public class Pausa extends ControllerAdapter {
         crearMenuPausa();
         crearVentanaOpciones();
 
-        Controllers.addListener(this);
+        // Creamos la instancia de InputsMenu con listener para pausa y back
+        inputsMenu = new InputsMenu(new InputsMenu.MenuInputListener() {
+            @Override
+            public void onNavigateUp() {  }
+            @Override
+            public void onNavigateDown() {  }
+            @Override
+            public void onSelect() {  }
+            @Override
+            public void onBack() { alternarPausa(); }
+            @Override
+            public void onPauseToggle() { alternarPausa(); }
+        });
+        Controllers.addListener(inputsMenu);
     }
 
     // Crea una textura de color sólido
@@ -99,26 +113,18 @@ public class Pausa extends ControllerAdapter {
 
     private void crearSkin() {
         pauseSkin = new Skin();
-
         BitmapFont skinFont = new BitmapFont();
         pauseSkin.add("default-font", skinFont);
-
-        // LabelStyle
         Label.LabelStyle labelStyle = new Label.LabelStyle(skinFont, Color.WHITE);
         pauseSkin.add("default", labelStyle);
-
-        // Estilo por defecto para botones
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
         btnStyle.font = skinFont;
         btnStyle.fontColor = Color.WHITE;
         btnStyle.overFontColor = Color.BLUE;
         pauseSkin.add("default-btn", btnStyle);
-
         TextButton.TextButtonStyle volverStyle = new TextButton.TextButtonStyle(btnStyle);
         volverStyle.fontColor = Color.BLACK;
         pauseSkin.add("volver-btn", volverStyle);
-
-        // SliderStyle
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle();
         Texture sliderBgTexture = createSolidTexture(100, 4, Color.LIGHT_GRAY);
         sliderStyle.background = new TextureRegionDrawable(new TextureRegion(sliderBgTexture));
@@ -130,10 +136,7 @@ public class Pausa extends ControllerAdapter {
         Texture knobTexture = new Texture(knobPixmap);
         knobPixmap.dispose();
         sliderStyle.knob = new TextureRegionDrawable(new TextureRegion(knobTexture));
-
         pauseSkin.add("default-horizontal", sliderStyle, Slider.SliderStyle.class);
-
-        // CheckBoxStyle
         CheckBox.CheckBoxStyle cbStyle = new CheckBox.CheckBoxStyle();
         Texture cbTextureOff = createTextureWithRectangle(25, 25, Color.WHITE, Color.BLUE);
         cbStyle.checkboxOff = new TextureRegionDrawable(new TextureRegion(cbTextureOff));
@@ -145,7 +148,7 @@ public class Pausa extends ControllerAdapter {
     }
 
     // Crea un botón usando el estilo "default-btn"
-    private TextButton createButton(String text, ClickListener listener) {
+    private TextButton createButton(String text, com.badlogic.gdx.scenes.scene2d.utils.ClickListener listener) {
         TextButton btn = new TextButton(text, pauseSkin, "default-btn");
         btn.addListener(listener);
         btn.pad(10);
@@ -158,68 +161,56 @@ public class Pausa extends ControllerAdapter {
         pauseTable.center();
         pauseTable.add().height(125);
         pauseTable.row();
-
-        TextButton btnMenuPrincipal = createButton("Menú Principal", new ClickListener() {
+        TextButton btnMenuPrincipal = createButton("Menú Principal", new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 ventanaJuego1.reproducirSonidoPausa();
                 ventanaJuego1.getGame().setScreen(new MenuPrincipal(ventanaJuego1.getGame()));
             }
         });
         pauseTable.add(btnMenuPrincipal).width(220).height(25).pad(10);
         pauseTable.row();
-
-        TextButton btnOpciones = createButton("Opciones", new ClickListener() {
+        TextButton btnOpciones = createButton("Opciones", new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 pauseTable.setVisible(false);
                 mostrarOpcionesPopup();
             }
         });
         pauseTable.add(btnOpciones).width(220).height(25).pad(10);
         pauseTable.row();
-
-        TextButton btnSalir = createButton("Salir del Juego", new ClickListener() {
+        TextButton btnSalir = createButton("Salir del Juego", new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 Gdx.app.exit();
             }
         });
         pauseTable.add(btnSalir).width(220).height(25).pad(10);
         pauseTable.row();
-
-        TextButton btnVolver = createButton("Volver", new ClickListener() {
+        TextButton btnVolver = createButton("Volver", new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 alternarPausa();
             }
         });
         pauseTable.add(btnVolver).width(220).height(25).pad(10);
-
         pauseStage.addActor(pauseTable);
     }
 
-    // Crea una fila de control de volumen (Label, Slider y etiqueta de porcentaje)
     private Table createVolumeControlRow(String labelText) {
         Table row = new Table();
-
         Label label = new Label(labelText, pauseSkin);
         label.setFontScale(0.7f);
         label.setColor(Color.BLACK);
-
         final Slider slider = new Slider(0, 1, 0.01f, false, pauseSkin);
-
         if (labelText.contains("Música")) {
             slider.setValue(GestorDeAudio.getInstance().getVolumenMusica());
         } else if (labelText.contains("Efectos")) {
             slider.setValue(GestorDeAudio.getInstance().getVolumenEfectos());
         }
-
         final Label percentLabel = new Label(String.format("%d%%", (int) (slider.getValue() * 100)), pauseSkin);
         percentLabel.setFontScale(0.7f);
         percentLabel.setColor(Color.BLACK);
-
-        // Listener para actualizar el porcentaje y el volumen
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -233,7 +224,6 @@ public class Pausa extends ControllerAdapter {
                 }
             }
         });
-
         row.add(label).colspan(2).align(Align.left);
         row.row();
         row.add(slider).width(200).padRight(10);
@@ -241,33 +231,24 @@ public class Pausa extends ControllerAdapter {
         return row;
     }
 
-
     private void crearVentanaOpciones() {
-        // Se crea el estilo de la ventana con título en negro
         Window.WindowStyle windowStyle = new Window.WindowStyle(pauseSkin.getFont("default-font"), Color.BLACK, crearFondoPapelDrawable());
         windowOpciones = new Window("OPCIONES", windowStyle);
         windowOpciones.getTitleTable().padTop(25);
-        // Centrar el título y ajustar su alineación
         windowOpciones.getTitleTable().center();
         windowOpciones.getTitleLabel().setAlignment(Align.center);
-        // Reducir la separación entre el título y el contenido
         windowOpciones.padTop(25);
         windowOpciones.setModal(true);
         windowOpciones.setMovable(false);
-
         Table contentTable = new Table();
-        // Menor separación entre título y contenido
         contentTable.padTop(10);
         contentTable.defaults().pad(10);
-
         contentTable.add(createVolumeControlRow("Volumen Música:")).colspan(2).align(Align.left);
         contentTable.row();
         contentTable.add(createVolumeControlRow("Volumen Efectos:")).colspan(2).align(Align.left);
         contentTable.row();
-
         Table checkTable = new Table();
         Label chkLabel = new Label("Modo Ventana", pauseSkin);
-        // Ajuste para el texto del checkbox: tamaño menor y color negro
         chkLabel.setFontScale(0.7f);
         chkLabel.setColor(Color.BLACK);
         final CheckBox chkVentana = new CheckBox("", pauseSkin);
@@ -275,7 +256,6 @@ public class Pausa extends ControllerAdapter {
         checkTable.add(chkVentana).size(40, 40);
         contentTable.add(checkTable).colspan(2).padTop(15);
         contentTable.row();
-
         chkVentana.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -287,27 +267,24 @@ public class Pausa extends ControllerAdapter {
                 }
             }
         });
-
         TextButton btnVolver = new TextButton("Volver", pauseSkin, "volver-btn");
         btnVolver.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 windowOpciones.remove();
                 pauseTable.setVisible(true);
             }
         });
         btnVolver.pad(10);
-
         contentTable.row().padTop(20);
         contentTable.add(btnVolver).colspan(2).width(140).height(45);
-
         windowOpciones.add(contentTable).pad(20);
         windowOpciones.pack();
     }
 
     private Drawable crearFondoPapelDrawable() {
         Pixmap pixmap = new Pixmap(200, 40, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.985f, 0.91f, 0.7f, 1.0f)); // color "post-it"
+        pixmap.setColor(new Color(0.985f, 0.91f, 0.7f, 1.0f));
         pixmap.fill();
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
@@ -322,41 +299,30 @@ public class Pausa extends ControllerAdapter {
     public void render(ShapeRenderer shapeRenderer) {
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
-
         float extraVerticalOffset = -50f;
         float pauseButtonX = VIRTUAL_WIDTH - marginRight - menuWidth - START_BUTTON_CORRECTION;
         float pauseButtonY = VIRTUAL_HEIGHT - marginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION - extraVerticalOffset;
-
         if (isPaused) {
             spriteBatch.begin();
             spriteBatch.setColor(0, 0, 0, 0.5f);
             spriteBatch.draw(blankTexture, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
             spriteBatch.end();
         }
-
-        // Dibuja el icono de pausa
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(new Color(0.2f, 0.2f, 0.2f, 0.65f));
         shapeRenderer.rect(pauseButtonX, pauseButtonY, menuWidth, menuWidth);
-
         float pauseX = pauseButtonX + (menuWidth - (pauseWidth * 2 + pauseSpacing)) / 2;
         float pauseY = pauseButtonY + (menuWidth - pauseHeight) / 2;
-
         shapeRenderer.setColor(isPaused ? Color.WHITE : Color.BLUE);
         shapeRenderer.rect(pauseX - BORDER_NEGATIVE, pauseY - BORDER_NEGATIVE, pauseWidth + BORDER_POSITIVE, pauseHeight + BORDER_POSITIVE);
         shapeRenderer.rect(pauseX + pauseWidth + pauseSpacing - BORDER_NEGATIVE, pauseY - BORDER_NEGATIVE, pauseWidth + BORDER_POSITIVE, pauseHeight + BORDER_POSITIVE);
-
         shapeRenderer.setColor(isPaused ? Color.BLUE : Color.WHITE);
         shapeRenderer.rect(pauseX, pauseY, pauseWidth, pauseHeight);
         shapeRenderer.rect(pauseX + pauseWidth + pauseSpacing, pauseY, pauseWidth, pauseHeight);
         shapeRenderer.end();
-
-
         Gdx.gl.glDisable(GL20.GL_BLEND);
-
         spriteBatch.begin();
         font.getData().setScale(0.8f);
         GlyphLayout layoutStart = new GlyphLayout(font, START);
@@ -379,11 +345,8 @@ public class Pausa extends ControllerAdapter {
             font.draw(spriteBatch, START, startTextX, startTextY);
         }
         spriteBatch.end();
-
-
         if (isPaused) {
             ventanaJuego1.getHud().renderizarHUD(Gdx.graphics.getDeltaTime());
-
             spriteBatch.begin();
             font.getData().setScale(2.5f);
             GlyphLayout layoutPausa = new GlyphLayout(font, PAUSA);
@@ -397,7 +360,6 @@ public class Pausa extends ControllerAdapter {
             font.setColor(Color.BLUE);
             font.draw(spriteBatch, PAUSA, pauseTextX, pauseTextY);
             spriteBatch.end();
-
             pauseStage.act(Gdx.graphics.getDeltaTime());
             pauseStage.draw();
         }
@@ -410,7 +372,7 @@ public class Pausa extends ControllerAdapter {
         }
     }
 
-    private void alternarPausa() {
+    public void alternarPausa() {
         isPaused = !isPaused;
         ventanaJuego1.setPausado(isPaused);
         if (isPaused) {
@@ -429,22 +391,12 @@ public class Pausa extends ControllerAdapter {
         inputsBloqueados = bloquear;
     }
 
-    @Override
-    public boolean buttonDown(Controller controller, int buttonIndex) {
-        if (inputsBloqueados) return false;
-        if (buttonIndex == BUTTON_START) {
-            alternarPausa();
-            return true;
-        }
-        return false;
-    }
-
     public Viewport getViewport() {
         return hudViewport;
     }
 
     public void dispose() {
-        Controllers.removeListener(this);
+        Controllers.removeListener(inputsMenu);
         spriteBatch.dispose();
         font.dispose();
         pauseStage.dispose();

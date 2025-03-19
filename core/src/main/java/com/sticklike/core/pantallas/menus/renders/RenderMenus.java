@@ -8,7 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -23,6 +28,7 @@ public abstract class RenderMenus {
         stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearSkinBasico();
         shapeRenderer = new ShapeRenderer();
+        agregarVersionLabel();
     }
 
     protected Skin crearSkinBasico() {
@@ -30,54 +36,66 @@ public abstract class RenderMenus {
         BitmapFont font = new BitmapFont();
         skin.add("default-font", font);
 
-        Label.LabelStyle defaultLabelStyle = new Label.LabelStyle(font, Color.GRAY);
-        skin.add("default", defaultLabelStyle);
+        // Agregamos estilos usando métodos específicos
+        skin.add("default", crearLabelStyle(font, Color.GRAY), LabelStyle.class);
+        skin.add("default-button", crearDefaultButtonStyle(font), TextButtonStyle.class);
+        skin.add("hover-button", crearHoverButtonStyle(font), TextButtonStyle.class);
+        skin.add("selected-button", crearSelectedButtonStyle(font), TextButtonStyle.class);
 
-        // Fondo para los botones
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
-        pixmap.fill();
-        Texture pixmapTexture = new Texture(pixmap);
-        pixmap.dispose();
-        skin.add("buttonBackground", pixmapTexture, Texture.class);
+        return skin;
+    }
 
-        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(skin.getRegion("buttonBackground"));
-        TextButton.TextButtonStyle defaultButtonStyle = new TextButton.TextButtonStyle();
-        defaultButtonStyle.font = font;
-        defaultButtonStyle.up = backgroundDrawable;
-        defaultButtonStyle.fontColor = new Color(0.3f, 0.3f, 0.3f, 1);
-        skin.add("default-button", defaultButtonStyle);
+    private LabelStyle crearLabelStyle(BitmapFont font, Color color) {
+        return new LabelStyle(font, color);
+    }
 
-        // Estilo para hover
+    private TextButtonStyle crearDefaultButtonStyle(BitmapFont font) {
+        TextButtonStyle style = new TextButtonStyle();
+        style.font = font;
+        style.up = crearBotonDrawable();
+        style.fontColor = new Color(0.3f, 0.3f, 0.3f, 1);
+        return style;
+    }
+
+    // Crea un Drawable a partir de un Pixmap para el botón (fondo)
+    private TextureRegionDrawable crearBotonDrawable() {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
+        pm.fill();
+        Texture tex = new Texture(pm);
+        pm.dispose();
+        return new TextureRegionDrawable(new TextureRegion(tex));
+    }
+
+    // Crea el estilo para el botón en estado hover
+    private TextButtonStyle crearHoverButtonStyle(BitmapFont font) {
+        TextButtonStyle style = new TextButtonStyle();
+        style.font = font;
         Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
         hoverPixmap.fill();
         Texture hoverTexture = new Texture(hoverPixmap);
         hoverPixmap.dispose();
-        skin.add("hoverBackground", hoverTexture, Texture.class);
-        TextButton.TextButtonStyle hoverButtonStyle = new TextButton.TextButtonStyle();
-        hoverButtonStyle.font = font;
-        hoverButtonStyle.up = new TextureRegionDrawable(skin.getRegion("hoverBackground"));
-        hoverButtonStyle.fontColor = Color.DARK_GRAY;
-        skin.add("hover-button", hoverButtonStyle);
+        style.up = new TextureRegionDrawable(new TextureRegion(hoverTexture));
+        style.fontColor = Color.DARK_GRAY;
+        return style;
+    }
 
-        // Estilo para botón seleccionado (con efecto glow)
+    // Crea el estilo para el botón seleccionado (con efecto glow)
+    private TextButtonStyle crearSelectedButtonStyle(BitmapFont font) {
+        TextButtonStyle style = new TextButtonStyle();
+        style.font = font;
         Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
         glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
         glowPixmap.fill();
         Texture glowTexture = new Texture(glowPixmap);
         glowPixmap.dispose();
-        skin.add("glowTexture", glowTexture, Texture.class);
-        NinePatch glowNinePatch = new NinePatch(skin.get("glowTexture", Texture.class), 5, 5, 5, 5);
-        NinePatchDrawable glowDrawable = new NinePatchDrawable(glowNinePatch);
-        TextButton.TextButtonStyle selectedButtonStyle = new TextButton.TextButtonStyle();
-        selectedButtonStyle.font = font;
-        selectedButtonStyle.up = glowDrawable;
-        selectedButtonStyle.fontColor = Color.BLUE;
-        skin.add("selected-button", selectedButtonStyle);
-
-        return skin;
+        NinePatch glowNinePatch = new NinePatch(glowTexture, 5, 5, 5, 5);
+        style.up = new NinePatchDrawable(glowNinePatch);
+        style.fontColor = Color.BLUE;
+        return style;
     }
+
 
     public void render(float delta) {
         // Limpieza de pantalla
@@ -165,6 +183,19 @@ public abstract class RenderMenus {
         borderPixmap.dispose();
         NinePatch borderPatch = new NinePatch(borderTex, 1, 1, 1, 1);
         return new NinePatchDrawable(borderPatch);
+    }
+
+    private void agregarVersionLabel() {
+        Label versionLabel = new Label("v1.10.9-dev", uiSkin);
+        versionLabel.setFontScale(0.95f);
+        versionLabel.setColor(Color.DARK_GRAY);
+
+        Table versionTable = new Table();
+        versionTable.setFillParent(true);
+        versionTable.bottom().right().padRight(17.5f).padBottom(30);
+        versionTable.add(versionLabel);
+
+        stage.addActor(versionTable);
     }
 
     protected void animarEntrada(Actor container) {

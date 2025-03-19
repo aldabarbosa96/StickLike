@@ -36,6 +36,11 @@ public class MenuOpciones extends ScreenAdapter {
             public void onBack() {
                 volverAlMenuPrincipal();
             }
+
+            @Override
+            public void onPauseToggle() {
+
+            }
         });
 
         InputMultiplexer im = new InputMultiplexer(renderMenuOpciones.getStage(), inputsMenu);
