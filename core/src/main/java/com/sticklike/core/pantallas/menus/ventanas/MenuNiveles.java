@@ -33,24 +33,18 @@ public class MenuNiveles extends ScreenAdapter {
 
             @Override
             public void onSelectNivel2() {
-                // Implementar acción para Nivel 2
-                renderMenu.animarSalida(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Cambiar a la pantalla de Nivel 2
-                    }
-                });
             }
 
             @Override
             public void onSelectNivel3() {
-                // Implementar acción para Nivel 3
-                renderMenu.animarSalida(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Cambiar a la pantalla de Nivel 3
-                    }
-                });
+            }
+
+            @Override
+            public void onSelectNivel4() {
+            }
+
+            @Override
+            public void onSelectNivel5() {
             }
 
             @Override

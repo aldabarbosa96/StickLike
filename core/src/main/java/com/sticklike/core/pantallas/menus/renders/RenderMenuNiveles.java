@@ -1,5 +1,6 @@
 package com.sticklike.core.pantallas.menus.renders;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -7,27 +8,33 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import java.util.ArrayList;
 
 public class RenderMenuNiveles extends RenderMenus {
     private Actor titleActor;
-    private TextButton btnNivel1;
-    private TextButton btnNivel2;
-    private TextButton btnNivel3;
+    private TextButton btnNivel1, btnNivel2, btnNivel3, btnNivel4, btnNivel5;
     private TextButton btnVolver;
-    private Container<?> buttonContainer;
+    private Container<Container<Table>> buttonContainer;
     private ArrayList<TextButton> nivelButtons;
     private int selectedIndex = 0;
 
-    // Interfaz callback para notificar las acciones
     public interface MenuNivelesListener {
         void onSelectNivel1();
+
         void onSelectNivel2();
+
         void onSelectNivel3();
+
+        void onSelectNivel4();
+
+        void onSelectNivel5();
+
         void onBack();
     }
+
     private MenuNivelesListener listener;
 
     public void setMenuNivelesListener(MenuNivelesListener listener) {
@@ -53,13 +60,17 @@ public class RenderMenuNiveles extends RenderMenus {
         btnNivel1 = createMenuButton(1, "Nivel 1", "default-button");
         btnNivel2 = createMenuButton(2, "Nivel 2", "default-button");
         btnNivel3 = createMenuButton(3, "Nivel 3", "default-button");
-        btnVolver = createMenuButton(4, "Volver", "default-button");
+        btnNivel4 = createMenuButton(4, "Nivel 4", "default-button");
+        btnNivel5 = createMenuButton(5, "Nivel 5", "default-button");
+        btnVolver = createMenuButton(6, "Volver", "default-button");
 
         // Inicializar la lista de botones
         nivelButtons = new ArrayList<>();
         nivelButtons.add(btnNivel1);
         nivelButtons.add(btnNivel2);
         nivelButtons.add(btnNivel3);
+        nivelButtons.add(btnNivel4);
+        nivelButtons.add(btnNivel5);
         nivelButtons.add(btnVolver);
 
         // Asignar listeners de click a cada botón
@@ -87,19 +98,33 @@ public class RenderMenuNiveles extends RenderMenus {
                 if (listener != null) listener.onSelectNivel3();
             }
         });
-        btnVolver.addListener(new ClickListener() {
+        btnNivel4.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 selectedIndex = 3;
+                updateButtonHighlight();
+                if (listener != null) listener.onSelectNivel3();
+            }
+        });
+        btnNivel5.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                selectedIndex = 4;
+                updateButtonHighlight();
+                if (listener != null) listener.onSelectNivel3();
+            }
+        });
+        btnVolver.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                selectedIndex = 5;
                 updateButtonHighlight();
                 if (listener != null) listener.onBack();
             }
         });
 
-        // Agregar efecto hover a los botones
         addHoverEffect();
 
-        // Organizar los botones en una tabla
         Table buttonTable = new Table();
         buttonTable.add(btnNivel1).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
@@ -107,22 +132,21 @@ public class RenderMenuNiveles extends RenderMenus {
         buttonTable.row();
         buttonTable.add(btnNivel3).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
+        buttonTable.add(btnNivel4).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.row();
+        buttonTable.add(btnNivel5).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
+        buttonTable.row();
         buttonTable.add(btnVolver).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
 
-        // Crear el fondo estilo "papel" y el borde azul usando los métodos comunes
         Container<Table> innerContainer = new Container<>(buttonTable);
         innerContainer.setBackground(papelFondo());
         innerContainer.pad(20);
         innerContainer.pack();
 
         buttonContainer = new Container<>(innerContainer);
-        buttonContainer.setBackground(bordeAzul());
+        buttonContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
         buttonContainer.pack();
-
-        // Posicionar el contenedor fuera de la pantalla (abajo) y animar su entrada
-        animarEntrada(buttonContainer);
-
-        // Asegurar que se resalte el primer botón
+        animarEntrada(buttonContainer,2.25f);
         updateButtonHighlight();
     }
 
@@ -147,12 +171,10 @@ public class RenderMenuNiveles extends RenderMenus {
         button.clearChildren();
         button.add(contentTable).expand().fill();
 
-        // Guardar labels para facilitar la actualización de estilos
         button.setUserObject(new ButtonLabels(numberLabel, textLabel));
         return button;
     }
 
-    // Aplica efecto hover a cada botón
     private void addHoverEffect() {
         for (final TextButton btn : nivelButtons) {
             btn.addListener(new InputListener() {
@@ -163,6 +185,7 @@ public class RenderMenuNiveles extends RenderMenus {
                         btn.setStyle(uiSkin.get("hover-button", TextButton.TextButtonStyle.class));
                     }
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     int idx = nivelButtons.indexOf(btn);
@@ -174,7 +197,6 @@ public class RenderMenuNiveles extends RenderMenus {
         }
     }
 
-    // Actualiza la apariencia de los botones según cuál está seleccionado
     private void updateButtonHighlight() {
         TextButton.TextButtonStyle defaultStyle = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
         TextButton.TextButtonStyle selectedStyle = uiSkin.get("selected-button", TextButton.TextButtonStyle.class);
@@ -193,8 +215,6 @@ public class RenderMenuNiveles extends RenderMenus {
             }
         }
     }
-
-    // Métodos públicos para navegación con teclado/mando
 
     public int getSelectedIndex() {
         return selectedIndex;
@@ -221,7 +241,6 @@ public class RenderMenuNiveles extends RenderMenus {
         }
     }
 
-    // Activa el botón actualmente seleccionado
     public void activateSelectedButton() {
         switch (selectedIndex) {
             case 0:
@@ -234,6 +253,12 @@ public class RenderMenuNiveles extends RenderMenus {
                 if (listener != null) listener.onSelectNivel3();
                 break;
             case 3:
+                if (listener != null) listener.onSelectNivel4();
+                break;
+            case 4:
+                if (listener != null) listener.onSelectNivel5();
+                break;
+            case 5:
                 if (listener != null) listener.onBack();
                 break;
         }

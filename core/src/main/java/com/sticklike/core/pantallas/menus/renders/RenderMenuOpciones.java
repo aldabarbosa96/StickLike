@@ -62,14 +62,12 @@ public class RenderMenuOpciones extends RenderMenus {
         innerContainer.pack();
 
         Container<Container<Table>> borderContainer = new Container<>(innerContainer);
-        borderContainer.setBackground(bordeAzul());
+        borderContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY,10,Color.BLUE,2));
         borderContainer.pack();
         mainContainer = borderContainer;
 
         // Posicionamos el contenedor fuera de la pantalla para animar su entrada
-        mainContainer.setPosition((VIRTUAL_WIDTH - mainContainer.getWidth()) / 2, -mainContainer.getHeight());
-        stage.addActor(mainContainer);
-        mainContainer.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - mainContainer.getWidth()) / 2, (VIRTUAL_HEIGHT - mainContainer.getHeight()) / 2f, 0.25f), Actions.fadeIn(0.5f))));
+       animarEntrada(mainContainer,2);
     }
 
     private Table crearTablaOpciones() {

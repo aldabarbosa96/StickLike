@@ -66,19 +66,25 @@ public abstract class RenderMenus {
         return new TextureRegionDrawable(new TextureRegion(tex));
     }
 
-    // Crea el estilo para el botón en estado hover
     private TextButtonStyle crearHoverButtonStyle(BitmapFont font) {
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
+
+        // Pixmap de 1x1 con relleno semitransparente (sin borde)
         Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
         hoverPixmap.fill();
+
         Texture hoverTexture = new Texture(hoverPixmap);
         hoverPixmap.dispose();
-        style.up = new TextureRegionDrawable(new TextureRegion(hoverTexture));
+
+        style.up = new TextureRegionDrawable(hoverTexture);
         style.fontColor = Color.DARK_GRAY;
+
         return style;
     }
+
+
 
     // Crea el estilo para el botón seleccionado (con efecto glow)
     private TextButtonStyle crearSelectedButtonStyle(BitmapFont font) {
@@ -172,18 +178,6 @@ public abstract class RenderMenus {
         return new TiledDrawable(new TextureRegion(texture));
     }
 
-    protected Drawable bordeAzul() {
-        Pixmap borderPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        borderPixmap.setColor(0, 0, 0, 0);
-        borderPixmap.fill();
-        borderPixmap.setColor(Color.BLUE);
-        borderPixmap.drawRectangle(0, 0, 12, 12);
-        Texture borderTex = new Texture(borderPixmap);
-        borderPixmap.dispose();
-        NinePatch borderPatch = new NinePatch(borderTex, 1, 1, 1, 1);
-        return new NinePatchDrawable(borderPatch);
-    }
-
     private void agregarVersionLabel() {
         Label versionLabel = new Label("v1.10.9-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
@@ -197,36 +191,48 @@ public abstract class RenderMenus {
         stage.addActor(versionTable);
     }
 
-    protected NinePatchDrawable crearSombraDrawable(Color color, int width, int height, int offsetX, int offsetY) {
-        Pixmap pixmap = new Pixmap(width + offsetX, height + offsetY, Pixmap.Format.RGBA8888);
+    protected NinePatchDrawable crearSombraConBorde(Color shadowColor, int shadowSize, Color borderColor, int borderThickness) {
+        int totalSize = 16 + (shadowSize + borderThickness) * 2;
 
-        // Capa externa con menor intensidad
-        for (int i = 0; i < offsetX; i++) {
-            // Usamos un alpha menor: de 0 a 0.05 en lugar de 0 a 0.10
-            float alpha = 0.05f * ((float) i / offsetX);
-            pixmap.setColor(new Color(color.r, color.g, color.b, alpha));
-            pixmap.fillRectangle(i, i, width, height);
+        Pixmap pixmap = new Pixmap(totalSize, totalSize, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.SourceOver);
+        pixmap.setColor(0, 0, 0, 0);
+        pixmap.fill();
+
+        // 1) Dibujamos la sombra como "anillos" concéntricos (de claro a oscuro o viceversa):
+        for (int i = 0; i < shadowSize; i++) {
+            float alpha = 0.25f * ((float) i / (shadowSize - 1));
+            pixmap.setColor(new Color(shadowColor.r, shadowColor.g, shadowColor.b, alpha));
+
+            int offset = i;
+            int size = totalSize - offset * 2;
+            pixmap.drawRectangle(offset, offset, size, size);
         }
 
-        // Capa interna también con intensidad reducida
-        for (int i = 0; i < offsetX / 2; i++) {
-            // Ajuste proporcional para que el efecto sea sutil
-            float alpha = 0.05f - (0.075f * ((float) i / ((float) offsetX / 2)));
-            pixmap.setColor(new Color(color.r, color.g, color.b, alpha));
-            // Ajusta estos valores según el tamaño deseado; aquí se usa un offset y reducción fijos
-            pixmap.fillRectangle(i + 5, i + 5, width - 200, height - 200);
+        // 2) Rellenamos la zona del borde
+        pixmap.setColor(borderColor);
+        pixmap.fillRectangle(shadowSize, shadowSize, totalSize - 2 * shadowSize, totalSize - 2 * shadowSize);
+
+        // 3) Vaciamos el interior (zona transparente) para que se vea el contenido o fondo del contenedor
+        int insideOffset = shadowSize + borderThickness;
+        int insideSize = totalSize - 2 * insideOffset;
+        if (insideSize > 0) {
+            pixmap.setColor(0, 0, 0, 0);
+            pixmap.fillRectangle(insideOffset, insideOffset, insideSize, insideSize);
         }
 
-        Texture shadowTexture = new Texture(pixmap);
+        Texture texture = new Texture(pixmap);
         pixmap.dispose();
 
-        NinePatch shadowPatch = new NinePatch(new TextureRegion(shadowTexture), offsetX / 3, offsetX / 2, offsetY / 3, offsetY / 2);
-        return new NinePatchDrawable(shadowPatch);
+        int split = shadowSize + borderThickness;
+        NinePatch ninePatch = new NinePatch(new TextureRegion(texture), split, split, split, split);
+        return new NinePatchDrawable(ninePatch);
     }
 
-    protected void animarEntrada(Actor container) {
+
+    protected void animarEntrada(Actor container, float heightOffset) {
         container.setPosition((VIRTUAL_WIDTH - container.getWidth()) / 2, -container.getHeight());
-        container.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - container.getWidth()) / 2, (VIRTUAL_HEIGHT - container.getHeight()) / 2f, 0.25f), Actions.fadeIn(0.5f))));
+        container.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - container.getWidth()) / 2, (VIRTUAL_HEIGHT - container.getHeight()) / heightOffset, 0.25f), Actions.fadeIn(0.5f))));
         stage.addActor(container);
     }
 

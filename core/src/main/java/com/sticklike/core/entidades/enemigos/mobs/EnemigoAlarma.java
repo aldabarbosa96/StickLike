@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.enemigos.mobs;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
@@ -34,16 +35,20 @@ public class EnemigoAlarma implements Enemigo {
     private RenderBaseEnemigos renderBaseEnemigos;
 
     public EnemigoAlarma(float x, float y, Jugador jugador) {
-        sprite = new Sprite(manager.get(ENEMIGO_ALARMA, Texture.class));
+        sprite = new Sprite(escogerTextura());
         sprite.setPosition(x, y);
-        sprite.setSize(20,20);
+        sprite.setSize(20, 20);
         this.jugador = jugador;
-        this.movimientoAlarma = new MovimientoCulo(velocidadBase,true);
+        this.movimientoAlarma = new MovimientoCulo(velocidadBase, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_ALARMA_TEXTURE, Texture.class);
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
+    private Texture escogerTextura() {
+        float texturaAleatoria = MathUtils.random(10);
+        return texturaAleatoria <= 5 ? manager.get(ENEMIGO_ALARMA, Texture.class) : manager.get(ENEMIGO_ALARMA2, Texture.class);
+    }
 
     @Override
     public void actualizar(float delta) {

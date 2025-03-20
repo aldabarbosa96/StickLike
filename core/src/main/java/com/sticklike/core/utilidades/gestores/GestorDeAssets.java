@@ -29,6 +29,7 @@ public class GestorDeAssets {
     public static final String ENEMIGO_VATER = "enemigos/07vater.png";
     public static final String ENEMIGO_VATER2 = "enemigos/07vater2.png";
     public static final String ENEMIGO_ALARMA = "enemigos/08alarma.png";
+    public static final String ENEMIGO_ALARMA2 = "enemigos/08alarma2.png";
     public static final String CORAZON_VIDA = "hud/life.png";
     public static final String ARMA_PIEDRA = "armas/01piedra.png";
     public static final String ARMA_CALCETIN = "armas/02calcetin.png";
@@ -100,6 +101,7 @@ public class GestorDeAssets {
         manager.load(ENEMIGO_VATER, Texture.class);
         manager.load(ENEMIGO_VATER2, Texture.class);
         manager.load(ENEMIGO_ALARMA, Texture.class);
+        manager.load(ENEMIGO_ALARMA2, Texture.class);
         manager.load(CORAZON_VIDA, Texture.class);
         manager.load(ARMA_PIEDRA, Texture.class);
         manager.load(ARMA_CALCETIN, Texture.class);
