@@ -209,7 +209,7 @@ public class RenderMenuOpciones extends RenderMenus {
     protected Skin crearSkinBasico() {
         Skin skin = new Skin();
         skin.add("default-font", getFont());
-        skin.add("default", new Label.LabelStyle(getFont(), Color.DARK_GRAY), Label.LabelStyle.class);
+        skin.add("default", new Label.LabelStyle(getFont(), Color.BLACK), Label.LabelStyle.class);
         skin.add("default-button", crearBotonDefault(), TextButton.TextButtonStyle.class);
         skin.add("default-horizontal", crearEstiloSliders(), Slider.SliderStyle.class);
         // Aquí se registra el estilo para CheckBox con el nombre "default"

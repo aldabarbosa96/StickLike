@@ -36,12 +36,10 @@ public abstract class RenderMenus {
         BitmapFont font = new BitmapFont();
 
         skin.add("default-font", font);
-        skin.add("default", crearLabelStyle(font, Color.GRAY), LabelStyle.class);
+        skin.add("default", crearLabelStyle(font, Color.BLACK), LabelStyle.class);
         skin.add("default-button", crearDefaultButtonStyle(font), TextButtonStyle.class);
         skin.add("hover-button", crearHoverButtonStyle(font), TextButtonStyle.class);
         skin.add("selected-button", crearSelectedButtonStyle(font), TextButtonStyle.class);
-        //skin.add("shadow-container", crearSombraDrawable(Color.BLACK, 30), NinePatchDrawable.class);
-
 
         return skin;
     }
@@ -54,7 +52,7 @@ public abstract class RenderMenus {
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
         style.up = crearBotonDrawable();
-        style.fontColor = new Color(0.3f, 0.3f, 0.3f, 1);
+        style.fontColor = new Color(Color.BLACK);
         return style;
     }
 
@@ -189,7 +187,7 @@ public abstract class RenderMenus {
     private void agregarVersionLabel() {
         Label versionLabel = new Label("v1.10.9-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
-        versionLabel.setColor(Color.DARK_GRAY);
+        versionLabel.setColor(Color.BLUE);
 
         Table versionTable = new Table();
         versionTable.setFillParent(true);
@@ -225,9 +223,6 @@ public abstract class RenderMenus {
         NinePatch shadowPatch = new NinePatch(new TextureRegion(shadowTexture), offsetX / 3, offsetX / 2, offsetY / 3, offsetY / 2);
         return new NinePatchDrawable(shadowPatch);
     }
-
-
-
 
     protected void animarEntrada(Actor container) {
         container.setPosition((VIRTUAL_WIDTH - container.getWidth()) / 2, -container.getHeight());
