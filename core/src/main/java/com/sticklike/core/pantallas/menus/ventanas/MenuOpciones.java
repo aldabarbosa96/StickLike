@@ -6,18 +6,18 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.pantallas.menus.InputsMenu;
-import com.sticklike.core.pantallas.menus.renders.RenderMenuOpciones;
+import com.sticklike.core.pantallas.menus.renders.RenderBaseMenuOpciones;
 
 public class MenuOpciones extends ScreenAdapter {
     private MainGame game;
-    private RenderMenuOpciones renderMenuOpciones;
+    private RenderBaseMenuOpciones renderMenuOpciones;
     private InputsMenu inputsMenu;
 
     public MenuOpciones(MainGame game) {
         this.game = game;
-        renderMenuOpciones = new RenderMenuOpciones();
+        renderMenuOpciones = new RenderBaseMenuOpciones();
 
-        renderMenuOpciones.setMenuOpcionesListener(new RenderMenuOpciones.MenuOpcionesListener() {
+        renderMenuOpciones.setMenuOpcionesListener(new RenderBaseMenuOpciones.MenuOpcionesListener() {
             @Override
             public void onVolver() {
                 volverAlMenuPrincipal();

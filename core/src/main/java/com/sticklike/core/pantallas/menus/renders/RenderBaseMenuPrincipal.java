@@ -22,7 +22,7 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import java.util.ArrayList;
 
-public class RenderMenuPrincipal extends RenderMenus {
+public class RenderBaseMenuPrincipal extends RenderBaseMenus {
     private Actor titleActor;
     private Container<Stack> buttonContainer;
     private ArrayList<TextButton> menuButtons;
@@ -39,7 +39,7 @@ public class RenderMenuPrincipal extends RenderMenus {
         this.menuListener = listener;
     }
 
-    public RenderMenuPrincipal() {
+    public RenderBaseMenuPrincipal() {
         super();
         menuButtons = new ArrayList<>();
         crearElementosUI();
@@ -59,13 +59,13 @@ public class RenderMenuPrincipal extends RenderMenus {
                 GestorDeAudio.getInstance().cambiarMusica("fondoMenu2");
             }
         })));
-        TextButton btnJugar = createMenuButton(1, "Jugar", "default-button");
-        TextButton btnNiveles = createMenuButton(2, "Niveles", "default-button");
-        TextButton btnPersonaje = createMenuButton(3, "Personaje", "default-button");
-        TextButton btnOpciones = createMenuButton(4, "Opciones", "default-button");
-        TextButton btnLogros = createMenuButton(5, "Logros", "default-button");
-        TextButton btnCreditos = createMenuButton(6, "Créditos", "default-button");
-        TextButton btnSalir = createMenuButton(7, "Salir", "default-button");
+        TextButton btnJugar = crearBotonesNumerados(1, "Jugar", "default-button");
+        TextButton btnNiveles = crearBotonesNumerados(2, "Niveles", "default-button");
+        TextButton btnPersonaje = crearBotonesNumerados(3, "Personaje", "default-button");
+        TextButton btnOpciones = crearBotonesNumerados(4, "Opciones", "default-button");
+        TextButton btnLogros = crearBotonesNumerados(5, "Logros", "default-button");
+        TextButton btnCreditos = crearBotonesNumerados(6, "Créditos", "default-button");
+        TextButton btnSalir = crearBotonesNumerados(7, "Salir", "default-button");
 
         btnJugar.addListener(new ClickListener() {
             @Override
@@ -165,72 +165,9 @@ public class RenderMenuPrincipal extends RenderMenus {
         buttonContainer.pack();
         animarEntrada(buttonContainer, 2.5f);
 
-        addHoverEffect();
-        updateButtonHighlight();
+        efectoHover(menuButtons, () -> selectedIndex);
+        actualizarBotonResaltado(menuButtons, selectedIndex);
 
-    }
-
-    private TextButton createMenuButton(int number, String text, String styleName) {
-        TextButton button = new TextButton("", uiSkin, styleName);
-        Table contentTable = new Table();
-        contentTable.defaults().center().pad(0);
-        Label numberLabel = new Label(String.format("%2d.", number), uiSkin);
-        numberLabel.setAlignment(Align.left);
-        numberLabel.setFontScale(1.2f);
-        contentTable.add(numberLabel).width(30);
-        Label textLabel = new Label(text, uiSkin);
-        textLabel.setAlignment(Align.center);
-        textLabel.setFontScale(1.2f);
-        contentTable.add(textLabel).expandX().fillX();
-        Label dummyLabel = new Label("", uiSkin);
-        contentTable.add(dummyLabel).width(30);
-        button.clearChildren();
-        button.add(contentTable).expand().fill();
-        button.setUserObject(new ButtonLabels(numberLabel, textLabel));
-        return button;
-    }
-
-    private void addHoverEffect() {
-        for (final TextButton btn : menuButtons) {
-            btn.addListener(new InputListener() {
-                @Override
-                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    int idx = menuButtons.indexOf(btn);
-                    // SOLO aplicamos hover si NO está seleccionado
-                    if (idx != selectedIndex) {
-                        btn.setStyle(uiSkin.get("hover-button", TextButtonStyle.class));
-                    }
-                }
-
-                @Override
-                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                    int idx = menuButtons.indexOf(btn);
-                    // Si NO está seleccionado, vuelve al default
-                    if (idx != selectedIndex) {
-                        btn.setStyle(uiSkin.get("default-button", TextButtonStyle.class));
-                    }
-                }
-            });
-        }
-    }
-
-
-    private void updateButtonHighlight() {
-        TextButtonStyle defaultStyle = uiSkin.get("default-button", TextButtonStyle.class);
-        TextButtonStyle selectedStyle = uiSkin.get("selected-button", TextButtonStyle.class);
-        for (int i = 0; i < menuButtons.size(); i++) {
-            TextButton button = menuButtons.get(i);
-            ButtonLabels labels = (ButtonLabels) button.getUserObject();
-            if (i == selectedIndex) {
-                button.setStyle(selectedStyle);
-                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font, selectedStyle.fontColor));
-                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font, selectedStyle.fontColor));
-            } else {
-                button.setStyle(defaultStyle);
-                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font, defaultStyle.fontColor));
-                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font, defaultStyle.fontColor));
-            }
-        }
     }
 
     public int getSelectedIndex() {
@@ -240,21 +177,21 @@ public class RenderMenuPrincipal extends RenderMenus {
     public void setSelectedIndex(int index) {
         if (index >= 0 && index < menuButtons.size()) {
             selectedIndex = index;
-            updateButtonHighlight();
+            actualizarBotonResaltado(menuButtons, selectedIndex);
         }
     }
 
     public void incrementSelectedIndex() {
         if (selectedIndex < menuButtons.size() - 1) {
             selectedIndex++;
-            updateButtonHighlight();
+            actualizarBotonResaltado(menuButtons, selectedIndex);
         }
     }
 
     public void decrementSelectedIndex() {
         if (selectedIndex > 0) {
             selectedIndex--;
-            updateButtonHighlight();
+            actualizarBotonResaltado(menuButtons, selectedIndex);
         }
     }
 
@@ -316,7 +253,7 @@ public class RenderMenuPrincipal extends RenderMenus {
         int shadowCenterX = mainCenterX + shadowOffset;
         int shadowCenterY = mainCenterY + shadowOffset;
         int radius = size / 2;
-        pixmap.setColor(new Color(0.698f, 0, 0, 1));
+        pixmap.setColor(new Color(0.65f, 0, 0, 1));
         pixmap.fillCircle(shadowCenterX, shadowCenterY, radius);
         pixmap.setColor(new Color(0, 0, 1, 0.85f));
         pixmap.fillCircle(mainCenterX, mainCenterY, radius);
@@ -372,18 +309,7 @@ public class RenderMenuPrincipal extends RenderMenus {
         return group;
     }
 
-
     @Override
     public void animarSalida(Runnable callback) {
-    }
-
-    private class ButtonLabels {
-        public Label number;
-        public Label text;
-
-        public ButtonLabels(Label number, Label text) {
-            this.number = number;
-            this.text = text;
-        }
     }
 }

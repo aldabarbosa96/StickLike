@@ -2,7 +2,9 @@ package com.sticklike.core.pantallas.menus.ventanas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -20,18 +22,22 @@ public class Creditos extends ScreenAdapter {
 
     public Creditos(final MainGame game) {
         stage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        Skin skin = new Skin();
+        BitmapFont font = new BitmapFont();
 
-        String texto = "CREDITOS\n\n\n" +
+        skin.add("default-font", font);
+        skin.add("default", new Label.LabelStyle(font, Color.WHITE), Label.LabelStyle.class);
+
+        String texto = "CRÉDITOS\n\n\n" +
             "Desarrollo:\n\n" +
-            "David Barbosa Olayo\nDisenyo, programacion, creacion de assets, composicion y edicion de audio.\n\n" +
+            "David Barbosa Olayo\nDiseño, programación, creación de assets, composición y edición de audio.\n\n" +
             "Colaboraciones:\n\n" +
-            "Carlos Barbosa Molina \n Creacion de assets y contribucion en audio.\n\n" +
-            "Albert Barbosa Olayo \n Contribucion en audio.\n\n" +
-            "Aleix Albors Munyoz \n Contribucion en assets.\n\n" +
+            "Carlos Barbosa Molina \n Creación de assets y contribución en audio.\n\n" +
+            "Albert Barbosa Olayo \n Contribución en audio.\n\n" +
+            "Aleix Albors Munyoz \n Contribución en assets.\n\n" +
             "Agradecimientos:\n\n" +
-            "A mi familia y amigos por su apoyo y contribucion en este proyecto.\n\n" +
-            "Tecnologias utilizadas\n\n" +
+            "A mi familia y amigos por su apoyo y contribución en este proyecto.\n\n" +
+            "Tecnologías utilizadas\n\n" +
             "    Lenguaje: Java\n" +
             "    Framework: LibGDX\n" +
             "    Imagen: PixelStudio\n" +

@@ -190,6 +190,7 @@ public class PopUpMejoras {
         uiStage.addActor(upgradeWindow);
         uiStage.setKeyboardFocus(upgradeWindow);
 
+        Controllers.removeListener(ventanaJuego1.getMenuPause().getInputsMenu());
         InputMultiplexer im = new InputMultiplexer(inputHandler, uiStage);
         Gdx.input.setInputProcessor(im);
         Controllers.addListener(inputHandler);
@@ -218,6 +219,7 @@ public class PopUpMejoras {
 
     private void onSelectMejora(int index, List<Mejora> mejoras) {
         if (index < 0 || index >= mejoras.size()) return;
+        Controllers.addListener(ventanaJuego1.getMenuPause().getInputsMenu());
         sistemaDeMejoras.aplicarMejora(mejoras.get(index));
         ventanaJuego1.getRenderHUDComponents().setHabilidadesActivas(sistemaDeMejoras.getHabilidadesActivas());
         upgradeWindow.remove();

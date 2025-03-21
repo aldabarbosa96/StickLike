@@ -260,7 +260,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 14f;
     public static final float OBJETO_ORO_WIDTH = 14f;
     public static final float OBJETO_ORO_HEIGHT = 14f;
-    public static final float OBJETO_PWUP_WIDTH = 9f;
+    public static final float OBJETO_PWUP_WIDTH = 8f;
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
     public static final float ANCHO_DESTRUCT = 40f;
@@ -288,7 +288,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
     public static final float EVENTO2_SPEED_MULT = 1.45f;
     public static final float EVENTO3_SPEED_MULT = 2f;
-    public static final float EVENTO3_SPAWN_RATE = 0.05f;
+    public static final float EVENTO3_SPAWN_RATE = 0.1f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN", "ALARMA", "REGLA"};

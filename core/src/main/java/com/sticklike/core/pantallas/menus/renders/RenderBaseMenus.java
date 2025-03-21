@@ -8,23 +8,23 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+
+import java.util.function.IntSupplier;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-public abstract class RenderMenus {
+public abstract class RenderBaseMenus {
     protected Stage stage;
     protected Skin uiSkin;
     protected ShapeRenderer shapeRenderer;
 
-    public RenderMenus() {
+    public RenderBaseMenus() {
         stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearSkinBasico();
         shapeRenderer = new ShapeRenderer();
@@ -229,6 +229,82 @@ public abstract class RenderMenus {
         return new NinePatchDrawable(ninePatch);
     }
 
+    protected TextButton crearBotonesNumerados(int number, String text, String styleName) {
+        TextButton button = new TextButton("", uiSkin, styleName);
+
+        Table contentTable = new Table();
+        contentTable.defaults().center().pad(0);
+
+        Label numberLabel = new Label(String.format("%2d.", number), uiSkin);
+        numberLabel.setAlignment(Align.left);
+        numberLabel.setFontScale(1.2f);
+        contentTable.add(numberLabel).width(30);
+
+        Label textLabel = new Label(text, uiSkin);
+        textLabel.setAlignment(Align.center);
+        textLabel.setFontScale(1.2f);
+        contentTable.add(textLabel).expandX().fillX();
+
+        contentTable.add(new Label("", uiSkin)).width(30); // dummy
+
+        button.clearChildren();
+        button.add(contentTable).expand().fill();
+
+        // Podrías guardar los dos labels en una clase auxiliar si quieres.
+        button.setUserObject(new ButtonLabels(numberLabel, textLabel));
+
+        return button;
+    }
+
+    protected void efectoHover(final java.util.List<TextButton> buttons,
+                                           final IntSupplier selectedIndexSupplier) {
+        for (final TextButton btn : buttons) {
+            btn.addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    int idx = buttons.indexOf(btn);
+                    if (idx != selectedIndexSupplier.getAsInt()) {
+                        btn.setStyle(uiSkin.get("hover-button", TextButtonStyle.class));
+                    }
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    int idx = buttons.indexOf(btn);
+                    if (idx != selectedIndexSupplier.getAsInt()) {
+                        btn.setStyle(uiSkin.get("default-button", TextButtonStyle.class));
+                    }
+                }
+            });
+        }
+    }
+
+    protected void actualizarBotonResaltado(java.util.List<TextButton> buttons,
+                                         int selectedIndex) {
+        TextButtonStyle defaultStyle = uiSkin.get("default-button", TextButtonStyle.class);
+        TextButtonStyle selectedStyle = uiSkin.get("selected-button", TextButtonStyle.class);
+
+        for (int i = 0; i < buttons.size(); i++) {
+            TextButton button = buttons.get(i);
+            // Importante: usa la misma clase ButtonLabels de la base
+            ButtonLabels labels = (ButtonLabels) button.getUserObject();
+
+            if (i == selectedIndex) {
+                button.setStyle(selectedStyle);
+                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font,
+                    selectedStyle.fontColor));
+                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font,
+                    selectedStyle.fontColor));
+            } else {
+                button.setStyle(defaultStyle);
+                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font,
+                    defaultStyle.fontColor));
+                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font,
+                    defaultStyle.fontColor));
+            }
+        }
+    }
+
 
     protected void animarEntrada(Actor container, float heightOffset) {
         container.setPosition((VIRTUAL_WIDTH - container.getWidth()) / 2, -container.getHeight());
@@ -243,4 +319,15 @@ public abstract class RenderMenus {
     }
 
     public abstract void animarSalida(Runnable callback);
+
+    // Clase auxiliar para almacenar los labels del botón
+    protected static class ButtonLabels {
+        public Label number;
+        public Label text;
+
+        public ButtonLabels(Label number, Label text) {
+            this.number = number;
+            this.text = text;
+        }
+    }
 }

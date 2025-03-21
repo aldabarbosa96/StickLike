@@ -8,18 +8,18 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.pantallas.menus.InputsMenu;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
-import com.sticklike.core.pantallas.menus.renders.RenderMenuPrincipal;
+import com.sticklike.core.pantallas.menus.renders.RenderBaseMenuPrincipal;
 
 public class MenuPrincipal extends ScreenAdapter {
     private MainGame game;
-    private RenderMenuPrincipal renderMenu;
+    private RenderBaseMenuPrincipal renderMenu;
     private InputsMenu inputsMenu;
 
     public MenuPrincipal(MainGame game) {
         this.game = game;
-        renderMenu = new RenderMenuPrincipal();
+        renderMenu = new RenderBaseMenuPrincipal();
         // Configuramos el listener para el render
-        renderMenu.setMenuListener(new RenderMenuPrincipal.MenuListener() {
+        renderMenu.setMenuListener(new RenderBaseMenuPrincipal.MenuListener() {
             @Override
             public void onSelectButton(int index) {
                 ejecutarAccion(index);
@@ -48,8 +48,6 @@ public class MenuPrincipal extends ScreenAdapter {
 
             @Override
             public void onBack() {
-                // En el menú principal, BACK podría salir de la aplicación
-                Gdx.app.exit();
             }
 
             @Override

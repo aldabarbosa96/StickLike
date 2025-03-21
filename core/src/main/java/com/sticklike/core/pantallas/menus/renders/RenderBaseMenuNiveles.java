@@ -3,17 +3,15 @@ package com.sticklike.core.pantallas.menus.renders;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import java.util.ArrayList;
 
-public class RenderMenuNiveles extends RenderMenus {
+public class RenderBaseMenuNiveles extends RenderBaseMenus {
     private Actor titleActor;
     private TextButton btnNivel1, btnNivel2, btnNivel3, btnNivel4, btnNivel5;
     private TextButton btnVolver;
@@ -41,7 +39,7 @@ public class RenderMenuNiveles extends RenderMenus {
         this.listener = listener;
     }
 
-    public RenderMenuNiveles() {
+    public RenderBaseMenuNiveles() {
         super();
         crearElementosUI();
     }
@@ -57,12 +55,12 @@ public class RenderMenuNiveles extends RenderMenus {
         titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
 
         // Crear botones para cada nivel y "Volver"
-        btnNivel1 = createMenuButton(1, "Nivel 1", "default-button");
-        btnNivel2 = createMenuButton(2, "Nivel 2", "default-button");
-        btnNivel3 = createMenuButton(3, "Nivel 3", "default-button");
-        btnNivel4 = createMenuButton(4, "Nivel 4", "default-button");
-        btnNivel5 = createMenuButton(5, "Nivel 5", "default-button");
-        btnVolver = createMenuButton(6, "Volver", "default-button");
+        btnNivel1 = crearBotonesNumerados(1, "<<  Cuaderno  >>", "default-button");
+        btnNivel2 = crearBotonesNumerados(2, "<<  Pizarra  >>", "default-button");
+        btnNivel3 = crearBotonesNumerados(3, "<<  Ordenador  >>", "default-button");
+        btnNivel4 = crearBotonesNumerados(4, "<<  ???  >>", "default-button");
+        btnNivel5 = crearBotonesNumerados(5, "<<  ???  >>", "default-button");
+        btnVolver = crearBotonesNumerados(6, "Volver", "default-button");
 
         // Inicializar la lista de botones
         nivelButtons = new ArrayList<>();
@@ -78,7 +76,7 @@ public class RenderMenuNiveles extends RenderMenus {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 selectedIndex = 0;
-                updateButtonHighlight();
+                actualizarBotonResaltado(nivelButtons, selectedIndex);
                 if (listener != null) listener.onSelectNivel1();
             }
         });
@@ -86,7 +84,7 @@ public class RenderMenuNiveles extends RenderMenus {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 selectedIndex = 1;
-                updateButtonHighlight();
+                actualizarBotonResaltado(nivelButtons, selectedIndex);
                 if (listener != null) listener.onSelectNivel2();
             }
         });
@@ -94,7 +92,7 @@ public class RenderMenuNiveles extends RenderMenus {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 selectedIndex = 2;
-                updateButtonHighlight();
+                actualizarBotonResaltado(nivelButtons, selectedIndex);
                 if (listener != null) listener.onSelectNivel3();
             }
         });
@@ -102,7 +100,7 @@ public class RenderMenuNiveles extends RenderMenus {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 selectedIndex = 3;
-                updateButtonHighlight();
+                actualizarBotonResaltado(nivelButtons, selectedIndex);
                 if (listener != null) listener.onSelectNivel3();
             }
         });
@@ -110,7 +108,7 @@ public class RenderMenuNiveles extends RenderMenus {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 selectedIndex = 4;
-                updateButtonHighlight();
+                actualizarBotonResaltado(nivelButtons, selectedIndex);
                 if (listener != null) listener.onSelectNivel3();
             }
         });
@@ -118,12 +116,12 @@ public class RenderMenuNiveles extends RenderMenus {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 selectedIndex = 5;
-                updateButtonHighlight();
+                actualizarBotonResaltado(nivelButtons, selectedIndex);
                 if (listener != null) listener.onBack();
             }
         });
 
-        addHoverEffect();
+        efectoHover(nivelButtons, () -> selectedIndex);
 
         Table buttonTable = new Table();
         buttonTable.add(btnNivel1).pad(12).center().width(VIRTUAL_WIDTH / 4).height(45f);
@@ -146,74 +144,8 @@ public class RenderMenuNiveles extends RenderMenus {
         buttonContainer = new Container<>(innerContainer);
         buttonContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
         buttonContainer.pack();
-        animarEntrada(buttonContainer,2.25f);
-        updateButtonHighlight();
-    }
-
-    private TextButton createMenuButton(int number, String text, String styleName) {
-        TextButton button = new TextButton("", uiSkin, styleName);
-        Table contentTable = new Table();
-        contentTable.defaults().center().pad(0);
-
-        Label numberLabel = new Label(String.format("%2d.", number), uiSkin);
-        numberLabel.setAlignment(Align.left);
-        numberLabel.setFontScale(1.2f);
-        contentTable.add(numberLabel).width(30);
-
-        Label textLabel = new Label(text, uiSkin);
-        textLabel.setAlignment(Align.center);
-        textLabel.setFontScale(1.2f);
-        contentTable.add(textLabel).expandX().fillX();
-
-        Label dummyLabel = new Label("", uiSkin);
-        contentTable.add(dummyLabel).width(30);
-
-        button.clearChildren();
-        button.add(contentTable).expand().fill();
-
-        button.setUserObject(new ButtonLabels(numberLabel, textLabel));
-        return button;
-    }
-
-    private void addHoverEffect() {
-        for (final TextButton btn : nivelButtons) {
-            btn.addListener(new InputListener() {
-                @Override
-                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    int idx = nivelButtons.indexOf(btn);
-                    if (idx != selectedIndex) {
-                        btn.setStyle(uiSkin.get("hover-button", TextButton.TextButtonStyle.class));
-                    }
-                }
-
-                @Override
-                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                    int idx = nivelButtons.indexOf(btn);
-                    if (idx != selectedIndex) {
-                        btn.setStyle(uiSkin.get("default-button", TextButton.TextButtonStyle.class));
-                    }
-                }
-            });
-        }
-    }
-
-    private void updateButtonHighlight() {
-        TextButton.TextButtonStyle defaultStyle = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
-        TextButton.TextButtonStyle selectedStyle = uiSkin.get("selected-button", TextButton.TextButtonStyle.class);
-
-        for (int i = 0; i < nivelButtons.size(); i++) {
-            TextButton button = nivelButtons.get(i);
-            ButtonLabels labels = (ButtonLabels) button.getUserObject();
-            if (i == selectedIndex) {
-                button.setStyle(selectedStyle);
-                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font, selectedStyle.fontColor));
-                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font, selectedStyle.fontColor));
-            } else {
-                button.setStyle(defaultStyle);
-                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font, defaultStyle.fontColor));
-                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font, defaultStyle.fontColor));
-            }
-        }
+        animarEntrada(buttonContainer, 2.25f);
+        actualizarBotonResaltado(nivelButtons, selectedIndex);
     }
 
     public int getSelectedIndex() {
@@ -223,21 +155,21 @@ public class RenderMenuNiveles extends RenderMenus {
     public void setSelectedIndex(int index) {
         if (index >= 0 && index < nivelButtons.size()) {
             selectedIndex = index;
-            updateButtonHighlight();
+            actualizarBotonResaltado(nivelButtons, selectedIndex);
         }
     }
 
     public void incrementSelectedIndex() {
         if (selectedIndex < nivelButtons.size() - 1) {
             selectedIndex++;
-            updateButtonHighlight();
+            actualizarBotonResaltado(nivelButtons, selectedIndex);
         }
     }
 
     public void decrementSelectedIndex() {
         if (selectedIndex > 0) {
             selectedIndex--;
-            updateButtonHighlight();
+            actualizarBotonResaltado(nivelButtons, selectedIndex);
         }
     }
 
@@ -266,16 +198,5 @@ public class RenderMenuNiveles extends RenderMenus {
 
     public void animarSalida(final Runnable callback) {
         super.animarSalida(buttonContainer, callback);
-    }
-
-    // Clase auxiliar para almacenar los labels del botón
-    private class ButtonLabels {
-        public Label number;
-        public Label text;
-
-        public ButtonLabels(Label number, Label text) {
-            this.number = number;
-            this.text = text;
-        }
     }
 }

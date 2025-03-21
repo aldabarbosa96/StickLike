@@ -7,18 +7,18 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.pantallas.menus.InputsMenu;
-import com.sticklike.core.pantallas.menus.renders.RenderMenuNiveles;
+import com.sticklike.core.pantallas.menus.renders.RenderBaseMenuNiveles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 public class MenuNiveles extends ScreenAdapter {
     private MainGame game;
-    private RenderMenuNiveles renderMenu;
+    private RenderBaseMenuNiveles renderMenu;
     private InputsMenu inputsMenu;
 
     public MenuNiveles(MainGame game) {
         this.game = game;
-        renderMenu = new RenderMenuNiveles();
-        renderMenu.setMenuNivelesListener(new RenderMenuNiveles.MenuNivelesListener() {
+        renderMenu = new RenderBaseMenuNiveles();
+        renderMenu.setMenuNivelesListener(new RenderBaseMenuNiveles.MenuNivelesListener() {
             @Override
             public void onSelectNivel1() {
                 GestorDeAudio.getInstance().detenerMusica();

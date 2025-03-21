@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
@@ -314,7 +312,7 @@ public class VentanaJuego1 implements Screen {
         viewport.update(width, height, true);
         popUpMejoras.getUiStage().getViewport().update(width, height, true);
         hud.resize(width, height);
-        pausa.getViewport().update(width, height, true);
+        pausa.getRenderPausa().getHudViewport().update(width, height, true);
         controladorEnemigos.setVentanaRedimensionada(true);
         BoostIconEffectManager.getInstance().getEffect().updateDimensions(camara);
     }

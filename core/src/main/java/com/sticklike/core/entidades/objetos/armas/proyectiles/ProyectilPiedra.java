@@ -129,7 +129,7 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 0.9f);
+        GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 1);
     }
 
     @Override

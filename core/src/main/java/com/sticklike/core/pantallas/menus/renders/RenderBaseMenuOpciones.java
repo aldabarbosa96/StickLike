@@ -24,13 +24,17 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-public class RenderMenuOpciones extends RenderMenus {
+import java.util.ArrayList;
+import java.util.List;
+
+public class RenderBaseMenuOpciones extends RenderBaseMenus {
     private MenuOpcionesListener listener;
     private Container<Container<Table>> mainContainer;
     private Slider sliderMusica;
     private Slider sliderEfectos;
     private CheckBox chkPantallaCompleta;
     private TextButton btnVolver;
+    private List<Actor> focus;
 
     public interface MenuOpcionesListener {
         void onVolver();
@@ -40,11 +44,10 @@ public class RenderMenuOpciones extends RenderMenus {
         this.listener = listener;
     }
 
-    public RenderMenuOpciones() {
+    public RenderBaseMenuOpciones() {
         super();
         crearElementosUI();
     }
-
 
     private void crearElementosUI() {
         Actor titleActor = tituloConReborde("OPCIONES", 2.25f);
@@ -123,6 +126,7 @@ public class RenderMenuOpciones extends RenderMenus {
         // Botón Volver
         btnVolver = new TextButton("Volver", uiSkin, "default-button");
         addButtonListeners(btnVolver);
+        btnVolver.getLabel().setColor(Color.BLACK);
         optionsTable.add(btnVolver).colspan(1);
 
         return optionsTable;
