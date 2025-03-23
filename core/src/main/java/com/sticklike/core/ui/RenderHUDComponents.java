@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -214,9 +215,9 @@ public class RenderHUDComponents {
         float centerX = barX + barWidth * 0.5f;
         float posY = barY - 35f;
         float offset = 60f;
-        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf(jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf(Jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
         renderizarIconoConTexto(manager.get(ICONO_CALEAVELA_KILLS, Texture.class), 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
-        renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(Jugador.getTrazosGanados()), 0.8f, Color.WHITE, Color.DARK_GRAY);
     }
 
     private void renderizarTextoBarraXP(float barX, float barY, float barWidth, float barHeight) {

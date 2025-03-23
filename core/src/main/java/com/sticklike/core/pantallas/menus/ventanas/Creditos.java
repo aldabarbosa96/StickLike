@@ -28,24 +28,65 @@ public class Creditos extends ScreenAdapter {
         skin.add("default-font", font);
         skin.add("default", new Label.LabelStyle(font, Color.WHITE), Label.LabelStyle.class);
 
-        String texto = "CRÉDITOS\n\n\n" +
-            "Desarrollo:\n\n" +
-            "David Barbosa Olayo\nDiseño, programación, creación de assets, composición y edición de audio.\n\n" +
-            "Colaboraciones:\n\n" +
-            "Carlos Barbosa Molina \n Creación de assets y contribución en audio.\n\n" +
-            "Albert Barbosa Olayo \n Contribución en audio.\n\n" +
-            "Aleix Albors Munyoz \n Contribución en assets.\n\n" +
-            "Agradecimientos:\n\n" +
-            "A mi familia y amigos por su apoyo y contribución en este proyecto.\n\n" +
-            "Tecnologías utilizadas\n\n" +
-            "    Lenguaje: Java\n" +
-            "    Framework: LibGDX\n" +
-            "    Imagen: PixelStudio\n" +
-            "    Audio: Audacity\n\n\n\n" +
-            "© 2025 SitckLike. Todos los derechos reservados." + "\n".repeat(40) +
-            "--15.";
+        String creditos = """
+            CRÉDITOS
 
-        creditsLabel = new Label(texto, skin);
+            ------------------------------------------
+
+            Una producción de StickLike
+            © 2025 - Todos los derechos reservados
+
+            ------------------------------------------
+
+            DIRECCIÓN, DISEÑO Y DESARROLLO
+            - David Barbosa Olayo
+
+
+            PROGRAMACIÓN
+            - David Barbosa Olayo
+
+
+            DISEÑO Y CREACIÓN DE ASSETS VISUALES
+            - David Barbosa Olayo
+            - Carlos Barbosa Molina (asistencia en diseño VFX)
+            - Aleix Albors Munyoz (asistencia en diseño VFX)
+
+
+            SONIDO Y AMBIENTACIÓN
+            - David Barbosa Olayo
+            - Albert Barbosa Olayo (asistencia en diseño SFX )
+            - Carlos Barbosa Molina (asistencia en diseño SFX)
+
+
+
+            ARTE Y SOPORTE ARTÍSTICO
+            - Carlos Barbosa Molina
+
+
+            AGRADECIMIENTOS ESPECIALES
+            A mi familia y amigos, por su apoyo constante y por creer
+            en este proyecto desde el primer día.
+
+            ------------------------------------------
+
+            TECNOLOGÍAS Y HERRAMIENTAS UTILIZADAS
+            - Lenguaje de programación: Java
+            - Motor gráfico: LibGDX
+            - Editor de gráficos: Pixel Studio
+            - Editor de audio: Audacity
+
+            ------------------------------------------
+            Este proyecto fue creado con pasión durante noches
+            de café y aprendizaje constante. Gracias por ser
+            parte de esta experiencia y darle vida a este sueño.
+
+            Tu apoyo significa todo para un desarrollador independiente.
+
+            ¡GRACIAS POR JUGAR! ;)
+            """.repeat(1) + "\n".repeat(40) + "--15.";
+
+
+        creditsLabel = new Label(creditos, skin);
         creditsLabel.setAlignment(Align.center);
         creditsLabel.setWrap(true);
 
@@ -60,17 +101,14 @@ public class Creditos extends ScreenAdapter {
 
         // Calculamos el recorrido total, desde su posición inicial hasta que salga por arriba de la pantalla
         float recorrido = VIRTUAL_HEIGHT + labelHeight;
-        float duracion = 30f;
+        float duracion = 60f;
 
-        creditsLabel.addAction(Actions.sequence(
-            Actions.moveBy(0, recorrido, duracion),
-            Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    game.setScreen(new MenuPrincipal(game));
-                }
-            })
-        ));
+        creditsLabel.addAction(Actions.sequence(Actions.moveBy(0, recorrido, duracion), Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(new MenuPrincipal(game));
+            }
+        })));
 
         // Listener para capturar cualquier input y cambiar a MenuPrincipal
         stage.addListener(new InputListener() {

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
@@ -129,8 +130,8 @@ public class RenderVentanaGameOver {
         String[] lineas = {
             "Tiempo: " + ventanaJuego1.getRenderHUDComponents().formatearTiempo(ventanaJuego1.getRenderHUDComponents().getTiempoTranscurrido()),
             "Kills: " + ventanaJuego1.getControladorEnemigos().getKillCounter(),
-            "Oro: " + ventanaJuego1.getJugador().getOroGanado(),
-            "Trazos: " + ObjetoPowerUp.getContador()
+            "Oro: " + Jugador.getOroGanado(),
+            "Trazos: " + Jugador.getTrazosGanados()
         };
 
         float totalAltura = 0f;

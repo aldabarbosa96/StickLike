@@ -102,7 +102,7 @@ public class EnemigoVater implements Enemigo {
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        if (jugador.getCacasRecogidas() >= 1) return null;
+        if (Jugador.getOroGanado() >= 15) return null;
         float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 0.25f) {
             haSoltadoXP = true;

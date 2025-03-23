@@ -92,7 +92,9 @@ public class MenuPrincipal extends ScreenAdapter {
                 game.setScreen(new MenuNiveles(game));
                 break;
             case 2: // Personaje
-                // Implementar acción de Personaje
+                Controllers.removeListener(inputsMenu);
+                Gdx.input.setInputProcessor(null);
+                game.setScreen(new MenuPersonaje(game));
                 break;
             case 3: // Opciones
                 Controllers.removeListener(inputsMenu);

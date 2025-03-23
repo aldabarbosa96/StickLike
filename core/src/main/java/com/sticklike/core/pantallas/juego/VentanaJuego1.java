@@ -247,7 +247,7 @@ public class VentanaJuego1 implements Screen {
                         jugador.setOroGanado(jugador.getOroGanado() + 1);
 
                     } else if (xp instanceof ObjetoPowerUp) {
-                        jugador.setCacasRecogidas(jugador.getCacasRecogidas() + 1);
+                        jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
                     }
                     objetosXP.removeIndex(i);
                 }

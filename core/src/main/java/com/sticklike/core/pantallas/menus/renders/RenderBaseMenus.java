@@ -199,7 +199,7 @@ public abstract class RenderBaseMenus {
         pixmap.setColor(0, 0, 0, 0);
         pixmap.fill();
 
-        // 1) Dibujamos la sombra como "anillos" concéntricos (de claro a oscuro o viceversa):
+        // 1) Dibujamos la sombra como "anillos" concéntricos
         for (int i = 0; i < shadowSize; i++) {
             float alpha = 0.25f * ((float) i / (shadowSize - 1));
             pixmap.setColor(new Color(shadowColor.r, shadowColor.g, shadowColor.b, alpha));

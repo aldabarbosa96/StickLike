@@ -19,6 +19,7 @@ public class GestorDeAssets {
     public static Array<Texture> borrones;
     // Enemigos/Proyectiles
     public static final String STICKMAN = "jugador/01stickman.png";
+    public static final String STICKMAN_MENU = "jugador/03stickmanMenu.png";
     public static final String ENEMIGO_CULO = "enemigos/01culo.png";
     public static final String ENEMIGO_CULO_OJO = "enemigos/04culoOjo.png";
     public static final String ENEMIGO_CULO_OJO_CERRADO = "enemigos/04culoOjoCerrado.png";
@@ -38,6 +39,8 @@ public class GestorDeAssets {
     public static final String ARMA_NUBE_PEDO_HUD = "armas/03nubePedoHUD.png";
     public static final String ARMA_PAPELCULO = "armas/05papelCulo.png";
     // Drops y HUD
+    public static final String TROFEO = "hud/trofeo.png";
+    public static final String TROFEO2 = "hud/trofeo2.png";
     public static final String ARANDELA = "hud/arandelaMenu.png";
     public static final String CORDEL = "hud/cordelMenu.png";
     public static final String RECOLECTABLE_XP = "drops/01xp1.png";
@@ -91,6 +94,7 @@ public class GestorDeAssets {
     public static void cargarTexturas() {
         // Cargar texturas con el AssetManager
         manager.load(STICKMAN, Texture.class);
+        manager.load(STICKMAN_MENU, Texture.class);
         manager.load(ENEMIGO_CULO, Texture.class);
         manager.load(ENEMIGO_CULO_OJO, Texture.class);
         manager.load(ENEMIGO_CULO_OJO_CERRADO, Texture.class);
@@ -114,6 +118,8 @@ public class GestorDeAssets {
         manager.load("armas/05papelCuloImpacto01.png", Texture.class);
         manager.load("armas/05papelCuloImpacto02.png", Texture.class);
 
+        manager.load(TROFEO, Texture.class);
+        manager.load(TROFEO2, Texture.class);
         manager.load(ARANDELA, Texture.class);
         manager.load(CORDEL, Texture.class);
         manager.load(RECOLECTABLE_XP, Texture.class);

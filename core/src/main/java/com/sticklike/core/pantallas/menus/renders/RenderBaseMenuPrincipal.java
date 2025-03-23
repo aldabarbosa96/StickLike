@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Scaling;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
+import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import java.util.ArrayList;
@@ -53,12 +54,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         titleTable.top();
         titleTable.add(titleActor).padTop(75).padBottom(50).center();
         stage.addActor(titleTable);
-        titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f), Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                GestorDeAudio.getInstance().cambiarMusica("fondoMenu2");
-            }
-        })));
+        titleActor.addAction(Actions.sequence(Actions.delay(0.75f), Actions.fadeIn(0.5f)));
         TextButton btnJugar = crearBotonesNumerados(1, "Jugar", "default-button");
         TextButton btnNiveles = crearBotonesNumerados(2, "Niveles", "default-button");
         TextButton btnPersonaje = crearBotonesNumerados(3, "Personaje", "default-button");
@@ -167,6 +163,21 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
 
         efectoHover(menuButtons, () -> selectedIndex);
         actualizarBotonResaltado(menuButtons, selectedIndex);
+
+        Actor iconos = crearContenedorDeIconos();
+        if (iconos instanceof Table) {
+            ((Table) iconos).pack();
+        }
+        iconos.setPosition(245, stage.getViewport().getWorldHeight() / 2);
+        stage.addActor(iconos);
+        iconos.addAction(Actions.sequence(Actions.delay(0.75f), Actions.fadeIn(0.5f)));
+
+        stage.addAction(Actions.sequence(Actions.delay(0.7f), Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                GestorDeAudio.getInstance().cambiarMusica("fondoMenu2");
+            }
+        })));
 
     }
 
@@ -307,6 +318,73 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
 
 
         return group;
+    }
+
+    private Actor crearContenedorDeIconos() {
+        Group iconGroup = new Group();
+        iconGroup.getColor().a = 0;
+
+        Texture iconCacadoradaTexture = manager.get(RECOLECTABLE_CACA_DORADA, Texture.class);
+        Texture iconPowerupTexture = manager.get(RECOLECTABLE_POWER_UP, Texture.class);
+        Texture iconPowerupTexture2 = manager.get(RECOLECTABLE_POWER_UP, Texture.class);
+        Texture iconTrofeoTexture = manager.get(TROFEO2, Texture.class);
+
+        Image iconCacadorada = new Image(iconCacadoradaTexture);
+        Image iconPowerup = new Image(iconPowerupTexture);
+        Image iconPowerup2 = new Image(iconPowerupTexture2);
+        Image iconTrofeo = new Image(iconTrofeoTexture);
+
+        iconCacadorada.setSize(32, 32);
+        iconCacadorada.setPosition(2, 65);
+
+        iconTrofeo.setSize(22.5f, 45);
+        iconTrofeo.setPosition(7, -87.5f);
+
+        float powerupWidth = 10f;
+        float powerupHeight = 37.5f;
+        float basePosX = 12;
+        float basePosY = -10f;
+        float centerX = basePosX + (powerupWidth * 0.5f);
+        float centerY = basePosY + (powerupHeight * 0.5f);
+
+        iconPowerup.setSize(powerupWidth, powerupHeight);
+        iconPowerup.setOrigin(iconPowerup.getWidth() / 2, iconPowerup.getHeight() / 2);
+        iconPowerup.setPosition(centerX - iconPowerup.getWidth() / 2, centerY - iconPowerup.getHeight() / 2);
+        iconPowerup.setRotation(45f);
+
+        iconPowerup2.setSize(powerupWidth, powerupHeight);
+        iconPowerup2.setOrigin(iconPowerup2.getWidth() / 2, iconPowerup2.getHeight() / 2);
+        iconPowerup2.setPosition(centerX - iconPowerup2.getWidth() / 2, centerY - iconPowerup2.getHeight() / 2);
+        iconPowerup2.setRotation(-45f);
+
+        BitmapFont font = new BitmapFont();
+        font.getData().markupEnabled = true;
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
+
+        Label labelCacadorada = new Label("[DARK_GRAY]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
+        Label labelPowerup = new Label("[DARK_GRAY]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
+        Label labelTrofeo = new Label("[BLUE]?[][DARK_GRAY]/?[]", labelStyle);
+
+        labelCacadorada.setFontScale(1.2f);
+        labelPowerup.setFontScale(1.2f);
+        labelTrofeo.setFontScale(1.1f);
+
+        float fixedLabelX = 77.5f;
+        float offsetLabel = 2.5f;
+
+        labelCacadorada.setPosition(fixedLabelX, iconCacadorada.getY() + (iconCacadorada.getHeight() - labelCacadorada.getHeight()) / 2);
+        labelPowerup.setPosition(fixedLabelX, centerY - labelPowerup.getHeight() / 2);
+        labelTrofeo.setPosition(fixedLabelX - offsetLabel, iconTrofeo.getY() + (iconTrofeo.getHeight() - labelTrofeo.getHeight()) / 2);
+
+        iconGroup.addActor(iconCacadorada);
+        iconGroup.addActor(labelCacadorada);
+        iconGroup.addActor(iconPowerup);
+        iconGroup.addActor(iconPowerup2);
+        iconGroup.addActor(labelPowerup);
+        iconGroup.addActor(iconTrofeo);
+        iconGroup.addActor(labelTrofeo);
+
+        return iconGroup;
     }
 
     @Override
