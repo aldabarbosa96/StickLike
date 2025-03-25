@@ -47,7 +47,7 @@ public class Boost extends ObjetoBase {
             case ATAQUE:
                 return 666;
             case MUNICION:
-                return 10;
+                return 20;
             case INVULNERABILIDAD:
                 return 5;
             case VELATAQUE:

@@ -57,7 +57,7 @@ public class NubePedo implements Proyectiles {
         sprite.setOriginCenter();
         this.jugador = jugador;
         this.proyectilActivo = true;
-        this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
+        this.powerFactor = 1f + (Jugador.getPoderJugador() / 100f);
 
         sprite.setScale(MIN_SCALE);
         sprite.setColor(0.75f, 0.75f, 0.75f, MIN_ALPHA);

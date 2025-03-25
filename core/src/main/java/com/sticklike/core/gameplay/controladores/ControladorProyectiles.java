@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.BoliBic;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPapelCulo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
@@ -53,8 +54,7 @@ public class ControladorProyectiles {
                     colision = estaEnRadioTazo(enemigo, proyectil);
                 }
                 // Si es ProyectilPapelCulo, comprobamos si está en explosión
-                else if (proyectil instanceof ProyectilPapelCulo) {
-                    ProyectilPapelCulo proyectilPapelCulo = (ProyectilPapelCulo) proyectil;
+                else if (proyectil instanceof ProyectilPapelCulo proyectilPapelCulo) {
                     if (proyectilPapelCulo.isImpactoAnimacionActiva()) {
                         // Usar el área circular de la explosión
                         Circle explosionArea = proyectilPapelCulo.getCirculoColision();
@@ -143,9 +143,19 @@ public class ControladorProyectiles {
         enemigo.aplicarKnockback(fuerza, difX, difY);
     }
 
-    public void renderizarProyectiles(SpriteBatch batch) {
-        for (Proyectiles proyectil : proyectiles) {
-            proyectil.renderizarProyectil(batch);
+    public void renderizarProyectiles(SpriteBatch batch) { // usado para renderizar proyectiles por encima de los enemigos
+        for (Proyectiles p : proyectiles) {
+            if (!(p instanceof BoliBic && p.isPersistente())) {
+                p.renderizarProyectil(batch);
+            }
+        }
+    }
+
+    public void renderizarProyectilesFondo(SpriteBatch batch) { // usado para renderizar proyectiles por debajo de los enemigos
+        for (Proyectiles p : proyectiles) {
+            if (p instanceof BoliBic && p.isPersistente()) {
+                p.renderizarProyectil(batch);
+            }
         }
     }
 
@@ -169,7 +179,6 @@ public class ControladorProyectiles {
 
         return Intersector.overlaps(tazoCircle, enemyRect);
     }
-
 
 
     public ProyectilTazo obtenerUltimoProyectilTazo() {
@@ -198,7 +207,7 @@ public class ControladorProyectiles {
     public void reset() { // Reseteamos de proyectiles para evitar interferencias y poder gestionar el nuevo estado de estos
         // todo --> se deberá gestionar desde aquí en vez de desde dispose (así podrán mantenerse algunas mejoras si existe la posibilidad de vida extra)
         proyectiles.clear();
-        //multiplicadorDeDanyo = 1.0f;
+        multiplicadorDeDanyo = 1.0f;
     }
 
     public void dispose() {
@@ -213,6 +222,10 @@ public class ControladorProyectiles {
 
     public void setMultiplicadorDeDanyo(float multiplicadorDeDanyo) {
         this.multiplicadorDeDanyo = multiplicadorDeDanyo;
+    }
+
+    public Array<Proyectiles> getProyectiles() {
+        return proyectiles;
     }
 }
 

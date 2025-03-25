@@ -285,41 +285,36 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
     private void agregarFilaEstadisticaConUpgrade(Table table, String iconoPath, Label nombre, Label valor, int upgradeCost) {
         // 1) Icono de la estadística
         Image icono = new Image(manager.get(iconoPath, Texture.class));
-        table.add(icono).width(20).height(20).pad(10);
+        table.add(icono).width(20).height(20).pad(10).padLeft(10);
 
         // 2) Nombre y valor
-        table.add(nombre).left().pad(10);
-        table.add(valor).left().pad(10);
+        table.add(nombre).left().pad(10).padRight(10);
+        table.add(valor).left().pad(10).padRight(25);
 
         // 3) Contenedor para el botón "+" y el icono de oro + label con coste
         Table upgradeContainer = new Table();
 
         // 3a) Creamos el botón "+"
-        TextButton.TextButtonStyle plusStyle = new TextButton.TextButtonStyle();
-        plusStyle.font = new BitmapFont(); // O tu font preferida
-        plusStyle.fontColor = Color.BLUE;
-        TextButton plusButton = new TextButton("+", plusStyle);
-
-        // 3b) Creamos el icono de oro
-        Image goldIcon = new Image(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class));
-        goldIcon.setSize(15, 15); // Ajusta el tamaño según quieras
-
-        // 3c) Label con el coste hardcodeado
         BitmapFont font = new BitmapFont();
-        font.getData().markupEnabled = true;
-        Label.LabelStyle costLabelStyle = new Label.LabelStyle(font, Color.BLACK);
-        Label costLabel = new Label("x" + "[BLUE]" + upgradeCost + "[]", costLabelStyle);
-        costLabel.setFontScale(0.8f);
 
-        // 3d) Añadimos todos al contenedor
-        upgradeContainer.add(plusButton).padRight(5);
-        upgradeContainer.add(goldIcon).width(15).height(15).padRight(2);
-        upgradeContainer.add(costLabel).left();
+        TextButton.TextButtonStyle plusStyle = new TextButton.TextButtonStyle();
+        plusStyle.font = font;
+        plusStyle.fontColor = new Color(0,0.75f,0,1);
 
-        // 3e) Añadimos el contenedor como cuarta columna
-        table.add(upgradeContainer).pad(10).padLeft(25);
+        TextButton plusButton = new TextButton("+", plusStyle);
+        Label.LabelStyle shadowStyle = new Label.LabelStyle(font, Color.BLACK);
+        Label plusShadow = new Label("+", shadowStyle);
+        plusShadow.setFontScale(1.33f);
 
-        // Nueva fila
+        plusShadow.setPosition(2, -2);
+
+        Stack plusStack = new Stack();
+        plusStack.add(plusShadow);
+        plusStack.add(plusButton);
+
+        upgradeContainer.add(plusStack).padRight(5);
+        table.add(upgradeContainer).pad(5).padLeft(25);
+
         table.row();
 
         // 4) Listener en el botón

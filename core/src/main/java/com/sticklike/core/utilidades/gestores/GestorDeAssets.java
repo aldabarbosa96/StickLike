@@ -38,6 +38,7 @@ public class GestorDeAssets {
     public static final String ARMA_NUBE_PEDO = "armas/03nubePedo.png";
     public static final String ARMA_NUBE_PEDO_HUD = "armas/03nubePedoHUD.png";
     public static final String ARMA_PAPELCULO = "armas/05papelCulo.png";
+    public static final String ARMA_BOLIBIC = "armas/06boliBic.png";
     // Drops y HUD
     public static final String TROFEO = "hud/trofeo.png";
     public static final String TROFEO2 = "hud/trofeo2.png";
@@ -113,6 +114,7 @@ public class GestorDeAssets {
         manager.load(ARMA_NUBE_PEDO, Texture.class);
         manager.load(ARMA_NUBE_PEDO_HUD, Texture.class);
         manager.load(ARMA_PAPELCULO, Texture.class);
+        manager.load(ARMA_BOLIBIC, Texture.class);
 
         manager.load("armas/05papelCuloImpacto00.png", Texture.class);
         manager.load("armas/05papelCuloImpacto01.png", Texture.class);

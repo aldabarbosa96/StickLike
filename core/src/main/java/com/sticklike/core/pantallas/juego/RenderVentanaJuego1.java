@@ -9,10 +9,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.BoliBic;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
+import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.ui.HUD;
 import com.sticklike.core.utilidades.PoissonPoints;
 
@@ -101,7 +103,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
             }
         }else {
                 // 1) Limpiamos la pantalla
-                if (jugador.getVidaJugador() <= 15) {
+                if (Jugador.getVidaJugador() <= 15) {
                     if (jugador.getRenderJugador().isEnParpadeo()) {
                         Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
                     } else {
@@ -130,12 +132,16 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
 
             spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
         }
-        spriteBatch.end(); // Cerrar SpriteBatch después de dibujar borrones
+        spriteBatch.end(); // Cerramos SpriteBatch después de dibujar borrones
 
         // 4) Renderizamos la cuadrícula
         renderizarLineasCuadricula(camara, jugador);
 
-        // 5) Dibujar sombras de los enemigos
+        spriteBatch.begin();
+        jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
+        spriteBatch.end();
+
+        // 5) Dibujamos sombras de los enemigos
         shapeRenderer.setProjectionMatrix(camara.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         controladorEnemigos.dibujarSombrasEnemigos(shapeRenderer);
@@ -156,14 +162,14 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();
 
-        // 7) Renderizar HUD
+        // 7) Renderizamos HUD
         hud.renderizarHUD(delta);
     }
     public void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        if (jugador.getVidaJugador() <= 15) {
+        if (Jugador.getVidaJugador() <= 15) {
             shapeRenderer.setColor(0.9f, 0.64f, 0.7f, 1f);
         } else {
             shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);

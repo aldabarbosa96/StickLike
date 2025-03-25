@@ -16,6 +16,7 @@ public class RenderParticulasProyectil {
     private float width;
     private Color color;
     private ShapeRenderer shapeRenderer;
+    private float alphaMult = 1f;
 
     public RenderParticulasProyectil(int maxLength, float width, Color color) {
         this.maxLength = maxLength;
@@ -56,9 +57,11 @@ public class RenderParticulasProyectil {
             float x4 = p1.x + halfWidth * MathUtils.cos(angle + MathUtils.PI / 2);
             float y4 = p1.y + halfWidth * MathUtils.sin(angle + MathUtils.PI / 2);
 
-            // Calculamos el valor alpha para el fade
-            float alpha = ((float) i / (positions.size - 1));
+            // Calculamos el valor alpha para el fade y lo multiplicamos por alphaMult para gestionar individualmente a través del setter el alpha
+            float alpha = (((float) i / (positions.size - 1)) * alphaMult);
+            alpha = MathUtils.clamp(alpha, 0f, 1f);
             shapeRenderer.setColor(color.r, color.g, color.b, alpha);
+
 
             // Dibujamos la forma como dos triángulos que forman un cuadrilátero
             shapeRenderer.triangle(x1, y1, x2, y2, x3, y3);
@@ -70,8 +73,11 @@ public class RenderParticulasProyectil {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-
     public void dispose() {
         shapeRenderer.dispose();
+    }
+
+    public void setAlphaMult(float alphaMult) {
+        this.alphaMult = alphaMult;
     }
 }

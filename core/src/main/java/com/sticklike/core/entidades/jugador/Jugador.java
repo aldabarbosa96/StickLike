@@ -33,6 +33,7 @@ public class Jugador {
     private AtaqueTazo ataqueTazo;
     private AtaqueNubePedo ataqueNubePedo;
     private AtaquePapelCulo ataquePapelCulo;
+    private AtaqueBoliBic ataqueBoliBic;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
@@ -88,6 +89,7 @@ public class Jugador {
         this.ataqueTazo = null;
         this.ataqueNubePedo = null;
         this.ataquePapelCulo = null;
+        this.ataqueBoliBic = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
         this.renderParticulasSangre = new RenderParticulasSangre();
@@ -113,6 +115,9 @@ public class Jugador {
             }
             if (ataquePapelCulo != null) {
                 ataquePapelCulo.manejarDisparo(delta, this, gestorDeAudio);
+            }
+            if (ataqueBoliBic != null) {
+                ataqueBoliBic.manejarDisparo(delta,this,gestorDeAudio);
             }
 
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, gestorDeAudio);
@@ -171,7 +176,7 @@ public class Jugador {
     }
 
 
-    public static void aumentarRangoAtaque(float percentage) {
+    public void aumentarRangoAtaque(float percentage) {
         rangoAtaqueJugador += rangoAtaqueJugador * percentage;
     }
 
@@ -348,6 +353,14 @@ public class Jugador {
 
     public AtaqueNubePedo getAtaqueNubePedo() {
         return ataqueNubePedo;
+    }
+
+    public AtaqueBoliBic getAtaqueBoliBic() {
+        return ataqueBoliBic;
+    }
+
+    public void setAtaqueBoliBic(AtaqueBoliBic ataqueBoliBic) {
+        this.ataqueBoliBic = ataqueBoliBic;
     }
 
     public RenderJugador getRenderJugador() {
