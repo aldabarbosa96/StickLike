@@ -156,7 +156,6 @@ public class BoliBic implements Proyectiles {
         }
     }
 
-
     @Override
     public void dispose() {
         dropTexture.dispose();
