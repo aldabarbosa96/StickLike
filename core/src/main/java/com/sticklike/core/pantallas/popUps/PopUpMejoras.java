@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
-import com.sticklike.core.utilidades.gestores.GestorDeAssets;
+import com.sticklike.core.pantallas.menus.renders.RenderBaseMenus;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -35,18 +35,21 @@ import java.util.List;
  * Representa un pop-up que muestra mejoras disponibles para el jugador.
  * Permite al usuario seleccionar una mejora usando teclado, ratón o mando.
  */
-public class PopUpMejoras {
+public class PopUpMejoras extends RenderBaseMenus {
+
+    private static final float EXTRA_BORDE = 12.5f;
+
     private Stage uiStage;
     private Skin uiSkin;
     private SistemaDeMejoras sistemaDeMejoras;
     private VentanaJuego1 ventanaJuego1;
     private Window upgradeWindow;
+    private Group popupGroup;
     private GameInputHandler inputHandler;
     private List<TextButton> improvementButtons;
     private int selectedIndex = 0;
     private boolean popUpAbierto = false;
     private FondoAnimadoPopUp fondoAnimadoPopUp;
-
 
     public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego1 ventanaJuego1) {
         this.ventanaJuego1 = ventanaJuego1;
@@ -60,53 +63,62 @@ public class PopUpMejoras {
     public Skin crearAspectoUI() {
         Skin skin = new Skin();
         BitmapFont font = new BitmapFont();
-        // Registramos la fuente en el Skin para que también se libere al hacer skin.dispose()
         skin.add("default-font", font);
 
-        // 1) Creamos Pixmap y su textura para el fondo de la ventana
+        // Fuente pequeña
+        BitmapFont smallFont = new BitmapFont();
+        smallFont.getData().setScale(0.75f);
+
+        Label.LabelStyle habLabelStyle = new Label.LabelStyle();
+        habLabelStyle.font = smallFont;
+        habLabelStyle.fontColor = Color.BLUE;
+        skin.add("hab", habLabelStyle);
+
+        Label.LabelStyle statLabelStyle = new Label.LabelStyle();
+        statLabelStyle.font = smallFont;
+        statLabelStyle.fontColor = new Color(0f, 0.5f, 0.25f, 1);
+        skin.add("stat", statLabelStyle);
+
+        // Fondo de la ventana
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
+        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f)); // opaco
         pixmap.fill();
         Texture pixmapTexture = new Texture(pixmap);
         pixmap.dispose();
-
         skin.add("windowBackgroundTexture", pixmapTexture, Texture.class);
-        // Usamos la textura registrada para crear el Drawable
+
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(skin.getRegion("windowBackgroundTexture"));
 
-        // 2) Creamos el estilo de la ventana
+        // Estilo de la ventana
         Window.WindowStyle wStyle = new Window.WindowStyle(font, Color.BLUE, backgroundDrawable);
-        // Registramos el estilo en el Skin
         skin.add("default-window", wStyle);
 
-        // 3) Estilo de botón por defecto
+        // Botón por defecto
         TextButton.TextButtonStyle defaultButtonStyle = new TextButton.TextButtonStyle();
         defaultButtonStyle.font = font;
         defaultButtonStyle.fontColor = Color.BLACK;
         skin.add("default-button", defaultButtonStyle);
 
-        // 4) Creamos Pixmap y textura para el estado "seleccionado"
+        // Textura para botón "resaltado"
         Pixmap highlightPixmap = new Pixmap(8, 12, Pixmap.Format.RGBA8888);
         highlightPixmap.setColor(new Color(0.9f, 0.9f, 0.9f, 0.5f));
         highlightPixmap.fill();
         Texture highlightTexture = new Texture(highlightPixmap);
         highlightPixmap.dispose();
-
         skin.add("highlightTexture", highlightTexture, Texture.class);
-        // Creamos el NinePatch a partir de la textura registrada
-        NinePatch highlightNinePatch =
-            new NinePatch(skin.get("highlightTexture", Texture.class), 3, 3, 3, 3);
+
+        NinePatch highlightNinePatch = new NinePatch(skin.get("highlightTexture", Texture.class), 3, 3, 3, 3);
         NinePatchDrawable highlightDrawable = new NinePatchDrawable(highlightNinePatch);
         highlightDrawable.setMinHeight(50);
 
-        // 5) Estilo para botón seleccionado (azul)
+        // Botón seleccionado (azul)
         TextButton.TextButtonStyle selectedButtonStyle = new TextButton.TextButtonStyle();
         selectedButtonStyle.font = font;
         selectedButtonStyle.up = highlightDrawable;
         selectedButtonStyle.fontColor = Color.BLUE;
         skin.add("selected-button", selectedButtonStyle);
 
-        // 6) Estilo para botón seleccionado (verde) cuando no hay icono
+        // Botón seleccionado (verde)
         TextButton.TextButtonStyle selectedButtonGreenStyle = new TextButton.TextButtonStyle();
         selectedButtonGreenStyle.font = font;
         selectedButtonGreenStyle.up = highlightDrawable;
@@ -116,7 +128,6 @@ public class PopUpMejoras {
         return skin;
     }
 
-
     public void mostrarPopUpMejoras(final List<Mejora> mejoras) {
         this.fondoAnimadoPopUp = new FondoAnimadoPopUp();
         ventanaJuego1.setPausado(true);
@@ -125,21 +136,23 @@ public class PopUpMejoras {
         popUpAbierto = true;
         uiStage.addActor(fondoAnimadoPopUp);
 
+        // Creamos la Window
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         upgradeWindow = new Window(POPUP_HEADER, wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
+        upgradeWindow.getTitleLabel().setFontScale(1.2f);
 
         float w = POPUP_WIDTH;
         float h = POPUP_HEIGHT;
         upgradeWindow.setSize(w, h);
-        upgradeWindow.setPosition((VIRTUAL_WIDTH - w) / 2f, (VIRTUAL_HEIGHT - h + POPUP_POSITION_CORRECTION) / 2f);
         upgradeWindow.padTop(POPUP_HEADER_PADDING);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
-        upgradeWindow.getTitleTable().padTop(15);
+        upgradeWindow.getTitleTable().padTop(15).padBottom(-35);
 
         improvementButtons.clear();
 
+        // Añadimos filas con las mejoras
         for (int i = 0; i < mejoras.size(); i++) {
             if (i >= POPUP_BUTTON_LABELS.length) break;
 
@@ -148,7 +161,6 @@ public class PopUpMejoras {
 
             TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
             TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora() + POPUP_FOOTER2, tbs);
-            // Asociamos la mejora al botón para usarlo en la lógica de resaltado
             btn.setUserObject(mejora);
             btn.getLabel().setWrap(true);
             btn.getLabel().setAlignment(Align.center);
@@ -157,15 +169,19 @@ public class PopUpMejoras {
             rowTable.pad(POPUP_ROW_PADDING + 5f);
             rowTable.defaults().center();
 
-            rowTable.add().width(25).padLeft(8).padRight(-5f); // Espaciado a la izquierda
-            rowTable.add(btn).expandX().fillX().center(); // Centrar el botón
+            // Etiqueta de tipo
+            String estiloLabel = mejora.getTipoMejora().equals("HAB") ? "hab" : "stat";
+            Label labelTipo = new Label(mejora.getTipoMejora(), uiSkin, estiloLabel);
+
+            rowTable.add(labelTipo).width(25).padLeft(8).padRight(-5f);
+            rowTable.add(btn).expandX().fillX().center();
 
             if (mejora.getIcono() != null) {
                 Image iconImage = new Image(mejora.getIcono());
                 Container<Image> iconContainer = new Container<>(iconImage);
-                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-5f).height(25); // Icono a la derecha
+                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-5f).height(25);
             } else {
-                rowTable.add().width(25); // Espacio adicional para centrar si no tiene icono la mejora
+                rowTable.add().width(25);
             }
 
             upgradeWindow.row();
@@ -187,9 +203,28 @@ public class PopUpMejoras {
             updateButtonHighlight();
         }
 
-        uiStage.addActor(upgradeWindow);
+        // Grupo que contendrá la sombra + la ventana, con margen extra
+        popupGroup = new Group();
+        // El Group es un poco más grande para que se vea el borde alrededor
+        float totalWidth = w + EXTRA_BORDE * 2;
+        float totalHeight = h + EXTRA_BORDE * 2;
+        popupGroup.setSize(totalWidth, totalHeight);
+        float posX = (VIRTUAL_WIDTH - w) / 2f - EXTRA_BORDE;
+        float posY = (VIRTUAL_HEIGHT - h + POPUP_POSITION_CORRECTION) / 2f - EXTRA_BORDE;
+        popupGroup.setPosition(posX, posY);
+
+        Image borderImage = new Image(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
+        borderImage.setSize(totalWidth, totalHeight);
+        popupGroup.addActor(borderImage);
+
+        // Añadimos la Window centrada en (EXTRA_BORDE, EXTRA_BORDE) para que el borde quede alrededor
+        upgradeWindow.setPosition(EXTRA_BORDE, EXTRA_BORDE);
+        popupGroup.addActor(upgradeWindow);
+
+        uiStage.addActor(popupGroup);
         uiStage.setKeyboardFocus(upgradeWindow);
 
+        // Ajuste de inputs
         Controllers.removeListener(ventanaJuego1.getMenuPause().getInputsMenu());
         InputMultiplexer im = new InputMultiplexer(inputHandler, uiStage);
         Gdx.input.setInputProcessor(im);
@@ -203,7 +238,6 @@ public class PopUpMejoras {
 
         for (int i = 0; i < improvementButtons.size(); i++) {
             TextButton btn = improvementButtons.get(i);
-            // Recuperamos la mejora asociada
             Mejora mejora = (Mejora) btn.getUserObject();
             if (i == selectedIndex) {
                 if (mejora.getIcono() != null) {
@@ -222,8 +256,10 @@ public class PopUpMejoras {
         Controllers.addListener(ventanaJuego1.getMenuPause().getInputsMenu());
         sistemaDeMejoras.aplicarMejora(mejoras.get(index));
         ventanaJuego1.getRenderHUDComponents().setHabilidadesActivas(sistemaDeMejoras.getHabilidadesActivas());
-        upgradeWindow.remove();
+
+        popupGroup.remove();
         fondoAnimadoPopUp.remove();
+
         ventanaJuego1.setPausado(false);
         ventanaJuego1.getRenderHUDComponents().reanudarTemporizador();
         ventanaJuego1.getMenuPause().bloquearInputs(false);
@@ -246,6 +282,11 @@ public class PopUpMejoras {
 
     public boolean isPopUpAbierto() {
         return popUpAbierto;
+    }
+
+    @Override
+    public void animarSalida(Runnable callback) {
+        // Implementar animación de salida si fuera necesario
     }
 
     /**

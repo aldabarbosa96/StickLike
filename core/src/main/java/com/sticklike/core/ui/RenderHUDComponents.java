@@ -11,14 +11,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.progreso.Mejora;
@@ -81,6 +79,7 @@ public class RenderHUDComponents {
         hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply();
         hudStage = new Stage(hudViewport, spriteBatch);
+        MensajesChat.init(hudStage);
     }
 
     public void renderizarTemporizador(float delta) {
@@ -458,4 +457,5 @@ public class RenderHUDComponents {
     public boolean isPausadoTemporizador() {
         return pausadoTemporizador;
     }
+
 }

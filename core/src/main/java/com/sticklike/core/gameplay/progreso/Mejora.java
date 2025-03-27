@@ -46,6 +46,13 @@ public class Mejora {
         return idHabilidad;
     }
 
+    public String getTipoMejora() {
+        if (idHabilidad != null) {
+            return idHabilidad.contains("_") ? "STAT" : "HAB";
+        }
+        return "STAT";
+    }
+
     public Texture getIcono() {
         return texture;
     }

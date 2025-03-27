@@ -62,7 +62,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡PAPELCULO!",
             "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()),1, manager.get(ARMA_PAPELCULO, Texture.class),"PAPEL"));
         todasLasMejoras.add(new Mejora("BOLIBIC PETAO",
-            "Lanza goterones de tinta desde el cielo",()-> jugador.setAtaqueBoliBic(new AtaqueBoliBic()),1,manager.get(ARMA_BOLIBIC,Texture.class),"BOLI"));
+            "Llueven bolis bic con explosión de tinta",()-> jugador.setAtaqueBoliBic(new AtaqueBoliBic()),1,manager.get(ARMA_BOLIBIC,Texture.class),"BOLI"));
 
         // Upgrades específicos para las habilidades
         // Calcetín

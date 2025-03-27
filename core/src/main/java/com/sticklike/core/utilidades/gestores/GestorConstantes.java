@@ -61,7 +61,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Pop_up
     // -------------------------------------------------
-    public static final float POPUP_WIDTH = 325f * 1.4814814815f;
+    public static final float POPUP_WIDTH = 330f * 1.4814814815f;
     public static final float POPUP_HEIGHT = 375f * 1.09375f;
     public static final float POPUP_HEADER_PADDING = 50f;
     public static final float POPUP_ROW_PADDING = 8f;

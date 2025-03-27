@@ -7,6 +7,7 @@ import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
+import com.sticklike.core.ui.MensajesChat;
 import com.sticklike.core.ui.RenderHUDComponents;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
@@ -77,7 +78,8 @@ public class SistemaDeEventos {
             public void run() {
                 restaurarSpawnNormal();
             }
-        }, 10); // duración efecto
+        }, 7); // duración efecto
+        MensajesChat.getInstance().addMessage("StickMan: ", "Mmm cuántas pollitas...");
     }
 
     private void restaurarSpawnNormal() {

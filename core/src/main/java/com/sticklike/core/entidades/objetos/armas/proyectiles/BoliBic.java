@@ -70,7 +70,7 @@ public class BoliBic implements Proyectiles {
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(40, 5.25f, new Color(0.15f, 0.15f, 0.75f, 1));
+        this.renderParticulasProyectil = new RenderParticulasProyectil(38, 5.25f, new Color(0.15f, 0.15f, 0.75f, 1));
         this.centroSprite = new Vector2();
     }
 

@@ -11,6 +11,7 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
+import com.sticklike.core.ui.MensajesChat;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
@@ -175,6 +176,7 @@ public class VentanaJuego1 implements Screen {
                 musicChanged = true;
             }
             actualizarLogica(delta, gestorDeAudio);
+
         } else {
             gestorDeAudio.pausarMusica();
         }

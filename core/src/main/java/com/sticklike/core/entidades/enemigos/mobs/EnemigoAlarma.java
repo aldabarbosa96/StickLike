@@ -37,7 +37,7 @@ public class EnemigoAlarma implements Enemigo {
     public EnemigoAlarma(float x, float y, Jugador jugador) {
         sprite = new Sprite(escogerTextura());
         sprite.setPosition(x, y);
-        sprite.setSize(20, 20);
+        sprite.setSize(32, 32);
         this.jugador = jugador;
         this.movimientoAlarma = new MovimientoCulo(velocidadBase, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
