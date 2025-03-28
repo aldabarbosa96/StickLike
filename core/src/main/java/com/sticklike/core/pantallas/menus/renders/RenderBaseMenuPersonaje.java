@@ -113,7 +113,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         BitmapFont font = new BitmapFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-        Label goldLabel = new Label("[DARK_GRAY]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
+        Label goldLabel = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
         goldLabel.setFontScale(1.2f);
         container.add(goldIcon).width(40).height(40).padRight(5).padLeft(15);
         container.add(goldLabel).left();
@@ -130,7 +130,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         BitmapFont font = new BitmapFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-        Label powerupLabel = new Label("[DARK_GRAY]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
+        Label powerupLabel = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
         powerupLabel.setFontScale(1.2f);
         container.add(powerupIcon).padRight(5).padLeft(5);
         container.add(powerupLabel).left();
@@ -206,25 +206,25 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         Label.LabelStyle statsLabelStyle = new Label.LabelStyle(font, Color.WHITE);
 
         // Creación de etiquetas para cada estadística
-        Label statVidaName = new Label("[DARK_GRAY]Vida total:[]", statsLabelStyle);
+        Label statVidaName = new Label("[BLACK]Vida total:[]", statsLabelStyle);
         Label statVidaValue = new Label("[BLUE]" + Jugador.getMaxVidaJugador() + "[]", statsLabelStyle);
-        Label statRegName = new Label("[DARK_GRAY]Regeneración de vida:[]", statsLabelStyle);
+        Label statRegName = new Label("[BLACK]Regeneración de vida:[]", statsLabelStyle);
         Label statRegValue = new Label("[BLUE]" + Jugador.getRegVidaJugador() + "[]", statsLabelStyle);
-        Label statDanyoName = new Label("[DARK_GRAY]Fuerza física:[]", statsLabelStyle);
+        Label statDanyoName = new Label("[BLACK]Fuerza física:[]", statsLabelStyle);
         Label statDanyoValue = new Label("[BLUE]" + Jugador.getDanyoAtaqueJugador() + "[]", statsLabelStyle);
-        Label statRangoName = new Label("[DARK_GRAY]Rango de alcance:[]", statsLabelStyle);
+        Label statRangoName = new Label("[BLACK]Rango de alcance:[]", statsLabelStyle);
         Label statRangoValue = new Label("[BLUE]" + Jugador.getRangoAtaqueJugador() + "[]", statsLabelStyle);
-        Label statVelAtaqueName = new Label("[DARK_GRAY]Velocidad de ataque:[]", statsLabelStyle);
+        Label statVelAtaqueName = new Label("[BLACK]Velocidad de ataque:[]", statsLabelStyle);
         Label statVelAtaqueValue = new Label("[BLUE]" + Jugador.getVelocidadAtaque() + "[]", statsLabelStyle);
-        Label statMunicionName = new Label("[DARK_GRAY]Munición por disparo:[]", statsLabelStyle);
+        Label statMunicionName = new Label("[BLACK]Munición por disparo:[]", statsLabelStyle);
         Label statMunicionValue = new Label("[BLUE]" + Jugador.getProyectilesPorDisparo() + "[]", statsLabelStyle);
-        Label statCriticoName = new Label("[DARK_GRAY]Probabilidad de crítico:[]", statsLabelStyle);
+        Label statCriticoName = new Label("[BLACK]Probabilidad de crítico:[]", statsLabelStyle);
         Label statCriticoValue = new Label("[BLUE]" + Jugador.getCritico() + "[]", statsLabelStyle);
-        Label statPoderName = new Label("[DARK_GRAY]Poder mágico:[]", statsLabelStyle);
+        Label statPoderName = new Label("[BLACK]Poder mágico:[]", statsLabelStyle);
         Label statPoderValue = new Label("[BLUE]" + Jugador.getPoderJugador() + "[]", statsLabelStyle);
-        Label statVelMovimientoName = new Label("[DARK_GRAY]Velocidad de movimiento:[]", statsLabelStyle);
+        Label statVelMovimientoName = new Label("[BLACK]Velocidad de movimiento:[]", statsLabelStyle);
         Label statVelMovimientoValue = new Label("[BLUE]" + Jugador.getVelocidadJugador() + "[]", statsLabelStyle);
-        Label statResistenciaName = new Label("[DARK_GRAY]Resistencia:[]", statsLabelStyle);
+        Label statResistenciaName = new Label("[BLACK]Resistencia:[]", statsLabelStyle);
         Label statResistenciaValue = new Label("[BLUE]" + Jugador.getResistenciaJugador() + "[]", statsLabelStyle);
 
         // Ajustamos la escala de fuente para cada etiqueta
@@ -459,9 +459,9 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
             iconClone.setScaleX(0.5f);
             iconClone.setScaleY(0.75f);
 
-            Label itemLabel = new Label("[DARK_GRAY]" + items[i] + "[]", labelStyle);
+            Label itemLabel = new Label("[BLACK]" + items[i] + "[]", labelStyle);
             itemLabel.setFontScale(1);
-            Label cantidadLabel = new Label("[DARK_GRAY]x[]" + "[BLUE]" + cantidades[i] + "[]", labelStyle);
+            Label cantidadLabel = new Label("[BLACK]x[]" + "[BLUE]" + cantidades[i] + "[]", labelStyle);
             cantidadLabel.setFontScale(1);
 
             row.add(itemLabel).minWidth(75).padRight(10);

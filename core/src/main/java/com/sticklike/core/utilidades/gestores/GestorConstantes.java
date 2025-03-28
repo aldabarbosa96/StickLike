@@ -133,8 +133,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float CRITICO = 0.07f;
     public static final float REGENERACION_VIDA = 0.001f;
     public static final float PODER_JUGADOR = 10f;
-    public static final float WIDTH_JUGADOR = 12f;
-    public static final float HEIGHT_JUGADOR = 34f;
+    public static final float WIDTH_JUGADOR = 14f;
+    public static final float HEIGHT_JUGADOR = 36f;
     public static final float PARPADEO_JUGADOR_DANYO = 0.2f;
     public static final float PARPADEO_JUGADOR_VIDA = 0.2f;
 
@@ -263,6 +263,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_PWUP_WIDTH = 8f;
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
+    public static final float VIDA_DESTRUCTIBLE2 = 75f;
     public static final float ANCHO_DESTRUCT = 40f;
     public static final float ALTO_DESTRUCT = 36f;
     public static final float ANCHO_DESTRUCT1 = 44f;
@@ -271,6 +272,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ALTO_DESTRUCT2 = 40f;
     public static final float ANCHO_DESTRUCT3 = 38f;
     public static final float ALTO_DESTRUCT3 = 40f;
+    public static final float ANCHO_DESTRUCT_LATA = 40f;
+    public static final float ALTO_DESTRUCT_LATA = 60f;
     public static final float ANCHO_BOOST = 18f;
     public static final float ALTO_BOOST = 18f;
 
@@ -301,7 +304,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración borrones
     // -------------------------------------------------
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;
-    public static final float MIN_DIST_SAME_TEXTURE2 = 500f;
+    public static final float MIN_DIST_SAME_TEXTURE2 = 750;
     public static final int MAX_ATTEMPTS = 5;
     public static final int CANTIDAD_BORRONES = 1000; // todo --> dibujar más borrones
     public static final float MAP_MIN_X = -10000;

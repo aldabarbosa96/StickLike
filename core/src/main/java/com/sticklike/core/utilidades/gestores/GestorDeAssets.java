@@ -58,6 +58,8 @@ public class GestorDeAssets {
     public static final String DESTRUCTIBLE2_DMG = "destructibles/patatasD.png";
     public static final String DESTRUCTIBLE3 = "destructibles/pizza.png";
     public static final String DESTRUCTIBLE3_DMG = "destructibles/pizzaD.png";
+    public static final String DESTRUCTIBLE_LATA = "destructibles/lata.png";
+    public static final String DESTRUCTIBLE_LATA_DMG = "destructibles/lataD.png";
     public static final String ICONO_VEL_MOV = "hud/vel_mov.png";
     public static final String ICONO_FUERZA = "hud/fuerza.png";
     public static final String ICONO_PODER = "hud/poder_ataque.png";
@@ -138,6 +140,8 @@ public class GestorDeAssets {
         manager.load(DESTRUCTIBLE2_DMG, Texture.class);
         manager.load(DESTRUCTIBLE3, Texture.class);
         manager.load(DESTRUCTIBLE3_DMG, Texture.class);
+        manager.load(DESTRUCTIBLE_LATA, Texture.class);
+        manager.load(DESTRUCTIBLE_LATA_DMG, Texture.class);
 
         manager.load(ICONO_VEL_MOV, Texture.class);
         manager.load(ICONO_FUERZA, Texture.class);

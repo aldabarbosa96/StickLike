@@ -48,7 +48,7 @@ public class Mejora {
 
     public String getTipoMejora() {
         if (idHabilidad != null) {
-            return idHabilidad.contains("_") ? "STAT" : "HAB";
+            return idHabilidad.isEmpty() ? "STAT" : "HAB";
         }
         return "STAT";
     }

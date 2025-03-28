@@ -57,13 +57,13 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         float random = MathUtils.random(10);
         if (random >= 2.5f) {
             sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
-            sprite.setSize(26, 22);
+            sprite.setSize(28, 24);
         } else {
             tieneOjo = true;
             spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
-            spriteOjoAbierto.setSize(30, 26);
+            spriteOjoAbierto.setSize(32, 28);
             spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
-            spriteOjoCerrado.setSize(30, 26);
+            spriteOjoCerrado.setSize(32, 28);
             sprite = new Sprite(spriteOjoAbierto);
             vidaEnemigo = VIDA_ENEMIGOCULO * 2;
         }

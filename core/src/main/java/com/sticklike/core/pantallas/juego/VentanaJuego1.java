@@ -11,7 +11,7 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
-import com.sticklike.core.ui.MensajesChat;
+import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
@@ -25,10 +25,7 @@ import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.pantallas.popUps.PopUpMejoras;
 import com.sticklike.core.pantallas.gameOver.VentanaGameOver;
-import com.sticklike.core.ui.HUD;
 import com.sticklike.core.gameplay.progreso.Mejora;
-import com.sticklike.core.ui.Pausa;
-import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -91,6 +88,9 @@ public class VentanaJuego1 implements Screen {
         this.currentScreenWidth = screenWidth;
         this.currentScreenHeight = screenHeight;
 
+        MensajesChat.reset();
+        MensajesChatData.getInstance().reset();
+
         inicializarRenderYCamara();
         inicializarJugador();
         inicializarSistemasYControladores();
@@ -100,6 +100,7 @@ public class VentanaJuego1 implements Screen {
 
         // Ajustar la posición de la cámara
         actualizarPosCamara();
+        MensajesChat.getInstance().addMessage("StickMan","Ah shit! Here we go again . . .");
     }
 
     private void inicializarRenderYCamara() {
@@ -154,6 +155,7 @@ public class VentanaJuego1 implements Screen {
     public void show() {
         pausado = false;
         Gdx.input.setInputProcessor(null);
+
     }
 
     @Override

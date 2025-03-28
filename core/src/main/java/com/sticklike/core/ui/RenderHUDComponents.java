@@ -55,6 +55,7 @@ public class RenderHUDComponents {
     private String tiempoFormateado;
     private boolean pausadoTemporizador = false;
     private Stage hudStage;
+    private Stage chatlogStage;
     private Set<String> upgradeStats = new HashSet<>();
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
@@ -79,7 +80,8 @@ public class RenderHUDComponents {
         hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply();
         hudStage = new Stage(hudViewport, spriteBatch);
-        MensajesChat.init(hudStage);
+        chatlogStage = new Stage(hudViewport, spriteBatch);
+        MensajesChat.init(chatlogStage, this);
     }
 
     public void renderizarTemporizador(float delta) {
@@ -448,6 +450,10 @@ public class RenderHUDComponents {
 
     public Stage getHudStage() {
         return hudStage;
+    }
+
+    public Stage getChatlogStage() {
+        return chatlogStage;
     }
 
     public float getTiempoTranscurrido() {

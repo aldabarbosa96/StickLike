@@ -361,9 +361,9 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 
-        Label labelCacadorada = new Label("[DARK_GRAY]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
-        Label labelPowerup = new Label("[DARK_GRAY]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
-        Label labelTrofeo = new Label("[BLUE]?[][DARK_GRAY]/?[]", labelStyle);
+        Label labelCacadorada = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
+        Label labelPowerup = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
+        Label labelTrofeo = new Label("[BLUE]?[][BLACK]/?[]", labelStyle);
 
         labelCacadorada.setFontScale(1.2f);
         labelPowerup.setFontScale(1.2f);

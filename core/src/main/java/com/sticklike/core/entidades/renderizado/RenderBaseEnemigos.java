@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
+import com.sticklike.core.entidades.enemigos.destructibles.Destructibles2;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
-import com.sticklike.core.entidades.enemigos.mobs.Destructibles;
-import com.sticklike.core.entidades.objetos.recolectables.Boost;
+import com.sticklike.core.entidades.enemigos.destructibles.Destructibles;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -65,12 +65,14 @@ public class RenderBaseEnemigos {
                 dibujarSombraRegla((EnemigoRegla) enemigo, shapeRenderer);
             } else if (enemigo instanceof Destructibles) {
                 dibujarSombraDestructible((Destructibles) enemigo, shapeRenderer);
-
+            } else if (enemigo instanceof Destructibles2) {
+                dibujarSombraDestructible2((Destructibles2) enemigo, shapeRenderer);
             } else {
                 dibujarSombraVater(enemigo, shapeRenderer);
             }
         }
     }
+
 
     private void dibujarParpadeoSombra(Enemigo enemigo, ShapeRenderer shapeRenderer) {
         if (enemigo.getAnimaciones().estaEnParpadeo()) {
@@ -95,6 +97,7 @@ public class RenderBaseEnemigos {
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
 
     }
+
     private void dibujarSombraDestructible(Destructibles destructible, ShapeRenderer shapeRenderer) {
         float x = destructible.getX();
         float y = destructible.getY();
@@ -111,6 +114,21 @@ public class RenderBaseEnemigos {
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
+
+    private void dibujarSombraDestructible2(Destructibles2 enemigo, ShapeRenderer shapeRenderer) {
+        getEnemyCenter(enemigo, x, y, w, h);
+
+        float centerX = x + w / 2f;
+
+        float shadowWidth = w;
+        float shadowHeight = h * 0.25f;
+        float shadowX = centerX - (shadowWidth / 2f);
+        float shadowY = y - 5;
+
+        dibujarParpadeoSombra(enemigo, shapeRenderer);
+        shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
+
+    }
 
     private void dibujarSombraCulo(EnemigoCulo culo, ShapeRenderer shapeRenderer) {
         getEnemyCenter(culo, x, y, w, h);

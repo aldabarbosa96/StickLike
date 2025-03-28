@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.enemigos.destructibles.Destructibles2;
 import com.sticklike.core.entidades.enemigos.mobs.*;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.enemigos.mobs.Destructibles;
+import com.sticklike.core.entidades.enemigos.destructibles.Destructibles;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
@@ -25,7 +26,6 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Clase que gestiona el spawn, actualización y render de enemigos (se incluyen destructibles por tratarse como enemigos).
  */
 public class ControladorEnemigos {
-
     private final VentanaJuego1 ventanaJuego1;
     private final Array<Enemigo> enemigos = new Array<>();
     private final Jugador jugador;
@@ -37,9 +37,11 @@ public class ControladorEnemigos {
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
     private boolean bossSpawned = false;
     private final RenderBaseEnemigos renderBaseEnemigos;
-    private static final int MAX_ENEMIGOS = 999;
+    private static final int MAX_ENEMIGOS = 1350;
     private static final int MAX_DESTRUCTIBLES = 250;
+    private static final int MAX_DESTRUCTIBLES2 = 500;
     private boolean destructiblesSpawned = false; // para asegurarnos que solo spawnean 1 vez
+    private boolean yaSpawneadosDestructibles2 = false;
     private boolean ventanaRedimensionada = false;
     private float temporizadorRedimension = 0f;
     private static final float TIEMPO_ESPERA_REDIMENSION = 0.5f;
@@ -57,8 +59,8 @@ public class ControladorEnemigos {
         this.renderBaseEnemigos = new RenderBaseEnemigos();
 
         spawnDestructibles();
+        spawnDestructibles2();
     }
-
 
     public void actualizarSpawnEnemigos(float delta) {
         if (jugador.estaMuerto()) {
@@ -68,7 +70,6 @@ public class ControladorEnemigos {
         if (temporizadorGruposExamen > 0) {
             temporizadorGruposExamen -= delta;
         }
-
         // Spawn periódico de enemigos normales
         temporizadorDeAparicion += delta;
         if (temporizadorDeAparicion >= intervaloDeAparicion) {
@@ -90,8 +91,7 @@ public class ControladorEnemigos {
                 killCounter++;
 
                 // Si el enemigo es un destructible, suelta un boost
-                if (enemigo instanceof Destructibles) {
-                    Destructibles destructible = (Destructibles) enemigo;
+                if (enemigo instanceof Destructibles destructible) {
                     Boost boost = destructible.sueltaBoost(ventanaJuego1.getRenderHUDComponents());
                     ventanaJuego1.addXPObject(boost);
                 } else {
@@ -190,7 +190,6 @@ public class ControladorEnemigos {
         enemigos.add(enemigo);
     }
 
-
     public void spawnDestructibles() {
         if (destructiblesSpawned) {
             return;
@@ -230,6 +229,63 @@ public class ControladorEnemigos {
         destructiblesSpawned = true;
     }
 
+    public void spawnDestructibles2() {
+        // Evitamos respawn múltiple
+        if (yaSpawneadosDestructibles2) {
+            return;
+        }
+        yaSpawneadosDestructibles2 = true;
+
+        Vector2 firstPos = getSpawnPositionNearPlayer(500f, 500f);
+
+        Destructibles2 d2 = new Destructibles2(firstPos.x, firstPos.y, renderBaseEnemigos);
+        enemigos.add(d2);
+
+        int count = 1;
+        Array<Vector2> candidatePositions = PoissonPoints.getInstance().generatePoissonPoints(MAP_MIN_X, MAP_MIN_Y, MAP_MAX_X, MAP_MAX_Y, MIN_DIST_SAME_TEXTURE2, 30);
+        candidatePositions.shuffle();
+
+        float playerCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
+        float playerCenterY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
+        Vector2 playerCenter = new Vector2(playerCenterX, playerCenterY);
+
+        for (Vector2 candidateCenter : candidatePositions) {
+            if (candidateCenter.dst(playerCenter) < 750) {
+                continue;
+            }
+            float spawnX = candidateCenter.x - ANCHO_DESTRUCT / 2f;
+            float spawnY = candidateCenter.y - ALTO_DESTRUCT / 2f;
+
+            if (spawnX < MAP_MIN_X || spawnX + ANCHO_DESTRUCT > MAP_MAX_X || spawnY < MAP_MIN_Y || spawnY + ALTO_DESTRUCT > MAP_MAX_Y) {
+                continue;
+            }
+            Destructibles2 d2rest = new Destructibles2(spawnX, spawnY, renderBaseEnemigos);
+            enemigos.add(d2rest);
+            count++;
+
+            if (count >= MAX_DESTRUCTIBLES2) {
+                break;
+            }
+        }
+    }
+
+    private Vector2 getSpawnPositionNearPlayer(float minDistance, float maxDistance) {
+        float playerX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
+        float playerY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
+
+        float angle = MathUtils.random(0, MathUtils.PI2);
+        float distance = (minDistance == maxDistance) ? minDistance : MathUtils.random(minDistance, maxDistance);
+
+        float spawnX = playerX + MathUtils.cos(angle) * distance;
+        float spawnY = playerY + MathUtils.sin(angle) * distance;
+
+        spawnX = MathUtils.clamp(spawnX, MAP_MIN_X, MAP_MAX_X - ANCHO_DESTRUCT_LATA - 50f);
+        spawnY = MathUtils.clamp(spawnY, MAP_MIN_Y, MAP_MAX_Y - ALTO_DESTRUCT_LATA - 50f);
+
+        return new Vector2(spawnX, spawnY);
+    }
+
+
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {
         switch (tipoEnemigo) {
             case "CULO":
@@ -264,7 +320,7 @@ public class ControladorEnemigos {
         float bottomBound = ventanaJuego1.getOrtographicCamera().position.y - (ventanaJuego1.getViewport().getWorldHeight() / 2) - margin;
         float topBound = ventanaJuego1.getOrtographicCamera().position.y + (ventanaJuego1.getViewport().getWorldHeight() / 2) + margin;
         for (Enemigo enemigo : enemigos) {
-            if (enemigo instanceof Destructibles) {
+            if (enemigo instanceof Destructibles || enemigo instanceof Destructibles2) {
                 continue;
             }
             Sprite sprite = enemigo.getSprite();

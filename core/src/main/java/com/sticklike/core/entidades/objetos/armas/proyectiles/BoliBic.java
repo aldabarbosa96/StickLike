@@ -230,19 +230,18 @@ public class BoliBic implements Proyectiles {
 
     @Override
     public boolean isPersistente() {
-        return estadoBoli == EstadoBoli.EXPLODED;
+        return true;
     }
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        if (estadoBoli == EstadoBoli.FALLING) {
-            Rectangle enemyRect = enemigo.getSprite().getBoundingRectangle();
-            this.x = enemyRect.x + enemyRect.width / 2 - this.width / 2;
-            this.y = enemyRect.y + enemyRect.height / 2 - this.height / 2;
-            explotar();
+        if (!enemigosImpactados.contains(enemigo)) {
+            enemigo.reducirSalud(getBaseDamage());
+
+            enemigosImpactados.add(enemigo);
         }
-        enemigosImpactados.add(enemigo);
     }
+
 
     @Override
     public boolean yaImpacto(Enemigo enemigo) {

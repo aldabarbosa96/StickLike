@@ -8,6 +8,7 @@ import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.MensajesChat;
+import com.sticklike.core.ui.MensajesChatData;
 import com.sticklike.core.ui.RenderHUDComponents;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
@@ -26,6 +27,7 @@ public class SistemaDeEventos {
     private ControladorEnemigos controladorEnemigos;
     private SistemaDeNiveles sistemaDeNiveles;
     private boolean efectoPollaEjecutado = false;
+    private boolean activado = false;
 
 
     public SistemaDeEventos(RenderHUDComponents renderHUDComponents, ControladorEnemigos controladorEnemigos, SistemaDeNiveles sistemaDeNiveles) {
@@ -79,7 +81,6 @@ public class SistemaDeEventos {
                 restaurarSpawnNormal();
             }
         }, 7); // duración efecto
-        MensajesChat.getInstance().addMessage("StickMan: ", "Mmm cuántas pollitas...");
     }
 
     private void restaurarSpawnNormal() {
@@ -103,8 +104,9 @@ public class SistemaDeEventos {
         Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
     public void actualizar() {
+        MensajesChatData.getInstance().mostrarMensajeCulos(renderHUDComponents);
+        MensajesChatData.getInstance().update(renderHUDComponents);
         int nivelActual = sistemaDeNiveles.getNivelActual();
-
         if (!eventos.isEmpty()) {
             Evento siguienteEvento = eventos.peek();
             if (nivelActual >= siguienteEvento.getNivelRequerido()) {
@@ -112,6 +114,7 @@ public class SistemaDeEventos {
                     return;
                 }
                 Evento evento = eventos.poll();
+                assert evento != null;
                 Gdx.app.log("Act. Eventos.", "Activando evento: " + evento.getNombreEvento() + " [nivel requerido: " + evento.getNivelRequerido() + "]");
                 evento.applyEvento();
                 return;

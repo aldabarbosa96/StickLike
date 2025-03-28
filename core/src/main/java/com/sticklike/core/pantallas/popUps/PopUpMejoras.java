@@ -175,6 +175,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
             rowTable.add(labelTipo).width(25).padLeft(8).padRight(-5f);
             rowTable.add(btn).expandX().fillX().center();
+            labelTipo.toFront();
 
             if (mejora.getIcono() != null) {
                 Image iconImage = new Image(mejora.getIcono());

@@ -70,8 +70,10 @@ public class HUD {
         renderHUDComponents.renderizarMarcosMejoras();
         spriteBatch.end();
 
-        MensajesChat.getInstance().update(delta);
+        MensajesChat.getInstance().update();
 
+        renderHUDComponents.getChatlogStage().act(delta);
+        renderHUDComponents.getChatlogStage().draw();
         renderHUDComponents.getHudStage().act(delta);
         renderHUDComponents.getHudStage().draw();
     }
