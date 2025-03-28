@@ -135,7 +135,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         spriteBatch.end(); // Cerramos SpriteBatch después de dibujar borrones
 
         // 4) Renderizamos la cuadrícula
-        renderizarLineasCuadricula(camara, jugador);
+        renderizarLineasCuadricula(camara);
 
         spriteBatch.begin();
         jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
@@ -165,7 +165,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         // 7) Renderizamos HUD
         hud.renderizarHUD(delta);
     }
-    public void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
+    public void renderizarLineasCuadricula(OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 

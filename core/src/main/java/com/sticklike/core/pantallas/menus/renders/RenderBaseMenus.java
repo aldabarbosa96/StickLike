@@ -111,7 +111,7 @@ public abstract class RenderBaseMenus {
         shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
-        float cellSize = 75;
+        float cellSize = 32;
         float startX = stage.getCamera().position.x - stage.getViewport().getWorldWidth() / 2;
         float endX = stage.getCamera().position.x + stage.getViewport().getWorldWidth() / 2;
         float startY = stage.getCamera().position.y - stage.getViewport().getWorldHeight() / 2;
@@ -179,7 +179,7 @@ public abstract class RenderBaseMenus {
     }
 
     private void agregarVersionLabel() {
-        Label versionLabel = new Label("v1.10.9-dev", uiSkin);
+        Label versionLabel = new Label("v1.10.13-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
         versionLabel.setColor(Color.BLUE);
 

@@ -158,7 +158,7 @@ public class BoliBic implements Proyectiles {
 
     @Override
     public void dispose() {
-        dropTexture.dispose();
+        dropTexture = null;
     }
 
     private void generarStains() {
@@ -171,8 +171,8 @@ public class BoliBic implements Proyectiles {
         stainScaleX = new float[numStains];
         stainScaleY = new float[numStains];
         for (int i = 0; i < numStains; i++) {
-            stainOffsetX[i] = MathUtils.random(-10, 10);
-            stainOffsetY[i] = MathUtils.random(-10, 10);
+            stainOffsetX[i] = MathUtils.random(-7.5f, 7.5f);
+            stainOffsetY[i] = MathUtils.random(-7.5f, 7.5f);
             stainSizes[i] = MathUtils.random(4, 8);
             // Para simular que se han "chafado" al explotar usamos factor de escala en X mayor a 1 (más ancho) y en Y menor que 1 (más bajo)
             stainScaleX[i] = MathUtils.random(1.3f, 1.7f);

@@ -23,7 +23,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // CONFIGURACIÓN DEL HUD
     // -------------------------------------------------
     public static final float HUD_HEIGHT = 175f;
-    public static final float GRID_CELL_SIZE = 38f * 1.09375f;
+    public static final float GRID_CELL_SIZE = 32;
     public static final float GRID_CELL_SIZE_CORRECTION = 18f * 1.09375f;
     public static final float HUD_BAR_WIDTH = 200f * 1.4814814815f;
     public static final float HUD_BAR_HEIGHT = 11.5f * 1.09375f;
