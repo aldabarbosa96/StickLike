@@ -1,8 +1,10 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoPolla;
@@ -12,6 +14,7 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -48,27 +51,44 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
-        movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
 
-        if (temporizadorDanyo > 0) {
-            temporizadorDanyo -= delta;
+        if (vidaEnemigo > 0) {
+            movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
+            animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+            animacionesBaseEnemigos.actualizarFade(delta);
+            if (temporizadorDanyo > 0) {
+                temporizadorDanyo -= delta;
+            }
+            animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        } else {
+            movimientoPolla.actualizarSoloKnockback(delta, sprite);
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+            }
         }
     }
 
+
     @Override
     public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch, this);
+        if (vidaEnemigo > 0) {
+            renderBaseEnemigos.dibujarEnemigos(batch, this);
+        } else {
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                sprite.draw(batch);
+            }
+        }
     }
 
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade()) {
-                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO - 0.05f);
+            if (!animacionesBaseEnemigos.estaEnFade() && !animacionesBaseEnemigos.enAnimacionMuerte()) {
+                Animation<TextureRegion> animMuertePolla = GestorDeAssets.animations.get("muertePolla");
+                animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
+                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
@@ -122,7 +142,7 @@ public class EnemigoPolla implements Enemigo {
 
     @Override
     public boolean puedeAplicarDanyo() {
-        return temporizadorDanyo <= 0;
+        return vidaEnemigo > 0 && temporizadorDanyo <= 0;
     }
 
     @Override

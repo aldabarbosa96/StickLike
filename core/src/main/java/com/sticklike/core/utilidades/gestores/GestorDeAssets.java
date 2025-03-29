@@ -122,6 +122,25 @@ public class GestorDeAssets {
         manager.load("armas/05papelCuloImpacto01.png", Texture.class);
         manager.load("armas/05papelCuloImpacto02.png", Texture.class);
 
+        manager.load("enemigos/animaciones/culoMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte02.png", Texture.class);
+
         manager.load(TROFEO, Texture.class);
         manager.load(TROFEO2, Texture.class);
         manager.load(ARANDELA, Texture.class);
@@ -212,12 +231,18 @@ public class GestorDeAssets {
         animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.05f));
         animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.05f));
         animations.put("papelCuloImpacto", crearAnimacion("armas/05papelCuloImpacto", 3, 0.05f));
+        animations.put("muerteCulo", crearAnimacion("enemigos/animaciones/culoMuerte", 3,0.1f));
+        animations.put("muertePolla", crearAnimacion("enemigos/animaciones/pollaMuerte", 3,0.1f));
+        animations.put("reglaMuerte", crearAnimacion("enemigos/animaciones/reglaMuerte", 3,0.1f));
+        animations.put("examenMuerte", crearAnimacion("enemigos/animaciones/examenMuerte", 3,0.1f));
+        animations.put("vaterMuerte", crearAnimacion("enemigos/animaciones/vaterMuerte", 3,0.1f));
+        animations.put("alarmaMuerte", crearAnimacion("enemigos/animaciones/alarmaMuerte", 3,0.1f));
     }
 
     private static Animation<TextureRegion> crearAnimacion(String ruta, int contadorFrames, float duracionContador) {
         TextureRegion[] frames = new TextureRegion[contadorFrames];
         for (int i = 0; i < contadorFrames; i++) {
-            // Se construye la ruta para cada frame
+            // Construímos la ruta para cada frame
             String framePath = ruta + "0" + i + ".png";
             Texture frameTexture = manager.get(framePath, Texture.class);
             frames[i] = new TextureRegion(frameTexture);

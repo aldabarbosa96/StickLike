@@ -1,8 +1,10 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionCulo;
@@ -14,6 +16,7 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -41,6 +44,8 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     private final Texture damageTexture;
     private boolean recibeImpacto = false; // puede ser útil en un futuro
     private RenderBaseEnemigos renderBaseEnemigos;
+    private float deathPosX, deathPosY;
+    private boolean deathPosCaptured = false;
 
     public EnemigoCulo(float x, float y, Jugador jugador) {
         esConOjo();
@@ -71,20 +76,37 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
-        movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
 
-        if (temporizadorDanyo > 0) {
-            temporizadorDanyo -= delta;
+        if (vidaEnemigo > 0) {
+            // Mientras el enemigo esté vivo se aplica el movimiento completo
+            movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
+            animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+            animacionesBaseEnemigos.actualizarFade(delta);
+            if (temporizadorDanyo > 0) {
+                temporizadorDanyo -= delta;
+            }
+            animacionCulo.actualizarAnimacion(delta, sprite);
+            animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        } else {
+            movimientoCulo.actualizarSoloKnockback(delta, sprite);
+
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+            }
         }
-        animacionCulo.actualizarAnimacion(delta, sprite);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
+
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch, this);
+        if (vidaEnemigo > 0) {
+            renderBaseEnemigos.dibujarEnemigos(batch, this);
+        } else {
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                sprite.draw(batch);
+            }
+        }
     }
 
     @Override
@@ -116,7 +138,9 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade()) {
+            if (!animacionesBaseEnemigos.estaEnFade() && !animacionesBaseEnemigos.enAnimacionMuerte()) {
+                Animation<TextureRegion> animMuerteCulo = GestorDeAssets.animations.get("muerteCulo");
+                animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
@@ -135,7 +159,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public boolean puedeAplicarDanyo() {
-        return temporizadorDanyo <= 0;
+        return vidaEnemigo > 0 && temporizadorDanyo <= 0;
     }
 
     @Override
@@ -145,8 +169,9 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.estaEnFade());
+        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte() && !animacionesBaseEnemigos.estaEnFade());
     }
+
 
     @Override
     public void dispose() {

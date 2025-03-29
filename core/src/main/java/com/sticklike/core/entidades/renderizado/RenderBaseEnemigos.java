@@ -53,6 +53,15 @@ public class RenderBaseEnemigos {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
         for (Enemigo enemigo : enemigos) {
+
+           if (enemigo.getVida() <= 0) {
+                continue;
+            }
+            // Si el enemigo está en animación de muerte, no se dibuja su sombra.
+            if (enemigo.getAnimaciones().enAnimacionMuerte()) {
+                continue;
+            }
+
             if (enemigo instanceof BossPolla) {
                 dibujarSombraBossPolla((BossPolla) enemigo, shapeRenderer);
             } else if (enemigo instanceof EnemigoCulo) {
@@ -72,7 +81,6 @@ public class RenderBaseEnemigos {
             }
         }
     }
-
 
     private void dibujarParpadeoSombra(Enemigo enemigo, ShapeRenderer shapeRenderer) {
         if (enemigo.getAnimaciones().estaEnParpadeo()) {

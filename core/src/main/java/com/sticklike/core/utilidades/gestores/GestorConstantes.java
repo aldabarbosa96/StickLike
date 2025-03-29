@@ -16,8 +16,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración de la cámara
     // -------------------------------------------------
     public static final float CAMERA_OFFSET_Y = -95f;
-    public static final float CAMERA_JUGADOR_OFFSET_X = 7.5f;
-    public static final float CAMERA_JUGADOR_OFFSET_Y = 132.5f;
+    public static final float CAMERA_JUGADOR_OFFSET_X = 6.25f;
+    public static final float CAMERA_JUGADOR_OFFSET_Y = 142.5f;
 
     // -------------------------------------------------
     // CONFIGURACIÓN DEL HUD
@@ -214,10 +214,10 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_PAPELCULO = 45f;
     public static final float EMPUJE_BASE_PAPELCULO = 250f;
     public static final float SPEED_MULT = 1.8f;
-    public static final float PIEDRA_SIZE = 6f;
-    public static final float CALCETIN_W_SIZE = 20f;
-    public static final float CALCETIN_H_SIZE = 24f;
-    public static final float PAPELCULO_W_SIZE = 16;
+    public static final float PIEDRA_SIZE = 6.5f;
+    public static final float CALCETIN_W_SIZE = 20.5f;
+    public static final float CALCETIN_H_SIZE = 24.5f;
+    public static final float PAPELCULO_W_SIZE = 16.5f;
     public static final float PAPELCULO_H_SIZE = 19;
     public static final float PAPELCULO_SPEED = 666f;
     public static final float PROJECTILE_BASE_DAMAGE = 8f; //todo --> gestionar en un futuro
@@ -227,7 +227,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
     public static final float MULT_DANYO = 1f;
-    public static final float TAZO_SIZE = 14f;
+    public static final float TAZO_SIZE = 14.5f;
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 52.5f;
     public static final float RADIO_TAZOS_JUGADOR = 75f;
@@ -294,7 +294,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO3_SPAWN_RATE = 0.1f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
-    public static final String[] LISTA_EXAMEN = {"EXAMEN", "ALARMA", "REGLA"};
+    public static final String[] LISTA_EXAMEN = {"EXAMEN","EXAMEN","EXAMEN", "ALARMA","ALARMA","ALARMA", "REGLA"};
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "POLLA", "CULO", "CULO", "CULO", "CULO"};

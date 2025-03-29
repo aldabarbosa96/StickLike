@@ -67,6 +67,18 @@ public class Creditos extends ScreenAdapter {
             A mi familia y amigos, por su apoyo constante y por creer
             en este proyecto desde el primer día.
 
+            A mi padre,
+            por ayudarme con tantas ideas y dibujos,
+            por estar siempre interesado, pendiente, y dispuesto a echarme una mano en todo momento.
+
+            A Héctor,
+            por estar siempre ahí, por interesarte de verdad en cómo iba todo,
+            por aguantarme hablando del juego a todas horas,
+            y por jugarlo con ganas cada vez que te lo pedía, dándome tu opinión sincera.
+
+
+            Gracias a todos por acompañarme en todo este proceso.
+
             ------------------------------------------
 
             TECNOLOGÍAS Y HERRAMIENTAS UTILIZADAS

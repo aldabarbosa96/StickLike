@@ -124,10 +124,20 @@ public abstract class RenderBaseMenus {
         }
         shapeRenderer.end();
 
+        float lineThickness = 1f;
+        float marginX = startX + 64;
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(marginX - lineThickness / 2, startY, lineThickness, endY - startY);
+
+        shapeRenderer.end();
+
         // Actualización y dibujo del Stage
         stage.act(delta);
         stage.draw();
     }
+
+
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);

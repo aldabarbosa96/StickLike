@@ -1,8 +1,10 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
@@ -13,6 +15,7 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -52,26 +55,44 @@ public class EnemigoAlarma implements Enemigo {
 
     @Override
     public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
-        movimientoAlarma.actualizarMovimiento(delta, sprite, jugador);
 
-        if (tempDanyo > 0) {
-            tempDanyo -= delta;
+        if (vidaEnemigo > 0) {
+            // Estado vivo: se ejecuta la lógica normal
+            animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+            animacionesBaseEnemigos.actualizarFade(delta);
+            movimientoAlarma.actualizarMovimiento(delta, sprite, jugador);
+            if (tempDanyo > 0) {
+                tempDanyo -= delta;
+            }
+            animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        } else {
+            // Estado de muerte: se actualiza únicamente el knockback y la animación de muerte
+            movimientoAlarma.actualizarSoloKnockback(delta, sprite);
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+            }
         }
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch, this);
+        if (vidaEnemigo > 0) {
+            renderBaseEnemigos.dibujarEnemigos(batch, this);
+        } else {
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                sprite.draw(batch);
+            }
+        }
     }
 
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade()) {
+            if (!animacionesBaseEnemigos.estaEnFade() && !animacionesBaseEnemigos.enAnimacionMuerte()) {
+                Animation<TextureRegion> animMuerteAlarma = GestorDeAssets.animations.get("alarmaMuerte");
+                animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteAlarma);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
@@ -125,7 +146,7 @@ public class EnemigoAlarma implements Enemigo {
 
     @Override
     public boolean puedeAplicarDanyo() {
-        return tempDanyo <= 0;
+        return vidaEnemigo > 0 && tempDanyo <= 0;
     }
 
     @Override

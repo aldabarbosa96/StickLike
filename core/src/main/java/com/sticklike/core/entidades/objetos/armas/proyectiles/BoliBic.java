@@ -59,8 +59,8 @@ public class BoliBic implements Proyectiles {
         this.targetY = y - (Gdx.graphics.getHeight() / 3f) + MathUtils.random(-100, 100);
         this.estadoBoli = EstadoBoli.FALLING;
         this.explosionTimer = 0;
-        this.width = 25;
-        this.height = 25;
+        this.width = 26;
+        this.height = 26;
         this.proyectilActivo = true;
         this.rotation = 0;
         this.rotationSpeed = MathUtils.random(150, 350);
@@ -70,7 +70,7 @@ public class BoliBic implements Proyectiles {
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(38, 5.25f, new Color(0.15f, 0.15f, 0.75f, 1));
+        this.renderParticulasProyectil = new RenderParticulasProyectil(32, 5.25f, new Color(0.15f, 0.15f, 0.75f, 1));
         this.centroSprite = new Vector2();
     }
 

@@ -1,8 +1,10 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionExamen;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
@@ -13,6 +15,7 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -55,30 +58,51 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
 
     @Override
     public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
 
-        if (temporizadorDanyo > 0) temporizadorDanyo -= delta;
-
-        if (movimientoExamen != null) movimientoExamen.actualizarMovimiento(delta, sprite, jugador);
-
-        animacionExamen.actualizarAnimacion(delta, jugador, sprite);
+        if (vidaEnemigo > 0) {
+            animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+            animacionesBaseEnemigos.actualizarFade(delta);
+            if (temporizadorDanyo > 0) temporizadorDanyo -= delta;
+            if (movimientoExamen != null) {
+                movimientoExamen.actualizarMovimiento(delta, sprite, jugador);
+            }
+            animacionExamen.actualizarAnimacion(delta, jugador, sprite);
+        } else {
+            if (movimientoExamen != null) {
+                movimientoExamen.actualizarSoloKnockback(delta, sprite);
+            }
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+            }
+        }
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch, this);
+        if (vidaEnemigo > 0) {
+            renderBaseEnemigos.dibujarEnemigos(batch, this);
+        } else {
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                sprite.draw(batch);
+            }
+        }
     }
 
     @Override
     public void reducirSalud(float amount) {
         vidaEnemigo -= amount;
+        // Activar parpadeo si no se está ya parpadeando
         if (!animacionesBaseEnemigos.estaEnParpadeo()) {
             animacionesBaseEnemigos.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
         }
         if (vidaEnemigo <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade()) {
+            // Iniciar animación de muerte solo una vez (cuando aún no se ha iniciado)
+            if (!animacionesBaseEnemigos.estaEnFade() && !animacionesBaseEnemigos.enAnimacionMuerte()) {
+                Animation<TextureRegion> animMuerteExamen = GestorDeAssets.animations.get("examenMuerte");
+                animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteExamen);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+                activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
     }
@@ -132,7 +156,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
 
     @Override
     public boolean puedeAplicarDanyo() {
-        return temporizadorDanyo <= 0;
+        return vidaEnemigo > 0 && temporizadorDanyo <= 0;
     }
 
     @Override

@@ -90,7 +90,7 @@ public class RenderHUDComponents {
         }
         tiempoFormateado = formatearTiempo(tiempoTranscurrido);
         float timerVerticalOffset = 35f;
-        float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + 15f);
+        float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + 12.5f);
         float textY = (VIRTUAL_HEIGHT / 2) + TIMER_Y_POS + timerVerticalOffset;
         fuente.getData().setScale(TIMER_SCALE);
         Color colorReborde = Color.BLACK;
@@ -152,12 +152,12 @@ public class RenderHUDComponents {
         shapeRenderer.rect(xLinea2, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2f);
 
         float circleRadius = 6f;
-        float circleYBottom = 45f + EXTRA_HUD_HEIGHT;
+        float circleYBottom = 35f + EXTRA_HUD_HEIGHT;
         float circleYTop = 108f + EXTRA_HUD_HEIGHT;
 
         // Círculos lado izquierdo
         float circleXLeft = margenIzquierdo / 2f;
-        shapeRenderer.setColor(new Color(0.85f, 0.85f, 0.85f, 1));
+        shapeRenderer.setColor(new Color(0.75f, 0.75f, 0.75f, 1));
         shapeRenderer.circle(circleXLeft, circleYBottom, circleRadius);
         shapeRenderer.circle(circleXLeft, circleYTop, circleRadius);
     }

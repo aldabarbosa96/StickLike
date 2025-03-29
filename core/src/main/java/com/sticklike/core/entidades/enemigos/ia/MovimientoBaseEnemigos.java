@@ -45,4 +45,17 @@ public abstract class MovimientoBaseEnemigos {
         knockbackVelY = dirY * fuerza;
         knockbackTimer = knockbackDuration;
     }
+
+    public final void actualizarSoloKnockback(float delta, Sprite sprite) {
+        if (knockbackTimer > 0) {
+            float moveX = knockbackVelX * delta;
+            float moveY = knockbackVelY * delta;
+            sprite.translate(moveX, moveY);
+            knockbackTimer -= delta;
+            if (knockbackTimer < 0) {
+                knockbackTimer = 0;
+            }
+        }
+    }
+
 }
