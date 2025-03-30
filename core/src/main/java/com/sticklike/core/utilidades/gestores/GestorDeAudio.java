@@ -53,6 +53,8 @@ public class GestorDeAudio {
         efectosSonido.put("pedo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPedo.wav")));
         efectosSonido.put("boli", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBoliBic.wav")));
         efectosSonido.put("muerteJugador", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteJugador.wav")));
+        efectosSonido.put("muerteGenerico", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteGenerico.wav")));
+        efectosSonido.put("muerteGenerico2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteGenerico2.wav")));
         efectosSonido.put("recogerXP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerObjetoXPCaca.wav")));
         efectosSonido.put("recogerVida", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerCorazon.wav")));
         efectosSonido.put("recogerOro", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoOro.wav")));
@@ -65,6 +67,7 @@ public class GestorDeAudio {
         efectosSonido.put("sonidoBossPolla2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla2.wav")));
         efectosSonido.put("sonidoBossPolla3", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla3.wav")));
         efectosSonido.put("sonidoBossPolla4", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla4.wav")));
+        efectosSonido.put("sonidoBossPollaMuerte", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPollaMuerte.wav")));
         efectosSonido.put("boostVel", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostVel.wav")));
         efectosSonido.put("boostAttack", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAttack.wav")));
         efectosSonido.put("boostAmo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAmo.wav")));

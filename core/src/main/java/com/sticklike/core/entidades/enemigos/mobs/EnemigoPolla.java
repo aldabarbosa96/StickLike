@@ -90,6 +90,7 @@ public class EnemigoPolla implements Enemigo {
                 animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+                animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
             }
         }
     }

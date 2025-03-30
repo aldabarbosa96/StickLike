@@ -195,7 +195,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
     public static final float DURACION_PARPADEO_ENEMIGO = 0.085f;
-    public static final float DURACION_FADE_ENEMIGO = 0.25f;
+    public static final float DURACION_FADE_ENEMIGO = 0.3f;
+    public static final float DURACION_FADE_BOSS = 1.6f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
     public static final float TIEMPO_FADE_TOTAL = 0.25f;
     public static final float ALPHA_ACTUAL = 1f;
@@ -329,7 +330,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_PAPEL = 1;
     public static final float AUDIO_PIEDRA = 0.75f;
     public static final float AUDIO_RECOLECCION_CACA = 0.9f;
-    public static final float AUDIO_RECOLECCION_VIDA = 0.85f;
+    public static final float AUDIO_RECOLECCION_VIDA = 1f;
     public static final float AUDIO_RECOLECCION_ORO = 0.85f;
     public static final float AUDIO_RECOLECCION_PWUP = 0.75f;
     public static final float AUDIO_DANYO = 0.75f;

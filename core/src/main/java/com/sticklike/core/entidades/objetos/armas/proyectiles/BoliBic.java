@@ -235,11 +235,7 @@ public class BoliBic implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        if (!enemigosImpactados.contains(enemigo)) {
-            enemigo.reducirSalud(getBaseDamage());
-
-            enemigosImpactados.add(enemigo);
-        }
+        enemigosImpactados.add(enemigo);
     }
 
 

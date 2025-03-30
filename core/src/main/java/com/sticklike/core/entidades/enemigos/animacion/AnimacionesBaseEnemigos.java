@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -139,6 +141,27 @@ public class AnimacionesBaseEnemigos {
             if (animacionMuerte.isAnimationFinished(stateTimeMuerte)) {
                 enAnimacionMuerte = false;
             }
+        }
+    }
+
+    public void actualizarAnimacionMuerteSinEscala(Sprite sprite, float delta) { // para poder animar de formas especiales a los bosses sin que se deforme la imagen
+        if (enAnimacionMuerte && animacionMuerte != null) {
+            stateTimeMuerte += delta;
+            TextureRegion frame = animacionMuerte.getKeyFrame(stateTimeMuerte, false);
+            // Solo actualizamos la región, sin cambiar el tamaño, posición u origen.
+            sprite.setRegion(frame);
+            if (animacionMuerte.isAnimationFinished(stateTimeMuerte)) {
+                enAnimacionMuerte = false;
+            }
+        }
+    }
+
+    public void reproducirSonidoMuerteGenerico(){
+        float sonidoAleatorioMuerte = MathUtils.random(10);
+        if (sonidoAleatorioMuerte >= 5) {
+            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico2", 0.3f);
+        } else {
+            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico", 0.25f);
         }
     }
 

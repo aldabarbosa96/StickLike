@@ -54,11 +54,7 @@ public class RenderBaseEnemigos {
 
         for (Enemigo enemigo : enemigos) {
 
-           if (enemigo.getVida() <= 0) {
-                continue;
-            }
-            // Si el enemigo está en animación de muerte, no se dibuja su sombra.
-            if (enemigo.getAnimaciones().enAnimacionMuerte()) {
+            if (!(enemigo instanceof BossPolla) && enemigo.getVida() <= 0) {
                 continue;
             }
 
@@ -82,9 +78,9 @@ public class RenderBaseEnemigos {
         }
     }
 
-    private void dibujarParpadeoSombra(Enemigo enemigo, ShapeRenderer shapeRenderer) {
+    private void dibujarParpadeoSombra(Enemigo enemigo, ShapeRenderer shapeRenderer, Color color) {
         if (enemigo.getAnimaciones().estaEnParpadeo()) {
-            shapeRenderer.setColor(Color.WHITE);
+            shapeRenderer.setColor(color);
         } else if (enemigo.getAnimaciones().estaEnFade()) {
             shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1);
         } else shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
@@ -101,7 +97,7 @@ public class RenderBaseEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - 8f;
 
-        dibujarParpadeoSombra(enemigo, shapeRenderer);
+        dibujarParpadeoSombra(enemigo, shapeRenderer, Color.BLACK);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
 
     }
@@ -118,7 +114,7 @@ public class RenderBaseEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y + destructible.getShadowYOffset();
 
-        dibujarParpadeoSombra(destructible, shapeRenderer);
+        dibujarParpadeoSombra(destructible, shapeRenderer, Color.WHITE);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
@@ -133,7 +129,7 @@ public class RenderBaseEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - 5;
 
-        dibujarParpadeoSombra(enemigo, shapeRenderer);
+        dibujarParpadeoSombra(enemigo, shapeRenderer, Color.WHITE);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
 
     }
@@ -147,7 +143,7 @@ public class RenderBaseEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - SHADOW_OFFSET;
 
-        dibujarParpadeoSombra(culo, shapeRenderer);
+        dibujarParpadeoSombra(culo, shapeRenderer, Color.WHITE);
 
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
@@ -178,7 +174,7 @@ public class RenderBaseEnemigos {
         float finalShadowHeight = baseShadowHeight * factor;
         float finalShadowX = centerX - finalShadowWidth / 2f;
 
-        dibujarParpadeoSombra(polla, shapeRenderer);
+        dibujarParpadeoSombra(polla, shapeRenderer, Color.WHITE);
         shapeRenderer.ellipse(finalShadowX, baseShadowY, finalShadowWidth, finalShadowHeight);
     }
 
@@ -190,7 +186,7 @@ public class RenderBaseEnemigos {
         float shadowX = centerX - shadowSize / 2f;
         float shadowY = y;
 
-        dibujarParpadeoSombra(examen, shapeRenderer);
+        dibujarParpadeoSombra(examen, shapeRenderer, Color.WHITE);
 
         shapeRenderer.ellipse(shadowX, shadowY, shadowSize + 1f, shadowSize - 10f);
     }
@@ -204,7 +200,7 @@ public class RenderBaseEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - 3.5f;
 
-        dibujarParpadeoSombra(regla, shapeRenderer);
+        dibujarParpadeoSombra(regla, shapeRenderer, Color.WHITE);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 
@@ -216,7 +212,7 @@ public class RenderBaseEnemigos {
         float shadowX = centerX - (shadowWidth / 2f);
         float shadowY = y - 12f;
 
-        dibujarParpadeoSombra(enemigo, shapeRenderer);
+        dibujarParpadeoSombra(enemigo, shapeRenderer, Color.WHITE);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
     }
 

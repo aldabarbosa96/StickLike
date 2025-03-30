@@ -109,6 +109,7 @@ public class EnemigoRegla implements Enemigo {
                 animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteRegla);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+                animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
             }
         }
     }

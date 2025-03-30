@@ -57,7 +57,7 @@ public class MensajesChat {
 
     public static MensajesChat getInstance() {
         if (instance == null) {
-            throw new IllegalStateException("MensajesChat no ha sido inicializado. Llamar a init() primero.");
+            throw new IllegalStateException("ERROR: MensajesChat no ha sido inicializado. Llamar a init() primero.");
         }
         return instance;
     }
@@ -65,7 +65,7 @@ public class MensajesChat {
     public void addMessage(String nombre, String mensaje) {
         String timeStamp = getCurrentTimeStamp();
         boolean esOjete = nombre.toLowerCase().contains("ojete");
-        String colorNombre = esOjete ? "[RED]" : "[BLUE]";
+        String colorNombre = esOjete ? "[#FF4500]" : "[BLUE]";
 
         String fullMessage = "[GREEN][" + timeStamp + "][] " + colorNombre + nombre + ":  []" + "[BLACK]" + mensaje + "[]";
 

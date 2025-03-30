@@ -17,6 +17,7 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -143,6 +144,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
                 animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+                animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
             }
         }
     }

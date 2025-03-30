@@ -118,29 +118,6 @@ public class GestorDeAssets {
         manager.load(ARMA_PAPELCULO, Texture.class);
         manager.load(ARMA_BOLIBIC, Texture.class);
 
-        manager.load("armas/05papelCuloImpacto00.png", Texture.class);
-        manager.load("armas/05papelCuloImpacto01.png", Texture.class);
-        manager.load("armas/05papelCuloImpacto02.png", Texture.class);
-
-        manager.load("enemigos/animaciones/culoMuerte00.png", Texture.class);
-        manager.load("enemigos/animaciones/culoMuerte01.png", Texture.class);
-        manager.load("enemigos/animaciones/culoMuerte02.png", Texture.class);
-        manager.load("enemigos/animaciones/pollaMuerte00.png", Texture.class);
-        manager.load("enemigos/animaciones/pollaMuerte01.png", Texture.class);
-        manager.load("enemigos/animaciones/pollaMuerte02.png", Texture.class);
-        manager.load("enemigos/animaciones/reglaMuerte00.png", Texture.class);
-        manager.load("enemigos/animaciones/reglaMuerte01.png", Texture.class);
-        manager.load("enemigos/animaciones/reglaMuerte02.png", Texture.class);
-        manager.load("enemigos/animaciones/examenMuerte00.png", Texture.class);
-        manager.load("enemigos/animaciones/examenMuerte01.png", Texture.class);
-        manager.load("enemigos/animaciones/examenMuerte02.png", Texture.class);
-        manager.load("enemigos/animaciones/vaterMuerte00.png", Texture.class);
-        manager.load("enemigos/animaciones/vaterMuerte01.png", Texture.class);
-        manager.load("enemigos/animaciones/vaterMuerte02.png", Texture.class);
-        manager.load("enemigos/animaciones/alarmaMuerte00.png", Texture.class);
-        manager.load("enemigos/animaciones/alarmaMuerte01.png", Texture.class);
-        manager.load("enemigos/animaciones/alarmaMuerte02.png", Texture.class);
-
         manager.load(TROFEO, Texture.class);
         manager.load(TROFEO2, Texture.class);
         manager.load(ARANDELA, Texture.class);
@@ -187,21 +164,52 @@ public class GestorDeAssets {
         manager.load(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
         manager.load(DAMAGE_ALARMA_TEXTURE, Texture.class);
 
+        // Animaciones
         manager.load("acciones/movement/stickman_idle00.png", Texture.class);
         manager.load("acciones/movement/stickman_idle01.png", Texture.class);
         manager.load("acciones/movement/stickman_idle02.png", Texture.class);
-
         manager.load("acciones/movement/stickman_movementD00.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD01.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD02.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD03.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD04.png", Texture.class);
-
         manager.load("acciones/movement/stickman_movementI00.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI01.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI02.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI03.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI04.png", Texture.class);
+
+        manager.load("armas/05papelCuloImpacto00.png", Texture.class);
+        manager.load("armas/05papelCuloImpacto01.png", Texture.class);
+        manager.load("armas/05papelCuloImpacto02.png", Texture.class);
+
+        manager.load("enemigos/animaciones/culoMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte04.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte05.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte06.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte07.png", Texture.class);
+
 
         // Cargar borrones
         borrones = new Array<>();
@@ -237,6 +245,7 @@ public class GestorDeAssets {
         animations.put("examenMuerte", crearAnimacion("enemigos/animaciones/examenMuerte", 3,0.1f));
         animations.put("vaterMuerte", crearAnimacion("enemigos/animaciones/vaterMuerte", 3,0.1f));
         animations.put("alarmaMuerte", crearAnimacion("enemigos/animaciones/alarmaMuerte", 3,0.1f));
+        animations.put("bossPollaMuerte", crearAnimacion("enemigos/animaciones/bossPollaMuerte", 8,0.2f));
     }
 
     private static Animation<TextureRegion> crearAnimacion(String ruta, int contadorFrames, float duracionContador) {
