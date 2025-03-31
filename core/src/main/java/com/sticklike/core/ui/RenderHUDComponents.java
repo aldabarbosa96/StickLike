@@ -81,7 +81,7 @@ public class RenderHUDComponents {
         hudViewport.apply();
         hudStage = new Stage(hudViewport, spriteBatch);
         chatlogStage = new Stage(hudViewport, spriteBatch);
-        MensajesChat.init(chatlogStage, this);
+        MensajesChat.init(chatlogStage, this,VentanaJuego1.getCamara(),spriteBatch);
     }
 
     public void renderizarTemporizador(float delta) {
@@ -464,4 +464,11 @@ public class RenderHUDComponents {
         return pausadoTemporizador;
     }
 
+    public ControladorEnemigos getControladorEnemigos() {
+        return controladorEnemigos;
+    }
+
+    public OrthographicCamera getHudCamera() {
+        return hudCamera;
+    }
 }

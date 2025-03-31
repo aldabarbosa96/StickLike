@@ -1,153 +1,169 @@
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
-
-import java.text.SimpleDateFormat;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Date;
 
-import static com.sticklike.core.utilidades.gestores.GestorConstantes.HUD_HEIGHT;
+import com.sticklike.core.interfaces.Enemigo;
+
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_WIDTH;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_HEIGHT;
 
 public class MensajesChat {
+
     private static MensajesChat instance;
 
+    // Stage para mensajes del jugador (HUD) y para mensajes de enemigos (mundo)
+    private Stage chatStage;
+    private Stage enemyStage;
     private RenderHUDComponents renderHUDComponents;
-    private Table table;
-    private Stage hudStage;
     private ArrayList<ChatMessage> messages;
     private float displayDuration;
     private BitmapFont font;
     private Label.LabelStyle labelStyle;
-    private static final float FADE_IN_DURATION = 0.5f;
-    private static final float FADE_OUT_DURATION = 1f;
+    private static final float FADE_IN_DURATION = 0.25f;
+    private static final float FADE_OUT_DURATION = 0.25f;
+    private static final float FOLLOW_OFFSET_Y = 5f;
 
-    // Constructor privado para evitar instanciación directa
-    private MensajesChat(Stage hudStage, RenderHUDComponents renderHUDComponents) {
-        this.hudStage = hudStage;
+    // Constructor privado: se reciben los dos stages (uno para chat y otro para mensajes de enemigos)
+    private MensajesChat(Stage chatStage, RenderHUDComponents renderHUDComponents, Stage enemyStage) {
+        this.chatStage = chatStage;
+        this.renderHUDComponents = renderHUDComponents;
+        this.enemyStage = enemyStage;
         this.messages = new ArrayList<>();
-        // La duración total de cada mensaje (incluyendo fade in/out)
-        this.displayDuration = 15;
+        this.displayDuration = MathUtils.random(4,6);
         this.font = new BitmapFont();
         this.font.getData().markupEnabled = true;
+        this.font.getData().setScale(0.8f);
         this.labelStyle = new Label.LabelStyle();
-        this.renderHUDComponents = renderHUDComponents;
-        font.getData().setScale(0.9f);
-        labelStyle.font = font;
-        labelStyle.fontColor = Color.WHITE;
-
-        table = new Table();
-        table.setFillParent(true);
-        table.bottom().left();
-        table.padLeft(15);
-        table.padBottom(HUD_HEIGHT + 5);
-        hudStage.addActor(table);
+        this.labelStyle.font = font;
+        this.labelStyle.fontColor = Color.WHITE;
     }
 
-    public static void init(Stage hudStage, RenderHUDComponents renderHUDComponents) {
+    public static void init(Stage chatStage, RenderHUDComponents renderHUDComponents, OrthographicCamera worldCamera, com.badlogic.gdx.graphics.g2d.SpriteBatch spriteBatch) {
         if (instance == null) {
-            instance = new MensajesChat(hudStage, renderHUDComponents);
+            // Creamos un stage para mensajes de enemigos con un ExtendViewport usando la cámara del mundo
+            Stage enemyStage = new Stage(new ExtendViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, worldCamera), spriteBatch);
+            instance = new MensajesChat(chatStage, renderHUDComponents, enemyStage);
         }
     }
 
     public static MensajesChat getInstance() {
         if (instance == null) {
-            throw new IllegalStateException("ERROR: MensajesChat no ha sido inicializado. Llamar a init() primero.");
+            throw new IllegalStateException("ERROR: MensajesChat no ha sido inicializado. Llama a init() primero.");
         }
         return instance;
     }
 
-    public void addMessage(String nombre, String mensaje) {
-        String timeStamp = getCurrentTimeStamp();
-        boolean esEnemigo = nombre.toLowerCase().contains("oj") || nombre.toLowerCase().contains("polla");
-        String colorNombre = esEnemigo ? "[#E30B5D]" : "[BLUE]";
-
-        String fullMessage = "[GREEN][" + timeStamp + "][] " + colorNombre + nombre + ":  []" + "[BLACK]" + mensaje + "[]";
+    public void addMessage(String nombre, String mensaje, float posX, float posY, Enemigo enemy, boolean esEnemigo) {
+        //String timeStamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        boolean esEnemigoTexto = nombre.toLowerCase().contains("oj") || nombre.toLowerCase().contains("polla");
+        String colorNombre = esEnemigoTexto ? "[#B00020]" : "[#3A5FCD]";
+        String fullMessage = /*"[GREEN][" + timeStamp + "][] " + */colorNombre + nombre + ":  []" + "[#454545]" + mensaje + "[]";
 
         Label label = new Label(fullMessage, labelStyle);
         label.setWrap(true);
-        label.setAlignment(Align.left);
+        label.setAlignment(Align.center);
+        label.setPosition(posX, posY);
 
-        ChatMessage chatMessage = new ChatMessage(fullMessage, displayDuration, label, renderHUDComponents.getTiempoTranscurrido());
-        messages.add(chatMessage);
+        ChatMessage cm = new ChatMessage(fullMessage, displayDuration, label, renderHUDComponents.getTiempoTranscurrido(), enemy, esEnemigo);
+        messages.add(cm);
+        if (esEnemigo) {
+            enemyStage.addActor(label);
+        } else {
+            chatStage.addActor(label);
+        }
+    }
 
-        float margen = 50;
-        float maxWidth = hudStage.getWidth() - margen;
-        table.add(label).width(maxWidth).padBottom(5).row();
+    // Métodos sobrecargados para mensajes del jugador
+    public void addMessage(String nombre, String mensaje, float posX, float posY) {
+        addMessage(nombre, mensaje, posX, posY, null, false);
+    }
+
+    // Métodos sobrecargados para mensajes de los enemigos
+    public void addEnemyMessage(String nombre, String mensaje, Enemigo enemy) {
+        float posX = enemy.getSprite().getX();
+        float posY = enemy.getSprite().getY() + enemy.getSprite().getHeight() + FOLLOW_OFFSET_Y;
+        addMessage(nombre, mensaje, posX, posY, enemy, true);
     }
 
     public void update() {
         float currentTime = renderHUDComponents.getTiempoTranscurrido();
-        boolean refreshNeeded = false;
-        Iterator<ChatMessage> iterator = messages.iterator();
-        while (iterator.hasNext()) {
-            ChatMessage msg = iterator.next();
+        Iterator<ChatMessage> iter = messages.iterator();
+        while (iter.hasNext()) {
+            ChatMessage msg = iter.next();
             float elapsed = currentTime - msg.startingTime;
+
+            if (msg.esEnemigo && msg.enemy != null && msg.enemy.estaMuerto()) {
+                float newRemainingTime = (currentTime - msg.startingTime) + FADE_OUT_DURATION;
+                if (newRemainingTime < msg.remainingTime) {
+                    msg.remainingTime = newRemainingTime;
+                }
+            }
+
             float alpha = 1f;
-            // Fade in
             if (elapsed < FADE_IN_DURATION) {
                 alpha = elapsed / FADE_IN_DURATION;
-            }
-            // Fade out
-            else if (elapsed > msg.remainingTime - FADE_OUT_DURATION) {
+            } else if (elapsed > msg.remainingTime - FADE_OUT_DURATION) {
                 alpha = (msg.remainingTime - elapsed) / FADE_OUT_DURATION;
                 if (alpha < 0) alpha = 0;
             }
+            Color c = msg.label.getColor();
+            c.a = alpha;
+            msg.label.setColor(c);
 
-            Color currentColor = msg.label.getColor();
-            currentColor.a = alpha;
-            msg.label.setColor(currentColor);
+            if (msg.esEnemigo && msg.enemy != null) {
+                // Actualizamos la posición en base a la posición actual del enemigo
+                float newX = msg.enemy.getSprite().getX();
+                float newY = msg.enemy.getSprite().getY() + msg.enemy.getSprite().getHeight() + FOLLOW_OFFSET_Y;
+                msg.label.setPosition(newX, newY);
+            }
 
             if (elapsed >= msg.remainingTime) {
                 msg.label.remove();
-                iterator.remove();
-                refreshNeeded = true;
+                iter.remove();
             }
         }
-        if (refreshNeeded) {
-            refreshTable();
-        }
+        chatStage.act();
+        enemyStage.act();
     }
 
-    private void refreshTable() {
-        table.clear();
-        float margen = 50;
-        float maxWidth = hudStage.getWidth() - margen;
-        for (ChatMessage msg : messages) {
-            table.add(msg.label).width(maxWidth).padBottom(5).row();
-        }
-    }
-
-    private String getCurrentTimeStamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        return sdf.format(new Date());
+    public void draw(OrthographicCamera worldCamera) {
+        chatStage.draw();
+        enemyStage.draw();
     }
 
     public static void reset() {
         if (instance != null) {
-            instance.table.clear();
             instance.messages.clear();
+            instance.chatStage.clear();
+            instance.enemyStage.clear();
             instance = null;
         }
     }
 
-    // Clase interna para representar cada mensaje con su tiempo de vida y Label asociado
     private class ChatMessage {
         String text;
         float startingTime;
         float remainingTime;
         Label label;
+        Enemigo enemy;
+        boolean esEnemigo;
 
-        public ChatMessage(String text, float remainingTime, Label label, float startingTime) {
+        public ChatMessage(String text, float remainingTime, Label label, float startingTime, Enemigo enemy, boolean esEnemigo) {
             this.text = text;
             this.startingTime = startingTime;
             this.remainingTime = remainingTime;
             this.label = label;
+            this.enemy = enemy;
+            this.esEnemigo = esEnemigo;
         }
     }
 }

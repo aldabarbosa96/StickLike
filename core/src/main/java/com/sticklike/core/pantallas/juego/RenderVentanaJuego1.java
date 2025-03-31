@@ -9,13 +9,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.BoliBic;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
-import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.ui.HUD;
+import com.sticklike.core.ui.MensajesChat;
 import com.sticklike.core.utilidades.PoissonPoints;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -163,7 +162,11 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         spriteBatch.end();
 
         // 7) Renderizamos HUD
+        MensajesChat.getInstance().update();
+        MensajesChat.getInstance().draw(camara);
         hud.renderizarHUD(delta);
+
+
     }
     public void renderizarLineasCuadricula(OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);

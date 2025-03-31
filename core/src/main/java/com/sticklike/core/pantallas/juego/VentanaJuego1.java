@@ -48,7 +48,7 @@ public class VentanaJuego1 implements Screen {
     // Render básico
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
-    private OrthographicCamera camara;
+    private static OrthographicCamera camara;
     private ExtendViewport viewport;
     private RenderVentanaJuego1 renderVentanaJuego1;
     private RenderHUDComponents renderHUDComponents;
@@ -100,7 +100,8 @@ public class VentanaJuego1 implements Screen {
 
         // Ajustar la posición de la cámara
         actualizarPosCamara();
-        MensajesChat.getInstance().addMessage("StickMan","Ah shit! Here we go again . . .");
+        MensajesChat.getInstance().addMessage("StickMan","Ah shit! Here we go again . . .", jugador.getSprite().getX() - 17.5f, jugador.getSprite().getY() - 20);
+
     }
 
     private void inicializarRenderYCamara() {
@@ -415,5 +416,9 @@ public class VentanaJuego1 implements Screen {
 
     public HUD getHud() {
         return hud;
+    }
+
+    public static OrthographicCamera getCamara() {
+        return camara;
     }
 }
