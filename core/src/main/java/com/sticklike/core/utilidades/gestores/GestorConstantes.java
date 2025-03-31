@@ -285,7 +285,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 9;
-    public static final int LVL_EVENTO5 = 10;
+    public static final int LVL_EVENTO5 = 12;
     public static final float EVENTO1_SPAWN_RATE = 0.5f;
     public static final float EVENTO1_SPEED_MULT = 1.25f;
     public static final float EVENTO2_SPAWN_RATE = 0.25f;
@@ -295,10 +295,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO3_SPAWN_RATE = 0.1f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
-    public static final String[] LISTA_EXAMEN = {"EXAMEN","EXAMEN","EXAMEN", "ALARMA","ALARMA","ALARMA", "REGLA"};
+    public static final String[] LISTA_EXAMEN = {"EXAMEN","EXAMEN","EXAMEN","REGLA"};
+    public static final String[] LISTA_ALARMA = {"ALARMA"};
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
-    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "REGLA"};
-    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "POLLA", "CULO", "CULO", "CULO", "CULO"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS3 = {"CULO"};
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000001f;
 
     // -------------------------------------------------

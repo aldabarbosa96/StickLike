@@ -159,9 +159,9 @@ public class AnimacionesBaseEnemigos {
     public void reproducirSonidoMuerteGenerico(){
         float sonidoAleatorioMuerte = MathUtils.random(10);
         if (sonidoAleatorioMuerte >= 5) {
-            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico2", 0.3f);
+            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico2", 0.2f);
         } else {
-            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico", 0.25f);
+            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico", 0.2f);
         }
     }
 

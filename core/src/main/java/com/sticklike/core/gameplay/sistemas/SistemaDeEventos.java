@@ -42,7 +42,8 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Aumenta nº enemigos 2", this::eventoAumentaEnemigos2, LVL_EVENTO2));
         eventos.add(new Evento("Aparecen las pollas", this::entraEnemigoPolla, LVL_EVENTO3));
         eventos.add(new Evento("BOSSPOLLA Aparece", this::spawnPrimerBoss, LVL_EVENTO4));
-        eventos.add(new Evento("Examen Aparece", this::spawnExamen, LVL_EVENTO4));
+        eventos.add(new Evento("Alarma Aparece", this::spawnAlarma, LVL_EVENTO4));
+        eventos.add(new Evento("Examen Aparece", this::spawnExamen, LVL_EVENTO5));
     }
 
     private void eventoAumentaEnemigos1() {
@@ -71,6 +72,7 @@ public class SistemaDeEventos {
 
     private void entraEnemigoPolla() {
         // Configuramos efecto de spawn masivo
+        MensajesChatData.getInstance().mostrarMensajePollas(renderHUDComponents);
         controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
 
@@ -94,9 +96,15 @@ public class SistemaDeEventos {
         Gdx.app.log("BossPolla", "¡Ha aparecido el PollaBOSS en el nivel 9!");
     }
 
+    private void spawnAlarma() {
+        GestorDeAudio.getInstance().cambiarMusica("fondo4");
+        controladorEnemigos.setTiposDeEnemigos(LISTA_ALARMA);
+        controladorEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
+        incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
+        Gdx.app.log("Alarma", "¡Alarmas comienzan a aparecer!");
+    }
 
     private void spawnExamen() {
-        GestorDeAudio.getInstance().cambiarMusica("fondo4");
         controladorEnemigos.setTiposDeEnemigos(LISTA_EXAMEN);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
         incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
@@ -104,7 +112,9 @@ public class SistemaDeEventos {
     }
     public void actualizar() {
         MensajesChatData.getInstance().mostrarMensajeCulos(renderHUDComponents);
-        MensajesChatData.getInstance().update(renderHUDComponents);
+        MensajesChatData.getInstance().mostrarMensajePollas(renderHUDComponents);
+        MensajesChatData.getInstance().updateCulos(renderHUDComponents);
+        MensajesChatData.getInstance().updatePollas(renderHUDComponents);
         int nivelActual = sistemaDeNiveles.getNivelActual();
         if (!eventos.isEmpty()) {
             Evento siguienteEvento = eventos.peek();
@@ -131,7 +141,7 @@ public class SistemaDeEventos {
     }
 
     private boolean comprobarBossPollaMuerto(Evento siguienteEvento) {
-        if (siguienteEvento.getNombreEvento().equals("Examen Aparece")) {
+        if (siguienteEvento.getNombreEvento().equals("Alarma Aparece")) {
             for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
                 if (enemigo instanceof BossPolla && !enemigo.estaMuerto()) {
                     return false;

@@ -64,8 +64,8 @@ public class MensajesChat {
 
     public void addMessage(String nombre, String mensaje) {
         String timeStamp = getCurrentTimeStamp();
-        boolean esOjete = nombre.toLowerCase().contains("ojete");
-        String colorNombre = esOjete ? "[#FF4500]" : "[BLUE]";
+        boolean esEnemigo = nombre.toLowerCase().contains("oj") || nombre.toLowerCase().contains("polla");
+        String colorNombre = esEnemigo ? "[#E30B5D]" : "[BLUE]";
 
         String fullMessage = "[GREEN][" + timeStamp + "][] " + colorNombre + nombre + ":  []" + "[BLACK]" + mensaje + "[]";
 

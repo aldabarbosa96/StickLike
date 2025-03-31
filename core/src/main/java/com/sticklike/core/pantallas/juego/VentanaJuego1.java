@@ -198,11 +198,12 @@ public class VentanaJuego1 implements Screen {
 
     private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
         jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, gestorDeAudio);
+        sistemaDeEventos.actualizar();
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
         actualizarRecogidaXP(delta);
         actualizarTextoFlotante(delta);
-        sistemaDeEventos.actualizar();
+
     }
 
     private void actualizarRecogidaXP(float delta) {
