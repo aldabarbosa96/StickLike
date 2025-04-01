@@ -18,15 +18,15 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_BOLIBIC;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_MOCO;
 
-public class BoliBic implements Proyectiles {
+public class LluviaMocos implements Proyectiles {
 
-    public enum EstadoBoli {
+    public enum EstadoMoco {
         FALLING, EXPLODED
     }
 
-    private EstadoBoli estadoBoli;
+    private EstadoMoco estadoMoco;
     private GestorDeAudio gestorDeAudio;
     private RenderParticulasProyectil renderParticulasProyectil;
     private float x, y;
@@ -52,25 +52,25 @@ public class BoliBic implements Proyectiles {
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private Vector2 centroSprite;
 
-    public BoliBic(float x, float y, float fallSpeed, GestorDeAudio gestorDeAudio) {
+    public LluviaMocos(float x, float y, float fallSpeed, GestorDeAudio gestorDeAudio) {
         this.x = x;
         this.y = y;
         this.fallSpeed = fallSpeed;
         this.targetY = y - (Gdx.graphics.getHeight() / 3f) + MathUtils.random(-100, 100);
-        this.estadoBoli = EstadoBoli.FALLING;
+        this.estadoMoco = EstadoMoco.FALLING;
         this.explosionTimer = 0;
-        this.width = 26;
-        this.height = 26;
+        this.width = 20;
+        this.height = 20;
         this.proyectilActivo = true;
         this.rotation = 0;
         this.rotationSpeed = MathUtils.random(150, 350);
         this.stainsGenerated = false;
         if (texture == null) {
-            texture = GestorDeAssets.manager.get(ARMA_BOLIBIC, Texture.class);
+            texture = GestorDeAssets.manager.get(ARMA_MOCO, Texture.class);
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(32, 5.25f, new Color(0.15f, 0.15f, 0.75f, 1));
+        this.renderParticulasProyectil = new RenderParticulasProyectil(32, 6f, new Color(0.15f, 0.75f, 0.15f, 1));
         this.centroSprite = new Vector2();
     }
 
@@ -78,7 +78,7 @@ public class BoliBic implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
 
-        if (estadoBoli == EstadoBoli.FALLING) {
+        if (estadoMoco == EstadoMoco.FALLING) {
             y -= fallSpeed * delta;
             rotation += rotationSpeed * delta;
             centroSprite.set(x + width / 2, y + height / 2);
@@ -88,7 +88,7 @@ public class BoliBic implements Proyectiles {
                 y = targetY;
                 explotar();
             }
-        } else if (estadoBoli == EstadoBoli.EXPLODED) {
+        } else if (estadoMoco == EstadoMoco.EXPLODED) {
             explosionTimer += delta;
             if (!stainsGenerated) {
                 generarStains();
@@ -101,8 +101,8 @@ public class BoliBic implements Proyectiles {
     }
 
     public void explotar() {
-        if (estadoBoli == EstadoBoli.FALLING) {
-            estadoBoli = EstadoBoli.EXPLODED;
+        if (estadoMoco == EstadoMoco.FALLING) {
+            estadoMoco = EstadoMoco.EXPLODED;
             explosionTimer = 0;
             gestorDeAudio.reproducirEfecto("boli", 0.33f);
         }
@@ -113,15 +113,15 @@ public class BoliBic implements Proyectiles {
         if (!proyectilActivo) return;
 
         // Aquí configuramos el alpha que queremos para las partículas.
-        renderParticulasProyectil.setAlphaMult(0.33f);
+        renderParticulasProyectil.setAlphaMult(0.35f);
 
-        if (estadoBoli == EstadoBoli.FALLING) {
+        if (estadoMoco == EstadoMoco.FALLING) {
             renderParticulasProyectil.render(batch);
             batch.draw(texture, x, y, width / 2, height / 2, width, height, 1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
-        } else if (estadoBoli == EstadoBoli.EXPLODED && stainsGenerated) {
+        } else if (estadoMoco == EstadoMoco.EXPLODED && stainsGenerated) {
             if (dropTexture == null) {
                 Pixmap pixmap = new Pixmap(32, 32, Pixmap.Format.RGBA8888);
-                pixmap.setColor(0f, 0f, 0.5f, 1);
+                pixmap.setColor(0f, 0.5f, 0f, 1);
                 pixmap.fillCircle(16, 16, 16);
                 dropTexture = new Texture(pixmap);
                 pixmap.dispose();
@@ -182,9 +182,9 @@ public class BoliBic implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        if (estadoBoli == EstadoBoli.FALLING) {
+        if (estadoMoco == EstadoMoco.FALLING) {
             return new Rectangle(x, y, width, height);
-        } else if (estadoBoli == EstadoBoli.EXPLODED && stainsGenerated) {
+        } else if (estadoMoco == EstadoMoco.EXPLODED && stainsGenerated) {
             float firstStainX = x + stainOffsetX[0];
             float firstStainY = y + stainOffsetY[0];
             float dropWidth = stainSizes[0] * stainScaleX[0];

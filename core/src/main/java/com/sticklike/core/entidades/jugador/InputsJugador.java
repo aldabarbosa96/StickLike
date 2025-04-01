@@ -98,6 +98,9 @@ public class InputsJugador extends ControllerAdapter {
         jugador.setDireccionActual(result.direction);
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
 
     /**
      * Enum para indicar la dirección horizontal: LEFT, RIGHT o IDLE.

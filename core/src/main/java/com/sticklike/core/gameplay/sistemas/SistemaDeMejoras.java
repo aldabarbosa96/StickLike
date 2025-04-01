@@ -56,8 +56,9 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
-        todasLasMejoras.add(new Mejora("¡PAPELCULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
-        todasLasMejoras.add(new Mejora("BOLIBIC PETAO", "Llueven bolis bic con explosión de tinta", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
+        todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
+        todasLasMejoras.add(new Mejora("LLUVIA DE MOCOS", "Llueven mocardones con impacto mucoso", () -> jugador.setAtaqueMocos(new AtaqueMocos()), 1, manager.get(ARMA_MOCO, Texture.class), "MOCO"));
+        todasLasMejoras.add(new Mejora("BOLI BICAZO", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
 
         // Upgrades específicos para las habilidades
         // Calcetín

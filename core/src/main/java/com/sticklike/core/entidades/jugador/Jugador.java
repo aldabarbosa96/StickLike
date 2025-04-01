@@ -33,6 +33,7 @@ public class Jugador {
     private AtaqueTazo ataqueTazo;
     private AtaqueNubePedo ataqueNubePedo;
     private AtaquePapelCulo ataquePapelCulo;
+    private AtaqueMocos ataqueMocos;
     private AtaqueBoliBic ataqueBoliBic;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
@@ -89,6 +90,7 @@ public class Jugador {
         this.ataqueTazo = null;
         this.ataqueNubePedo = null;
         this.ataquePapelCulo = null;
+        this.ataqueMocos = null;
         this.ataqueBoliBic = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
@@ -116,6 +118,10 @@ public class Jugador {
             if (ataquePapelCulo != null) {
                 ataquePapelCulo.manejarDisparo(delta, this, gestorDeAudio);
             }
+            if (ataqueMocos != null) {
+                ataqueMocos.manejarDisparo(delta,this,gestorDeAudio);
+            }
+
             if (ataqueBoliBic != null) {
                 ataqueBoliBic.manejarDisparo(delta,this,gestorDeAudio);
             }
@@ -355,6 +361,14 @@ public class Jugador {
         return ataqueNubePedo;
     }
 
+    public AtaqueMocos getAtaqueMocos() {
+        return ataqueMocos;
+    }
+
+    public void setAtaqueMocos(AtaqueMocos ataqueMocos) {
+        this.ataqueMocos = ataqueMocos;
+    }
+
     public AtaqueBoliBic getAtaqueBoliBic() {
         return ataqueBoliBic;
     }
@@ -406,5 +420,9 @@ public class Jugador {
 
     public void setIntervaloDisparo(float intervaloDisparo) {
         this.intervaloDisparo = intervaloDisparo;
+    }
+
+    public InputsJugador getInputController() {
+        return inputController;
     }
 }

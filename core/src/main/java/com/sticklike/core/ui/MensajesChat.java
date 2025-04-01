@@ -37,6 +37,7 @@ public class MensajesChat {
         this.chatStage = chatStage;
         this.renderHUDComponents = renderHUDComponents;
         this.enemyStage = enemyStage;
+
         this.messages = new ArrayList<>();
         this.displayDuration = MathUtils.random(4,6);
         this.font = new BitmapFont();

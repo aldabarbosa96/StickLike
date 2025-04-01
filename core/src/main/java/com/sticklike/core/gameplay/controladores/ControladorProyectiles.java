@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.BoliBic;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.LluviaMocos;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPapelCulo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
@@ -145,7 +145,7 @@ public class ControladorProyectiles {
 
     public void renderizarProyectiles(SpriteBatch batch) { // usado para renderizar proyectiles por encima de los enemigos
         for (Proyectiles p : proyectiles) {
-            if (!(p instanceof BoliBic && p.isPersistente())) {
+            if (!(p instanceof LluviaMocos && p.isPersistente())) {
                 p.renderizarProyectil(batch);
             }
         }
@@ -153,7 +153,7 @@ public class ControladorProyectiles {
 
     public void renderizarProyectilesFondo(SpriteBatch batch) { // usado para renderizar proyectiles por debajo de los enemigos
         for (Proyectiles p : proyectiles) {
-            if (p instanceof BoliBic && p.isPersistente()) {
+            if (p instanceof LluviaMocos && p.isPersistente()) {
                 p.renderizarProyectil(batch);
             }
         }

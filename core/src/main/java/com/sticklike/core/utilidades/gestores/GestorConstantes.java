@@ -213,6 +213,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int VEL_ROTACION_CALCETIN = 1080;
     public static final float DANYO_CALCETIN = 13f;
     public static final float DANYO_PAPELCULO = 45f;
+    public static final float DANYO_BOLIBIC = 35f;
     public static final float EMPUJE_BASE_PAPELCULO = 250f;
     public static final float SPEED_MULT = 1.8f;
     public static final float PIEDRA_SIZE = 6.5f;
@@ -227,6 +228,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DISTANCIA_RECORRIDA = 0f;
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
+    public static final float EMPUJE_BASE_BOLI = 150f;
     public static final float MULT_DANYO = 1f;
     public static final float TAZO_SIZE = 14.5f;
     public static final float DURACION_NUBE_PEDO = 8f;
