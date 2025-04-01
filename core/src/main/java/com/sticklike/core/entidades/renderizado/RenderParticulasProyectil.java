@@ -18,8 +18,13 @@ public class RenderParticulasProyectil {
     private ShapeRenderer shapeRenderer;
     private float alphaMult = 1f;
 
-    public RenderParticulasProyectil(int maxLength, float width, Color color) {
-        this.maxLength = maxLength;
+    /**
+     * @param baseMaxLength Usamos el valor escalado en base a la resolución 2560x1440p
+     */
+    public RenderParticulasProyectil(int baseMaxLength, float width, Color color) {
+        // Calculamos un factor de escala basado en el ancho actual en relación a 2560.
+        float scaleFactor = Gdx.graphics.getWidth() / 2560f;
+        this.maxLength = (int)(baseMaxLength * scaleFactor);
         this.width = width;
         this.color = color;
         this.positions = new Array<>();
@@ -57,11 +62,10 @@ public class RenderParticulasProyectil {
             float x4 = p1.x + halfWidth * MathUtils.cos(angle + MathUtils.PI / 2);
             float y4 = p1.y + halfWidth * MathUtils.sin(angle + MathUtils.PI / 2);
 
-            // Calculamos el valor alpha para el fade y lo multiplicamos por alphaMult para gestionar individualmente a través del setter el alpha
+            // Calculamos el valor alpha para el fade y lo multiplicamos por alphaMult para gestionar individualmente el alpha
             float alpha = (((float) i / (positions.size - 1)) * alphaMult);
             alpha = MathUtils.clamp(alpha, 0f, 1f);
             shapeRenderer.setColor(color.r, color.g, color.b, alpha);
-
 
             // Dibujamos la forma como dos triángulos que forman un cuadrilátero
             shapeRenderer.triangle(x1, y1, x2, y2, x3, y3);
