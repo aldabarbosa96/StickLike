@@ -49,8 +49,8 @@ public class ProyectilPiedra implements Proyectiles {
 
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
         int maxLength = (int) (18 * scaleFactor);
-        float scaledWidth = 3 * scaleFactor;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaledWidth, new Color(0.9f, 0f, 0f, 1f));
+        float scaledWidth = 3.5f * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaledWidth, Color.BLACK);
         renderParticulasProyectil.setAlphaMult(0.5f);
         center = new Vector2();
     }

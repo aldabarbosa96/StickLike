@@ -7,7 +7,7 @@ import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
-import com.sticklike.core.ui.MensajesChatData;
+import com.sticklike.core.ui.MensajesData;
 import com.sticklike.core.ui.RenderHUDComponents;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
@@ -72,7 +72,7 @@ public class SistemaDeEventos {
 
     private void entraEnemigoPolla() {
         // Configuramos efecto de spawn masivo
-        MensajesChatData.getInstance().mostrarMensajePollas(renderHUDComponents);
+        MensajesData.getInstance().mostrarMensajePollas(renderHUDComponents);
         controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
 
@@ -111,10 +111,10 @@ public class SistemaDeEventos {
         Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
     public void actualizar() {
-        MensajesChatData.getInstance().mostrarMensajeCulos(renderHUDComponents);
-        MensajesChatData.getInstance().mostrarMensajePollas(renderHUDComponents);
-        MensajesChatData.getInstance().updateCulos(renderHUDComponents);
-        MensajesChatData.getInstance().updatePollas(renderHUDComponents);
+        MensajesData.getInstance().mostrarMensajeCulos(renderHUDComponents);
+        MensajesData.getInstance().mostrarMensajePollas(renderHUDComponents);
+        MensajesData.getInstance().updateCulos(renderHUDComponents);
+        MensajesData.getInstance().updatePollas(renderHUDComponents);
         int nivelActual = sistemaDeNiveles.getNivelActual();
         if (!eventos.isEmpty()) {
             Evento siguienteEvento = eventos.peek();

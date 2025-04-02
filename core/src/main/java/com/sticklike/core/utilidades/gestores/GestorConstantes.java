@@ -216,7 +216,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_BOLIBIC = 35f;
     public static final float EMPUJE_BASE_PAPELCULO = 250f;
     public static final float SPEED_MULT = 1.8f;
-    public static final float PIEDRA_SIZE = 6.5f;
+    public static final float PIEDRA_SIZE = 7f;
     public static final float CALCETIN_W_SIZE = 20.5f;
     public static final float CALCETIN_H_SIZE = 24.5f;
     public static final float PAPELCULO_W_SIZE = 16.5f;
@@ -297,7 +297,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO3_SPAWN_RATE = 0.1f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
-    public static final String[] LISTA_EXAMEN = {"EXAMEN","EXAMEN","EXAMEN","REGLA"};
+    public static final String[] LISTA_EXAMEN = {"EXAMEN","EXAMEN","EXAMEN","EXAMEN","EXAMEN","EXAMEN","REGLA"};
     public static final String[] LISTA_ALARMA = {"ALARMA"};
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "REGLA"};

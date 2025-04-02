@@ -16,9 +16,9 @@ import com.sticklike.core.interfaces.Enemigo;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_WIDTH;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_HEIGHT;
 
-public class MensajesChat {
+public class Mensajes {
 
-    private static MensajesChat instance;
+    private static Mensajes instance;
 
     // Stage para mensajes del jugador (HUD) y para mensajes de enemigos (mundo)
     private Stage chatStage;
@@ -32,8 +32,8 @@ public class MensajesChat {
     private static final float FADE_OUT_DURATION = 0.25f;
     private static final float FOLLOW_OFFSET_Y = 5f;
 
-    // Constructor privado: se reciben los dos stages (uno para chat y otro para mensajes de enemigos)
-    private MensajesChat(Stage chatStage, RenderHUDComponents renderHUDComponents, Stage enemyStage) {
+    // Constructor privado: se reciben los dos stages (uno para el player y otro para los de enemigos)
+    private Mensajes(Stage chatStage, RenderHUDComponents renderHUDComponents, Stage enemyStage) {
         this.chatStage = chatStage;
         this.renderHUDComponents = renderHUDComponents;
         this.enemyStage = enemyStage;
@@ -52,11 +52,11 @@ public class MensajesChat {
         if (instance == null) {
             // Creamos un stage para mensajes de enemigos con un ExtendViewport usando la cámara del mundo
             Stage enemyStage = new Stage(new ExtendViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, worldCamera), spriteBatch);
-            instance = new MensajesChat(chatStage, renderHUDComponents, enemyStage);
+            instance = new Mensajes(chatStage, renderHUDComponents, enemyStage);
         }
     }
 
-    public static MensajesChat getInstance() {
+    public static Mensajes getInstance() {
         if (instance == null) {
             throw new IllegalStateException("ERROR: MensajesChat no ha sido inicializado. Llama a init() primero.");
         }
@@ -66,7 +66,7 @@ public class MensajesChat {
     public void addMessage(String nombre, String mensaje, float posX, float posY, Enemigo enemy, boolean esEnemigo) {
         //String timeStamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
         boolean esEnemigoTexto = nombre.toLowerCase().contains("oj") || nombre.toLowerCase().contains("polla");
-        String colorNombre = esEnemigoTexto ? "[#B00020]" : "[#3A5FCD]";
+        String colorNombre = esEnemigoTexto ? "[#D32F2F]" : "[#3A5FCD]";
         String fullMessage = /*"[GREEN][" + timeStamp + "][] " + */colorNombre + nombre + ":  []" + "[#454545]" + mensaje + "[]";
 
         Label label = new Label(fullMessage, labelStyle);

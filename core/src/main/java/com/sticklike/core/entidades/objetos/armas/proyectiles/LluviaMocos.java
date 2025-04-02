@@ -59,8 +59,8 @@ public class LluviaMocos implements Proyectiles {
         this.targetY = y - (Gdx.graphics.getHeight() / 3f) + MathUtils.random(-100, 100);
         this.estadoMoco = EstadoMoco.FALLING;
         this.explosionTimer = 0;
-        this.width = 20;
-        this.height = 20;
+        this.width = 17.5f;
+        this.height = 17.5f;
         this.proyectilActivo = true;
         this.rotation = 0;
         this.rotationSpeed = MathUtils.random(150, 350);

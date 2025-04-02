@@ -14,7 +14,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
-import com.sticklike.core.ui.MensajesChat;
+import com.sticklike.core.ui.Mensajes;
 import com.sticklike.core.utilidades.PoissonPoints;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -162,8 +162,8 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         spriteBatch.end();
 
         // 7) Renderizamos HUD
-        MensajesChat.getInstance().update();
-        MensajesChat.getInstance().draw(camara);
+        Mensajes.getInstance().update();
+        Mensajes.getInstance().draw(camara);
         hud.renderizarHUD(delta);
 
 

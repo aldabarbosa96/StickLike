@@ -210,7 +210,7 @@ public class RenderBaseEnemigos {
         float shadowWidth = w * 0.65f;
         float shadowHeight = h * 0.15f;
         float shadowX = centerX - (shadowWidth / 2f);
-        float shadowY = y - 12f;
+        float shadowY = y -7.5f;
 
         dibujarParpadeoSombra(enemigo, shapeRenderer, Color.WHITE);
         shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);

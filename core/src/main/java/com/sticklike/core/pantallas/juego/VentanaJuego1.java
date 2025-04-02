@@ -88,8 +88,8 @@ public class VentanaJuego1 implements Screen {
         this.currentScreenWidth = screenWidth;
         this.currentScreenHeight = screenHeight;
 
-        MensajesChat.reset();
-        MensajesChatData.getInstance().reset();
+        Mensajes.reset();
+        MensajesData.getInstance().reset();
 
         inicializarRenderYCamara();
         inicializarJugador();
@@ -100,7 +100,7 @@ public class VentanaJuego1 implements Screen {
 
         // Ajustar la posición de la cámara
         actualizarPosCamara();
-        MensajesChat.getInstance().addMessage("StickMan","Ah shit! Here we go again...", jugador.getSprite().getX() - 17.5f, jugador.getSprite().getY() - 20);
+        Mensajes.getInstance().addMessage("StickMan","Ah shit! Here we go again...", jugador.getSprite().getX() - 17.5f, jugador.getSprite().getY() - 20);
 
     }
 

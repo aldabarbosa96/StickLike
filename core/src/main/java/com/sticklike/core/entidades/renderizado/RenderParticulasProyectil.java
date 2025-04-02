@@ -84,4 +84,8 @@ public class RenderParticulasProyectil {
     public void setAlphaMult(float alphaMult) {
         this.alphaMult = alphaMult;
     }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 }

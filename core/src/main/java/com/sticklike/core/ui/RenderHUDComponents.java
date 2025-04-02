@@ -39,9 +39,7 @@ import java.util.Set;
  */
 
 public class RenderHUDComponents {
-    // Nueva constante para aumentar la altura del HUD
     private static final float EXTRA_HUD_HEIGHT = 20f;
-
     private ShapeRenderer shapeRenderer;
     private GlyphLayout layout;
     private BitmapFont fuente;
@@ -81,7 +79,7 @@ public class RenderHUDComponents {
         hudViewport.apply();
         hudStage = new Stage(hudViewport, spriteBatch);
         chatlogStage = new Stage(hudViewport, spriteBatch);
-        MensajesChat.init(chatlogStage, this,VentanaJuego1.getCamara(),spriteBatch);
+        Mensajes.init(chatlogStage, this,VentanaJuego1.getCamara(),spriteBatch);
     }
 
     public void renderizarTemporizador(float delta) {
@@ -452,10 +450,6 @@ public class RenderHUDComponents {
         return hudStage;
     }
 
-    public Stage getChatlogStage() {
-        return chatlogStage;
-    }
-
     public float getTiempoTranscurrido() {
         return tiempoTranscurrido;
     }
@@ -466,9 +460,5 @@ public class RenderHUDComponents {
 
     public ControladorEnemigos getControladorEnemigos() {
         return controladorEnemigos;
-    }
-
-    public OrthographicCamera getHudCamera() {
-        return hudCamera;
     }
 }

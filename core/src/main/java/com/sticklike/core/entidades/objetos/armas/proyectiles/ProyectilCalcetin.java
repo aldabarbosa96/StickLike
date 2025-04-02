@@ -39,6 +39,8 @@ public class ProyectilCalcetin implements Proyectiles {
     private Jugador jugador;
     private RenderParticulasProyectil renderParticulasProyectil;
     private Vector2 centroSprite;
+    private float impactoTimer = 0;
+    private static final float IMPACTO_DURACION = 0.1f;
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad,
                              float poderJugador, float extraDamage, Jugador jugador) {
@@ -81,6 +83,18 @@ public class ProyectilCalcetin implements Proyectiles {
         distanciaRecorrida += desplazamiento;
 
         sprite.rotate(rotationSpeed * delta);
+
+        // Si no se ha registrado un nuevo impacto, se incrementa el temporizador
+        if (enemigosImpactados.isEmpty()) {
+            sprite.setColor(1, 1, 1, 1);
+        } else {
+            impactoTimer += delta;
+            if (impactoTimer >= IMPACTO_DURACION) {
+                enemigosImpactados.clear();
+                sprite.setColor(1, 1, 1, 1);
+                impactoTimer = 0;
+            }
+        }
 
         if (distanciaRecorrida >= distanciaMaxima) {
             desactivarProyectil();
@@ -150,6 +164,8 @@ public class ProyectilCalcetin implements Proyectiles {
     @Override
     public void registrarImpacto(Enemigo enemigo) {
         enemigosImpactados.add(enemigo);
+        sprite.setColor(1, 0, 0, 1);
+        impactoTimer = 0;
     }
 
     @Override
