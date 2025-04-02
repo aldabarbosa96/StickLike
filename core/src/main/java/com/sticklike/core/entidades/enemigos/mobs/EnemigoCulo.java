@@ -17,7 +17,6 @@ import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
-import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -63,13 +62,13 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         float random = MathUtils.random(10);
         if (random >= 2.5f) {
             sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
-            sprite.setSize(28, 24);
+            sprite.setSize(30, 26);
         } else {
             tieneOjo = true;
             spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
-            spriteOjoAbierto.setSize(32, 28);
+            spriteOjoAbierto.setSize(34, 30);
             spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
-            spriteOjoCerrado.setSize(32, 28);
+            spriteOjoCerrado.setSize(34, 30);
             sprite = new Sprite(spriteOjoAbierto);
             vidaEnemigo = VIDA_ENEMIGOCULO * 2;
         }
