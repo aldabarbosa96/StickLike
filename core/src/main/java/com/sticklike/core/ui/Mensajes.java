@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -39,7 +40,7 @@ public class Mensajes {
         this.enemyStage = enemyStage;
 
         this.messages = new ArrayList<>();
-        this.displayDuration = MathUtils.random(4,6);
+        this.displayDuration = MathUtils.random(4, 6);
         this.font = new BitmapFont();
         this.font.getData().markupEnabled = true;
         this.font.getData().setScale(0.8f);
@@ -67,7 +68,7 @@ public class Mensajes {
         //String timeStamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
         boolean esEnemigoTexto = nombre.toLowerCase().contains("oj") || nombre.toLowerCase().contains("polla");
         String colorNombre = esEnemigoTexto ? "[#D32F2F]" : "[#3A5FCD]";
-        String fullMessage = /*"[GREEN][" + timeStamp + "][] " + */colorNombre + nombre + ":  []" + "[#454545]" + mensaje + "[]";
+        String fullMessage = /*"[GREEN][" + timeStamp + "][] " + */colorNombre + "[" + nombre + "]:  []" + "[#454545]" + mensaje + "[]";
 
         Label label = new Label(fullMessage, labelStyle);
         label.setWrap(true);

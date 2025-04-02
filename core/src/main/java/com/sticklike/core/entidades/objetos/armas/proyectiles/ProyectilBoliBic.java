@@ -64,7 +64,6 @@ public class ProyectilBoliBic implements Proyectiles {
         float scaleWidth = 5f * scaleFactor;
         this.renderParticulas = new RenderParticulasProyectil(maxLength, scaleWidth, DEFAULT_PARTICLE_COLOR);
     }
-
     @Override
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
@@ -88,13 +87,14 @@ public class ProyectilBoliBic implements Proyectiles {
         if (!enemigosImpactados.isEmpty()) {
             impactoTimer += delta;
             if (impactoTimer >= IMPACTO_DURACION) {
-                enemigosImpactados.clear();
+                // Se reinician los colores, pero no limpiamos el conjunto, evitando reimpactar al mismo enemigo
                 impactoTimer = 0;
                 sprite.setColor(1, 1, 1, 1);
                 renderParticulas.setColor(DEFAULT_PARTICLE_COLOR);
             }
         }
     }
+
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {

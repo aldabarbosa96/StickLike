@@ -81,7 +81,7 @@ public class SistemaDeEventos {
             public void run() {
                 restaurarSpawnNormal();
             }
-        }, 5); // duración efecto
+        }, 3.5f); // duración efecto
     }
 
     private void restaurarSpawnNormal() {

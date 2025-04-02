@@ -188,6 +188,29 @@ public class MensajesData {
         opcionesChatPollas.add(new ChatOption("Polla21", "Mamá me lavó las negras"));
     }
 
+    private void mensajesAlarmas(){ // todo --> por gestionar
+        opcionesChatPollas.add(new ChatOption("Alarma1", ""));
+        opcionesChatPollas.add(new ChatOption("Crono2", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma3", ""));
+        opcionesChatPollas.add(new ChatOption("Crono4", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma5", ""));
+        opcionesChatPollas.add(new ChatOption("Crono6", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma7", ""));
+        opcionesChatPollas.add(new ChatOption("Crono8", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma9", ""));
+        opcionesChatPollas.add(new ChatOption("Crono10", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma11", ""));
+        opcionesChatPollas.add(new ChatOption("Crono12", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma13", ""));
+        opcionesChatPollas.add(new ChatOption("Crono14", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma15", ""));
+        opcionesChatPollas.add(new ChatOption("Crono16", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma17", ""));
+        opcionesChatPollas.add(new ChatOption("Crono18", ""));
+        opcionesChatPollas.add(new ChatOption("Alarma19", ""));
+        opcionesChatPollas.add(new ChatOption("Crono20", ""));
+    }
+
     // Clase interna para representar una opción de mensaje
     private static class ChatOption {
         String nombre;

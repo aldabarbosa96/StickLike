@@ -40,7 +40,7 @@ public class EnemigoPolla implements Enemigo {
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         sprite = new Sprite(manager.get(ENEMIGO_POLLA, Texture.class));
-        sprite.setSize(27.5f, 27.5f);
+        sprite.setSize(28, 28);
         sprite.setPosition(x, y);
         this.jugador = jugador;
         this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
