@@ -110,6 +110,7 @@ public class SistemaDeEventos {
         incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
         Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
+
     public void actualizar() {
         MensajesData.getInstance().mostrarMensajeCulos(renderHUDComponents);
         MensajesData.getInstance().mostrarMensajePollas(renderHUDComponents);

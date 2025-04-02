@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -31,7 +32,6 @@ public class ProyectilBoliBic implements Proyectiles {
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float impactoTimer = 0;
     private static final float IMPACTO_DURACION = 0.1f;
-    // Guardamos el color original de las partículas para restablecerlo
     private static final Color DEFAULT_PARTICLE_COLOR = new Color(0, 0, 0.75f, 1);
 
     public ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil, Jugador jugador) {
@@ -60,7 +60,7 @@ public class ProyectilBoliBic implements Proyectiles {
         this.jugador = jugador;
 
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
-        int maxLength = (int) (22 * scaleFactor);
+        int maxLength = (int) (17.5f * scaleFactor);
         float scaleWidth = 5f * scaleFactor;
         this.renderParticulas = new RenderParticulasProyectil(maxLength, scaleWidth, DEFAULT_PARTICLE_COLOR);
     }
@@ -138,7 +138,8 @@ public class ProyectilBoliBic implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        return DANYO_BOLIBIC * (1f + (Jugador.getPoderJugador() / 100f));
+        float baseDamage = 25 + MathUtils.random(DANYO_BOLIBIC);
+        return baseDamage * (1f + (Jugador.getPoderJugador() / 100f));
     }
 
     @Override

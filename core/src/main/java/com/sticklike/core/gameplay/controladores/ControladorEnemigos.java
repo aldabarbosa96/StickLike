@@ -47,9 +47,9 @@ public class ControladorEnemigos {
     private static final float TIEMPO_ESPERA_REDIMENSION = 0.5f;
     private boolean necesitaOrdenar = false;
     private float temporizadorGruposExamen = 0f;
-    private static final float INTERVALO_GRUPO_EXAMEN = 5f;
+    private static final float INTERVALO_GRUPO_EXAMEN = 0.8f;
     private float temporizadorVaterSpawn = 0f;
-    private static float intervaloVaterSpawn = 30f;
+    private static float intervaloVaterSpawn = 40f;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;

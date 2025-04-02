@@ -7,7 +7,7 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 public class AtaqueBoliBic {
     private float temporizadorDisparo = 0f;
-    private float intervaloDisparo = 0.5f;
+    private float intervaloDisparo = 0.75f;
 
     // Vector de puntería continuo que se actualiza cada frame; se inicializa a (1,0) y se irá modificando
     private float aimX = 1f;
