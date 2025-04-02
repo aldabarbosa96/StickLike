@@ -172,7 +172,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ENEMY_MIN_MOVE_DURATION = 1.0f;
     public static final float ENEMY_MAX_MOVE_DURATION = 10.0f;
     public static final float BORDER_SPAWN_MARGIN = 200f;
-    public static final float INTERVALO_SPAWN = 1f;
+    public static final float INTERVALO_SPAWN = 0.8f;
     public static final float MAX_OFFSET = 100f;
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
@@ -288,21 +288,21 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO3 = 7;
     public static final int LVL_EVENTO4 = 9;
     public static final int LVL_EVENTO5 = 12;
-    public static final float EVENTO1_SPAWN_RATE = 0.5f;
+    public static final float EVENTO1_SPAWN_RATE = 0.4f;
     public static final float EVENTO1_SPEED_MULT = 1.25f;
     public static final float EVENTO2_SPAWN_RATE = 0.25f;
     public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
     public static final float EVENTO2_SPEED_MULT = 1.45f;
     public static final float EVENTO3_SPEED_MULT = 2f;
     public static final float EVENTO3_SPAWN_RATE = 0.1f;
+    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000001f;
     public static final String[] LISTA_POLLAS = {"POLLA"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
-    public static final String[] LISTA_EXAMEN = {"EXAMEN","EXAMEN","EXAMEN","EXAMEN","EXAMEN","EXAMEN","REGLA"};
+    public static final String[] LISTA_EXAMEN = {"EXAMEN"};
     public static final String[] LISTA_ALARMA = {"ALARMA"};
     public static final String[] TIPOS_ENEMIGOS = {"POLLA", "CULO", "CULO", "CULO", "CULO", "CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "REGLA"};
     public static final String[] TIPOS_ENEMIGOS3 = {"CULO"};
-    public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000001f;
 
     // -------------------------------------------------
     // Configuración borrones

@@ -143,7 +143,7 @@ public class ControladorEnemigos {
         if ("EXAMEN".equals(tipoElegido)) {
             spawnEnGrupo(tipoElegido, randomSpeed);
         } else {
-            // Spawn normal para enemigos: se usa posición cercana al jugador
+            // Spawn normal
             Vector2 spawnPos = getRandomSpawnPosition();
             Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
             enemigos.add(enemigo);
