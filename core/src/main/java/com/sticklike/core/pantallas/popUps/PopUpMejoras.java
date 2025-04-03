@@ -173,14 +173,15 @@ public class PopUpMejoras extends RenderBaseMenus {
             String estiloLabel = mejora.getTipoMejora().equals("HAB") ? "hab" : "stat";
             Label labelTipo = new Label(mejora.getTipoMejora(), uiSkin, estiloLabel);
 
-            rowTable.add(labelTipo).width(25).padLeft(8).padRight(-5f);
+            rowTable.add(labelTipo).width(25).center().padLeft(10).padRight(-10f);
             rowTable.add(btn).expandX().fillX().center();
             labelTipo.toFront();
 
             if (mejora.getIcono() != null) {
                 Image iconImage = new Image(mejora.getIcono());
+                iconImage.setScale(1.25f);
                 Container<Image> iconContainer = new Container<>(iconImage);
-                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-5f).height(25);
+                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-10f).height(25);
             } else {
                 rowTable.add().width(25);
             }
@@ -241,7 +242,7 @@ public class PopUpMejoras extends RenderBaseMenus {
             TextButton btn = improvementButtons.get(i);
             Mejora mejora = (Mejora) btn.getUserObject();
             if (i == selectedIndex) {
-                if (mejora.getIcono() != null) {
+                if (mejora.getIcono() != null && mejora.getTipoMejora().equals("HAB")) {
                     btn.setStyle(selectedStyle);
                 } else {
                     btn.setStyle(selectedGreenStyle);

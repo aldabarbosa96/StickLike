@@ -104,7 +104,7 @@ public class LluviaMocos implements Proyectiles {
         if (estadoMoco == EstadoMoco.FALLING) {
             estadoMoco = EstadoMoco.EXPLODED;
             explosionTimer = 0;
-            gestorDeAudio.reproducirEfecto("boli", 0.33f);
+            gestorDeAudio.reproducirEfecto("moco", 0.33f);
         }
     }
 

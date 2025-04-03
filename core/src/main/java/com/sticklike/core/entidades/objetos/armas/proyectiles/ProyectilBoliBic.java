@@ -12,6 +12,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -158,6 +159,7 @@ public class ProyectilBoliBic implements Proyectiles {
             enemigosImpactados.add(enemigo);
             sprite.setColor(Color.RED);
             renderParticulas.setColor(Color.RED);
+            GestorDeAudio.getInstance().reproducirEfecto("impactoBase",1);
             impactoTimer = 0;
         }
     }

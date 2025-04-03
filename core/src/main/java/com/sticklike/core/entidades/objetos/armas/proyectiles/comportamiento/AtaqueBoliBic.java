@@ -84,6 +84,6 @@ public class AtaqueBoliBic {
         ProyectilBoliBic proyectil = new ProyectilBoliBic(playerCenterX, playerCenterY, dirX, dirY, 500, jug);
         jug.getControladorProyectiles().anyadirNuevoProyectil(proyectil);
 
-        // gestorDeAudio.reproducirEfecto("lanzarBoliBic", AUDIO_BOLIBIC); todo --> añadir
+        gestorDeAudio.reproducirEfecto("boli", 0.6f);
     }
 }

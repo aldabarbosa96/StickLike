@@ -51,7 +51,8 @@ public class GestorDeAudio {
         efectosSonido.put("lanzarCalcetin", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoCalcetines.wav")));
         efectosSonido.put("tazo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoTazo.wav")));
         efectosSonido.put("pedo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPedo.wav")));
-        efectosSonido.put("boli", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMoco.wav")));
+        efectosSonido.put("moco", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMoco.wav")));
+        efectosSonido.put("boli", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBoliBic.wav")));
         efectosSonido.put("muerteJugador", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteJugador.wav")));
         efectosSonido.put("muerteGenerico", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteGenerico.wav")));
         efectosSonido.put("muerteGenerico2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteGenerico2.wav")));
