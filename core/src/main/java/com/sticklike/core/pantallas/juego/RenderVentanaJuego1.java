@@ -112,7 +112,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
                     if (jugador.getRenderJugador().isEnParpadeo()) {
                         Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
                     } else {
-                        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+                        Gdx.gl.glClearColor(0.91f, 0.91f, 0.91f, 1);
                     }
                 }
             }

@@ -50,7 +50,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
             jugador.setVidaMax(Jugador.getMaxVidaJugador() + 15);
             jugador.setVidaJugador(Jugador.getVidaJugador() + 15);
-        }, 5, null, null));
+        }, 5, manager.get(ICONO_VIDA, Texture.class), null));
 
         // Mejoras base para habilidades (se especifica el id de la habilidad; no contienen "_" en el id)
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));

@@ -104,7 +104,7 @@ public class RenderHUDComponents {
 
     public void renderizarFondoHUD() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        shapeRenderer.setColor(0.985f, 0.91f, 0.7f, 1.0f);
+        shapeRenderer.setColor(0.99f, 0.925f, 0.66f, 1.0f);
         shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD);
     }
 
@@ -125,7 +125,7 @@ public class RenderHUDComponents {
     }
 
     public void renderizarLineasHorizontalesCuadricula(float alturaHUD) {
-        shapeRenderer.setColor(0.75f, 0.85f, 0.9f, 1);
+        shapeRenderer.setColor(0.74f, 0.84f, 0.9f, 1);
         float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
         for (float y = 0; y <= alturaHUD; y += cellSize) {
             shapeRenderer.rectLine(0, y, VIRTUAL_WIDTH, y, 2);

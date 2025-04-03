@@ -49,7 +49,7 @@ public class HUD {
 
         // 2. Dibujar las líneas horizontales
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight);
+        renderHUDComponents.renderizarLineasHorizontalesCuadricula(hudHeight + HUD_BAR_Y_OFFSET);
         shapeRenderer.end();
 
         // 3. Dibujar el resto de los elementos HUD

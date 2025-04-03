@@ -104,7 +104,7 @@ public abstract class RenderBaseMenus {
 
     public void render(float delta) {
         // Limpieza de pantalla
-        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+        Gdx.gl.glClearColor(0.92f, 0.92f, 0.92f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Dibujo de cuadrícula
