@@ -38,15 +38,15 @@ public class SistemaDeMejoras {
 
     private void inicializarMejoras() {
         // Mejora global (no relacionada con una habilidad, idHabilidad = null)
-        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, null, null));
-        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 18%", () -> jugador.reducirIntervaloDisparo(0.16f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 39%", () -> jugador.aumentarDanyo(1.39f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 1", () -> jugador.aumentarProyectilesPorDisparo(1), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, null, null));
-        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%", () -> jugador.aumentarResistencia(0.2f), 3, null, null));
-        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, null, null));
+        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, manager.get(ICONO_VEL_MOV, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, manager.get(ICONO_RANGO, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 28%", () -> jugador.reducirIntervaloDisparo(0.22f), 5, manager.get(ICONO_VEL_ATAQUE, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 39%", () -> jugador.aumentarDanyo(1.39f), 5, manager.get(ICONO_FUERZA, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 2", () -> jugador.aumentarProyectilesPorDisparo(2), 5, manager.get(ICONO_PROYECTILES, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, manager.get(ICONO_REGENERACION, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, manager.get(ICONO_CRITICO, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%", () -> jugador.aumentarResistencia(0.2f), 3, manager.get(ICONO_RESISTENCIA, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, manager.get(ICONO_PODER, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
             jugador.setVidaMax(Jugador.getMaxVidaJugador() + 15);
             jugador.setVidaJugador(Jugador.getVidaJugador() + 15);
@@ -177,7 +177,9 @@ public class SistemaDeMejoras {
 
         // Si la mejora aplicada tiene ícono, se considera que es una habilidad o upgrade visual.
         // Si se trata de una habilidad base (su id no contiene "_"), se registra su id para habilitar futuros upgrades.
-        if (mejoraSeleccionada.getIcono() != null) {
+        // Sólo se añaden al HUD las mejoras de tipo HABILIDAD ("HAB")
+        if (mejoraSeleccionada.getIcono() != null && mejoraSeleccionada.getTipoMejora().equals("HAB")) {
+            // Registrar la habilidad base para habilitar futuros upgrades
             if (mejoraSeleccionada.getIdHabilidad() != null && !mejoraSeleccionada.getIdHabilidad().contains("_")) {
                 habilidadesActivasIds.add(mejoraSeleccionada.getIdHabilidad());
             }

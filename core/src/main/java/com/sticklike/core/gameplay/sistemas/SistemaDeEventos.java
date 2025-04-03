@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
@@ -50,23 +51,27 @@ public class SistemaDeEventos {
     private void eventoAumentaEnemigos1() {
         controladorEnemigos.setIntervaloDeAparicion(EVENTO1_SPAWN_RATE);
         controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS2);
-        incrementarVelocidadCulo(EVENTO1_SPEED_MULT);
+        incrementarVelocidadEnemigos(EVENTO1_SPEED_MULT);
         Gdx.app.log("Aparición", "Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
 
     }
 
     private void eventoAumentaEnemigos2() {
         controladorEnemigos.setIntervaloDeAparicion(EVENTO2_SPAWN_RATE);
-        incrementarVelocidadCulo(EVENTO2_SPEED_MULT);
+        incrementarVelocidadEnemigos(EVENTO2_SPEED_MULT);
         Gdx.app.log("Aparición", "Aparición cada: " + controladorEnemigos.getIntervaloDeAparicion());
 
     }
 
-    private void incrementarVelocidadCulo(float factorMultiplicador) {
+    private void incrementarVelocidadEnemigos(float factorMultiplicador) {
         for (Enemigo enemigo : controladorEnemigos.getEnemigos()) {
             if (enemigo instanceof EnemigoCulo culo) {
                 float velocidadActual = culo.getVelocidad();
                 culo.setVelocidad(velocidadActual * factorMultiplicador);
+            } else if (enemigo instanceof EnemigoPolla polla) {
+                float velocidadActual = polla.getMovimientoPolla().getVelocidadEnemigo();
+                polla.setVelocidad(velocidadActual * factorMultiplicador);
+
             }
         }
     }
@@ -101,21 +106,27 @@ public class SistemaDeEventos {
         GestorDeAudio.getInstance().cambiarMusica("fondo4");
         controladorEnemigos.setTiposDeEnemigos(LISTA_ALARMA);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
-        incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
+        incrementarVelocidadEnemigos(EVENTO3_SPEED_MULT);
         Gdx.app.log("Alarma", "¡Alarmas comienzan a aparecer!");
     }
 
     private void spawnExamen() {
         controladorEnemigos.setTiposDeEnemigos(LISTA_EXAMEN);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
-        incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
+        incrementarVelocidadEnemigos(EVENTO3_SPEED_MULT);
         Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
+
     private void spawnReglas() {
         controladorEnemigos.setTiposDeEnemigos(LISTA_REGLA);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
-        incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
+        incrementarVelocidadEnemigos(EVENTO3_SPEED_MULT);
         Gdx.app.log("Reglas", "¡Reglas comienzan a aparecer!");
+    }
+
+    private void spawnTodosSegundoEvento() {
+        controladorEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS4);
+        controladorEnemigos.setIntervaloDeAparicion(EVENTO4_SPAWN_RATE);
     }
 
     public void actualizar() {

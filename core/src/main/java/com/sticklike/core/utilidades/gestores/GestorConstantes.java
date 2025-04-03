@@ -126,7 +126,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int VIDAMAX_JUGADOR = 75;
     public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
-    public static final float INTERVALO_MIN_DISPARO = 0.09f;
+    public static final float INTERVALO_MIN_DISPARO = 0.05f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
     public static final int NUM_PROYECTILES_INICIALES = 2;
     public static final float RESISTENCIA = 0.05f;
@@ -286,9 +286,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO1 = 3;
     public static final int LVL_EVENTO2 = 5;
     public static final int LVL_EVENTO3 = 7;
-    public static final int LVL_EVENTO4 = 9;
-    public static final int LVL_EVENTO5 = 13;
-    public static final int LVL_EVENTO6 = 14;
+    public static final int LVL_EVENTO4 = 10;
+    public static final int LVL_EVENTO5 = 12;
+    public static final int LVL_EVENTO6 = 13;
     public static final float EVENTO1_SPAWN_RATE = 0.4f;
     public static final float EVENTO1_SPEED_MULT = 1.25f;
     public static final float EVENTO2_SPAWN_RATE = 0.25f;
@@ -296,15 +296,17 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO2_SPEED_MULT = 1.45f;
     public static final float EVENTO3_SPEED_MULT = 2f;
     public static final float EVENTO3_SPAWN_RATE = 0.1f;
+    public static final float EVENTO4_SPAWN_RATE = 0.075f;
     public static final float EVENTO_POLLAS_SPAWN_RATE = 0.000001f;
-    public static final String[] LISTA_POLLAS = {"POLLA","POLLA","CULO"};
+    public static final String[] LISTA_POLLAS = {"POLLA", "POLLA", "CULO"};
     public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN"};
     public static final String[] LISTA_ALARMA = {"ALARMA"};
     public static final String[] LISTA_REGLA = {"REGLA"};
     public static final String[] TIPOS_ENEMIGOS = {"CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "REGLA"};
-    public static final String[] TIPOS_ENEMIGOS3 = {"CULO", "POLLA"};
+    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA"};
+    public static final String[] TIPOS_ENEMIGOS4 = {"REGLA","ALARMA","EXAMEN"};
 
     // -------------------------------------------------
     // Configuración borrones
