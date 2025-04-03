@@ -36,11 +36,12 @@ public class EnemigoAlarma implements Enemigo {
     private final Texture damageTexture;
     private boolean recibeImpacto = false; // puede ser útil en un futuro
     private RenderBaseEnemigos renderBaseEnemigos;
+    private boolean esCrono;
 
     public EnemigoAlarma(float x, float y, Jugador jugador) {
         sprite = new Sprite(escogerTextura());
         sprite.setPosition(x, y);
-        sprite.setSize(32, 32);
+        sprite.setSize(36, 36);
         this.jugador = jugador;
         this.movimientoAlarma = new MovimientoCulo(velocidadBase, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
@@ -50,7 +51,13 @@ public class EnemigoAlarma implements Enemigo {
 
     private Texture escogerTextura() {
         float texturaAleatoria = MathUtils.random(10);
-        return texturaAleatoria <= 5 ? manager.get(ENEMIGO_ALARMA, Texture.class) : manager.get(ENEMIGO_ALARMA2, Texture.class);
+        if (texturaAleatoria <= 5) {
+            esCrono = false;
+            return manager.get(ENEMIGO_ALARMA, Texture.class);
+        } else {
+            esCrono = true;
+            return manager.get(ENEMIGO_ALARMA2, Texture.class);
+        }
     }
 
     @Override
@@ -95,6 +102,7 @@ public class EnemigoAlarma implements Enemigo {
                 animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteAlarma);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+                animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
             }
         }
     }
@@ -192,5 +200,9 @@ public class EnemigoAlarma implements Enemigo {
     @Override
     public AnimacionesBaseEnemigos getAnimaciones() {
         return animacionesBaseEnemigos;
+    }
+
+    public boolean isEsCrono() {
+        return esCrono;
     }
 }

@@ -44,6 +44,7 @@ public class SistemaDeEventos {
         eventos.add(new Evento("BOSSPOLLA Aparece", this::spawnPrimerBoss, LVL_EVENTO4));
         eventos.add(new Evento("Alarma Aparece", this::spawnAlarma, LVL_EVENTO4));
         eventos.add(new Evento("Examen Aparece", this::spawnExamen, LVL_EVENTO5));
+        eventos.add(new Evento("Regla Aparece", this::spawnReglas, LVL_EVENTO6));
     }
 
     private void eventoAumentaEnemigos1() {
@@ -76,7 +77,7 @@ public class SistemaDeEventos {
         controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
         controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
 
-        Timer.schedule(new Timer.Task(){
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 restaurarSpawnNormal();
@@ -110,12 +111,20 @@ public class SistemaDeEventos {
         incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
         Gdx.app.log("Examen", "¡Exámenes comienzan a aparecer!");
     }
+    private void spawnReglas() {
+        controladorEnemigos.setTiposDeEnemigos(LISTA_REGLA);
+        controladorEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
+        incrementarVelocidadCulo(EVENTO3_SPEED_MULT);
+        Gdx.app.log("Reglas", "¡Reglas comienzan a aparecer!");
+    }
 
     public void actualizar() {
         MensajesData.getInstance().mostrarMensajeCulos(renderHUDComponents);
         MensajesData.getInstance().mostrarMensajePollas(renderHUDComponents);
+        MensajesData.getInstance().mostrarMensajeAlarmas(renderHUDComponents);
         MensajesData.getInstance().updateCulos(renderHUDComponents);
         MensajesData.getInstance().updatePollas(renderHUDComponents);
+        MensajesData.getInstance().updateAlarmas(renderHUDComponents);
         int nivelActual = sistemaDeNiveles.getNivelActual();
         if (!eventos.isEmpty()) {
             Evento siguienteEvento = eventos.peek();

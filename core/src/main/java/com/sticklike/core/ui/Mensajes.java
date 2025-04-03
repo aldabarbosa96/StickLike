@@ -43,7 +43,7 @@ public class Mensajes {
         this.displayDuration = MathUtils.random(4, 6);
         this.font = new BitmapFont();
         this.font.getData().markupEnabled = true;
-        this.font.getData().setScale(0.8f);
+        this.font.getData().setScale(0.75f);
         this.labelStyle = new Label.LabelStyle();
         this.labelStyle.font = font;
         this.labelStyle.fontColor = Color.WHITE;
@@ -66,8 +66,7 @@ public class Mensajes {
 
     public void addMessage(String nombre, String mensaje, float posX, float posY, Enemigo enemy, boolean esEnemigo) {
         //String timeStamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        boolean esEnemigoTexto = nombre.toLowerCase().contains("oj") || nombre.toLowerCase().contains("polla");
-        String colorNombre = esEnemigoTexto ? "[#D32F2F]" : "[#3A5FCD]";
+        String colorNombre = esEnemigo ? "[#D32F2F]" : "[#3A5FCD]";
         String fullMessage = /*"[GREEN][" + timeStamp + "][] " + */colorNombre + "[" + nombre + "]:  []" + "[#454545]" + mensaje + "[]";
 
         Label label = new Label(fullMessage, labelStyle);

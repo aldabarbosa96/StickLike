@@ -67,8 +67,8 @@ public class ProyectilPapelCulo implements Proyectiles {
 
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
         int maxLength = (int) (20 * scaleFactor);
-        float scaleWidth = 7 * scaleFactor;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaleWidth, new Color(0.8f, 0.75f, 0.85f, 1));
+        float scaleWidth = 10 * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaleWidth, new Color(0.65f, 0.5f, 0.7f, 1));
         this.centroSprite = new Vector2();
 
         this.velocidadVertical = velocidadProyectil * MathUtils.sinDeg(anguloLanzamiento);

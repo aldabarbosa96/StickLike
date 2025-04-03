@@ -103,6 +103,7 @@ public class EnemigoExamen implements Enemigo {  // TODO --> (manejar el cambio 
                 animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteExamen);
                 animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+                animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
             }
         }
     }

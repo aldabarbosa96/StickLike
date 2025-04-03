@@ -70,7 +70,7 @@ public class LluviaMocos implements Proyectiles {
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(32, 6f, new Color(0.15f, 0.75f, 0.15f, 1));
+        this.renderParticulasProyectil = new RenderParticulasProyectil(42, 4.5f, new Color(0.15f, 0.75f, 0.15f, 1));
         this.centroSprite = new Vector2();
     }
 
