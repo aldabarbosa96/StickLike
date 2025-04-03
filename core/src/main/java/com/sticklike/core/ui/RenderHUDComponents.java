@@ -104,7 +104,7 @@ public class RenderHUDComponents {
 
     public void renderizarFondoHUD() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        shapeRenderer.setColor(0.99f, 0.92f, 0.65f, 1.0f);
+        shapeRenderer.setColor(1, 0.93f, 0.66f, 1.0f);
         shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD);
     }
 
