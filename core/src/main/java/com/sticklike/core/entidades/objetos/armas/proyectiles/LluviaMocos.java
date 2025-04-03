@@ -51,11 +51,13 @@ public class LluviaMocos implements Proyectiles {
     private boolean stainsGenerated;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private Vector2 centroSprite;
+    private float velocity;
+    private float gravity = 90.8f; // todo --> revisar si en un futuro es necesario aplicar el efecto de gravedad...
 
     public LluviaMocos(float x, float y, float fallSpeed, GestorDeAudio gestorDeAudio) {
         this.x = x;
         this.y = y;
-        this.fallSpeed = fallSpeed;
+        this.velocity = fallSpeed;
         this.targetY = y - (Gdx.graphics.getHeight() / 3f) + MathUtils.random(-100, 100);
         this.estadoMoco = EstadoMoco.FALLING;
         this.explosionTimer = 0;
@@ -79,7 +81,9 @@ public class LluviaMocos implements Proyectiles {
         if (!proyectilActivo) return;
 
         if (estadoMoco == EstadoMoco.FALLING) {
-            y -= fallSpeed * delta;
+            // Incrementamos la velocidad con la aceleración de la gravedad
+            velocity += gravity * delta;
+            y -= velocity * delta;
             rotation += rotationSpeed * delta;
             centroSprite.set(x + width / 2, y + height / 2);
             renderParticulasProyectil.update(centroSprite);
@@ -88,7 +92,8 @@ public class LluviaMocos implements Proyectiles {
                 y = targetY;
                 explotar();
             }
-        } else if (estadoMoco == EstadoMoco.EXPLODED) {
+        }
+        else if (estadoMoco == EstadoMoco.EXPLODED) {
             explosionTimer += delta;
             if (!stainsGenerated) {
                 generarStains();
@@ -112,7 +117,7 @@ public class LluviaMocos implements Proyectiles {
     public void renderizarProyectil(SpriteBatch batch) {
         if (!proyectilActivo) return;
 
-        // Aquí configuramos el alpha que queremos para las partículas.
+        // Aquí configuramos el alpha que queremos para las partículas
         renderParticulasProyectil.setAlphaMult(0.35f);
 
         if (estadoMoco == EstadoMoco.FALLING) {
@@ -174,7 +179,7 @@ public class LluviaMocos implements Proyectiles {
             stainOffsetX[i] = MathUtils.random(-7.5f, 7.5f);
             stainOffsetY[i] = MathUtils.random(-7.5f, 7.5f);
             stainSizes[i] = MathUtils.random(4, 8);
-            // Para simular que se han "chafado" al explotar usamos factor de escala en X mayor a 1 (más ancho) y en Y menor que 1 (más bajo)
+            // Para simular que se han chafado al explotar usamos factor de escala en X mayor a 1 (más ancho) y en Y menor que 1 (más bajo)
             stainScaleX[i] = MathUtils.random(1.3f, 1.7f);
             stainScaleY[i] = MathUtils.random(0.4f, 0.6f);
         }
