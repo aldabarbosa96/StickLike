@@ -197,6 +197,11 @@ public class BossPolla implements Enemigo {
     }
 
     @Override
+    public boolean isMostrandoDamageSprite() {
+        return false;
+    }
+
+    @Override
     public void dispose() {
         sprite = null;
     }

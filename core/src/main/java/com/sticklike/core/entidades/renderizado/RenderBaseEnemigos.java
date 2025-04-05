@@ -28,7 +28,7 @@ public class RenderBaseEnemigos {
 
     public void dibujarEnemigos(SpriteBatch batch, Enemigo enemigo) {
         float vidaEnemigo = enemigo.getVida();
-        boolean mostrarSprite = (vidaEnemigo > 0) || enemigo.getAnimaciones().estaEnFade();
+        boolean mostrarSprite = (vidaEnemigo > 0) || enemigo.getAnimaciones().estaEnFade() || enemigo.getAnimaciones().estaEnParpadeo();
         if (mostrarSprite) {
             Color originalColor = enemigo.getSprite().getColor().cpy();
 
@@ -54,26 +54,19 @@ public class RenderBaseEnemigos {
 
         for (Enemigo enemigo : enemigos) {
 
-            if (!(enemigo instanceof BossPolla) && enemigo.getVida() <= 0) {
+            if (!(enemigo instanceof BossPolla) && enemigo.getVida() <= 0 && !(enemigo.isMostrandoDamageSprite())) {
                 continue;
             }
 
-            if (enemigo instanceof BossPolla) {
-                dibujarSombraBossPolla((BossPolla) enemigo, shapeRenderer);
-            } else if (enemigo instanceof EnemigoCulo) {
-                dibujarSombraCulo((EnemigoCulo) enemigo, shapeRenderer);
-            } else if (enemigo instanceof EnemigoPolla) {
-                dibujarSombraPolla((EnemigoPolla) enemigo, shapeRenderer);
-            } else if (enemigo instanceof EnemigoExamen) {
-                dibujarSombraExamen((EnemigoExamen) enemigo, shapeRenderer);
-            } else if (enemigo instanceof EnemigoRegla) {
-                dibujarSombraRegla((EnemigoRegla) enemigo, shapeRenderer);
-            } else if (enemigo instanceof Destructibles) {
-                dibujarSombraDestructible((Destructibles) enemigo, shapeRenderer);
-            } else if (enemigo instanceof Destructibles2) {
-                dibujarSombraDestructible2((Destructibles2) enemigo, shapeRenderer);
-            } else {
-                dibujarSombraVater(enemigo, shapeRenderer);
+            switch (enemigo) {
+                case BossPolla bossPolla -> dibujarSombraBossPolla(bossPolla, shapeRenderer);
+                case EnemigoCulo culo -> dibujarSombraCulo(culo, shapeRenderer);
+                case EnemigoPolla enemigoPolla -> dibujarSombraPolla(enemigoPolla, shapeRenderer);
+                case EnemigoExamen enemigoExamen -> dibujarSombraExamen(enemigoExamen, shapeRenderer);
+                case EnemigoRegla enemigoRegla -> dibujarSombraRegla(enemigoRegla, shapeRenderer);
+                case Destructibles destructibles -> dibujarSombraDestructible(destructibles, shapeRenderer);
+                case Destructibles2 destructibles2 -> dibujarSombraDestructible2(destructibles2, shapeRenderer);
+                default -> dibujarSombraVater(enemigo, shapeRenderer);
             }
         }
     }
@@ -209,11 +202,14 @@ public class RenderBaseEnemigos {
         float centerX = x + w / 2f;
         float shadowWidth = w * 0.65f;
         float shadowHeight = h * 0.15f;
-        float shadowX = centerX - (shadowWidth / 2f);
-        float shadowY = y -7.5f;
+
+        float shadowX = centerX - (shadowWidth / 2f) - 2.5f;
+        float shadowXOffset = centerX - (shadowWidth / 2) + 2.5f;
+        float finalShadowX = enemigo.getAnimaciones().isEstaFlipped() ? shadowX : shadowXOffset;
+        float shadowY = y - 7.5f;
 
         dibujarParpadeoSombra(enemigo, shapeRenderer, Color.WHITE);
-        shapeRenderer.ellipse(shadowX, shadowY, shadowWidth, shadowHeight);
+        shapeRenderer.ellipse(finalShadowX, shadowY, shadowWidth, shadowHeight);
     }
 
     private void getEnemyCenter(Enemigo enemigo, float x, float y, float w, float h) {

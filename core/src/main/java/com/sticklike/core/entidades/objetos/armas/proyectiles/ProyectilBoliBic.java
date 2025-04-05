@@ -28,14 +28,13 @@ public class ProyectilBoliBic implements Proyectiles {
     private float distanciaRecorrida;
     private boolean proyectilActivo;
     private float direccionX, direccionY;
-    private Jugador jugador;
     private RenderParticulasProyectil renderParticulas;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
     private float impactoTimer = 0;
     private static final float IMPACTO_DURACION = 0.1f;
     private static final Color DEFAULT_PARTICLE_COLOR = new Color(0, 0, 0.75f, 1);
 
-    public ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil, Jugador jugador) {
+    public ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil) {
         if (textura == null) {
             textura = manager.get(ARMA_BOLIBIC, Texture.class);
         }
@@ -55,10 +54,9 @@ public class ProyectilBoliBic implements Proyectiles {
         this.direccionX = dirX;
         this.direccionY = dirY;
         this.velocidadProyectil = velocidadProyectil;
-        this.distanciaMaxima = 666;
+        this.distanciaMaxima = 333;
         this.distanciaRecorrida = 0f;
         this.proyectilActivo = true;
-        this.jugador = jugador;
 
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
         int maxLength = (int) (17.5f * scaleFactor);
@@ -139,7 +137,7 @@ public class ProyectilBoliBic implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        float baseDamage = 25 + MathUtils.random(DANYO_BOLIBIC);
+        float baseDamage = 5 + MathUtils.random(DANYO_BOLIBIC);
         return baseDamage * (1f + (Jugador.getPoderJugador() / 100f));
     }
 

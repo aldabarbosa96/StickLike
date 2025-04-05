@@ -44,8 +44,13 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     private final Texture damageTexture;
     private boolean recibeImpacto = false; // puede ser útil en un futuro
     private RenderBaseEnemigos renderBaseEnemigos;
-    private float deathPosX, deathPosY;
-    private boolean deathPosCaptured = false;
+    private boolean esConOjo;
+    private Float posXMuerte = null;
+    private Float posYMuerte = null;
+    private boolean mostrandoDamageSprite = false;
+    private float damageSpriteTimer = 0f;
+    private boolean deathAnimationTriggered = false;
+
 
     public EnemigoCulo(float x, float y, Jugador jugador) {
         esConOjo();
@@ -62,45 +67,66 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         float random = MathUtils.random(10);
         if (random >= 2.5f) {
             sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
-            sprite.setSize(30, 26);
+            sprite.setSize(32, 28);
+            esConOjo = false;
         } else {
             tieneOjo = true;
             spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
-            spriteOjoAbierto.setSize(34, 30);
+            spriteOjoAbierto.setSize(36, 32);
             spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
-            spriteOjoCerrado.setSize(34, 30);
+            spriteOjoCerrado.setSize(36, 32);
             sprite = new Sprite(spriteOjoAbierto);
             vidaEnemigo = VIDA_ENEMIGOCULO * 2;
+            esConOjo = true;
         }
     }
 
-    @Override
     public void actualizar(float delta) {
         animacionesBaseEnemigos.actualizarFade(delta);
 
         if (vidaEnemigo > 0) {
-            // Mientras el enemigo esté vivo se aplica el movimiento completo
             movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
-            animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
-            animacionesBaseEnemigos.actualizarFade(delta);
-            if (temporizadorDanyo > 0) {
-                temporizadorDanyo -= delta;
-            }
+        } else {
+            movimientoCulo.actualizarSoloKnockback(delta, sprite, true);
+        }
+
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+
+        if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+            animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+        }
+
+        if (vidaEnemigo > 0) {
+            if (temporizadorDanyo > 0) temporizadorDanyo -= delta;
             animacionCulo.actualizarAnimacion(delta, sprite);
             animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
-        } else {
-            movimientoCulo.actualizarSoloKnockback(delta, sprite);
+        }
 
-            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-                animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+        // Si el enemigo ya está muerto, mostramos el sprite de daño durante 0.09 segundos
+        if (vidaEnemigo <= 0 && mostrandoDamageSprite) {
+            damageSpriteTimer -= delta;
+            sprite.setTexture(damageTexture);
+            if (damageSpriteTimer <= 0) {
+                mostrandoDamageSprite = false;
+                if (!deathAnimationTriggered) {
+                    Animation<TextureRegion> animMuerteCulo;
+                    if (!esConOjo) {
+                        animMuerteCulo = GestorDeAssets.animations.get("muerteCulo");
+                    } else {
+                        animMuerteCulo = GestorDeAssets.animations.get("muerteCulo2");
+                    }
+                    animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+                    animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
+                    animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+                    deathAnimationTriggered = true;
+                }
             }
         }
     }
 
-
     @Override
     public void renderizar(SpriteBatch batch) {
-        if (vidaEnemigo > 0) {
+        if (vidaEnemigo > 0 || mostrandoDamageSprite) {
             renderBaseEnemigos.dibujarEnemigos(batch, this);
         } else {
             if (animacionesBaseEnemigos.enAnimacionMuerte()) {
@@ -108,6 +134,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
             }
         }
     }
+
 
     @Override
     public void activarParpadeo(float duracion) {
@@ -125,25 +152,29 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 0.25f) {
             haSoltadoXP = true;
-            return new ObjetoVida(this.getX(), this.getY());
+            return new ObjetoVida(posXMuerte, posYMuerte);
         }
         if (!haSoltadoXP && randomXP >= 15f) {
             haSoltadoXP = true;
-            return new ObjetoXp(this.getX(), this.getY());
+            return new ObjetoXp(posXMuerte, posYMuerte);
         }
         return null;
     }
 
     @Override
     public void reducirSalud(float amount) {
+        if (vidaEnemigo <= 0) return; // Ya está muerto, evitamos procesar más daño.
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade() && !animacionesBaseEnemigos.enAnimacionMuerte()) {
-                Animation<TextureRegion> animMuerteCulo = GestorDeAssets.animations.get("muerteCulo");
-                animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
-                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                activarParpadeo(DURACION_PARPADEO_ENEMIGO);
-                animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+            // Guardamos la posición de la muerte (si aún no se ha hecho)
+            if (posXMuerte == null || posYMuerte == null) {
+                posXMuerte = sprite.getX();
+                posYMuerte = sprite.getY();
+            }
+            // Activamos el estado de sprite de daño si aún no se ha iniciado la animación de muerte
+            if (!mostrandoDamageSprite && !deathAnimationTriggered) {
+                mostrandoDamageSprite = true;
+                damageSpriteTimer = 0.05f;
             }
         }
     }
@@ -170,7 +201,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte() && !animacionesBaseEnemigos.estaEnFade());
+        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte()  && !animacionesBaseEnemigos.estaEnParpadeo());
     }
 
 
@@ -241,5 +272,8 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     public boolean isTieneOjo() {
         return tieneOjo;
+    }
+    public boolean isMostrandoDamageSprite() {
+        return mostrandoDamageSprite;
     }
 }

@@ -23,6 +23,7 @@ public class AnimacionesBaseEnemigos {
     private float tiempoFadeRestante = TIEMPO_FADE_RESTANTE;
     private float tiempoTotalFade = TIEMPO_FADE_TOTAL;
     private float alphaActual = ALPHA_ACTUAL;
+    private boolean estaFlipped;
 
     private Animation<TextureRegion> animacionMuerte;
     private float stateTimeMuerte = 0;
@@ -94,6 +95,7 @@ public class AnimacionesBaseEnemigos {
             boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2 > jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
             if (sprite.isFlipX() != estaALaIzquierda) {
                 sprite.flip(true, false);
+                estaFlipped = estaALaIzquierda;
             }
         }
     }
@@ -119,7 +121,7 @@ public class AnimacionesBaseEnemigos {
             float centerX = oldX + oldWidth / 2f;
             float centerY = oldY + oldHeight / 2f;
 
-            float scaleFactor = 1.015f;
+            float scaleFactor = 1.011f;
             float newWidth = oldWidth * scaleFactor;
             float newHeight = oldHeight * scaleFactor;
 
@@ -138,11 +140,15 @@ public class AnimacionesBaseEnemigos {
                 sprite.flip(false, true);
             }
 
+            // Aplicamos el alpha calculado del fade al sprite:
+            //sprite.setColor(1f, 0, 0, getAlphaActual());
+
             if (animacionMuerte.isAnimationFinished(stateTimeMuerte)) {
                 enAnimacionMuerte = false;
             }
         }
     }
+
 
     public void actualizarAnimacionMuerteSinEscala(Sprite sprite, float delta) { // para poder animar de formas especiales a los bosses sin que se deforme la imagen
         if (enAnimacionMuerte && animacionMuerte != null) {
@@ -167,5 +173,9 @@ public class AnimacionesBaseEnemigos {
 
     public boolean enAnimacionMuerte() {
         return enAnimacionMuerte;
+    }
+
+    public boolean isEstaFlipped() {
+        return estaFlipped;
     }
 }

@@ -232,6 +232,11 @@ public class Destructibles implements Enemigo {
         return animacionesBaseEnemigos;
     }
 
+    @Override
+    public boolean isMostrandoDamageSprite() {
+        return false;
+    }
+
     // Getters para los parámetros de la sombra, para usarlos en el renderizado individual.
     public float getShadowWidthMultiplier() {
         return tipo.getShadowWidthMultiplier();

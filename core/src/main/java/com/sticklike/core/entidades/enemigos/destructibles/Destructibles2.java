@@ -146,4 +146,9 @@ public class Destructibles2 implements Enemigo {
     public AnimacionesBaseEnemigos getAnimaciones() {
         return animacionesBaseEnemigos;
     }
+
+    @Override
+    public boolean isMostrandoDamageSprite() {
+        return false;
+    }
 }

@@ -2,6 +2,7 @@ package com.sticklike.core.entidades.enemigos.ia;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
+
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
@@ -46,14 +47,16 @@ public abstract class MovimientoBaseEnemigos {
         knockbackTimer = knockbackDuration;
     }
 
-    public final void actualizarSoloKnockback(float delta, Sprite sprite) {
-        if (knockbackTimer > 0) {
-            float moveX = knockbackVelX * delta;
-            float moveY = knockbackVelY * delta;
+    public final void actualizarSoloKnockback(float delta, Sprite sprite, boolean mantenerKnockback) {
+        if (knockbackTimer > 0 || mantenerKnockback) {
+            float moveX = knockbackVelX * 1.25f * delta;
+            float moveY = knockbackVelY * 1.25f * delta;
             sprite.translate(moveX, moveY);
-            knockbackTimer -= delta;
-            if (knockbackTimer < 0) {
-                knockbackTimer = 0;
+            if (!mantenerKnockback) {
+                knockbackTimer -= delta;
+                if (knockbackTimer < 0) {
+                    knockbackTimer = 0;
+                }
             }
         }
     }

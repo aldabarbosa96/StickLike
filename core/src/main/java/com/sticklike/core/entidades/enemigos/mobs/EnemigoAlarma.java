@@ -20,7 +20,11 @@ import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
+/**
+ * Enemigo Alarma; puede aparecer Crono (Cosmo) o Alarma (Wanda), alterando su vida y animación. Gestiona su comportamiento y daño.
+ */
 public class EnemigoAlarma implements Enemigo {
+
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGO_ALARMA;
@@ -32,59 +36,90 @@ public class EnemigoAlarma implements Enemigo {
     private boolean procesado = false;
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private float damageAmount = DANYO_CULO;
-    private boolean tieneOjo = false;
-    private final Texture damageTexture;
-    private boolean recibeImpacto = false; // puede ser útil en un futuro
+    private boolean recibeImpacto = false;
     private RenderBaseEnemigos renderBaseEnemigos;
-    private boolean esCrono;
+    private boolean esCrono;   // Determina si es la versión verde (true) o rosa (false)
+    private Float posXMuerte = null;
+    private Float posYMuerte = null;
+    private boolean mostrandoDamageSprite = false;
+    private float damageSpriteTimer = 0f;
+    private boolean deathAnimationTriggered = false;
+
+    private final Texture damageTexture;
 
     public EnemigoAlarma(float x, float y, Jugador jugador) {
         sprite = new Sprite(escogerTextura());
         sprite.setPosition(x, y);
-        sprite.setSize(36, 36);
+        sprite.setSize(38, 38);
+
         this.jugador = jugador;
         this.movimientoAlarma = new MovimientoCulo(velocidadBase, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_ALARMA_TEXTURE, Texture.class);
+
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     private Texture escogerTextura() {
         float texturaAleatoria = MathUtils.random(10);
         if (texturaAleatoria <= 5) {
-            esCrono = false;
+            esCrono = false; // Rosa
             return manager.get(ENEMIGO_ALARMA, Texture.class);
         } else {
-            esCrono = true;
+            esCrono = true;  // Verde
             return manager.get(ENEMIGO_ALARMA2, Texture.class);
         }
     }
 
     @Override
     public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarFade(delta);
+        animacionesBaseEnemigos.actualizarFade(delta); // todo --> revisar si es necesario
 
         if (vidaEnemigo > 0) {
-            // Estado vivo: se ejecuta la lógica normal
-            animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
-            animacionesBaseEnemigos.actualizarFade(delta);
+            // Lógica de movimiento y ataque mientras está vivo
             movimientoAlarma.actualizarMovimiento(delta, sprite, jugador);
             if (tempDanyo > 0) {
                 tempDanyo -= delta;
             }
             animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+
         } else {
-            // Estado de muerte: se actualiza únicamente el knockback y la animación de muerte
-            movimientoAlarma.actualizarSoloKnockback(delta, sprite);
-            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+            // Lógica de knockback y animación de muerte
+            movimientoAlarma.actualizarSoloKnockback(delta, sprite, true);
+
+            if (mostrandoDamageSprite) {
+                damageSpriteTimer -= delta;
+                sprite.setTexture(damageTexture);
+
+                if (damageSpriteTimer <= 0) {
+                    mostrandoDamageSprite = false;
+                    if (!deathAnimationTriggered) {
+                        Animation<TextureRegion> animMuerteAlarma;
+                        // Cosmo => "alarmaMuerte", Wanda => "alarma2Muerte"
+                        if (!esCrono) {
+                            animMuerteAlarma = GestorDeAssets.animations.get("alarmaMuerte2");
+                        } else {
+                            animMuerteAlarma = GestorDeAssets.animations.get("alarmaMuerte");
+                        }
+                        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteAlarma);
+                        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+                        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+                        deathAnimationTriggered = true;
+                    }
+                }
+
+            } else if (animacionesBaseEnemigos.enAnimacionMuerte()) {
                 animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
             }
         }
+
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
     }
+
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        if (vidaEnemigo > 0) {
+        if (vidaEnemigo > 0 || mostrandoDamageSprite) {
             renderBaseEnemigos.dibujarEnemigos(batch, this);
         } else {
             if (animacionesBaseEnemigos.enAnimacionMuerte()) {
@@ -95,21 +130,27 @@ public class EnemigoAlarma implements Enemigo {
 
     @Override
     public void reducirSalud(float amount) {
+        // Si ya está a 0 o menos, no duplicamos eventos
+        if (vidaEnemigo <= 0) return;
+
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade() && !animacionesBaseEnemigos.enAnimacionMuerte()) {
-                Animation<TextureRegion> animMuerteAlarma = GestorDeAssets.animations.get("alarmaMuerte");
-                animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteAlarma);
-                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                activarParpadeo(DURACION_PARPADEO_ENEMIGO);
-                animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+            // Guardamos la posición de la muerte para el posible drop
+            if (posXMuerte == null || posYMuerte == null) {
+                posXMuerte = sprite.getX();
+                posYMuerte = sprite.getY();
+            }
+            // Activamos el sprite de daño si aún no hemos lanzado la animación de muerte
+            if (!mostrandoDamageSprite && !deathAnimationTriggered) {
+                mostrandoDamageSprite = true;
+                damageSpriteTimer = 0.05f;
             }
         }
     }
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.estaEnFade());
+        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte()  && !animacionesBaseEnemigos.estaEnParpadeo());
     }
 
     @Override
@@ -133,11 +174,11 @@ public class EnemigoAlarma implements Enemigo {
         float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 0.25f) {
             haSoltadoXP = true;
-            return new ObjetoVida(this.getX(), this.getY());
+            return new ObjetoVida(posXMuerte, posYMuerte);
         }
         if (!haSoltadoXP && randomXP >= 15f) {
             haSoltadoXP = true;
-            return new ObjetoXp(this.getX(), this.getY());
+            return new ObjetoXp(posXMuerte, posYMuerte);
         }
         return null;
     }
@@ -200,6 +241,11 @@ public class EnemigoAlarma implements Enemigo {
     @Override
     public AnimacionesBaseEnemigos getAnimaciones() {
         return animacionesBaseEnemigos;
+    }
+
+    @Override
+    public boolean isMostrandoDamageSprite() {
+        return mostrandoDamageSprite;
     }
 
     public boolean isEsCrono() {

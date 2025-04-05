@@ -81,9 +81,9 @@ public class AtaqueBoliBic {
         float dirY = aimY;
 
         // Creamos el proyectil con la dirección obtenida
-        ProyectilBoliBic proyectil = new ProyectilBoliBic(playerCenterX, playerCenterY, dirX, dirY, 500, jug);
+        ProyectilBoliBic proyectil = new ProyectilBoliBic(playerCenterX, playerCenterY, dirX, dirY, 500);
         jug.getControladorProyectiles().anyadirNuevoProyectil(proyectil);
 
-        gestorDeAudio.reproducirEfecto("boli", 0.6f);
+        gestorDeAudio.reproducirEfecto("boli", 0.5f);
     }
 }

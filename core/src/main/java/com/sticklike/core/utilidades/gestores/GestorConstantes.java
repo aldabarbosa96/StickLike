@@ -194,11 +194,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Animaciones enemigos
     // -------------------------------------------------
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
-    public static final float DURACION_PARPADEO_ENEMIGO = 0.085f;
-    public static final float DURACION_FADE_ENEMIGO = 0.3f;
+    public static final float DURACION_PARPADEO_ENEMIGO = 0.09f;
+    public static final float DURACION_FADE_ENEMIGO = 0.6f;
     public static final float DURACION_FADE_BOSS = 1.6f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
-    public static final float TIEMPO_FADE_TOTAL = 0.25f;
+    public static final float TIEMPO_FADE_TOTAL = 1f;
     public static final float ALPHA_ACTUAL = 1f;
     public static final float VELOCIDAD_EMPUJE = 0f;
     public static final float TEMPORIZADOR_EMPUJE = 0f;
@@ -213,8 +213,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int VEL_ROTACION_CALCETIN = 1080;
     public static final float DANYO_CALCETIN = 13f;
     public static final float DANYO_PAPELCULO = 45f;
-    public static final float DANYO_BOLIBIC = 35f;
-    public static final float EMPUJE_BASE_PAPELCULO = 250f;
+    public static final float DANYO_BOLIBIC = 25f;
+    public static final float EMPUJE_BASE_PAPELCULO = 200f;
     public static final float SPEED_MULT = 1.8f;
     public static final float PIEDRA_SIZE = 7f;
     public static final float CALCETIN_W_SIZE = 20.5f;

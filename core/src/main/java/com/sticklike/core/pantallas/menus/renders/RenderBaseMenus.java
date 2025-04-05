@@ -195,7 +195,7 @@ public abstract class RenderBaseMenus {
 
         Table versionTable = new Table();
         versionTable.setFillParent(true);
-        versionTable.bottom().right().padRight(17.5f).padBottom(30);
+        versionTable.bottom().right().padRight(30).padBottom(30);
         versionTable.add(versionLabel);
 
         stage.addActor(versionTable);
