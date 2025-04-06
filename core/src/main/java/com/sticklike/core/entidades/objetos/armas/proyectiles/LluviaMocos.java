@@ -92,8 +92,7 @@ public class LluviaMocos implements Proyectiles {
                 y = targetY;
                 explotar();
             }
-        }
-        else if (estadoMoco == EstadoMoco.EXPLODED) {
+        } else if (estadoMoco == EstadoMoco.EXPLODED) {
             explosionTimer += delta;
             if (!stainsGenerated) {
                 generarStains();
@@ -163,7 +162,11 @@ public class LluviaMocos implements Proyectiles {
 
     @Override
     public void dispose() {
-        dropTexture = null;
+        if (dropTexture != null) {
+            dropTexture.dispose();
+            dropTexture = null;
+        }
+        renderParticulasProyectil.dispose();
     }
 
     private void generarStains() {

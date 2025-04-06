@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionCulo;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -144,8 +145,14 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
         recibeImpacto = true;
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        // Obtenemos el Rectangle del proyectil a través del pool, evitando crear un nuevo objeto
+        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
+        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
+        // Liberamos el Rectangle para su reutilización
+        RectanglePoolManager.liberarRectangulo(projectileRect);
+        return overlaps;
     }
+
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
@@ -174,7 +181,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
             // Activamos el estado de sprite de daño si aún no se ha iniciado la animación de muerte
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = 0.05f;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
             }
         }
     }

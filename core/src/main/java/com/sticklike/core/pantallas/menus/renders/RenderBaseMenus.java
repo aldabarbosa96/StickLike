@@ -52,7 +52,7 @@ public abstract class RenderBaseMenus {
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
         style.up = crearBotonDrawable();
-        style.fontColor = new Color(Color.BLACK);
+        style.fontColor = Color.BLACK;
         return style;
     }
 
@@ -189,7 +189,7 @@ public abstract class RenderBaseMenus {
     }
 
     private void agregarVersionLabel() {
-        Label versionLabel = new Label("v1.10.15-dev", uiSkin);
+        Label versionLabel = new Label("v1.10.16-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
         versionLabel.setColor(Color.BLUE);
 

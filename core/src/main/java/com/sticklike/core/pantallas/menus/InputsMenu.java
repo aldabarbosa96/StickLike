@@ -26,11 +26,6 @@ public class InputsMenu extends InputAdapter implements ControllerListener {
 
     @Override
     public boolean keyDown(int keycode) {
-        // Detecta pausa con SPACE o P
-        if (keycode == Input.Keys.SPACE || keycode == Input.Keys.P) {
-            if (listener != null) listener.onPauseToggle();
-            return true;
-        }
         switch (keycode) {
             case Input.Keys.UP:
             case Input.Keys.LEFT:
@@ -44,7 +39,6 @@ public class InputsMenu extends InputAdapter implements ControllerListener {
             case Input.Keys.NUMPAD_ENTER:
                 if (listener != null) listener.onSelect();
                 return true;
-            case Input.Keys.ESCAPE:
             case Input.Keys.BACKSPACE:
                 if (listener != null) listener.onBack();
                 return true;

@@ -100,7 +100,7 @@ public class VentanaJuego1 implements Screen {
 
         // Ajustar la posición de la cámara
         actualizarPosCamara();
-        Mensajes.getInstance().addMessage("StickMan","Ah shit! Here we go again...", jugador.getSprite().getX() - 17.5f, jugador.getSprite().getY() - 25);
+        Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX() - 17.5f, jugador.getSprite().getY() - 20);
 
     }
 
@@ -340,8 +340,7 @@ public class VentanaJuego1 implements Screen {
         spriteBatch.dispose();
         shapeRenderer.dispose();
         renderVentanaJuego1.dispose();
-        popUpMejoras.getUiStage().dispose();
-        popUpMejoras.getUiSkin().dispose();
+        popUpMejoras.dispose();
         pausa.dispose();
         pausa = null;
 

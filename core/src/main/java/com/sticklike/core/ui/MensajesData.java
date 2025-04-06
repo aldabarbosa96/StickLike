@@ -15,24 +15,24 @@ public class MensajesData {
 
     private static MensajesData instance;
 
-    // Estados y listas para mensajes de "culos"
+    // Estados y listas para mensajes de culos
     private boolean mensajeCulosActivado;
     private List<ChatOption> opcionesChatCulos;
     private List<ChatOption> mensajesCulosPorMostrar;
     private int nextMessageCulosIndex;
     private float lastCuloMessageTime;
 
-    // Estados y listas para mensajes de "pollas"
+    // Estados y listas para mensajes de pollas
     private boolean mensajesPollasActivado;
     private List<ChatOption> opcionesChatPollas;
     private List<ChatOption> mensajesPollasPorMostrar;
     private int nextMessagePollasIndex;
     private float lastPollaMessageTime;
 
-    // Estados y listas para mensajes de "alarmas"
+    // Estados y listas para mensajes de alarmas
     private boolean mensajeAlarmasActivado;
-    private List<ChatOption> opcionesAlarmasAlarma;  // para enemigos cuyo sprite es "Alarma" (esCrono == false)
-    private List<ChatOption> opcionesAlarmasCrono;     // para enemigos cuyo sprite es "Crono" (esCrono == true)
+    private List<ChatOption> opcionesAlarmasAlarma;
+    private List<ChatOption> opcionesAlarmasCrono;
     private List<ChatOption> mensajesAlarmasAlarmaPorMostrar;
     private List<ChatOption> mensajesAlarmasCronoPorMostrar;
     private int nextMessageAlarmasAlarmaIndex;
@@ -47,17 +47,17 @@ public class MensajesData {
         mensajesPollasActivado = false;
         mensajeAlarmasActivado = false;
 
-        // Inicializamos mensajes de "culos"
+        // Inicializamos mensajes de culos
         opcionesChatCulos = new ArrayList<>();
         mensajesCulos();
         resetMensajesCulos();
 
-        // Inicializamos mensajes de "pollas"
+        // Inicializamos mensajes de pollas
         opcionesChatPollas = new ArrayList<>();
         mensajesPollas();
         resetMensajesPollas();
 
-        // Inicializamos mensajes de "alarmas"
+        // Inicializamos mensajes de alarmas
         opcionesAlarmasAlarma = new ArrayList<>();
         opcionesAlarmasCrono = new ArrayList<>();
         initMensajesAlarmas();
@@ -156,7 +156,7 @@ public class MensajesData {
     }
 
     public void updateCulos(RenderHUDComponents renderHUDComponents) {
-        delayBetweenMessages = MathUtils.random(7.5f, 15f);
+        delayBetweenMessages = MathUtils.random(10, 20f);
         if (mensajeCulosActivado && nextMessageCulosIndex < mensajesCulosPorMostrar.size()) {
             float currentTime = renderHUDComponents.getTiempoTranscurrido();
             if (currentTime - lastCuloMessageTime >= delayBetweenMessages) {
@@ -172,7 +172,7 @@ public class MensajesData {
     }
 
     public void updatePollas(RenderHUDComponents renderHUDComponents) {
-        delayBetweenMessages = MathUtils.random(10f, 20f);
+        delayBetweenMessages = MathUtils.random(15, 30f);
         if (mensajesPollasActivado && nextMessagePollasIndex < mensajesPollasPorMostrar.size()) {
             float currentTime = renderHUDComponents.getTiempoTranscurrido();
             if (currentTime - lastPollaMessageTime >= delayBetweenMessages) {
@@ -191,7 +191,7 @@ public class MensajesData {
         float currentTime = renderHUDComponents.getTiempoTranscurrido();
         // Actualización para alarma
         if (mensajeAlarmasActivado && nextMessageAlarmasAlarmaIndex < mensajesAlarmasAlarmaPorMostrar.size()) {
-            float delay = MathUtils.random(10f, 12f);
+            float delay = MathUtils.random(10f, 15f);
             if (currentTime - lastAlarmaAlarmaMessageTime >= delay) {
                 Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoAlarma.class);
                 if (enemy != null) {
@@ -207,7 +207,7 @@ public class MensajesData {
         }
         // Actualización para crono
         if (mensajeAlarmasActivado && nextMessageAlarmasCronoIndex < mensajesAlarmasCronoPorMostrar.size()) {
-            float delay = MathUtils.random(10f, 12f);
+            float delay = MathUtils.random(10f, 15f);
             if (currentTime - lastAlarmaCronoMessageTime >= delay) {
                 Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoAlarma.class);
                 if (enemy != null) {
@@ -237,7 +237,7 @@ public class MensajesData {
         opcionesChatCulos.add(new ChatOption("Ojete2", "¡Mira mis almorranas!"));
         opcionesChatCulos.add(new ChatOption("Ojete3", "¡¡¡Mira sus almorranas!!!"));
         opcionesChatCulos.add(new ChatOption("Ojete4", "¡Cagadle en el pecho!"));
-        opcionesChatCulos.add(new ChatOption("Ojete5", "¡Cagadle en la cara!"));
+        opcionesChatCulos.add(new ChatOption("Ojete5", "¡Diarreadlo!"));
         opcionesChatCulos.add(new ChatOption("Ojete6", "Yo me llamo Ralph"));
         opcionesChatCulos.add(new ChatOption("Ojete7", "Caca, culo, pedo, pis, nalga"));
         opcionesChatCulos.add(new ChatOption("Ojete8", "¡Me cago en tu estampa!"));

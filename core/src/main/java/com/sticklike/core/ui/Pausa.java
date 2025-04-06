@@ -45,7 +45,7 @@ public class Pausa {
 
     public void handleInput() {
         if (inputsBloqueados) return;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             alternarPausa();
         }
     }

@@ -5,22 +5,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.sticklike.core.utilidades.gestores.GestorDeAssets;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.manager;
 
 /**
  * Dibuja y actualiza el fondo animado con partículas de experiencia que caen, rotan y se desplazan como si fueran impulsadas bajo el agua.
  */
 public class FondoAnimadoPopUp extends Actor {
-    private static final Texture xpTexture1 = new Texture(GestorDeAssets.RECOLECTABLE_XP);
-    private static final Texture xpTexture2 = new Texture(GestorDeAssets.RECOLECTABLE_XP2);
-    private static final Texture xpTexture3 = new Texture(GestorDeAssets.RECOLECTABLE_XP3);
-
+    private static final Texture xpTexture1 = manager.get(RECOLECTABLE_XP, Texture.class);
+    private static final Texture xpTexture2 =  manager.get(RECOLECTABLE_XP2, Texture.class);
+    private static final Texture xpTexture3 =  manager.get(RECOLECTABLE_XP3, Texture.class);
     private List<Particle> particles;
     private float spawnTimer;
     // Factor de damping para simular resistencia del agua (aplicamos solo a vx para que baje)

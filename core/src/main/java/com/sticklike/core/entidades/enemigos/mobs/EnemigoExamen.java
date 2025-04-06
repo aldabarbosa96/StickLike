@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionExamen;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoExamen;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -145,7 +146,7 @@ public class EnemigoExamen implements Enemigo {
             // Activamos el sprite de daño breve, si no está ya en animación de muerte
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = 0.05f;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
             }
         } else {
             // Si sigue con vida tras el golpe, podemos activar parpadeo (opcional)
@@ -172,7 +173,10 @@ public class EnemigoExamen implements Enemigo {
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
+        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
+        RectanglePoolManager.liberarRectangulo(projectileRect);
+        return overlaps;
     }
 
     @Override

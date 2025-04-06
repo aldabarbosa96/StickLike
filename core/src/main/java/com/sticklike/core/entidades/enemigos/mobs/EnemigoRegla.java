@@ -12,6 +12,7 @@ import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
@@ -123,20 +124,17 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public void reducirSalud(float amount) {
-        // Si ya está muerto, evitamos duplicar eventos
         if (vidaEnemigo <= 0) return;
 
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // Guardamos la posición de muerte para drops
             if (posXMuerte == null || posYMuerte == null) {
                 posXMuerte = sprite.getX();
                 posYMuerte = sprite.getY();
             }
-            // Activamos el sprite de daño si aún no disparó la animación de muerte
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = 0.05f; // El tiempo que mostramos la textura de daño
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
             }
         }
     }
@@ -148,7 +146,10 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
+        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
+        RectanglePoolManager.liberarRectangulo(projectileRect);
+        return overlaps;
     }
 
     @Override

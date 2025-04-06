@@ -12,6 +12,7 @@ import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
@@ -143,7 +144,7 @@ public class EnemigoAlarma implements Enemigo {
             // Activamos el sprite de daño si aún no hemos lanzado la animación de muerte
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = 0.05f;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
             }
         }
     }
@@ -166,8 +167,12 @@ public class EnemigoAlarma implements Enemigo {
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
         recibeImpacto = true;
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
+        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
+        RectanglePoolManager.liberarRectangulo(projectileRect);
+        return overlaps;
     }
+
 
     @Override
     public ObjetosXP sueltaObjetoXP() {

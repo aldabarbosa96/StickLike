@@ -140,7 +140,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
         upgradeWindow = new Window(POPUP_HEADER, wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
-        upgradeWindow.getTitleLabel().setFontScale(1.2f);
+        upgradeWindow.getTitleLabel().setFontScale(1.25f);
 
         float w = POPUP_WIDTH;
         float h = POPUP_HEIGHT;
@@ -148,7 +148,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         upgradeWindow.padTop(POPUP_HEADER_PADDING);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
-        upgradeWindow.getTitleTable().padTop(15).padBottom(-35);
+        upgradeWindow.getTitleTable().padBottom(-35);
 
         improvementButtons.clear();
 
@@ -166,7 +166,7 @@ public class PopUpMejoras extends RenderBaseMenus {
             btn.getLabel().setAlignment(Align.center);
 
             Table rowTable = new Table();
-            rowTable.pad(POPUP_ROW_PADDING + 5f);
+            rowTable.pad(POPUP_ROW_PADDING);
             rowTable.defaults().center();
 
             // Etiqueta de tipo
@@ -289,6 +289,11 @@ public class PopUpMejoras extends RenderBaseMenus {
     @Override
     public void animarSalida(Runnable callback) {
         // Implementar animación de salida si fuera necesario
+    }
+
+    public void dispose() {
+        if (uiSkin != null) uiSkin.dispose();
+        if (uiStage != null) uiStage.dispose();
     }
 
     /**
