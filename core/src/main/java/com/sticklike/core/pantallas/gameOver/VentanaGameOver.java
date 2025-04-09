@@ -10,9 +10,11 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
-import com.sticklike.core.pantallas.menus.MenuPrincipal;
+import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
+import com.sticklike.core.ui.Mensajes;
+import com.sticklike.core.ui.MensajesData;
+
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -74,6 +76,8 @@ public class VentanaGameOver implements Screen {
         EnemigoPolla.resetStats();
         EnemigoExamen.resetStats();
         game.ventanaJuego1.dispose();
+        Mensajes.reset();
+        MensajesData.getInstance().reset();
         game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
         game.ventanaJuego1.resize(VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
         game.setScreen(game.ventanaJuego1);
@@ -108,5 +112,6 @@ public class VentanaGameOver implements Screen {
     public void dispose() {
         spriteBatch.dispose();
         font.dispose();
+
     }
 }

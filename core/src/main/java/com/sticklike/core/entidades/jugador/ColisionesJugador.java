@@ -1,6 +1,7 @@
 package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
@@ -36,12 +37,16 @@ public class ColisionesJugador {
         float offsetX = (fullRect.width - newWidth) / 2f;
         float offsetY = (fullRect.height - newHeight) / 2f;
 
-        // Creamos la caja de colisión reducida
-        Rectangle enemyHitbox = new Rectangle(fullRect.x + offsetX, fullRect.y + offsetY, newWidth, newHeight);
-        // Caja del jugador (valorar si se modifica en un futuro)
+        // Creamos la caja de colisión reducida a partir de la pool de rectángulos
+        Rectangle enemyHitbox = RectanglePoolManager.obtenerRectangulo(fullRect.x + offsetX, fullRect.y + offsetY, newWidth, newHeight);        // Caja del jugador (valorar si se modifica en un futuro)
         Rectangle playerRect = jugador.getSprite().getBoundingRectangle();
 
-        return playerRect.overlaps(enemyHitbox);
+        boolean overlaps = playerRect.overlaps(enemyHitbox);
+
+        // Liberamos el objeto Rectangle para su reutilización
+        RectanglePoolManager.liberarRectangulo(enemyHitbox);
+
+        return overlaps;
     }
 
     public void recibeDanyo(float cantidad, Jugador jugador, GestorDeAudio gestorDeAudio) {

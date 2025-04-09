@@ -12,7 +12,6 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  */
 
 public class ObjetoVida extends ObjetoBase {
-    private Sprite sprite;
     private boolean recolectado = false;
     private final static Texture TEXTURE = manager.get(RECOLECTABLE_VIDA, Texture.class);
 
@@ -25,7 +24,6 @@ public class ObjetoVida extends ObjetoBase {
     public void recolectar(GestorDeAudio gestorDeAudio) {
         gestorDeAudio.reproducirEfecto("recogerVida", AUDIO_RECOLECCION_VIDA);
         recolectado = true;
-        sprite = null;
     }
 
     @Override

@@ -1,19 +1,23 @@
 package com.sticklike.core.entidades.enemigos.mobs;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionCulo;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -41,6 +45,13 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     private final Texture damageTexture;
     private boolean recibeImpacto = false; // puede ser útil en un futuro
     private RenderBaseEnemigos renderBaseEnemigos;
+    private boolean esConOjo;
+    private Float posXMuerte = null;
+    private Float posYMuerte = null;
+    private boolean mostrandoDamageSprite = false;
+    private float damageSpriteTimer = 0f;
+    private boolean deathAnimationTriggered = false;
+
 
     public EnemigoCulo(float x, float y, Jugador jugador) {
         esConOjo();
@@ -57,35 +68,74 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         float random = MathUtils.random(10);
         if (random >= 2.5f) {
             sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
-            sprite.setSize(26, 22);
+            sprite.setSize(32, 28);
+            esConOjo = false;
         } else {
             tieneOjo = true;
             spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
-            spriteOjoAbierto.setSize(30, 26);
+            spriteOjoAbierto.setSize(36, 32);
             spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
-            spriteOjoCerrado.setSize(30, 26);
+            spriteOjoCerrado.setSize(36, 32);
             sprite = new Sprite(spriteOjoAbierto);
             vidaEnemigo = VIDA_ENEMIGOCULO * 2;
+            esConOjo = true;
         }
     }
 
-    @Override
     public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
         animacionesBaseEnemigos.actualizarFade(delta);
-        movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
 
-        if (temporizadorDanyo > 0) {
-            temporizadorDanyo -= delta;
+        if (vidaEnemigo > 0) {
+            movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
+        } else {
+            movimientoCulo.actualizarSoloKnockback(delta, sprite, true);
         }
-        animacionCulo.actualizarAnimacion(delta, sprite);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+
+        if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+            animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+        }
+
+        if (vidaEnemigo > 0) {
+            if (temporizadorDanyo > 0) temporizadorDanyo -= delta;
+            animacionCulo.actualizarAnimacion(delta, sprite);
+            animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        }
+
+        // Si el enemigo ya está muerto, mostramos el sprite de daño durante 0.09 segundos
+        if (vidaEnemigo <= 0 && mostrandoDamageSprite) {
+            damageSpriteTimer -= delta;
+            sprite.setTexture(damageTexture);
+            if (damageSpriteTimer <= 0) {
+                mostrandoDamageSprite = false;
+                if (!deathAnimationTriggered) {
+                    Animation<TextureRegion> animMuerteCulo;
+                    if (!esConOjo) {
+                        animMuerteCulo = GestorDeAssets.animations.get("muerteCulo");
+                    } else {
+                        animMuerteCulo = GestorDeAssets.animations.get("muerteCulo2");
+                    }
+                    animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+                    animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
+                    animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+                    deathAnimationTriggered = true;
+                }
+            }
+        }
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch, this);
+        if (vidaEnemigo > 0 || mostrandoDamageSprite) {
+            renderBaseEnemigos.dibujarEnemigos(batch, this);
+        } else {
+            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+                sprite.draw(batch);
+            }
+        }
     }
+
 
     @Override
     public void activarParpadeo(float duracion) {
@@ -95,30 +145,43 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
         recibeImpacto = true;
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        // Obtenemos el Rectangle del proyectil a través del pool, evitando crear un nuevo objeto
+        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
+        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
+        // Liberamos el Rectangle para su reutilización
+        RectanglePoolManager.liberarRectangulo(projectileRect);
+        return overlaps;
     }
+
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
         float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 0.25f) {
             haSoltadoXP = true;
-            return new ObjetoVida(this.getX(), this.getY());
+            return new ObjetoVida(posXMuerte, posYMuerte);
         }
         if (!haSoltadoXP && randomXP >= 15f) {
             haSoltadoXP = true;
-            return new ObjetoXp(this.getX(), this.getY());
+            return new ObjetoXp(posXMuerte, posYMuerte);
         }
         return null;
     }
 
     @Override
     public void reducirSalud(float amount) {
+        if (vidaEnemigo <= 0) return; // Ya está muerto, evitamos procesar más daño.
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade()) {
-                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                activarParpadeo(DURACION_PARPADEO_ENEMIGO);
+            // Guardamos la posición de la muerte (si aún no se ha hecho)
+            if (posXMuerte == null || posYMuerte == null) {
+                posXMuerte = sprite.getX();
+                posYMuerte = sprite.getY();
+            }
+            // Activamos el estado de sprite de daño si aún no se ha iniciado la animación de muerte
+            if (!mostrandoDamageSprite && !deathAnimationTriggered) {
+                mostrandoDamageSprite = true;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
             }
         }
     }
@@ -135,7 +198,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public boolean puedeAplicarDanyo() {
-        return temporizadorDanyo <= 0;
+        return vidaEnemigo > 0 && temporizadorDanyo <= 0;
     }
 
     @Override
@@ -145,8 +208,9 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.estaEnFade());
+        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte()  && !animacionesBaseEnemigos.estaEnParpadeo());
     }
+
 
     @Override
     public void dispose() {
@@ -215,5 +279,8 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     public boolean isTieneOjo() {
         return tieneOjo;
+    }
+    public boolean isMostrandoDamageSprite() {
+        return mostrandoDamageSprite;
     }
 }

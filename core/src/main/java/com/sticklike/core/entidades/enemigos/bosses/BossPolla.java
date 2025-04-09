@@ -1,8 +1,10 @@
 package com.sticklike.core.entidades.enemigos.bosses;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
@@ -12,6 +14,8 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.utilidades.gestores.GestorDeAssets;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -28,7 +32,7 @@ public class BossPolla implements Enemigo {
     private AnimacionesBaseEnemigos animaciones;
     private AnimacionBossPolla animacionBossPolla;
     private MovimientoBossPolla movimientoBoss;
-    private float vida = 1250f;
+    private float vida = 1350;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private float damageAmount = 9.5f;
@@ -56,49 +60,50 @@ public class BossPolla implements Enemigo {
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
+
     @Override
     public void actualizar(float delta) {
-        animaciones.actualizarParpadeo(sprite, delta);
         animaciones.actualizarFade(delta);
-        movimientoBoss.actualizarMovimiento(delta, sprite, jugador);
 
-        if (temporizadorDanyo > 0) {
-            temporizadorDanyo -= delta;
+        if (vida > 0) {
+            animaciones.actualizarParpadeo(sprite, delta);
+            animaciones.actualizarFade(delta);
+            movimientoBoss.actualizarMovimiento(delta, sprite, jugador);
+            if (temporizadorDanyo > 0) {
+                temporizadorDanyo -= delta;
+            }
+            animacionBossPolla.actualizarAnimacion(delta, sprite);
+            animaciones.flipearEnemigo(jugador, sprite);
+        } else {
+            if (animaciones.enAnimacionMuerte()) {
+                animaciones.actualizarAnimacionMuerteSinEscala(sprite, delta);
+            }
         }
-        animacionBossPolla.actualizarAnimacion(delta, sprite);
-        animaciones.flipearEnemigo(jugador, sprite);
     }
 
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        renderBaseEnemigos.dibujarEnemigos(batch, this);
-
-        /* Finalizamos el SpriteBatch para dibujar con ShapeRenderer el rectángulo de colisión del enemigo para debug
-        batch.end();
-
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-
-        Rectangle baseRect = sprite.getBoundingRectangle();
-        float marginX = baseRect.width * 0.2f;
-        float marginY = baseRect.height * 0.5f;
-        Rectangle expandedRect = new Rectangle(baseRect.x - marginX / 2, baseRect.y - marginY / 2, baseRect.width + marginX, baseRect.height + marginY);
-
-        shapeRenderer.rect(expandedRect.x, expandedRect.y, expandedRect.width, expandedRect.height);
-        shapeRenderer.end();
-
-        batch.begin();*/
+        if (vida > 0) {
+            renderBaseEnemigos.dibujarEnemigos(batch, this);
+        } else {
+            if (animaciones.enAnimacionMuerte()) {
+                sprite.draw(batch);
+            }
+        }
     }
 
     @Override
     public void reducirSalud(float amount) {
         vida -= amount;
-        if (vida <= 0 && !animaciones.estaEnFade()) {
-            animaciones.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-            animaciones.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
+        if (vida <= 0) {
+            if (!animaciones.estaEnFade() && !animaciones.enAnimacionMuerte()) {
+                Animation<TextureRegion> animMuerteBoss = GestorDeAssets.animations.get("bossPollaMuerte");
+                animaciones.iniciarAnimacionMuerte(animMuerteBoss);
+                animaciones.iniciarFadeMuerte(DURACION_FADE_BOSS);
+                animaciones.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
+                GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPollaMuerte", 1);
+            }
         }
     }
 
@@ -135,7 +140,7 @@ public class BossPolla implements Enemigo {
 
     @Override
     public boolean puedeAplicarDanyo() {
-        return temporizadorDanyo <= 0;
+        return vida > 0 && temporizadorDanyo <= 0;
     }
 
     @Override
@@ -189,6 +194,11 @@ public class BossPolla implements Enemigo {
 
     public AnimacionesBaseEnemigos getAnimaciones() {
         return animaciones;
+    }
+
+    @Override
+    public boolean isMostrandoDamageSprite() {
+        return false;
     }
 
     @Override

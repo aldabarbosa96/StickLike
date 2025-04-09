@@ -119,7 +119,7 @@ public class BoostIconEffect {
 
     public void dispose() {
         shapeRenderer.dispose();
-        icon = null;
+        //icon = null; todo --> (parece que sí ha resuelto el problema del icono null al reiniciar)
     }
 
     public boolean isActive() {

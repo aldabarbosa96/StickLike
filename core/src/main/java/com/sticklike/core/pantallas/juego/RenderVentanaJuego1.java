@@ -14,7 +14,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.ui.HUD;
-import com.sticklike.core.utilidades.DebugStats;
+import com.sticklike.core.ui.Mensajes;
 import com.sticklike.core.utilidades.PoissonPoints;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +31,6 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
 
     private ShapeRenderer shapeRenderer;
     private VentanaLoading ventanaLoading;
-    private DebugStats debugStats;
     private final int tamanyoCeldas;
     private Array<Borron> borronesMapa;
     private AtomicBoolean borronesListos = new AtomicBoolean(false);
@@ -62,7 +61,6 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
     public RenderVentanaJuego1(int tamanyoCeldas, Jugador jugador) {
         this.shapeRenderer = new ShapeRenderer();
         this.ventanaLoading = new VentanaLoading();
-        this.debugStats = new DebugStats();
         this.tamanyoCeldas = tamanyoCeldas;
 
         final Vector2 posicionInicialJugador = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
@@ -92,7 +90,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         ventanaJuego1.actualizarPosCamara();
 
         if (!borronesListos.get()) {
-            ventanaLoading.render(spriteBatch, delta);
+            ventanaLoading.render(delta);
             return;
         }
 
@@ -104,7 +102,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
             }
         }else {
                 // 1) Limpiamos la pantalla
-                if (jugador.getVidaJugador() <= 15) {
+                if (Jugador.getVidaJugador() <= 15) {
                     if (jugador.getRenderJugador().isEnParpadeo()) {
                         Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
                     } else {
@@ -114,7 +112,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
                     if (jugador.getRenderJugador().isEnParpadeo()) {
                         Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
                     } else {
-                        Gdx.gl.glClearColor(0.89f, 0.89f, 0.89f, 1);
+                        Gdx.gl.glClearColor(0.91f, 0.91f, 0.91f, 1);
                     }
                 }
             }
@@ -133,12 +131,16 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
 
             spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
         }
-        spriteBatch.end(); // Cerrar SpriteBatch después de dibujar borrones
+        spriteBatch.end(); // Cerramos SpriteBatch después de dibujar borrones
 
         // 4) Renderizamos la cuadrícula
-        renderizarLineasCuadricula(camara, jugador);
+        renderizarLineasCuadricula(camara);
 
-        // 5) Dibujar sombras de los enemigos
+        spriteBatch.begin();
+        jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
+        spriteBatch.end();
+
+        // 5) Dibujamos sombras de los enemigos
         shapeRenderer.setProjectionMatrix(camara.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         controladorEnemigos.dibujarSombrasEnemigos(shapeRenderer);
@@ -159,21 +161,18 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();
 
-        // 7) Renderizar HUD
+        // 7) Renderizamos HUD
+        Mensajes.getInstance().update();
+        Mensajes.getInstance().draw(camara);
         hud.renderizarHUD(delta);
 
-        debugStats.update();
-        if (debugStats.isEnabled()) {
-            spriteBatch.begin();
-            debugStats.render(spriteBatch, VIRTUAL_HEIGHT);
-            spriteBatch.end();
-        }
+
     }
-    public void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
+    public void renderizarLineasCuadricula(OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        if (jugador.getVidaJugador() <= 15) {
+        if (Jugador.getVidaJugador() <= 15) {
             shapeRenderer.setColor(0.9f, 0.64f, 0.7f, 1f);
         } else {
             shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
@@ -303,6 +302,5 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
     public void dispose() {
         shapeRenderer.dispose();
         ventanaLoading.dispose();
-        debugStats.dispose();
     }
 }

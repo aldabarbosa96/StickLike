@@ -28,7 +28,17 @@ public class Evento implements Comparable<Evento> {
 
     @Override
     public int compareTo(Evento otro) {
-        // Ordenar de menor a mayor nivelRequerido
-        return Integer.compare(this.nivelRequerido, otro.nivelRequerido);
+        int cmp = Integer.compare(this.nivelRequerido, otro.nivelRequerido);
+        if (cmp == 0) {
+            // Si ambos eventos tienen el mismo nivel, hacemos un desempate
+            if (this.nombreEvento.equals("BOSSPOLLA Aparece") && otro.nombreEvento.equals("Alarma Aparece")) {
+                return -1; // El boss tiene prioridad
+            } else if (this.nombreEvento.equals("Alarma Aparece") && otro.nombreEvento.equals("BOSSPOLLA Aparece")) {
+                return 1;  // El boss tiene prioridad, por lo tanto el evento alarma queda después
+            }
+            // Si no es uno de estos casos, se ordenan lexicográficamente
+            return this.nombreEvento.compareTo(otro.nombreEvento);
+        }
+        return cmp;
     }
 }

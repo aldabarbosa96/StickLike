@@ -77,9 +77,13 @@ public class MovimientoCulo extends MovimientoBaseEnemigos {
         // Determinamos el ángulo efectivo en función de la posición del enemigo respecto al jugador
         // Si el enemigo está a la izquierda del jugador, invertimos el efecto para que la inclinación "del paso" se mantenga coherente
         float effectiveRotation = currentRotationAngle;
-        if (sprite.getX() < jugador.getSprite().getX()) {
+        float centroEnemigo = sprite.getX() + sprite.getWidth() / 2;
+        float centroJugador = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
+
+        if (centroEnemigo < centroJugador) {
             effectiveRotation = -currentRotationAngle;
         }
+
 
         sprite.setRotation(effectiveRotation);
     }

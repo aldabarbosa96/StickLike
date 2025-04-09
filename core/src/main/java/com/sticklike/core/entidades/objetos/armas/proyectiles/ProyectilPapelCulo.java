@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -63,7 +64,11 @@ public class ProyectilPapelCulo implements Proyectiles {
         this.velocidadProyectil = velocidadProyectil;
         this.anguloLanzamiento = anguloLanzamiento;
         this.proyectilActivo = true;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(20,7,new Color(0.8f,0.75f,0.85f,1));
+
+        float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
+        int maxLength = (int) (20 * scaleFactor);
+        float scaleWidth = 10 * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaleWidth, new Color(0.65f, 0.5f, 0.7f, 1));
         this.centroSprite = new Vector2();
 
         this.velocidadVertical = velocidadProyectil * MathUtils.sinDeg(anguloLanzamiento);
@@ -177,7 +182,7 @@ public class ProyectilPapelCulo implements Proyectiles {
             return new Circle(impactX, impactY, radius);
         }
         // Si no está en fase de explosión, devolvemos un círculo aprox. en base al sprite
-        return new Circle(sprite.getX() + sprite.getWidth()/2f, sprite.getY() + sprite.getHeight()/2f, sprite.getWidth()/2f);
+        return new Circle(sprite.getX() + sprite.getWidth() / 2f, sprite.getY() + sprite.getHeight() / 2f, sprite.getWidth() / 2f);
     }
 
 
@@ -216,7 +221,7 @@ public class ProyectilPapelCulo implements Proyectiles {
     public void registrarImpacto(Enemigo enemigo) {
         // Si la animación de impacto aún no se ha activado, se activa una única vez
         if (!impactoAnimacionActiva) {
-            GestorDeAudio.getInstance().reproducirEfecto("explosion", 0.75f);
+            GestorDeAudio.getInstance().reproducirEfecto("explosion", 1);
             impactoAnimacionActiva = true;
             animationStateTime = 0f;
             impactX = sprite.getX();

@@ -2,8 +2,12 @@ package com.sticklike.core.entidades.enemigos.animacion;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -19,6 +23,11 @@ public class AnimacionesBaseEnemigos {
     private float tiempoFadeRestante = TIEMPO_FADE_RESTANTE;
     private float tiempoTotalFade = TIEMPO_FADE_TOTAL;
     private float alphaActual = ALPHA_ACTUAL;
+    private boolean estaFlipped;
+
+    private Animation<TextureRegion> animacionMuerte;
+    private float stateTimeMuerte = 0;
+    private boolean enAnimacionMuerte = false;
 
     public void activarParpadeo(Sprite sprite, float duracion, Texture damageTexture) {
         if (!enParpadeo) {
@@ -34,10 +43,14 @@ public class AnimacionesBaseEnemigos {
             tiempoParpadeoRestante -= delta;
             if (tiempoParpadeoRestante <= 0) {
                 enParpadeo = false;
-                sprite.setTexture(texturaOriginal);
+                // Si el fade está activo, mantenemos la textura de damage
+                if (!enFade) {
+                    sprite.setTexture(texturaOriginal);
+                }
             }
         }
     }
+
 
     public boolean estaEnParpadeo() {
         return enParpadeo;
@@ -82,7 +95,87 @@ public class AnimacionesBaseEnemigos {
             boolean estaALaIzquierda = sprite.getX() + sprite.getWidth() / 2 > jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
             if (sprite.isFlipX() != estaALaIzquierda) {
                 sprite.flip(true, false);
+                estaFlipped = estaALaIzquierda;
             }
         }
+    }
+
+    public void iniciarAnimacionMuerte(Animation<TextureRegion> animacionMuerte) {
+        this.animacionMuerte = animacionMuerte;
+        stateTimeMuerte = 0;
+        enAnimacionMuerte = true;
+    }
+
+    public void actualizarAnimacionMuerte(Sprite sprite, float delta) {
+        if (enAnimacionMuerte && animacionMuerte != null) {
+            stateTimeMuerte += delta;
+            TextureRegion frame = animacionMuerte.getKeyFrame(stateTimeMuerte, false);
+            float oldX = sprite.getX();
+            float oldY = sprite.getY();
+            float oldWidth = sprite.getWidth();
+            float oldHeight = sprite.getHeight();
+            boolean oldFlipX = sprite.isFlipX();
+            boolean oldFlipY = sprite.isFlipY();
+
+            // Calculamos el centro original del sprite
+            float centerX = oldX + oldWidth / 2f;
+            float centerY = oldY + oldHeight / 2f;
+
+            float scaleFactor = 1.011f;
+            float newWidth = oldWidth * scaleFactor;
+            float newHeight = oldHeight * scaleFactor;
+
+            // Establecemos la nueva región y tamaño
+            sprite.setRegion(frame);
+            sprite.setSize(newWidth, newHeight);
+            sprite.setOriginCenter();
+
+            // Recalculamos la posición de modo que el centro se mantenga igual
+            sprite.setPosition(centerX - newWidth / 2f, centerY - newHeight / 2f);
+
+            if (sprite.isFlipX() != oldFlipX) {
+                sprite.flip(true, false);
+            }
+            if (sprite.isFlipY() != oldFlipY) {
+                sprite.flip(false, true);
+            }
+
+            // Aplicamos el alpha calculado del fade al sprite:
+            //sprite.setColor(1f, 0, 0, getAlphaActual());
+
+            if (animacionMuerte.isAnimationFinished(stateTimeMuerte)) {
+                enAnimacionMuerte = false;
+            }
+        }
+    }
+
+
+    public void actualizarAnimacionMuerteSinEscala(Sprite sprite, float delta) { // para poder animar de formas especiales a los bosses sin que se deforme la imagen
+        if (enAnimacionMuerte && animacionMuerte != null) {
+            stateTimeMuerte += delta;
+            TextureRegion frame = animacionMuerte.getKeyFrame(stateTimeMuerte, false);
+            // Solo actualizamos la región, sin cambiar el tamaño, posición u origen.
+            sprite.setRegion(frame);
+            if (animacionMuerte.isAnimationFinished(stateTimeMuerte)) {
+                enAnimacionMuerte = false;
+            }
+        }
+    }
+
+    public void reproducirSonidoMuerteGenerico(){
+        float sonidoAleatorioMuerte = MathUtils.random(10);
+        if (sonidoAleatorioMuerte >= 5) {
+            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico2", 0.2f);
+        } else {
+            GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico", 0.2f);
+        }
+    }
+
+    public boolean enAnimacionMuerte() {
+        return enAnimacionMuerte;
+    }
+
+    public boolean isEstaFlipped() {
+        return estaFlipped;
     }
 }

@@ -17,11 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -34,9 +34,12 @@ import java.util.Set;
 
 /**
  * Gestiona y renderiza los componentes del HUD en el juego.
- * Se encarga de la visualización de información del jugador (salud, experiencia, nivel, estadísticas, etc.), y de la interacción con los elementos del HUD.
+ * Se encarga de la visualización de información del jugador (salud, experiencia, nivel, estadísticas, etc.)
+ * y de la interacción con los elementos del HUD.
  */
+
 public class RenderHUDComponents {
+    private static final float EXTRA_HUD_HEIGHT = 20f;
     private ShapeRenderer shapeRenderer;
     private GlyphLayout layout;
     private BitmapFont fuente;
@@ -50,6 +53,7 @@ public class RenderHUDComponents {
     private String tiempoFormateado;
     private boolean pausadoTemporizador = false;
     private Stage hudStage;
+    private Stage chatlogStage;
     private Set<String> upgradeStats = new HashSet<>();
     private OrthographicCamera hudCamera;
     private Viewport hudViewport;
@@ -74,6 +78,8 @@ public class RenderHUDComponents {
         hudViewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply();
         hudStage = new Stage(hudViewport, spriteBatch);
+        chatlogStage = new Stage(hudViewport, spriteBatch);
+        Mensajes.init(chatlogStage, this,VentanaJuego1.getCamara(),spriteBatch);
     }
 
     public void renderizarTemporizador(float delta) {
@@ -81,8 +87,8 @@ public class RenderHUDComponents {
             tiempoTranscurrido += delta;
         }
         tiempoFormateado = formatearTiempo(tiempoTranscurrido);
-        float timerVerticalOffset = 70f;
-        float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + 15f);
+        float timerVerticalOffset = 35f;
+        float textX = (VIRTUAL_WIDTH / 2) - (jugador.getSprite().getWidth() / 2f + 12.5f);
         float textY = (VIRTUAL_HEIGHT / 2) + TIMER_Y_POS + timerVerticalOffset;
         fuente.getData().setScale(TIMER_SCALE);
         Color colorReborde = Color.BLACK;
@@ -97,30 +103,32 @@ public class RenderHUDComponents {
     }
 
     public void renderizarFondoHUD() {
-        shapeRenderer.setColor(0.985f, 0.91f, 0.7f, 1.0f);
-        shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
+        float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
+        shapeRenderer.setColor(0.987f, 0.897f, 0.617f, 1f);
+        shapeRenderer.rect(0, 0, VIRTUAL_WIDTH, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD);
     }
 
     public void renderizarMarcoHUD() {
+        float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
         float grosorMarcoNegro = GROSOR_MARCO;
         float grosorSombra = GROSOR_SOMBRA;
         float grosorTotalSombra = grosorMarcoNegro + grosorSombra;
         shapeRenderer.setColor(0.1f, 0.1f, 0.1f, 1);
-        shapeRenderer.rect(-grosorSombra, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorTotalSombra, VIRTUAL_WIDTH + BORDER_CORRECTION * grosorSombra, grosorTotalSombra);
-        shapeRenderer.rect(-grosorSombra, -grosorSombra, grosorTotalSombra, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
-        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, -grosorSombra, grosorTotalSombra, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
+        shapeRenderer.rect(-grosorSombra, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD - grosorTotalSombra, VIRTUAL_WIDTH + BORDER_CORRECTION * grosorSombra, grosorTotalSombra);
+        shapeRenderer.rect(-grosorSombra, -grosorSombra, grosorTotalSombra, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
+        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, -grosorSombra, grosorTotalSombra, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD + grosorSombra);
 
         shapeRenderer.setColor(0.45f, 0.45f, 0.45f, 1);
-        shapeRenderer.rect(0, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD - grosorMarcoNegro, VIRTUAL_WIDTH, grosorMarcoNegro);
-        shapeRenderer.rect(0, 0, grosorMarcoNegro, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
-        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, 0, grosorMarcoNegro, HUD_HEIGHT + DESPLAZAMIENTO_VERTICAL_HUD);
+        shapeRenderer.rect(0, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD - grosorMarcoNegro, VIRTUAL_WIDTH, grosorMarcoNegro);
+        shapeRenderer.rect(0, 0, grosorMarcoNegro, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD);
+        shapeRenderer.rect(VIRTUAL_WIDTH - grosorMarcoNegro, 0, grosorMarcoNegro, effectiveHUDHeight + DESPLAZAMIENTO_VERTICAL_HUD);
     }
 
     public void renderizarLineasHorizontalesCuadricula(float alturaHUD) {
-        shapeRenderer.setColor(0.75f, 0.85f, 0.9f, 1);
+        shapeRenderer.setColor(0.725f, 0.825f, 0.875f, 1);
         float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
         for (float y = 0; y <= alturaHUD; y += cellSize) {
-            shapeRenderer.line(0, y, VIRTUAL_WIDTH, y);
+            shapeRenderer.rectLine(0, y, VIRTUAL_WIDTH, y, 2);
         }
     }
 
@@ -129,19 +137,31 @@ public class RenderHUDComponents {
         float margenIzquierdo = 40f;
         float grosorLinea = 1.5f;
         float espacioEntreLineas = 2.5f;
-        shapeRenderer.rect(margenIzquierdo, 0, grosorLinea, alturaHUD - 2f);
-        shapeRenderer.rect(margenIzquierdo + grosorLinea + espacioEntreLineas, 0, grosorLinea, alturaHUD - 2f);
 
-        float circleX = margenIzquierdo / 2f;
+        // Líneas en el lado izquierdo
+        shapeRenderer.rect(margenIzquierdo, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2);
+        shapeRenderer.rect(margenIzquierdo + grosorLinea + espacioEntreLineas, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2f);
+
+        // Líneas en el lado derecho
+        float margenDerecho = 40f;
+        float xLinea1 = VIRTUAL_WIDTH - margenDerecho - grosorLinea;
+        float xLinea2 = xLinea1 - espacioEntreLineas - grosorLinea;
+        shapeRenderer.rect(xLinea1, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2);
+        shapeRenderer.rect(xLinea2, 0, grosorLinea, alturaHUD + EXTRA_HUD_HEIGHT - 2f);
+
         float circleRadius = 6f;
-        float circleYBottom = 45f;
-        float circleYTop = 108f;
-        shapeRenderer.setColor(new Color(0.85f, 0.85f, 0.85f, 1));
-        shapeRenderer.circle(circleX, circleYBottom, circleRadius);
-        shapeRenderer.circle(circleX, circleYTop, circleRadius);
+        float circleYBottom = 35f + EXTRA_HUD_HEIGHT;
+        float circleYTop = 108f + EXTRA_HUD_HEIGHT;
+
+        // Círculos lado izquierdo
+        float circleXLeft = margenIzquierdo / 2f;
+        shapeRenderer.setColor(new Color(0.75f, 0.75f, 0.75f, 1));
+        shapeRenderer.circle(circleXLeft, circleYBottom, circleRadius);
+        shapeRenderer.circle(circleXLeft, circleYTop, circleRadius);
     }
 
     public void renderizarTextoNivelPlayer() {
+        float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
         fuente.getData().setScale(0.95f);
         GlyphLayout layoutLVL = new GlyphLayout(fuente, TEXTO_LVL);
         float widthLVL = layoutLVL.width;
@@ -154,8 +174,8 @@ public class RenderHUDComponents {
         float spacing = 2f;
         float totalWidth = widthLVL + spacing + widthNumero;
         float groupX = (VIRTUAL_WIDTH - totalWidth) / 2;
-        float textY = HUD_HEIGHT - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
-        float textYNumber = HUD_HEIGHT - NUMBER_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+        float textY = effectiveHUDHeight - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+        float textYNumber = effectiveHUDHeight - NUMBER_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
 
         fuente.getData().setScale(0.95f);
         dibujarTextoConReborde(spriteBatch, TEXTO_LVL, groupX, textY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
@@ -164,12 +184,12 @@ public class RenderHUDComponents {
         dibujarTextoConReborde(spriteBatch, nivelStr, groupX + widthLVL + spacing, textYNumber, BASIC_OFFSET, Color.BLUE, Color.WHITE);
     }
 
-
     public void renderizarBarraXPFondo() {
+        float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
         float barWidth = HUD_BAR_WIDTH;
         float barHeight = HUD_BAR_HEIGHT;
-        float barX = HUD_BAR_X;
-        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+        float barX = (VentanaJuego1.worldWidth - HUD_BAR_WIDTH) / 2;
+        float barY = effectiveHUDHeight - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
         float experiencePercentage = sistemaDeNiveles.getXpActual() / sistemaDeNiveles.getXpHastaSiguienteNivel();
 
         // Borde negro
@@ -184,18 +204,19 @@ public class RenderHUDComponents {
     }
 
     public void renderizarBarraXPInfo() {
+        float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
         float barWidth = HUD_BAR_WIDTH;
         float barHeight = HUD_BAR_HEIGHT;
         float barX = HUD_BAR_X;
-        float barY = HUD_HEIGHT - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
+        float barY = effectiveHUDHeight - barHeight - HUD_BAR_Y_OFFSET - XPBAR_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
         renderizarTextoBarraXP(barX, barY - BASIC_OFFSET2, barWidth, barHeight);
 
         float centerX = barX + barWidth * 0.5f;
         float posY = barY - 35f;
         float offset = 60f;
-        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf(jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf(Jugador.getOroGanado()), 0.8f, Color.GOLD, Color.DARK_GRAY);
         renderizarIconoConTexto(manager.get(ICONO_CALEAVELA_KILLS, Texture.class), 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), 0.8f, Color.WHITE, Color.DARK_GRAY);
-        renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(ObjetoPowerUp.getContador()), 0.8f, Color.WHITE, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(Jugador.getTrazosGanados()), 0.8f, Color.WHITE, Color.DARK_GRAY);
     }
 
     private void renderizarTextoBarraXP(float barX, float barY, float barWidth, float barHeight) {
@@ -204,7 +225,6 @@ public class RenderHUDComponents {
         int porcentajeXP = (int) ((xpActual / xpHastaSiguienteNivel) * 100);
         String experienceText = porcentajeXP + " %";
         layout.setText(fuente, experienceText);
-        float textWidth = layout.width;
         float textHeight = layout.height;
         float textX = barX + (barWidth) / 2;
         float textY = barY + (barHeight + textHeight) / 2 + XPTEXT_Y_CORRECTION;
@@ -221,6 +241,7 @@ public class RenderHUDComponents {
     }
 
     public void renderizarStatsJugadorBloque1() {
+        float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
         DecimalFormat df = new DecimalFormat("#.##");
         String valorVelocidad = df.format(jugador.getVelocidadJugador());
         String valorRango = df.format(jugador.getRangoAtaqueJugador());
@@ -229,13 +250,16 @@ public class RenderHUDComponents {
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
         String[] descripciones = {VEL_MOV, RANGO, VEL_ATAQUE, FUERZA, NUM_PROYECTILES};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
-        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class), manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class), manager.get(ICONO_PROYECTILES, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class),
+            manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class),
+            manager.get(ICONO_PROYECTILES, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION + 10;
-        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
+        float statsY = effectiveHUDHeight - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC1);
     }
 
     public void renderizarStatsJugadorBloque2() {
+        float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
         DecimalFormat df = new DecimalFormat("#.#");
         String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + df.format(jugador.getMaxVidaJugador());
         String valorRegeneracionVida = df.format(jugador.getRegVidaJugador() * 100) + " %";
@@ -244,9 +268,11 @@ public class RenderHUDComponents {
         String valorCritico = df.format(jugador.getCritico() * 100) + " %";
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
-        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class), manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class), manager.get(ICONO_CRITICO, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class),
+            manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class),
+            manager.get(ICONO_CRITICO, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2 + 10f;
-        float statsY = HUD_HEIGHT - STATS_Y_CORRECTION - 20f;
+        float statsY = effectiveHUDHeight - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
     }
 
@@ -292,14 +318,13 @@ public class RenderHUDComponents {
         }
     }
 
-
-
+    // Se actualiza la posición vertical (baseY) del slot y marco del arma
     public void dibujarAtaqueBasico(Texture texturaArma) {
         float slotSize = 40f;
         float attackSlotSize = slotSize / 1.8f;
-        float offsetX = 67.5f;
-        float baseX = VIRTUAL_WIDTH - 450f - offsetX;
-        float baseY = 65f;
+        float offsetX = 500;
+        float baseX = VIRTUAL_WIDTH - offsetX;
+        float baseY = 65f + EXTRA_HUD_HEIGHT;
 
         // Dibujamos marco, arma y texto
         spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), baseX, baseY, attackSlotSize, attackSlotSize);
@@ -320,8 +345,8 @@ public class RenderHUDComponents {
 
     public void crearSlots() {
         slotsList.clear();
-        float baseX = VIRTUAL_WIDTH - 450f;
-        float baseY = 75f;
+        float baseX = VIRTUAL_WIDTH - 435f;
+        float baseY = 75f + EXTRA_HUD_HEIGHT;
         float colGap = 80f;
         float rowGap = 50f;
         int columns = 5;
@@ -346,8 +371,9 @@ public class RenderHUDComponents {
                     ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
                     style.imageUp = drawableIcono;
                     ImageButton boton = new ImageButton(style);
-                    boton.setSize(slotsList.get(i).width - 10f, slotsList.get(i).height - 10f);
-                    boton.setPosition(slotsList.get(i).x + 5f, slotsList.get(i).y + 5f);
+                    float margin = slotsList.get(i).width * 0.175f;
+                    boton.setSize(slotsList.get(i).width - 2 * margin, slotsList.get(i).height - 2 * margin);
+                    boton.setPosition(slotsList.get(i).x + margin, slotsList.get(i).y + margin * 1.75f);
                     boton.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
@@ -380,7 +406,6 @@ public class RenderHUDComponents {
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         fuente.setColor(colorReborde);
-
         fuente.draw(batch, texto, x - offset, y);
         fuente.draw(batch, texto, x + offset, y);
         fuente.draw(batch, texto, x, y - offset);
@@ -389,7 +414,6 @@ public class RenderHUDComponents {
         fuente.draw(batch, texto, x + offset, y - offset);
         fuente.draw(batch, texto, x - offset, y + offset);
         fuente.draw(batch, texto, x + offset, y + offset);
-
         fuente.setColor(colorTexto);
         fuente.draw(batch, texto, x, y);
     }
@@ -411,8 +435,6 @@ public class RenderHUDComponents {
     }
 
     public void dispose() {
-        if (texturaCorazonVida != null) texturaCorazonVida.dispose();
-        if (texturaLapizXP != null) texturaLapizXP.dispose();
         if (fuente != null) fuente.dispose();
     }
 
@@ -434,5 +456,9 @@ public class RenderHUDComponents {
 
     public boolean isPausadoTemporizador() {
         return pausadoTemporizador;
+    }
+
+    public ControladorEnemigos getControladorEnemigos() {
+        return controladorEnemigos;
     }
 }

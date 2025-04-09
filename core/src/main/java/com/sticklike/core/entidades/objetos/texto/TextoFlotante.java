@@ -18,7 +18,7 @@ public class TextoFlotante {
     private BitmapFont fuente;
 
     private float tiempoTranscurrido;
-    private final float animDuration = 0.2f;
+    private final float animDuration = 0.25f;
 
     private final float initialScaleX;
     private final float initialScaleY;
@@ -31,14 +31,13 @@ public class TextoFlotante {
 
     public TextoFlotante(String texto, float x, float y, float duracion, float finalScaleX, float finalScaleY, boolean esCritico, BitmapFont fuenteCompartida) {
         this.texto = texto;
-        // Alternar extraOffset para evitar superposición
-        // Por ejemplo, 5 unidades a la izquierda o derecha
+        // Alternamos extraOffset para evitar superposición
         this.extraOffsetX = alternarOffset ? 4 : -4;
         alternarOffset = !alternarOffset; // Cambia para el siguiente texto
 
         // Se suma el offset a la posición base para conseguir el efecto de apilado
         this.x = x + this.extraOffsetX;
-        this.y = y; // Si se desea, también se puede alternar verticalmente
+        this.y = y; //no alternamos verticalmente de momento
         this.duracion = duracion;
         this.tiempoTranscurrido = 0;
         this.esCritico = esCritico;
@@ -46,8 +45,8 @@ public class TextoFlotante {
 
         this.finalScaleX = finalScaleX;
         this.finalScaleY = finalScaleY;
-        this.initialScaleX = finalScaleX * 0.2f;
-        this.initialScaleY = finalScaleY * 0.2f;
+        this.initialScaleX = finalScaleX * 0.25f;
+        this.initialScaleY = finalScaleY * 0.25f;
 
         // Iniciamos con la escala mínima para el efecto "pop"
         fuente.getData().setScale(initialScaleX, initialScaleY);

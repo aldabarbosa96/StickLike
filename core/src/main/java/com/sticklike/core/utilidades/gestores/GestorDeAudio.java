@@ -16,6 +16,9 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 public class GestorDeAudio {
     // Mantenemos una pista de música actualmente en reproducción.
     private Music musicaActual;
+    private float efectosVolumen = 1.0f;
+    private float musicaVolumen = 0.25f;
+
     // Usamos un mapa para todas las pistas de música de fondo.
     private Map<String, Music> musicasFondo;
     private Map<String, Sound> efectosSonido;
@@ -39,7 +42,7 @@ public class GestorDeAudio {
         musicasFondo.put("fondoMenu", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondoMenu.mp3")));
         musicasFondo.put("fondoMenu2", Gdx.audio.newMusic(Gdx.files.internal("audio/musica/fondoMenu2.mp3")));
 
-        // fondo2 por defecto (música inicial)
+        // fondo2 por defecto (música nivel inicial)
         musicaActual = musicasFondo.get("fondo2");
 
         // Cargar efectos de sonido
@@ -48,7 +51,11 @@ public class GestorDeAudio {
         efectosSonido.put("lanzarCalcetin", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoCalcetines.wav")));
         efectosSonido.put("tazo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoTazo.wav")));
         efectosSonido.put("pedo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPedo.wav")));
+        efectosSonido.put("moco", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMoco.wav")));
+        efectosSonido.put("boli", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBoliBic.wav")));
         efectosSonido.put("muerteJugador", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteJugador.wav")));
+        efectosSonido.put("muerteGenerico", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteGenerico.wav")));
+        efectosSonido.put("muerteGenerico2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoMuerteGenerico2.wav")));
         efectosSonido.put("recogerXP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerObjetoXPCaca.wav")));
         efectosSonido.put("recogerVida", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerCorazon.wav")));
         efectosSonido.put("recogerOro", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoOro.wav")));
@@ -61,6 +68,7 @@ public class GestorDeAudio {
         efectosSonido.put("sonidoBossPolla2", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla2.wav")));
         efectosSonido.put("sonidoBossPolla3", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla3.wav")));
         efectosSonido.put("sonidoBossPolla4", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPolla4.wav")));
+        efectosSonido.put("sonidoBossPollaMuerte", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoBossPollaMuerte.wav")));
         efectosSonido.put("boostVel", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostVel.wav")));
         efectosSonido.put("boostAttack", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAttack.wav")));
         efectosSonido.put("boostAmo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAmo.wav")));
@@ -74,14 +82,14 @@ public class GestorDeAudio {
     public void reproducirMusica() {
         if (musicaActual != null) {
             musicaActual.setLooping(true);
-            musicaActual.setVolume(MUSICA_VOLUMEN);
+            musicaActual.setVolume(musicaVolumen);
             musicaActual.play();
         }
     }
 
     public void pausarMusica() {
         if (musicaActual != null) {
-            musicaActual.setVolume(MUSICA_VOLUMEN_PAUSA);
+            musicaActual.setVolume(musicaVolumen * 0.5f);
         }
     }
 
@@ -106,13 +114,13 @@ public class GestorDeAudio {
         musicaActual = nuevaMusica;
         // Configuramos la nueva música
         musicaActual.setLooping(true);
-        musicaActual.setVolume(MUSICA_VOLUMEN);
+        musicaActual.setVolume(musicaVolumen);
         musicaActual.play();
     }
 
     public void reproducirEfecto(String nombre, float volumen) {
         int instancias = contadorInstancias.getOrDefault(nombre, 0);
-        if (nombre.equals("explosion") && instancias >= 1) {
+        if (nombre.equals("explosion") && instancias >= MAX_INSTANCIAS_SONIDO_EXPL) {
             return;
         }
 
@@ -122,16 +130,16 @@ public class GestorDeAudio {
 
         Sound sonido = efectosSonido.get(nombre);
         if (sonido == null) {
-            Gdx.app.log("SoundNotFound","Sonido no encontrado: " + nombre);
+            Gdx.app.log("SoundNotFound", "Sonido no encontrado: " + nombre);
             return;
         }
 
-        sonido.play(volumen);
+        sonido.play(volumen * efectosVolumen);
         contadorInstancias.put(nombre, instancias + 1);
 
         // Programar la disminución del contador después de la duración estimada
         float duracion = duracionSonidos.getOrDefault(nombre, 0.5f);
-        Timer.schedule(new Timer.Task(){
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 int actual = contadorInstancias.getOrDefault(nombre, 0);
@@ -156,12 +164,32 @@ public class GestorDeAudio {
         contadorInstancias.clear();
     }
 
+    public void setVolumenMusica(float volumen) {
+        this.musicaVolumen = volumen;
+        if (musicaActual != null) {
+            musicaActual.setVolume(musicaVolumen);
+        }
+    }
+
+    public void setVolumenEfectos(float volumen) {
+        this.efectosVolumen = volumen;
+    }
+
+    public float getVolumenMusica() {
+        return musicaVolumen;
+    }
+
+    public float getVolumenEfectos() {
+        return efectosVolumen;
+    }
+
     public void resetearInstancias() {
         contadorInstancias.clear();
     }
 
     // Implementación del patrón singleton
     private static GestorDeAudio instance;
+
     public static GestorDeAudio getInstance() {
         if (instance == null) {
             instance = new GestorDeAudio();

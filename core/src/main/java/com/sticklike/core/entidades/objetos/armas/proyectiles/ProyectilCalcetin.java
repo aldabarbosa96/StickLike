@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -38,6 +39,8 @@ public class ProyectilCalcetin implements Proyectiles {
     private Jugador jugador;
     private RenderParticulasProyectil renderParticulasProyectil;
     private Vector2 centroSprite;
+    private float impactoTimer = 0;
+    private static final float IMPACTO_DURACION = 0.1f;
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad,
                              float poderJugador, float extraDamage, Jugador jugador) {
@@ -57,7 +60,11 @@ public class ProyectilCalcetin implements Proyectiles {
         this.direccionY = direccionY;
         this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(17, 6f, new Color(1, 1, 1, 0.1f));
+
+        float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
+        int maxLength = (int) (17 * scaleFactor);
+        float adjustWidth = 6f * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, adjustWidth, new Color(1, 1, 1, 0.1f));
         this.centroSprite = new Vector2();
 
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
@@ -77,10 +84,22 @@ public class ProyectilCalcetin implements Proyectiles {
 
         sprite.rotate(rotationSpeed * delta);
 
+        if (!enemigosImpactados.isEmpty()) {
+            impactoTimer += delta;
+            if (impactoTimer >= IMPACTO_DURACION) {
+                sprite.setColor(1, 1, 1, 1);
+                renderParticulasProyectil.setColor(new Color(1, 1, 1, 0.1f));
+                impactoTimer = 0;
+            }
+        } else {
+            sprite.setColor(1, 1, 1, 1);
+        }
+
         if (distanciaRecorrida >= distanciaMaxima) {
             desactivarProyectil();
         }
     }
+
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
@@ -144,7 +163,12 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        enemigosImpactados.add(enemigo);
+        if (!enemigosImpactados.contains(enemigo)) {
+            enemigosImpactados.add(enemigo);
+            sprite.setColor(Color.RED);
+            renderParticulasProyectil.setColor(Color.RED);
+            impactoTimer = 0;
+        }
     }
 
     @Override

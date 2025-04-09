@@ -1,11 +1,17 @@
 package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
-import com.sticklike.core.pantallas.menus.MenuPrincipal;
+import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
+import com.sticklike.core.utilidades.DebugStats;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
+
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_HEIGHT;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_WIDTH;
 
 /**
  * MainGame es la clase principal del juego desarrollado con libGDX
@@ -15,6 +21,9 @@ import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 public class MainGame extends Game {
     public VentanaJuego1 ventanaJuego1;
     public GestorDeAudio gestorDeAudio;
+    private SpriteBatch batch;
+    private DebugStats debugStats;
+    private ExtendViewport mainViewport;
 
     @Override
     public void create() {
@@ -22,12 +31,21 @@ public class MainGame extends Game {
         GestorDeAssets.cargarRecursos();
         FontManager.initFonts();
         gestorDeAudio = GestorDeAudio.getInstance();
+        batch = new SpriteBatch();
+        debugStats = new DebugStats();
+        mainViewport = new ExtendViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         setScreen(new MenuPrincipal(this));
     }
 
     @Override
     public void render() {
         super.render();
+        debugStats.update();
+        mainViewport.apply();
+        batch.setProjectionMatrix(mainViewport.getCamera().combined);
+        batch.begin();
+        debugStats.render(batch, mainViewport.getWorldHeight());
+        batch.end();
     }
 
     @Override
@@ -39,6 +57,14 @@ public class MainGame extends Game {
             ventanaJuego1.dispose();
         }
         gestorDeAudio.dispose();
+        batch.dispose();
+        debugStats.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        mainViewport.update(width, height, true);
+        super.resize(width, height);
     }
 
     public VentanaJuego1 getVentanaJuego1() {

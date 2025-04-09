@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
+import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
@@ -24,10 +25,7 @@ import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
 import com.sticklike.core.pantallas.popUps.PopUpMejoras;
 import com.sticklike.core.pantallas.gameOver.VentanaGameOver;
-import com.sticklike.core.ui.HUD;
 import com.sticklike.core.gameplay.progreso.Mejora;
-import com.sticklike.core.ui.Pausa;
-import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -50,8 +48,8 @@ public class VentanaJuego1 implements Screen {
     // Render básico
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
-    private OrthographicCamera camara;
-    private FitViewport viewport;
+    private static OrthographicCamera camara;
+    private ExtendViewport viewport;
     private RenderVentanaJuego1 renderVentanaJuego1;
     private RenderHUDComponents renderHUDComponents;
 
@@ -90,6 +88,9 @@ public class VentanaJuego1 implements Screen {
         this.currentScreenWidth = screenWidth;
         this.currentScreenHeight = screenHeight;
 
+        Mensajes.reset();
+        MensajesData.getInstance().reset();
+
         inicializarRenderYCamara();
         inicializarJugador();
         inicializarSistemasYControladores();
@@ -99,6 +100,8 @@ public class VentanaJuego1 implements Screen {
 
         // Ajustar la posición de la cámara
         actualizarPosCamara();
+        Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX() - 17.5f, jugador.getSprite().getY() - 20);
+
     }
 
     private void inicializarRenderYCamara() {
@@ -106,7 +109,7 @@ public class VentanaJuego1 implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         camara = new OrthographicCamera();
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camara);
+        viewport = new ExtendViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camara);
         viewport.apply();
     }
 
@@ -138,9 +141,9 @@ public class VentanaJuego1 implements Screen {
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
-
         pausa = new Pausa(this);
     }
+
 
     private void inicializarListas() {
         textosDanyo = new Array<>();
@@ -153,28 +156,36 @@ public class VentanaJuego1 implements Screen {
     public void show() {
         pausado = false;
         Gdx.input.setInputProcessor(null);
+
     }
 
     @Override
     public void render(float delta) {
-        pausa.handleInput();
+        if (!renderVentanaJuego1.isLoadingComplete()) {
+            gestorDeAudio.pausarMusica();
+            renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
+            return;
+        }
+        pausa.handleInput(); // manejamos el pause cuando haya finalizado la carga
 
         if (jugador.estaMuerto()) {
             game.setScreen(new VentanaGameOver(game));
             return;
         }
 
-        if (!pausado && !pausa.isPaused() && renderVentanaJuego1.isLoadingComplete()) {
+        if (!pausado && !pausa.isPaused()) {
             if (!musicChanged) {
                 gestorDeAudio.cambiarMusica("fondo2");
-                musicChanged = true;  // Se marca que ya se cambió la música
+                musicChanged = true;
             }
             actualizarLogica(delta, gestorDeAudio);
+
         } else {
             gestorDeAudio.pausarMusica();
         }
 
         renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
+
         pausa.render(shapeRenderer);
 
         BoostIconEffectManager.getInstance().update(delta, renderHUDComponents);
@@ -184,18 +195,16 @@ public class VentanaJuego1 implements Screen {
 
         popUpMejoras.getUiStage().act(delta);
         popUpMejoras.getUiStage().draw();
-
-
     }
-
 
     private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
         jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, gestorDeAudio);
+        sistemaDeEventos.actualizar();
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
         actualizarRecogidaXP(delta);
         actualizarTextoFlotante(delta);
-        sistemaDeEventos.actualizar();
+
     }
 
     private void actualizarRecogidaXP(float delta) {
@@ -244,7 +253,7 @@ public class VentanaJuego1 implements Screen {
                         jugador.setOroGanado(jugador.getOroGanado() + 1);
 
                     } else if (xp instanceof ObjetoPowerUp) {
-                        jugador.setCacasRecogidas(jugador.getCacasRecogidas() + 1);
+                        jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
                     }
                     objetosXP.removeIndex(i);
                 }
@@ -309,7 +318,7 @@ public class VentanaJuego1 implements Screen {
         viewport.update(width, height, true);
         popUpMejoras.getUiStage().getViewport().update(width, height, true);
         hud.resize(width, height);
-        pausa.getViewport().update(width, height, true);
+        pausa.getRenderPausa().getHudViewport().update(width, height, true);
         controladorEnemigos.setVentanaRedimensionada(true);
         BoostIconEffectManager.getInstance().getEffect().updateDimensions(camara);
     }
@@ -331,8 +340,7 @@ public class VentanaJuego1 implements Screen {
         spriteBatch.dispose();
         shapeRenderer.dispose();
         renderVentanaJuego1.dispose();
-        popUpMejoras.getUiStage().dispose();
-        popUpMejoras.getUiSkin().dispose();
+        popUpMejoras.dispose();
         pausa.dispose();
         pausa = null;
 
@@ -397,8 +405,19 @@ public class VentanaJuego1 implements Screen {
         return controladorEnemigos;
     }
 
-    public FitViewport getViewport() {
+    public ExtendViewport getViewport() {
         return viewport;
     }
 
+    public MainGame getGame() {
+        return game;
+    }
+
+    public HUD getHud() {
+        return hud;
+    }
+
+    public static OrthographicCamera getCamara() {
+        return camara;
+    }
 }

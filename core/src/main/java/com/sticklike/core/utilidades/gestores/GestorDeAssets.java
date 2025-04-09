@@ -19,6 +19,7 @@ public class GestorDeAssets {
     public static Array<Texture> borrones;
     // Enemigos/Proyectiles
     public static final String STICKMAN = "jugador/01stickman.png";
+    public static final String STICKMAN_MENU = "jugador/03stickmanMenu.png";
     public static final String ENEMIGO_CULO = "enemigos/01culo.png";
     public static final String ENEMIGO_CULO_OJO = "enemigos/04culoOjo.png";
     public static final String ENEMIGO_CULO_OJO_CERRADO = "enemigos/04culoOjoCerrado.png";
@@ -29,6 +30,7 @@ public class GestorDeAssets {
     public static final String ENEMIGO_VATER = "enemigos/07vater.png";
     public static final String ENEMIGO_VATER2 = "enemigos/07vater2.png";
     public static final String ENEMIGO_ALARMA = "enemigos/08alarma.png";
+    public static final String ENEMIGO_ALARMA2 = "enemigos/08alarma2.png";
     public static final String CORAZON_VIDA = "hud/life.png";
     public static final String ARMA_PIEDRA = "armas/01piedra.png";
     public static final String ARMA_CALCETIN = "armas/02calcetin.png";
@@ -36,9 +38,16 @@ public class GestorDeAssets {
     public static final String ARMA_NUBE_PEDO = "armas/03nubePedo.png";
     public static final String ARMA_NUBE_PEDO_HUD = "armas/03nubePedoHUD.png";
     public static final String ARMA_PAPELCULO = "armas/05papelCulo.png";
+    public static final String ARMA_MOCO = "armas/06moco.png";
+    public static final String ARMA_BOLIBIC = "armas/07boliBic.png";
     // Drops y HUD
+    public static final String TROFEO = "hud/trofeo.png";
+    public static final String TROFEO2 = "hud/trofeo2.png";
+    public static final String ARANDELA = "hud/arandelaMenu.png";
+    public static final String CORDEL = "hud/cordelMenu.png";
     public static final String RECOLECTABLE_XP = "drops/01xp1.png";
     public static final String RECOLECTABLE_XP2 = "drops/01xp2.png";
+    public static final String RECOLECTABLE_XP3 = "drops/01xp3.png";
     public static final String RECOLECTABLE_VIDA = "hud/life.png";
     public static final String RECOLECTABLE_CACA_DORADA = "drops/02cacaDorada.png";
     public static final String RECOLECTABLE_POWER_UP = "drops/03powerUp.png";
@@ -50,6 +59,8 @@ public class GestorDeAssets {
     public static final String DESTRUCTIBLE2_DMG = "destructibles/patatasD.png";
     public static final String DESTRUCTIBLE3 = "destructibles/pizza.png";
     public static final String DESTRUCTIBLE3_DMG = "destructibles/pizzaD.png";
+    public static final String DESTRUCTIBLE_LATA = "destructibles/lata.png";
+    public static final String DESTRUCTIBLE_LATA_DMG = "destructibles/lataD.png";
     public static final String ICONO_VEL_MOV = "hud/vel_mov.png";
     public static final String ICONO_FUERZA = "hud/fuerza.png";
     public static final String ICONO_PODER = "hud/poder_ataque.png";
@@ -62,6 +73,7 @@ public class GestorDeAssets {
     public static final String ICONO_VIDA = "hud/vida.png";
     public static final String ICONO_CALEAVELA_KILLS = "hud/calavera.png";
     public static final String TEXTURA_MARCO = "hud/marco2.png";
+    public static final String BOCADILLO = "hud/bocadillo.png";
 
     // Boss y loading
     public static final String BOSS_POLLA = "enemigos/bossPolla.png";
@@ -87,6 +99,7 @@ public class GestorDeAssets {
     public static void cargarTexturas() {
         // Cargar texturas con el AssetManager
         manager.load(STICKMAN, Texture.class);
+        manager.load(STICKMAN_MENU, Texture.class);
         manager.load(ENEMIGO_CULO, Texture.class);
         manager.load(ENEMIGO_CULO_OJO, Texture.class);
         manager.load(ENEMIGO_CULO_OJO_CERRADO, Texture.class);
@@ -97,6 +110,7 @@ public class GestorDeAssets {
         manager.load(ENEMIGO_VATER, Texture.class);
         manager.load(ENEMIGO_VATER2, Texture.class);
         manager.load(ENEMIGO_ALARMA, Texture.class);
+        manager.load(ENEMIGO_ALARMA2, Texture.class);
         manager.load(CORAZON_VIDA, Texture.class);
         manager.load(ARMA_PIEDRA, Texture.class);
         manager.load(ARMA_CALCETIN, Texture.class);
@@ -104,13 +118,16 @@ public class GestorDeAssets {
         manager.load(ARMA_NUBE_PEDO, Texture.class);
         manager.load(ARMA_NUBE_PEDO_HUD, Texture.class);
         manager.load(ARMA_PAPELCULO, Texture.class);
+        manager.load(ARMA_MOCO, Texture.class);
+        manager.load(ARMA_BOLIBIC, Texture.class);
 
-        manager.load("armas/05papelCuloImpacto00.png", Texture.class);
-        manager.load("armas/05papelCuloImpacto01.png", Texture.class);
-        manager.load("armas/05papelCuloImpacto02.png", Texture.class);
-
+        manager.load(TROFEO, Texture.class);
+        manager.load(TROFEO2, Texture.class);
+        manager.load(ARANDELA, Texture.class);
+        manager.load(CORDEL, Texture.class);
         manager.load(RECOLECTABLE_XP, Texture.class);
         manager.load(RECOLECTABLE_XP2, Texture.class);
+        manager.load(RECOLECTABLE_XP3, Texture.class);
         manager.load(RECOLECTABLE_VIDA, Texture.class);
         manager.load(RECOLECTABLE_CACA_DORADA, Texture.class);
         manager.load(RECOLECTABLE_POWER_UP, Texture.class);
@@ -122,6 +139,8 @@ public class GestorDeAssets {
         manager.load(DESTRUCTIBLE2_DMG, Texture.class);
         manager.load(DESTRUCTIBLE3, Texture.class);
         manager.load(DESTRUCTIBLE3_DMG, Texture.class);
+        manager.load(DESTRUCTIBLE_LATA, Texture.class);
+        manager.load(DESTRUCTIBLE_LATA_DMG, Texture.class);
 
         manager.load(ICONO_VEL_MOV, Texture.class);
         manager.load(ICONO_FUERZA, Texture.class);
@@ -135,6 +154,7 @@ public class GestorDeAssets {
         manager.load(ICONO_VIDA, Texture.class);
         manager.load(ICONO_CALEAVELA_KILLS, Texture.class);
         manager.load(TEXTURA_MARCO, Texture.class);
+        manager.load(BOCADILLO, Texture.class);
 
         manager.load(BOSS_POLLA, Texture.class);
         manager.load(BOSS_POLLA_BOCACERRADA, Texture.class);
@@ -148,21 +168,66 @@ public class GestorDeAssets {
         manager.load(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
         manager.load(DAMAGE_ALARMA_TEXTURE, Texture.class);
 
+        // Animaciones
         manager.load("acciones/movement/stickman_idle00.png", Texture.class);
         manager.load("acciones/movement/stickman_idle01.png", Texture.class);
         manager.load("acciones/movement/stickman_idle02.png", Texture.class);
-
         manager.load("acciones/movement/stickman_movementD00.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD01.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD02.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD03.png", Texture.class);
         manager.load("acciones/movement/stickman_movementD04.png", Texture.class);
-
         manager.load("acciones/movement/stickman_movementI00.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI01.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI02.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI03.png", Texture.class);
         manager.load("acciones/movement/stickman_movementI04.png", Texture.class);
+
+        manager.load("armas/05papelCuloImpacto00.png", Texture.class);
+        manager.load("armas/05papelCuloImpacto01.png", Texture.class);
+        manager.load("armas/05papelCuloImpacto02.png", Texture.class);
+
+        manager.load("enemigos/animaciones/culoMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/culo2Muerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/culo2Muerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/culo2Muerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/culo2Muerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/pollaMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/reglaMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/examenMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/vaterMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/alarmaMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/alarma2Muerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/alarma2Muerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/alarma2Muerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/alarma2Muerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte04.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte05.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte06.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte07.png", Texture.class);
+
 
         // Cargar borrones
         borrones = new Array<>();
@@ -192,12 +257,21 @@ public class GestorDeAssets {
         animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.05f));
         animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.05f));
         animations.put("papelCuloImpacto", crearAnimacion("armas/05papelCuloImpacto", 3, 0.05f));
+        animations.put("muerteCulo", crearAnimacion("enemigos/animaciones/culoMuerte", 4,0.08f));
+        animations.put("muerteCulo2", crearAnimacion("enemigos/animaciones/culo2Muerte", 4,0.08f));
+        animations.put("muertePolla", crearAnimacion("enemigos/animaciones/pollaMuerte", 4,0.08f));
+        animations.put("reglaMuerte", crearAnimacion("enemigos/animaciones/reglaMuerte", 4,0.08f));
+        animations.put("examenMuerte", crearAnimacion("enemigos/animaciones/examenMuerte", 4,0.08f));
+        animations.put("vaterMuerte", crearAnimacion("enemigos/animaciones/vaterMuerte", 4,0.08f));
+        animations.put("alarmaMuerte", crearAnimacion("enemigos/animaciones/alarmaMuerte", 4,0.08f));
+        animations.put("alarmaMuerte2", crearAnimacion("enemigos/animaciones/alarma2Muerte", 4,0.08f));
+        animations.put("bossPollaMuerte", crearAnimacion("enemigos/animaciones/bossPollaMuerte", 8,0.2f));
     }
 
     private static Animation<TextureRegion> crearAnimacion(String ruta, int contadorFrames, float duracionContador) {
         TextureRegion[] frames = new TextureRegion[contadorFrames];
         for (int i = 0; i < contadorFrames; i++) {
-            // Se construye la ruta para cada frame
+            // Construímos la ruta para cada frame
             String framePath = ruta + "0" + i + ".png";
             Texture frameTexture = manager.get(framePath, Texture.class);
             frames[i] = new TextureRegion(frameTexture);

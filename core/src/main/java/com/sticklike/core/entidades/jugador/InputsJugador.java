@@ -51,8 +51,8 @@ public class InputsJugador extends ControllerAdapter {
     }
 
     private float procesarInputTecladoX() {
-        boolean pressLeft = Gdx.input.isKeyPressed(Input.Keys.A);
-        boolean pressRight = Gdx.input.isKeyPressed(Input.Keys.D);
+        boolean pressLeft = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean pressRight = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
         if (pressLeft && !pressRight) return -1;
         if (pressRight && !pressLeft) return 1;
@@ -60,8 +60,8 @@ public class InputsJugador extends ControllerAdapter {
     }
 
     private float procesarInputTecladoY() {
-        boolean pressUp = Gdx.input.isKeyPressed(Input.Keys.W);
-        boolean pressDown = Gdx.input.isKeyPressed(Input.Keys.S);
+        boolean pressUp = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
+        boolean pressDown = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
 
         if (pressUp && !pressDown) return 1;
         if (pressDown && !pressUp) return -1;
@@ -98,6 +98,9 @@ public class InputsJugador extends ControllerAdapter {
         jugador.setDireccionActual(result.direction);
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
 
     /**
      * Enum para indicar la dirección horizontal: LEFT, RIGHT o IDLE.

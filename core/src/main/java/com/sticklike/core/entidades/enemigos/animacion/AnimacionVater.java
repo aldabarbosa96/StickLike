@@ -56,20 +56,4 @@ public class AnimacionVater {
                 break;
         }
     }
-
-    public void forzarApertura(Sprite sprite) {
-        if (estadoActual != EstadoTapa.ABIERTA) {
-            estadoActual = EstadoTapa.ABIERTA;
-            tiempoAnimacion = 0;
-            sprite.setTexture(texturaTapaLevantada);
-        }
-    }
-
-    public void forzarCierre(Sprite sprite) {
-        if (estadoActual != EstadoTapa.CERRADA) {
-            estadoActual = EstadoTapa.CERRADA;
-            tiempoAnimacion = 0;
-            sprite.setTexture(texturaTapaBajada);
-        }
-    }
 }
