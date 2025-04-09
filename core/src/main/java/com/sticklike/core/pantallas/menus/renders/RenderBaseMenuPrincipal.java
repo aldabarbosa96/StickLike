@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -14,13 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
-
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
-
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import java.util.ArrayList;
 
 public class RenderBaseMenuPrincipal extends RenderBaseMenus {
@@ -29,6 +28,9 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
     private ArrayList<TextButton> menuButtons;
     private int selectedIndex = 0;
     private Container<Table> washersContainer;
+    private static TextureRegionDrawable cachedBotonDrawable;
+    private static TextureRegionDrawable cachedHoverDrawable;
+    private static NinePatchDrawable cachedSelectedDrawable;
 
     public interface MenuListener {
         void onSelectButton(int index);
@@ -55,6 +57,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         titleTable.add(titleActor).padTop(75).padBottom(50).center();
         stage.addActor(titleTable);
         titleActor.addAction(Actions.sequence(Actions.delay(0.75f), Actions.fadeIn(0.5f)));
+
         TextButton btnJugar = crearBotonesNumerados(1, "Jugar", "default-button");
         TextButton btnNiveles = crearBotonesNumerados(2, "Niveles", "default-button");
         TextButton btnPersonaje = crearBotonesNumerados(3, "Personaje", "default-button");
@@ -112,6 +115,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
                 if (menuListener != null) menuListener.onSelectButton(6);
             }
         });
+
         menuButtons.add(btnJugar);
         menuButtons.add(btnNiveles);
         menuButtons.add(btnPersonaje);
@@ -134,7 +138,6 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         buttonTable.add(btnCreditos).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
         buttonTable.row();
         buttonTable.add(btnSalir).pad(8).center().width(VIRTUAL_WIDTH / 4).height(45f);
-
 
         Container<Table> innerContainer = new Container<>(buttonTable);
         innerContainer.setBackground(papelFondo());
@@ -178,7 +181,6 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
                 GestorDeAudio.getInstance().cambiarMusica("fondoMenu2");
             }
         })));
-
     }
 
     public int getSelectedIndex() {
@@ -209,49 +211,60 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
     @Override
     protected Skin crearSkinBasico() {
         Skin skin = new Skin();
-        BitmapFont font = new BitmapFont();
+        // Utilizamos la fuente compartida
+        BitmapFont font = FontManager.getMenuFont();
         skin.add("default-font", font);
         Label.LabelStyle defaultLabelStyle = new Label.LabelStyle(font, Color.BLACK);
         skin.add("default", defaultLabelStyle, Label.LabelStyle.class);
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
-        pixmap.fill();
-        Texture pixmapTexture = new Texture(pixmap);
-        pixmap.dispose();
-        skin.add("buttonBackground", pixmapTexture, Texture.class);
-        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(skin.getRegion("buttonBackground"));
+        // Usamos recursos cacheados para el botón por defecto
+        if (cachedBotonDrawable == null) {
+            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
+            pixmap.fill();
+            Texture pixmapTexture = new Texture(pixmap);
+            pixmap.dispose();
+            cachedBotonDrawable = new TextureRegionDrawable(new TextureRegion(pixmapTexture));
+        }
+        skin.add("buttonBackground", cachedBotonDrawable.getRegion(), Texture.class);
         TextButtonStyle defaultButtonStyle = new TextButtonStyle();
         defaultButtonStyle.font = font;
-        defaultButtonStyle.up = backgroundDrawable;
-        defaultButtonStyle.fontColor = new Color(Color.BLACK);
+        defaultButtonStyle.up = cachedBotonDrawable;
+        defaultButtonStyle.fontColor = Color.BLACK;
         skin.add("default-button", defaultButtonStyle, TextButton.TextButtonStyle.class);
-        Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
-        hoverPixmap.fill();
-        Texture hoverTexture = new Texture(hoverPixmap);
-        hoverPixmap.dispose();
-        skin.add("hoverBackground", hoverTexture, Texture.class);
+
+        if (cachedHoverDrawable == null) {
+            Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
+            hoverPixmap.fill();
+            Texture hoverTexture = new Texture(hoverPixmap);
+            hoverPixmap.dispose();
+            cachedHoverDrawable = new TextureRegionDrawable(new TextureRegion(hoverTexture));
+        }
+        skin.add("hoverBackground", cachedHoverDrawable.getRegion(), Texture.class);
         TextButtonStyle hoverButtonStyle = new TextButtonStyle();
         hoverButtonStyle.font = font;
-        hoverButtonStyle.up = new TextureRegionDrawable(skin.getRegion("hoverBackground"));
+        hoverButtonStyle.up = cachedHoverDrawable;
         hoverButtonStyle.fontColor = Color.DARK_GRAY;
         skin.add("hover-button", hoverButtonStyle, TextButton.TextButtonStyle.class);
-        Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
-        glowPixmap.fill();
-        Texture glowTexture = new Texture(glowPixmap);
-        glowPixmap.dispose();
-        skin.add("glowTexture", glowTexture, Texture.class);
-        NinePatch glowNinePatch = new NinePatch(skin.get("glowTexture", Texture.class), 5, 5, 5, 5);
-        NinePatchDrawable glowDrawable = new NinePatchDrawable(glowNinePatch);
+
+        if (cachedSelectedDrawable == null) {
+            Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
+            glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
+            glowPixmap.fill();
+            Texture glowTexture = new Texture(glowPixmap);
+            glowPixmap.dispose();
+            NinePatch glowNinePatch = new NinePatch(glowTexture, 5, 5, 5, 5);
+            cachedSelectedDrawable = new NinePatchDrawable(glowNinePatch);
+        }
+        skin.add("glowTexture", cachedSelectedDrawable.getPatch().getTexture(), Texture.class);
         TextButtonStyle selectedButtonStyle = new TextButtonStyle();
         selectedButtonStyle.font = font;
-        selectedButtonStyle.up = glowDrawable;
+        selectedButtonStyle.up = cachedSelectedDrawable;
         selectedButtonStyle.fontColor = Color.BLUE;
         skin.add("selected-button", selectedButtonStyle, TextButton.TextButtonStyle.class);
+
         return skin;
     }
-
 
     private Actor crearChincheta() {
         int size = 15;
@@ -306,76 +319,59 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
 
     private Actor crearChinchetaConCordel() {
         Group group = new Group();
-
         Texture cordelTexture = manager.get(CORDEL, Texture.class);
         Image cordel = new Image(cordelTexture);
         group.addActor(cordel);
         cordel.setPosition(-0.5f, -cordel.getHeight());
-
         Image chincheta = (Image) crearChincheta();
         group.addActor(chincheta);
         chincheta.setPosition(0, 0);
-
-
         return group;
     }
 
     private Actor crearContenedorDeIconos() {
         Group iconGroup = new Group();
         iconGroup.getColor().a = 0;
-
         Texture iconCacadoradaTexture = manager.get(RECOLECTABLE_CACA_DORADA, Texture.class);
         Texture iconPowerupTexture = manager.get(RECOLECTABLE_POWER_UP, Texture.class);
         Texture iconPowerupTexture2 = manager.get(RECOLECTABLE_POWER_UP, Texture.class);
         Texture iconTrofeoTexture = manager.get(TROFEO2, Texture.class);
-
         Image iconCacadorada = new Image(iconCacadoradaTexture);
         Image iconPowerup = new Image(iconPowerupTexture);
         Image iconPowerup2 = new Image(iconPowerupTexture2);
         Image iconTrofeo = new Image(iconTrofeoTexture);
-
         iconCacadorada.setSize(32, 32);
         iconCacadorada.setPosition(2, 65);
-
         iconTrofeo.setSize(22.5f, 45);
         iconTrofeo.setPosition(7, -87.5f);
-
         float powerupWidth = 10f;
         float powerupHeight = 37.5f;
         float basePosX = 12;
         float basePosY = -10f;
         float centerX = basePosX + (powerupWidth * 0.5f);
         float centerY = basePosY + (powerupHeight * 0.5f);
-
         iconPowerup.setSize(powerupWidth, powerupHeight);
         iconPowerup.setOrigin(iconPowerup.getWidth() / 2, iconPowerup.getHeight() / 2);
         iconPowerup.setPosition(centerX - iconPowerup.getWidth() / 2, centerY - iconPowerup.getHeight() / 2);
         iconPowerup.setRotation(45f);
-
         iconPowerup2.setSize(powerupWidth, powerupHeight);
         iconPowerup2.setOrigin(iconPowerup2.getWidth() / 2, iconPowerup2.getHeight() / 2);
         iconPowerup2.setPosition(centerX - iconPowerup2.getWidth() / 2, centerY - iconPowerup2.getHeight() / 2);
         iconPowerup2.setRotation(-45f);
-
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getMenuFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-
         Label labelCacadorada = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
         Label labelPowerup = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
         Label labelTrofeo = new Label("[BLUE]?[][BLACK]/?[]", labelStyle);
-
         labelCacadorada.setFontScale(1.2f);
         labelPowerup.setFontScale(1.2f);
         labelTrofeo.setFontScale(1.1f);
-
         float fixedLabelX = 77.5f;
         float offsetLabel = 2.5f;
-
         labelCacadorada.setPosition(fixedLabelX, iconCacadorada.getY() + (iconCacadorada.getHeight() - labelCacadorada.getHeight()) / 2);
         labelPowerup.setPosition(fixedLabelX, centerY - labelPowerup.getHeight() / 2);
         labelTrofeo.setPosition(fixedLabelX - offsetLabel, iconTrofeo.getY() + (iconTrofeo.getHeight() - labelTrofeo.getHeight()) / 2);
-
         iconGroup.addActor(iconCacadorada);
         iconGroup.addActor(labelCacadorada);
         iconGroup.addActor(iconPowerup);
@@ -383,7 +379,6 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         iconGroup.addActor(labelPowerup);
         iconGroup.addActor(iconTrofeo);
         iconGroup.addActor(labelTrofeo);
-
         return iconGroup;
     }
 

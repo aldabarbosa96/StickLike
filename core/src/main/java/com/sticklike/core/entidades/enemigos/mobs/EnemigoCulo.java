@@ -103,7 +103,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
             animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
         }
 
-        // Si el enemigo ya está muerto, mostramos el sprite de daño durante 0.09 segundos
+        // Si el enemigo ya está muerto, mostramos el sprite de daño durante 0.08 segundos
         if (vidaEnemigo <= 0 && mostrandoDamageSprite) {
             damageSpriteTimer -= delta;
             sprite.setTexture(damageTexture);
@@ -136,7 +136,6 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         }
     }
 
-
     @Override
     public void activarParpadeo(float duracion) {
         animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
@@ -152,7 +151,6 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
         RectanglePoolManager.liberarRectangulo(projectileRect);
         return overlaps;
     }
-
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
@@ -170,10 +168,10 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
 
     @Override
     public void reducirSalud(float amount) {
-        if (vidaEnemigo <= 0) return; // Ya está muerto, evitamos procesar más daño.
+        if (vidaEnemigo <= 0) return; // Si ya está muerto, evitamos procesar más daño
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // Guardamos la posición de la muerte (si aún no se ha hecho)
+            // Guardamos la posición de la muerte
             if (posXMuerte == null || posYMuerte == null) {
                 posXMuerte = sprite.getX();
                 posYMuerte = sprite.getY();
@@ -181,7 +179,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
             // Activamos el estado de sprite de daño si aún no se ha iniciado la animación de muerte
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
             }
         }
     }
@@ -207,10 +205,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     }
 
     @Override
-    public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte()  && !animacionesBaseEnemigos.estaEnParpadeo());
-    }
-
+    public boolean estaMuerto() {return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte()  && !animacionesBaseEnemigos.estaEnParpadeo());}
 
     @Override
     public void dispose() {
@@ -280,6 +275,7 @@ public class EnemigoCulo implements Enemigo {  // TODO --> (manejar el cambio de
     public boolean isTieneOjo() {
         return tieneOjo;
     }
+
     public boolean isMostrandoDamageSprite() {
         return mostrandoDamageSprite;
     }

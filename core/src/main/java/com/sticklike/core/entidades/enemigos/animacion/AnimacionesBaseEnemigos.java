@@ -12,7 +12,7 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
- * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño, el fade de muerte y el volteo.
+ * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño, la animación y fade de muerte y el volteo.
  */
 
 public class AnimacionesBaseEnemigos {
@@ -121,7 +121,7 @@ public class AnimacionesBaseEnemigos {
             float centerX = oldX + oldWidth / 2f;
             float centerY = oldY + oldHeight / 2f;
 
-            float scaleFactor = 1.011f;
+            float scaleFactor = 1.011f; // factor de escalado de los sprites mientras se realiza la animación
             float newWidth = oldWidth * scaleFactor;
             float newHeight = oldHeight * scaleFactor;
 
@@ -140,7 +140,7 @@ public class AnimacionesBaseEnemigos {
                 sprite.flip(false, true);
             }
 
-            // Aplicamos el alpha calculado del fade al sprite:
+            // De momento no aplicamos fade-out a la animación (todo --> valorar si se cambia en un futuro)
             //sprite.setColor(1f, 0, 0, getAlphaActual());
 
             if (animacionMuerte.isAnimationFinished(stateTimeMuerte)) {

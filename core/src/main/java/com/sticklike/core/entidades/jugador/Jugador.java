@@ -40,7 +40,7 @@ public class Jugador {
     private RenderJugador renderJugador;
     private RenderParticulasSangre renderParticulasSangre;
 
-    // Atributos de stats
+    // Atributos de stats todo --> mover a clase modelo dedicada
     private static float velocidadJugador;
     private static float vidaJugador;
     private static float maxVidaJugador;
@@ -119,11 +119,11 @@ public class Jugador {
                 ataquePapelCulo.manejarDisparo(delta, this, gestorDeAudio);
             }
             if (ataqueMocos != null) {
-                ataqueMocos.manejarDisparo(delta,this,gestorDeAudio);
+                ataqueMocos.manejarDisparo(delta, this, gestorDeAudio);
             }
 
             if (ataqueBoliBic != null) {
-                ataqueBoliBic.manejarDisparo(delta,this,gestorDeAudio);
+                ataqueBoliBic.manejarDisparo(delta, this, gestorDeAudio);
             }
 
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, gestorDeAudio);

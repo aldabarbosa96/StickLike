@@ -10,19 +10,15 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Gestiona ataque Calcetín; genera proyectiles en múltiples direcciones y permite mejoras en el número de proyectiles, daño e intervalo de disparo.
  */
 
-
 public class AtaqueCalcetin {
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo = 2.5f;
     private final float MIN_INTERVALO_DISPARO = 0.25f;
-
-    // Campos para almacenar las bonificaciones de la mejora:
     private int proyectilesExtra = 0;
     private float extraDamage = 0f;
     private boolean ultimateUp = false;
 
     public void procesarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
-        // Obtenemos las coordenadas del centro del jugador
         float startX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f - 10f;
         float startY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f - 5f;
 
@@ -39,11 +35,9 @@ public class AtaqueCalcetin {
             float direccionY = (float) Math.sin(radianes);
 
             float poderHabilidad = jug.getPoderJugador();
-            // Se crea el proyectil pasando también el extraDamage para aumentar el daño base
             ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY,
                 PROJECTILE_CALCETIN_SPEED, SPEED_MULT, poderHabilidad, extraDamage, jug);
 
-            // Se añade el proyectil al controlador del jugador
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);
         }
 

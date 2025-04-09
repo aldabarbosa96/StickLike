@@ -38,7 +38,7 @@ public class ColisionesJugador {
         float offsetY = (fullRect.height - newHeight) / 2f;
 
         // Creamos la caja de colisión reducida a partir de la pool de rectángulos
-        Rectangle enemyHitbox = RectanglePoolManager.obtenerRectangulo(fullRect.x + offsetX, fullRect.y + offsetY, newWidth, newHeight);        // Caja del jugador (valorar si se modifica en un futuro)
+        Rectangle enemyHitbox = RectanglePoolManager.obtenerRectangulo(fullRect.x + offsetX, fullRect.y + offsetY, newWidth, newHeight); // Caja del jugador (valorar si se modifica en un futuro)
         Rectangle playerRect = jugador.getSprite().getBoundingRectangle();
 
         boolean overlaps = playerRect.overlaps(enemyHitbox);

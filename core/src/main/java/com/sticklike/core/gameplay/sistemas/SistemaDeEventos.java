@@ -77,10 +77,9 @@ public class SistemaDeEventos {
     }
 
     private void entraEnemigoPolla() {
-        // Configuramos efecto de spawn masivo
         MensajesData.getInstance().mostrarMensajePollas(renderHUDComponents);
         controladorEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
-        controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
+        controladorEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);   // efecto de spawn masivo
 
         Timer.schedule(new Timer.Task() {
             @Override

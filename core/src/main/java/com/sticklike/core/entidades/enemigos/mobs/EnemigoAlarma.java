@@ -25,7 +25,6 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  * Enemigo Alarma; puede aparecer Crono (Cosmo) o Alarma (Wanda), alterando su vida y animación. Gestiona su comportamiento y daño.
  */
 public class EnemigoAlarma implements Enemigo {
-
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGO_ALARMA;
@@ -77,7 +76,6 @@ public class EnemigoAlarma implements Enemigo {
         animacionesBaseEnemigos.actualizarFade(delta); // todo --> revisar si es necesario
 
         if (vidaEnemigo > 0) {
-            // Lógica de movimiento y ataque mientras está vivo
             movimientoAlarma.actualizarMovimiento(delta, sprite, jugador);
             if (tempDanyo > 0) {
                 tempDanyo -= delta;
@@ -85,7 +83,6 @@ public class EnemigoAlarma implements Enemigo {
             animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
 
         } else {
-            // Lógica de knockback y animación de muerte
             movimientoAlarma.actualizarSoloKnockback(delta, sprite, true);
 
             if (mostrandoDamageSprite) {
@@ -131,20 +128,17 @@ public class EnemigoAlarma implements Enemigo {
 
     @Override
     public void reducirSalud(float amount) {
-        // Si ya está a 0 o menos, no duplicamos eventos
         if (vidaEnemigo <= 0) return;
 
         vidaEnemigo -= amount;
         if (vidaEnemigo <= 0) {
-            // Guardamos la posición de la muerte para el posible drop
             if (posXMuerte == null || posYMuerte == null) {
                 posXMuerte = sprite.getX();
                 posYMuerte = sprite.getY();
             }
-            // Activamos el sprite de daño si aún no hemos lanzado la animación de muerte
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
             }
         }
     }

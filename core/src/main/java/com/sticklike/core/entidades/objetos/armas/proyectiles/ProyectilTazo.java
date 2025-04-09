@@ -24,7 +24,6 @@ import java.util.Set;
 /**
  * Proyectil Tazo; orbita alrededor del jugador causando daño en ciclos alternos de crecimiento, fase activa y cooldown.
  */
-
 public class ProyectilTazo implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
@@ -43,9 +42,9 @@ public class ProyectilTazo implements Proyectiles {
     private boolean esCritico;
     private static final float MIN_GROWTH_SCALE = 0.1f;
     private static final float MAX_GROWTH_SCALE = 0.9f;
-    private static final float GROW_DURATION = 0.5f;  // Duración del efecto de crecimiento y fade-out
+    private static final float GROW_DURATION = 0.5f;  // Duración del efecto de crecimiento + fade-out
 
-    // --- fases del ciclo del tazo ---
+    // enum para las fases
     public enum Phase {GROWING, ACTIVE, COOLDOWN}
 
     private Phase phase = Phase.GROWING;
@@ -54,6 +53,7 @@ public class ProyectilTazo implements Proyectiles {
     private static final float COOLDOWN_DURATION = 3.5f;
     private float growthTimer = 0f;
     private float powerFactor;
+    private final Rectangle collisionRect = new Rectangle();
 
     public ProyectilTazo(Jugador jugador, AtaqueTazo ataqueTazo, float offsetAngle, float radio, GestorDeAudio gestorDeAudio) {
         if (textura == null) {
@@ -76,9 +76,8 @@ public class ProyectilTazo implements Proyectiles {
         float scaledWidth = 5 * scaleFactor;
         this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaledWidth, Color.RED);
         this.centroSprite = new Vector2();
-        // Iniciamos con la escala mínima para el efecto de crecer
+        // Iniciamos con la escala mínima para el efecto de crecimiento
         sprite.setScale(MIN_GROWTH_SCALE);
-
     }
 
     @Override
@@ -97,7 +96,7 @@ public class ProyectilTazo implements Proyectiles {
 
         switch (phase) {
             case GROWING:
-                // Efecto de crecer: interpolamos la escala de MIN_GROWTH_SCALE a MAX_GROWTH_SCALE
+                // Efecto de crecimiento: interpolamos la escala de MIN_GROWTH_SCALE a MAX_GROWTH_SCALE
                 growthTimer += delta;
                 float progress = Math.min(growthTimer / GROW_DURATION, 1f);
                 float currentScale = MIN_GROWTH_SCALE + progress * (MAX_GROWTH_SCALE - MIN_GROWTH_SCALE);
@@ -136,7 +135,7 @@ public class ProyectilTazo implements Proyectiles {
                 break;
 
             case COOLDOWN:
-                // Durante COOLDOWN: se realiza un efecto de fade-out
+                // Durante COOLDOWN: realizamos un efecto de fade-out
                 if (phaseTimer < GROW_DURATION) {
                     float cooldownProgress = Math.min(phaseTimer / GROW_DURATION, 1f);
                     float scaleDuringCooldown = MAX_GROWTH_SCALE - cooldownProgress * (MAX_GROWTH_SCALE - MIN_GROWTH_SCALE);
@@ -144,7 +143,7 @@ public class ProyectilTazo implements Proyectiles {
                     float alphaDuringCooldown = 1f - cooldownProgress;
                     sprite.setColor(1, 1, 1, alphaDuringCooldown);
                 } else {
-                    // Después del fade-out, el sprite permanece oculto
+                    // Después del fade-out, ocultamos el sprite
                     sprite.setColor(1, 1, 1, 0f);
                 }
                 // Mantenemos la posición
@@ -161,12 +160,21 @@ public class ProyectilTazo implements Proyectiles {
         }
         centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
         renderParticulasProyectil.update(centroSprite);
+
+        // Actualizamos el rectángulo de colisión preasignado:
+        // Solo se considera en fase ACTIVE; en otras fases se pone un rectángulo vacío.
+        if (phase == Phase.ACTIVE) {
+            float visualWidth = sprite.getWidth() * sprite.getScaleX();
+            float visualHeight = sprite.getHeight() * sprite.getScaleY();
+            collisionRect.set(sprite.getX() + visualWidth / 2 - radioColision / 2, sprite.getY() + visualHeight / 2 - radioColision / 2, radioColision, radioColision);
+        } else {
+            collisionRect.set(0, 0, 0, 0);
+        }
     }
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
-
             if (sprite.getColor().a > 0f) {
                 renderParticulasProyectil.render(batch);
             }
@@ -176,12 +184,7 @@ public class ProyectilTazo implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        if (phase != Phase.ACTIVE) {
-            return new Rectangle(0, 0, 0, 0);
-        }
-        float visualWidth = sprite.getWidth() * sprite.getScaleX();
-        float visualHeight = sprite.getHeight() * sprite.getScaleY();
-        return new Rectangle(sprite.getX() + visualWidth / 2 - radioColision / 2, sprite.getY() + visualHeight / 2 - radioColision / 2, radioColision, radioColision);
+        return collisionRect;
     }
 
     @Override
@@ -227,7 +230,6 @@ public class ProyectilTazo implements Proyectiles {
         return 0f;
     }
 
-
     @Override
     public float getKnockbackForce() {
         return EMPUJE_BASE_CALCETIN;
@@ -242,7 +244,7 @@ public class ProyectilTazo implements Proyectiles {
     public void registrarImpacto(Enemigo enemigo) {
         gestorDeAudio.reproducirEfecto("tazo", 1);
         enemigosImpactados.add(enemigo);
-        sprite.setColor(1f, 0, 0f, 1);
+        sprite.setColor(Color.RED);
     }
 
     @Override

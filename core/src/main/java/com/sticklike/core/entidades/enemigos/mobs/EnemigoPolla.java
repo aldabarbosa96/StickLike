@@ -114,7 +114,7 @@ public class EnemigoPolla implements Enemigo {
             }
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
             }
         }
     }

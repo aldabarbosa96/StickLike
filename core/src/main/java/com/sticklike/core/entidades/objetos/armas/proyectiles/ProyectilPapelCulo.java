@@ -140,7 +140,7 @@ public class ProyectilPapelCulo implements Proyectiles {
                 float scaleY = sprite.getScaleY() * scaleFactorImpact;
                 // Dibujamos la animación de impacto usando la posición y rotación almacenadas
                 batch.draw(currentFrame, impactX, impactY, sprite.getOriginX(), sprite.getOriginY(), sprite.getWidth(), sprite.getHeight(), scaleX, scaleY, impactRotation);
-            } else if (aterrizado && !impactoAnimacionActiva) {
+            } else {
                 sprite.draw(batch);
             }
         }
@@ -181,7 +181,7 @@ public class ProyectilPapelCulo implements Proyectiles {
             float radius = (sprite.getWidth() * scaleFactorImpact) / 2f;
             return new Circle(impactX, impactY, radius);
         }
-        // Si no está en fase de explosión, devolvemos un círculo aprox. en base al sprite
+        // Si no está en fase de explosión, devolvemos un círculo aproximado en base al sprite
         return new Circle(sprite.getX() + sprite.getWidth() / 2f, sprite.getY() + sprite.getHeight() / 2f, sprite.getWidth() / 2f);
     }
 
@@ -228,7 +228,7 @@ public class ProyectilPapelCulo implements Proyectiles {
             impactY = sprite.getY();
             impactRotation = sprite.getRotation();
         }
-        // Luego, para cada enemigo que impacte (y que aún no se haya procesado)
+        // Gestionamos el impacto para cada enemigo (que aún no se haya procesado)
         if (!enemigosImpactados.contains(enemigo)) {
             enemigosImpactados.add(enemigo);
             float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;

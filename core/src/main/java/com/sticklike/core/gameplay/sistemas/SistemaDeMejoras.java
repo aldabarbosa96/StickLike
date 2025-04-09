@@ -37,7 +37,7 @@ public class SistemaDeMejoras {
     }
 
     private void inicializarMejoras() {
-        // Mejora global (no relacionada con una habilidad, idHabilidad = null)
+        // STATS (no relacionada con una habilidad, idHabilidad = null)
         todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, manager.get(ICONO_VEL_MOV, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, manager.get(ICONO_RANGO, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 28%", () -> jugador.reducirIntervaloDisparo(0.22f), 5, manager.get(ICONO_VEL_ATAQUE, Texture.class), null));
@@ -52,7 +52,7 @@ public class SistemaDeMejoras {
             jugador.setVidaJugador(Jugador.getVidaJugador() + 15);
         }, 5, manager.get(ICONO_VIDA, Texture.class), null));
 
-        // Mejoras base para habilidades (se especifica el id de la habilidad; no contienen "_" en el id)
+        // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));

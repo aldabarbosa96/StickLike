@@ -97,7 +97,7 @@ public class BossPolla implements Enemigo {
     public void reducirSalud(float amount) {
         vida -= amount;
         if (vida <= 0) {
-            if (!animaciones.estaEnFade() && !animaciones.enAnimacionMuerte()) {
+            if (!animaciones.estaEnFade() && !animaciones.enAnimacionMuerte()) { // todo --> gestionar animación de muerte desde actualizar
                 Animation<TextureRegion> animMuerteBoss = GestorDeAssets.animations.get("bossPollaMuerte");
                 animaciones.iniciarAnimacionMuerte(animMuerteBoss);
                 animaciones.iniciarFadeMuerte(DURACION_FADE_BOSS);
@@ -165,7 +165,7 @@ public class BossPolla implements Enemigo {
 
     @Override
     public void aplicarKnockback(float fuerza, float dirX, float dirY) {
-        // Para el boss no se le aplica knockback.
+        // Para el boss no se le aplica knockback
     }
 
     @Override

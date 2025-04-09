@@ -204,7 +204,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TEMPORIZADOR_EMPUJE = 0f;
     public static final float DURACION_EMPUJE = 0.25f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
-    public static final float DAMAGE_SPRITE_MUERTE = 0.08f;
+    public static final float DAMAGE_SPRITE_MUERTE_TIMER = 0.08f;
 
     // -------------------------------------------------
     // Configuración del proyectil
@@ -241,7 +241,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int NUM_TAZOS = 2;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
     public static final float DANYO_PEDO = 2.5f;
-    public static final float DELAY_ENTRE_PEDOS = 5f;
+    public static final float DELAY_ENTRE_PEDOS = 3.5f;
 
     // -------------------------------------------------
     // Configuración TextoFlotante

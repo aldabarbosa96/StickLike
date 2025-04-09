@@ -25,12 +25,9 @@ public class Destructibles implements Enemigo {
     private Texture damageTexture;
     private TipoDestructible tipo;
 
-    // Enum interno para definir los parámetros de cada tipo de destructible, incluyendo propiedades de sombra.
+    // Enum interno para definir los parámetros de cada tipo de destructible, incluyendo propiedades de sombra
     public enum TipoDestructible {
-        TIPO1(DESTRUCTIBLE, DESTRUCTIBLE_DMG, ANCHO_DESTRUCT, ALTO_DESTRUCT, 0.85f, 0.25f, -6f),
-        TIPO2(DESTRUCTIBLE1, DESTRUCTIBLE1_DMG, ANCHO_DESTRUCT1, ALTO_DESTRUCT1, 0.67f, 0.35f, -5f),
-        TIPO3(DESTRUCTIBLE2, DESTRUCTIBLE2_DMG, ANCHO_DESTRUCT2, ALTO_DESTRUCT2, 0.85f, 0.25f, -3.5f),
-        TIPO4(DESTRUCTIBLE3, DESTRUCTIBLE3_DMG, ANCHO_DESTRUCT3, ALTO_DESTRUCT3, 0.92f, 0.2f, -3.5f);
+        TIPO1(DESTRUCTIBLE, DESTRUCTIBLE_DMG, ANCHO_DESTRUCT, ALTO_DESTRUCT, 0.85f, 0.25f, -6f), TIPO2(DESTRUCTIBLE1, DESTRUCTIBLE1_DMG, ANCHO_DESTRUCT1, ALTO_DESTRUCT1, 0.67f, 0.35f, -5f), TIPO3(DESTRUCTIBLE2, DESTRUCTIBLE2_DMG, ANCHO_DESTRUCT2, ALTO_DESTRUCT2, 0.85f, 0.25f, -3.5f), TIPO4(DESTRUCTIBLE3, DESTRUCTIBLE3_DMG, ANCHO_DESTRUCT3, ALTO_DESTRUCT3, 0.92f, 0.2f, -3.5f);
 
         private final String textureKey;
         private final String damageTextureKey;
@@ -40,8 +37,7 @@ public class Destructibles implements Enemigo {
         private final float shadowHeightMultiplier;
         private final float shadowYOffset;
 
-        TipoDestructible(String textureKey, String damageTextureKey, float width, float height,
-                         float shadowWidthMultiplier, float shadowHeightMultiplier, float shadowYOffset) {
+        TipoDestructible(String textureKey, String damageTextureKey, float width, float height, float shadowWidthMultiplier, float shadowHeightMultiplier, float shadowYOffset) {
             this.textureKey = textureKey;
             this.damageTextureKey = damageTextureKey;
             this.width = width;
@@ -81,16 +77,16 @@ public class Destructibles implements Enemigo {
     }
 
     public Destructibles(float x, float y, RenderBaseEnemigos renderBaseEnemigos) {
-        // Seleccionar aleatoriamente un tipo de destructible de la enum interna.
+        // Seleccionar aleatoriamente un tipo de destructible de la enum interna
         TipoDestructible[] tipos = TipoDestructible.values();
         int indiceAleatorio = MathUtils.random(tipos.length - 1);
         this.tipo = tipos[indiceAleatorio];
 
-        // Asignar la textura y la textura de daño según el tipo seleccionado.
+        // Asignar la textura y la textura de daño según el tipo seleccionado
         this.sprite = new Sprite(manager.get(tipo.getTextureKey(), Texture.class));
         this.damageTexture = manager.get(tipo.getDamageTextureKey(), Texture.class);
 
-        // Configurar el tamaño y la posición del sprite.
+        // Configurar el tamaño y la posición del sprite
         sprite.setSize(tipo.getWidth(), tipo.getHeight());
         sprite.setPosition(x, y);
 
@@ -171,7 +167,7 @@ public class Destructibles implements Enemigo {
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        return null; // Se maneja desde el método sueltaBoost para mantener claridad en el código.
+        return null; // Se maneja desde el métdo sueltaBoost para gestionar por parámetro el renderHud y mantener claridad en el código
     }
 
     @Override
@@ -237,7 +233,6 @@ public class Destructibles implements Enemigo {
         return false;
     }
 
-    // Getters para los parámetros de la sombra, para usarlos en el renderizado individual.
     public float getShadowWidthMultiplier() {
         return tipo.getShadowWidthMultiplier();
     }

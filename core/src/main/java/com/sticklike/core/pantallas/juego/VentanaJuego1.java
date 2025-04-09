@@ -72,16 +72,11 @@ public class VentanaJuego1 implements Screen {
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
     private Array<ObjetosXP> objetosXP;
-    private Array<Enemigo> enemigosAEliminar;
-    private Array<Boost> boosts;
-
 
     private int currentScreenWidth;
     private int currentScreenHeight;
-
     private boolean pausado = false;
     private boolean musicChanged = false;
-
 
     public VentanaJuego1(MainGame game, int screenWidth, int screenHeight) {
         this.game = game;
@@ -148,8 +143,6 @@ public class VentanaJuego1 implements Screen {
     private void inicializarListas() {
         textosDanyo = new Array<>();
         objetosXP = new Array<>();
-        enemigosAEliminar = new Array<>();
-        boosts = new Array<>();
     }
 
     @Override
@@ -263,8 +256,7 @@ public class VentanaJuego1 implements Screen {
         // 3) Segunda pasada: eliminamos boosts que ya fueron recogidos y que expiraron
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
-            if (xp instanceof Boost) {
-                Boost boost = (Boost) xp;
+            if (xp instanceof Boost boost) {
                 if (boost.isCollected() && !boost.isActivo()) {
                     if (boost == boostActivo) {
                         boostActivo = null;
@@ -274,7 +266,6 @@ public class VentanaJuego1 implements Screen {
             }
         }
     }
-
 
     private void actualizarTextoFlotante(float delta) {
         for (int i = textosDanyo.size - 1; i >= 0; i--) {

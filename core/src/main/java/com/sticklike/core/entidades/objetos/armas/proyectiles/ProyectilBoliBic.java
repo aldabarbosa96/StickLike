@@ -41,7 +41,7 @@ public class ProyectilBoliBic implements Proyectiles {
         sprite = new Sprite(textura);
         sprite.setSize(25, 25);
 
-        // Colocamos el sprite de modo que (x,y) sea la punta del proyectil
+        // Colocamos el sprite de modo que (x,y) sea la punta del proyectil (está orientado hacia la esquina inferior izquierda)
         sprite.setPosition(x - sprite.getWidth() / 2, y - sprite.getHeight() / 2);
 
         sprite.flip(true, false);
@@ -63,6 +63,7 @@ public class ProyectilBoliBic implements Proyectiles {
         float scaleWidth = 5f * scaleFactor;
         this.renderParticulas = new RenderParticulasProyectil(maxLength, scaleWidth, DEFAULT_PARTICLE_COLOR);
     }
+
     @Override
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
@@ -157,7 +158,7 @@ public class ProyectilBoliBic implements Proyectiles {
             enemigosImpactados.add(enemigo);
             sprite.setColor(Color.RED);
             renderParticulas.setColor(Color.RED);
-            GestorDeAudio.getInstance().reproducirEfecto("impactoBase",1);
+            GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 1);
             impactoTimer = 0;
         }
     }

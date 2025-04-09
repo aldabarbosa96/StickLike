@@ -24,12 +24,10 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Enemigo Regla; gestiona su comportamiento y daño.
  */
 public class EnemigoRegla implements Enemigo {
-
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGOREGLA;
     private MovimientoRegla movimientoRegla;
-    private OrthographicCamera orthographicCamera;
     private float coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private boolean haSoltadoXP = false;
@@ -37,12 +35,8 @@ public class EnemigoRegla implements Enemigo {
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private float damageAmount = DANYO_REGLA;
     private RenderBaseEnemigos renderBaseEnemigos;
-
     private Float posXMuerte = null;
     private Float posYMuerte = null;
-
-
-    // Variables para la lógica de mostrar la textura de daño
     private boolean mostrandoDamageSprite = false;
     private float damageSpriteTimer = 0f;
     private boolean deathAnimationTriggered = false;
@@ -53,25 +47,18 @@ public class EnemigoRegla implements Enemigo {
         sprite = new Sprite(manager.get(ENEMIGO_REGLA_CRUZADA, Texture.class));
         sprite.setSize(25, 25);
         sprite.setPosition(x, y);
-
         this.jugador = jugador;
-        this.orthographicCamera = orthographicCamera;
-
         this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_REGLA_TEXTURE, Texture.class);
-
-        // Para dibujar con la misma lógica (sombras, fade, etc.)
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
     public void actualizar(float delta) {
-        // Actualiza el fade siempre (por si estuviera en fase de desvanecerse)
         animacionesBaseEnemigos.actualizarFade(delta);
 
         if (vidaEnemigo > 0) {
-            // Mientras siga vivo, movemos y aplicamos parpadeo si corresponde
             animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
             movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
 
@@ -80,10 +67,8 @@ public class EnemigoRegla implements Enemigo {
             }
 
         } else {
-            // Ya no movemos, pero puede haber knockback residual
             movimientoRegla.actualizarSoloKnockback(delta, sprite, true);
 
-            // Mostramos la textura de daño antes de iniciar la animación de muerte
             if (mostrandoDamageSprite) {
                 damageSpriteTimer -= delta;
                 sprite.setTexture(damageTexture); // Forzamos la textura de daño
@@ -91,7 +76,6 @@ public class EnemigoRegla implements Enemigo {
                 if (damageSpriteTimer <= 0) {
                     mostrandoDamageSprite = false;
 
-                    // Lanzamos la animación de muerte si no lo hicimos aún
                     if (!deathAnimationTriggered) {
                         Animation<TextureRegion> animMuerteRegla = GestorDeAssets.animations.get("reglaMuerte");
                         animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteRegla);
@@ -102,7 +86,6 @@ public class EnemigoRegla implements Enemigo {
                 }
 
             } else if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-                // Si ya hemos disparado la animación, la actualizamos
                 animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
             }
         }
@@ -110,12 +93,10 @@ public class EnemigoRegla implements Enemigo {
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        // Si sigue vivo o está mostrando el sprite de daño
         if (vidaEnemigo > 0 || mostrandoDamageSprite) {
             renderBaseEnemigos.dibujarEnemigos(batch, this);
 
         } else {
-            // Si está en animación de muerte, dibujamos el sprite con la animación
             if (animacionesBaseEnemigos.enAnimacionMuerte()) {
                 sprite.draw(batch);
             }
@@ -134,7 +115,7 @@ public class EnemigoRegla implements Enemigo {
             }
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
             }
         }
     }

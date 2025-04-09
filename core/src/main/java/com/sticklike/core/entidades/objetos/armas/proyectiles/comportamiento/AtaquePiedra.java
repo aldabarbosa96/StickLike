@@ -23,7 +23,6 @@ public class AtaquePiedra {
         storedDirection = null;
     }
 
-
     public boolean iniciarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         if (jug.getControladorEnemigos() == null) return false;
         target = encontrarEnemigoMasCercano(jug);
@@ -58,7 +57,7 @@ public class AtaquePiedra {
             if (proyectilesPendientes > 0) {
                 temporizadorEntreBalas += delta;
                 if (temporizadorEntreBalas >= intervaloEntreBalas) {
-                    // Si el target actual está muerto, buscar uno nuevo y actualizamos dirección
+                    // Si el target actual está muerto, buscamos uno nuevo y actualizamos dirección
                     if (target == null || target.estaMuerto()) {
                         Enemigo nuevoTarget = encontrarEnemigoMasCercano(jugador);
                         if (nuevoTarget != null) {
@@ -80,7 +79,7 @@ public class AtaquePiedra {
                     }
                 }
             } else {
-                // Por si acaso
+                // Por si acaso se interrumpe el target
                 volleyFinished = true;
                 temporizadorDisparo = 0;
             }

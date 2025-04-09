@@ -24,9 +24,8 @@ public class AtaqueBoliBic {
         }
     }
 
-    // Actualiza el vector de puntería de forma continua
     private void actualizarAim(float delta, Jugador jug) {
-        InputsJugador.ResultadoInput input = jug.getInputController().procesarInput(0);
+        InputsJugador.ResultadoInput input = jug.getInputController().procesarInput();
 
         // Usamos el input como dirección objetivo
         // Si no hay input (por ejemplo, teclas soltadas), mantenemos el vector actual
@@ -44,7 +43,7 @@ public class AtaqueBoliBic {
             targetY /= magTarget;
         }
 
-        // Calculamos la diferencia angular entre la dirección actual y la objetivo. Se usa atan2 para obtener los ángulos en grados
+        // Calculamos la diferencia angular entre la dirección actual y la objetivo. Usamos atan2 para obtener los ángulos en grados
         float currentAngle = (float) Math.toDegrees(Math.atan2(aimY, aimX));
         float targetAngle = (float) Math.toDegrees(Math.atan2(targetY, targetX));
         float diff = (((targetAngle - currentAngle) + 180 + 360) % 360) - 180;

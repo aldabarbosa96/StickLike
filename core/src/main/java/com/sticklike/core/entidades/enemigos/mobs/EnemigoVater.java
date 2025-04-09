@@ -23,7 +23,6 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class EnemigoVater implements Enemigo {
-
     private Sprite sprite;
     private Sprite spriteTapaLevantada;
     private Sprite spriteTapaBajada;
@@ -128,7 +127,7 @@ public class EnemigoVater implements Enemigo {
             }
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
             }
         }
     }

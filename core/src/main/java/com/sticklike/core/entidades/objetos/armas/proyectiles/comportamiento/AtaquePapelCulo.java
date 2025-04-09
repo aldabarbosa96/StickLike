@@ -53,14 +53,13 @@ public class AtaquePapelCulo {
     }
 
 
+    // todo --> implementar upgrades
     public void aumentarDamage(float incremento) {
         extraDamage += DANYO_PAPELCULO + (DANYO_PAPELCULO * incremento);
     }
 
-
     public void aumentarVelocidadDisparo(float factorReduccion) {
         intervaloDisparo *= (1 - factorReduccion);
-
         if (intervaloDisparo < MIN_INTERVALO_DISPARO) {
             intervaloDisparo = MIN_INTERVALO_DISPARO;
         }

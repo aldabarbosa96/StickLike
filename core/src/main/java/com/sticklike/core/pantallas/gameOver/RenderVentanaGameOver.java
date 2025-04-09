@@ -96,7 +96,7 @@ public class RenderVentanaGameOver {
         }
 
         float elapsedStats = sceneTime - totalWaitTime;
-        float statsAlpha = Math.min(1f, elapsedStats / 1f);
+        float statsAlpha = Math.min(1f, elapsedStats);
 
         font.setColor(1, 1, 1, statsAlpha);
 
@@ -134,7 +134,6 @@ public class RenderVentanaGameOver {
             "Trazos: " + Jugador.getTrazosGanados()
         };
 
-        float totalAltura = 0f;
         float espacioEntreLineas = 20f;
 
         // Usamos LinkedHashMap para almacenar la altura de cada línea y evitar cálculos repetidos
@@ -144,12 +143,9 @@ public class RenderVentanaGameOver {
             layout.setText(font, linea);
             float height = layout.height;
             lineHeights.put(linea, height);
-            totalAltura += height + espacioEntreLineas;
         }
-        totalAltura -= espacioEntreLineas;
 
-        float startY = (VIRTUAL_HEIGHT / 2f) + 100;
-        float y = startY;
+        float y = (VIRTUAL_HEIGHT / 2f) + 100;
 
         for (Map.Entry<String, Float> entry : lineHeights.entrySet()) {
             String linea = entry.getKey();

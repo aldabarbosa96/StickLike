@@ -30,9 +30,6 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
     private Vector2 inicioParabola;
     private Vector2 controlParabola;
     private Vector2 finParabola;
-    private float temporizadorAnimacion = 0f;
-    private float intervaloAnimacion = 0.2f;
-    private boolean usandoSprite2 = false;
     private static final float CARGA_RANDOM_OFFSET = 1.5f;
     private static final float DISPARO_RANDOM_OFFSET = 1.25f;
     private static final float PARABOLA_RANDOM_OFFSET = 1.75f;

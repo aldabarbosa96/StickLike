@@ -18,7 +18,6 @@ public class AtaqueNubePedo {
 
     public AtaqueNubePedo(Jugador jugador) {
         this.jugador = jugador;
-        cooldownTimer = 0f;
         nubePedo = new NubePedo(jugador);
         jugador.getControladorProyectiles().anyadirNuevoProyectil(nubePedo);
     }

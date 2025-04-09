@@ -22,7 +22,6 @@ import java.util.Set;
 /**
  * Proyectil Calcetín; se lanza en línea recta con rotación, causando daño y knockback a los enemigos en su trayectoria.
  */
-
 public class ProyectilCalcetin implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
@@ -41,14 +40,14 @@ public class ProyectilCalcetin implements Proyectiles {
     private Vector2 centroSprite;
     private float impactoTimer = 0;
     private static final float IMPACTO_DURACION = 0.1f;
+    private final Rectangle collisionRect = new Rectangle();
 
-    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad,
-                             float poderJugador, float extraDamage, Jugador jugador) {
+    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador, float extraDamage, Jugador jugador) {
         if (textura == null) {
             textura = manager.get(ARMA_CALCETIN, Texture.class);
         }
         this.distanciaMaxima = MAX_DISTANCIA;
-        this.distanciaRecorrida = 0; // inicializamos en 0
+        this.distanciaRecorrida = 0;
         sprite = new Sprite(textura);
         sprite.setSize(CALCETIN_W_SIZE, CALCETIN_H_SIZE);
         sprite.setPosition(x, y);
@@ -75,15 +74,22 @@ public class ProyectilCalcetin implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
 
+        // Actualizamos el centro del sprite y lo usamos para las partículas
         centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
         renderParticulasProyectil.update(centroSprite);
 
+        // Movemos el sprite según la dirección y velocidad
         float desplazamiento = velocidadProyectil * multiplicadorVelocidad * delta;
         sprite.translate(direccionX * desplazamiento, direccionY * desplazamiento);
         distanciaRecorrida += desplazamiento;
 
+        // Actualizamos la rotación del sprite
         sprite.rotate(rotationSpeed * delta);
 
+        // Actualizamos el rectángulo de colisión preasignado
+        collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+
+        // Gestión de impacto y restauración de color
         if (!enemigosImpactados.isEmpty()) {
             impactoTimer += delta;
             if (impactoTimer >= IMPACTO_DURACION) {
@@ -99,7 +105,6 @@ public class ProyectilCalcetin implements Proyectiles {
             desactivarProyectil();
         }
     }
-
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
@@ -127,7 +132,7 @@ public class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        return sprite.getBoundingRectangle();
+        return collisionRect;
     }
 
     @Override

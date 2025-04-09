@@ -22,27 +22,20 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public class EnemigoExamen implements Enemigo {
-
     private Sprite sprite;
     private Jugador jugador;
     private float vidaEnemigo = VIDA_ENEMIGO_EXAMEN;
     private float damageAmount = DANYO_EXAMEN;
     private float coolDownDanyo = COOLDOWN_EXAMEN;
     private float temporizadorDanyo = TEMPORIZADOR_DANYO;
-
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-
     private AnimacionesBaseEnemigos animacionesBaseEnemigos;
     private AnimacionExamen animacionExamen;
     private MovimientoExamen movimientoExamen;
-
     private static float velocidadBase = VEL_BASE_EXAMEN;
     private final Texture damageTexture;
-
     private RenderBaseEnemigos renderBaseEnemigos;
-
-    // Variables para el manejo del sprite de daño y la animación de muerte
     private boolean mostrandoDamageSprite = false;
     private float damageSpriteTimer = 0f;
     private boolean deathAnimationTriggered = false;
@@ -52,13 +45,9 @@ public class EnemigoExamen implements Enemigo {
 
     public EnemigoExamen(float x, float y, Jugador jugador, float velocidadEnemigo) {
         this.jugador = jugador;
-
-        // Inicializa el sprite base
         sprite = new Sprite(manager.get(ENEMIGO_EXAMEN, Texture.class));
         sprite.setSize(42f, 44f);
         sprite.setPosition(x, y);
-
-        // Movimiento, animaciones, etc.
         this.movimientoExamen = new MovimientoExamen();
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.animacionExamen = new AnimacionExamen(animacionesBaseEnemigos, manager.get(ENEMIGO_EXAMEN, Texture.class), manager.get(ENEMIGO_EXAMEN2, Texture.class), 0.25f);
@@ -71,11 +60,9 @@ public class EnemigoExamen implements Enemigo {
 
     @Override
     public void actualizar(float delta) {
-        // Actualiza el fade siempre
         animacionesBaseEnemigos.actualizarFade(delta);
 
         if (vidaEnemigo > 0) {
-            // Mientras esté vivo
             if (temporizadorDanyo > 0) {
                 temporizadorDanyo -= delta;
             }
@@ -84,13 +71,11 @@ public class EnemigoExamen implements Enemigo {
             }
             animacionExamen.actualizarAnimacion(delta, jugador, sprite);
         } else {
-            // Si ya no tiene vida, aplicamos knockback (si procede) y revisamos el sprite de daño
             if (movimientoExamen != null) {
                 movimientoExamen.actualizarSoloKnockback(delta, sprite, true);
             }
 
             if (mostrandoDamageSprite) {
-                // Durante el breve lapso de "sprite de daño" forzamos la textura
                 damageSpriteTimer -= delta;
                 sprite.setTexture(damageTexture);
 
@@ -107,22 +92,18 @@ public class EnemigoExamen implements Enemigo {
                 }
 
             } else if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-                // Si ya estamos en la animación de muerte, la actualizamos
                 animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
             }
         }
 
-        // Actualiza el parpadeo SIEMPRE, incluso después de morir.
         animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
     }
 
     @Override
     public void renderizar(SpriteBatch batch) {
-        // Si está vivo o todavía mostrando el sprite de daño, dibujamos con el RenderBase
         if (vidaEnemigo > 0 || mostrandoDamageSprite) {
             renderBaseEnemigos.dibujarEnemigos(batch, this);
         } else {
-            // Si está en animación de muerte, dibujamos el sprite directamente
             if (animacionesBaseEnemigos.enAnimacionMuerte()) {
                 sprite.draw(batch);
             }
@@ -131,25 +112,21 @@ public class EnemigoExamen implements Enemigo {
 
     @Override
     public void reducirSalud(float amount) {
-        // Evita procesar daño si ya está en <= 0
         if (vidaEnemigo <= 0) return;
 
         vidaEnemigo -= amount;
 
         if (vidaEnemigo <= 0) {
-            // Guardamos la posición donde muere, para dropear
             if (posXMuerte == null || posYMuerte == null) {
                 posXMuerte = sprite.getX();
                 posYMuerte = sprite.getY();
             }
 
-            // Activamos el sprite de daño breve, si no está ya en animación de muerte
             if (!mostrandoDamageSprite && !deathAnimationTriggered) {
                 mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE;
+                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
             }
         } else {
-            // Si sigue con vida tras el golpe, podemos activar parpadeo (opcional)
             if (!animacionesBaseEnemigos.estaEnParpadeo()) {
                 animacionesBaseEnemigos.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
             }

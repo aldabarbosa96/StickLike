@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.progreso.Mejora;
@@ -64,7 +65,7 @@ public class RenderHUDComponents {
         this.sistemaDeNiveles = sistemaDeNiveles;
         this.shapeRenderer = shapeRenderer;
         this.layout = new GlyphLayout();
-        this.fuente = new BitmapFont();
+        this.fuente = FontManager.getHudFont();
         this.spriteBatch = spriteBatch;
         this.jugador = jugador;
         this.texturaCorazonVida = manager.get(RECOLECTABLE_VIDA, Texture.class);

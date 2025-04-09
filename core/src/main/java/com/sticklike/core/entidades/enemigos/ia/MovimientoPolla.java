@@ -42,7 +42,6 @@ public class MovimientoPolla extends MovimientoBaseEnemigos {
 
         currentOffset = (float) Math.sin(tiempo * frecuenciaZigzag) * amplitudZigzag;
 
-        // Movimiento total
         float movimientoX = difX * velocidadEnemigo * delta;
         float movimientoY = (difY * velocidadEnemigo * delta) + currentOffset;
 

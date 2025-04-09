@@ -47,7 +47,7 @@ public abstract class MovimientoBaseEnemigos {
         knockbackTimer = knockbackDuration;
     }
 
-    public final void actualizarSoloKnockback(float delta, Sprite sprite, boolean mantenerKnockback) {
+    public final void actualizarSoloKnockback(float delta, Sprite sprite, boolean mantenerKnockback) { // para aplicar knockback durante la animación de muerte
         if (knockbackTimer > 0 || mantenerKnockback) {
             float moveX = knockbackVelX * 1.25f * delta;
             float moveY = knockbackVelY * 1.25f * delta;

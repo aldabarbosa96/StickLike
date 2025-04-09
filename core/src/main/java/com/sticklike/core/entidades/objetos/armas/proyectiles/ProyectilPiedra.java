@@ -20,7 +20,6 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 /**
  * Proyectil Piedra; se lanza en línea recta con velocidad ajustable, causando daño y knockback a los enemigos impactados.
  */
-
 public class ProyectilPiedra implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
@@ -32,6 +31,7 @@ public class ProyectilPiedra implements Proyectiles {
     private Jugador jugador;
     private RenderParticulasProyectil renderParticulasProyectil;
     private Vector2 center;
+    private final Rectangle collisionRect = new Rectangle();
 
     public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad, Jugador jugador) {
         if (textura == null) {
@@ -57,12 +57,15 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public void actualizarProyectil(float delta) {
-        // Actualizamos movimiento del sprite
         if (proyectilActivo) {
+            // Movimiento del sprite
             sprite.translate(direccionX * velocidadProyectil * multiplicadorVelocidad * delta, direccionY * velocidadProyectil * multiplicadorVelocidad * delta);
-            // Actualizamos rastro de partículas
+            // Actualización del rastro de partículas
             center.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
             renderParticulasProyectil.update(center);
+
+            // Actualizamos el rectángulo de colisión preasignado
+            collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
         }
     }
 
@@ -92,7 +95,8 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        return sprite.getBoundingRectangle();
+        // Se retorna el rectángulo preasignado, actualizado en cada frame
+        return collisionRect;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class ProyectilPiedra implements Proyectiles {
     }
 
     @Override
-    public boolean isPersistente() { // piedra no persiste tras el impacto
+    public boolean isPersistente() { // La piedra no persiste tras el impacto.
         return false;
     }
 
