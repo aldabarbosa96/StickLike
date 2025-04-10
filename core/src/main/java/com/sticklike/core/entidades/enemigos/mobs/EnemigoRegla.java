@@ -4,133 +4,58 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
-import com.sticklike.core.entidades.pools.RectanglePoolManager;
-import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
-import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
-
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
  * Enemigo Regla; gestiona su comportamiento y daño.
  */
-public class EnemigoRegla implements Enemigo {
-    private Sprite sprite;
-    private Jugador jugador;
-    private float vidaEnemigo = VIDA_ENEMIGOREGLA;
+public class EnemigoRegla extends EnemigoBase {
     private MovimientoRegla movimientoRegla;
-    private float coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
-    private float temporizadorDanyo = TEMPORIZADOR_DANYO;
-    private boolean haSoltadoXP = false;
-    private boolean procesado = false;
-    private AnimacionesBaseEnemigos animacionesBaseEnemigos;
-    private float damageAmount = DANYO_REGLA;
-    private RenderBaseEnemigos renderBaseEnemigos;
-    private Float posXMuerte = null;
-    private Float posYMuerte = null;
-    private boolean mostrandoDamageSprite = false;
-    private float damageSpriteTimer = 0f;
-    private boolean deathAnimationTriggered = false;
-
-    private final Texture damageTexture;
 
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
+        super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_REGLA_CRUZADA, Texture.class));
         sprite.setSize(25, 25);
         sprite.setPosition(x, y);
-        this.jugador = jugador;
         this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_REGLA_TEXTURE, Texture.class);
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
+        this.vidaEnemigo = VIDA_ENEMIGOREGLA;
+        this.temporizadorDanyo = TEMPORIZADOR_DANYO;
+        this.coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
     }
 
     @Override
-    public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarFade(delta);
-
-        if (vidaEnemigo > 0) {
-            animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
-            movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
-
-            if (temporizadorDanyo > 0) {
-                temporizadorDanyo -= delta;
-            }
-
-        } else {
-            movimientoRegla.actualizarSoloKnockback(delta, sprite, true);
-
-            if (mostrandoDamageSprite) {
-                damageSpriteTimer -= delta;
-                sprite.setTexture(damageTexture); // Forzamos la textura de daño
-
-                if (damageSpriteTimer <= 0) {
-                    mostrandoDamageSprite = false;
-
-                    if (!deathAnimationTriggered) {
-                        Animation<TextureRegion> animMuerteRegla = GestorDeAssets.animations.get("reglaMuerte");
-                        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteRegla);
-                        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-                        deathAnimationTriggered = true;
-                    }
-                }
-
-            } else if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-                animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
-            }
-        }
+    protected void actualizarMovimiento(float delta) {
+        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+        movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
     }
 
     @Override
-    public void renderizar(SpriteBatch batch) {
-        if (vidaEnemigo > 0 || mostrandoDamageSprite) {
-            renderBaseEnemigos.dibujarEnemigos(batch, this);
-
-        } else {
-            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-                sprite.draw(batch);
-            }
-        }
+    protected void actualizarKnockback(float delta) {
+        movimientoRegla.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
-    public void reducirSalud(float amount) {
-        if (vidaEnemigo <= 0) return;
-
-        vidaEnemigo -= amount;
-        if (vidaEnemigo <= 0) {
-            if (posXMuerte == null || posYMuerte == null) {
-                posXMuerte = sprite.getX();
-                posYMuerte = sprite.getY();
-            }
-            if (!mostrandoDamageSprite && !deathAnimationTriggered) {
-                mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
-            }
-        }
+    protected void iniciarAnimacionMuerte() {
+        Animation<TextureRegion> animMuerteRegla = GestorDeAssets.animations.get("reglaMuerte");
+        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteRegla);
+        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
     }
 
     @Override
-    public boolean estaMuerto() {
-        return vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte() && !animacionesBaseEnemigos.estaEnParpadeo();
-    }
-
-    @Override
-    public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
-        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
-        RectanglePoolManager.liberarRectangulo(projectileRect);
-        return overlaps;
+    protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
+        movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -142,84 +67,5 @@ public class EnemigoRegla implements Enemigo {
             return new ObjetoVida(posXMuerte, posYMuerte);
         }
         return null;
-    }
-
-    @Override
-    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
-        movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
-    }
-
-    @Override
-    public float getVida() {
-        return vidaEnemigo;
-    }
-
-    @Override
-    public float getDamageAmount() {
-        return damageAmount;
-    }
-
-    @Override
-    public AnimacionesBaseEnemigos getAnimaciones() {
-        return animacionesBaseEnemigos;
-    }
-
-    @Override
-    public boolean isMostrandoDamageSprite() {
-        return mostrandoDamageSprite;
-    }
-
-    public void setDamageAmount(float damage) {
-        this.damageAmount = damage;
-    }
-
-    @Override
-    public boolean haSoltadoXP() {
-        return haSoltadoXP;
-    }
-
-    @Override
-    public boolean puedeAplicarDanyo() {
-        return vidaEnemigo > 0 && temporizadorDanyo <= 0;
-    }
-
-    @Override
-    public void reseteaTemporizadorDanyo() {
-        temporizadorDanyo = coolDownDanyo;
-    }
-
-    @Override
-    public float getX() {
-        return sprite.getX();
-    }
-
-    @Override
-    public float getY() {
-        return sprite.getY();
-    }
-
-    @Override
-    public Sprite getSprite() {
-        return sprite;
-    }
-
-    @Override
-    public boolean isProcesado() {
-        return procesado;
-    }
-
-    @Override
-    public void setProcesado(boolean procesado) {
-        this.procesado = procesado;
-    }
-
-    @Override
-    public void activarParpadeo(float duracion) {
-        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
-    }
-
-    @Override
-    public void dispose() {
-        sprite = null;
     }
 }

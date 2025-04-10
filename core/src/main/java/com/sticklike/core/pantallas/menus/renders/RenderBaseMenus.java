@@ -190,7 +190,7 @@ public abstract class RenderBaseMenus {
     }
 
     private void agregarVersionLabel() {
-        Label versionLabel = new Label("v1.10.16-dev", uiSkin);
+        Label versionLabel = new Label("v1.10.17-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
         versionLabel.setColor(Color.BLUE);
 

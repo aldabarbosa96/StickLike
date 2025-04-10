@@ -24,7 +24,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  * Primer jefe enemigo del juego; gestiona su comportamiento, animaciones, daño y muerte.
  */
 
-public class BossPolla implements Enemigo {
+public class BossPolla implements Enemigo { // TODO --> deberá extender de EnemigoBase (por ahora lo dejamos así)
     private Sprite sprite;
     private Sprite spriteBocaAbierta;
     private Sprite spriteBocaCerrada;

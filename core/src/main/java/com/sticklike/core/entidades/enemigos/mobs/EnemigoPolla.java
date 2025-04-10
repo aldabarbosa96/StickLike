@@ -5,142 +5,61 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoPolla;
-import com.sticklike.core.entidades.pools.RectanglePoolManager;
-import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
-import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
-
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 /**
  * Enemigo Polla; gestiona su comportamiento, daño.
  */
+public class EnemigoPolla extends EnemigoBase {
 
-public class EnemigoPolla implements Enemigo {
-    private Sprite sprite;
-    private Jugador jugador;
-    private float vidaEnemigo = VIDA_ENEMIGO_POLLA;
-    private float coolDownDanyo = COOLDOWN_POLLA;
-    private float temporizadorDanyo = TEMPORIZADOR_DANYO;
     private MovimientoPolla movimientoPolla;
     private static float velocidadBase = VEL_BASE_POLLA;
-    private boolean haSoltadoXP = false;
-    private boolean procesado = false;
-    private AnimacionesBaseEnemigos animacionesBaseEnemigos;
-    private float damageAmount = DANYO_POLLA;
-    private final Texture damageTexture;
-    private RenderBaseEnemigos renderBaseEnemigos;
-    private Float posXMuerte = null;
-    private Float posYMuerte = null;
-    private boolean mostrandoDamageSprite = false;
-    private float damageSpriteTimer = 0f;
-    private boolean deathAnimationTriggered = false;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
+        super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_POLLA, Texture.class));
         sprite.setSize(30, 30);
         sprite.setPosition(x, y);
-        this.jugador = jugador;
-        this.movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
-        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
+        movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.damageTexture = manager.get(DAMAGE_POLLA_TEXTURE, Texture.class);
+        this.vidaEnemigo = VIDA_ENEMIGO_POLLA;
+        this.coolDownDanyo = COOLDOWN_POLLA;
+        this.temporizadorDanyo = TEMPORIZADOR_DANYO;
+        this.damageAmount = DANYO_POLLA;
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
-    public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarFade(delta);
-
-        if (vidaEnemigo > 0) {
-            movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
-        } else {
-            movimientoPolla.actualizarSoloKnockback(delta, sprite, true);
-        }
-
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
-
-        if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-            animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
-        }
-
-        if (vidaEnemigo > 0) {
-            if (temporizadorDanyo > 0) {
-                temporizadorDanyo -= delta;
-            }
-            animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
-        }
-
-        if (vidaEnemigo <= 0 && mostrandoDamageSprite) {
-            damageSpriteTimer -= delta;
-            sprite.setTexture(damageTexture);
-            if (damageSpriteTimer <= 0) {
-                mostrandoDamageSprite = false;
-                if (!deathAnimationTriggered) {
-                    Animation<TextureRegion> animMuertePolla = GestorDeAssets.animations.get("muertePolla");
-                    animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-                    animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
-                    animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-                    deathAnimationTriggered = true;
-                }
-            }
-        }
+    @Override
+    protected void actualizarMovimiento(float delta) {
+        movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
+        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
-    public void renderizar(SpriteBatch batch) {
-        if (vidaEnemigo > 0 || mostrandoDamageSprite) {
-            renderBaseEnemigos.dibujarEnemigos(batch, this);
-        } else {
-            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-                sprite.draw(batch);
-            }
-        }
+    protected void actualizarKnockback(float delta) {
+        movimientoPolla.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
-    public void reducirSalud(float amount) {
-        vidaEnemigo -= amount;
-        if (vidaEnemigo <= 0) {
-            if (posXMuerte == null || posYMuerte == null) {
-                posXMuerte = sprite.getX();
-                posYMuerte = sprite.getY();
-            }
-            if (!mostrandoDamageSprite && !deathAnimationTriggered) {
-                mostrandoDamageSprite = true;
-                damageSpriteTimer = DAMAGE_SPRITE_MUERTE_TIMER;
-            }
-        }
+    protected void iniciarAnimacionMuerte() {
+        Animation<TextureRegion> animMuertePolla = GestorDeAssets.animations.get("muertePolla");
+        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
+        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override
-    public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte() && !animacionesBaseEnemigos.estaEnParpadeo());
-    }
-
-
-    @Override
-    public float getX() {
-        return sprite.getX();
-    }
-
-    @Override
-    public float getY() {
-        return sprite.getY();
-    }
-
-    @Override
-    public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
-        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
-        RectanglePoolManager.liberarRectangulo(projectileRect);
-        return overlaps;
+    protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
+        movimientoPolla.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -157,82 +76,6 @@ public class EnemigoPolla implements Enemigo {
         return null;
     }
 
-    @Override
-    public Sprite getSprite() {
-        return sprite;
-    }
-
-    @Override
-    public void reseteaTemporizadorDanyo() {
-        temporizadorDanyo = coolDownDanyo;
-    }
-
-    @Override
-    public boolean puedeAplicarDanyo() {
-        return vidaEnemigo > 0 && temporizadorDanyo <= 0;
-    }
-
-    @Override
-    public boolean haSoltadoXP() {
-        return haSoltadoXP;
-    }
-
-    @Override
-    public void setProcesado(boolean procesado) {
-        this.procesado = procesado;
-    }
-
-    @Override
-    public boolean isProcesado() {
-        return procesado;
-    }
-
-    @Override
-    public void activarParpadeo(float duracion) {
-        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
-    }
-
-    @Override
-    public void aplicarKnockback(float fuerza, float dirX, float dirY) {
-        movimientoPolla.aplicarKnockback(fuerza, dirX, dirY);
-    }
-
-    @Override
-    public float getVida() {
-        return vidaEnemigo;
-    }
-
-    @Override
-    public float getDamageAmount() {
-        return damageAmount;
-    }
-
-    @Override
-    public AnimacionesBaseEnemigos getAnimaciones() {
-        return animacionesBaseEnemigos;
-    }
-
-    @Override
-    public boolean isMostrandoDamageSprite() {
-        return mostrandoDamageSprite;
-    }
-
-    public void setDamageAmount(float damage) {
-        this.damageAmount = damage;
-    }
-
-    public static void resetStats() {
-        velocidadBase = VEL_BASE_POLLA;
-    }
-
-    public static void setVelocidadBase(float nuevaVelocidadBase) {
-        velocidadBase = nuevaVelocidadBase;
-    }
-
-    public static float getVelocidadBase() {
-        return velocidadBase;
-    }
-
     public void setVelocidad(float nuevaVelocidad) {
         movimientoPolla.setVelocidadEnemigo(nuevaVelocidad);
     }
@@ -245,12 +88,15 @@ public class EnemigoPolla implements Enemigo {
         return animacionesBaseEnemigos.getAlphaActual();
     }
 
-    public AnimacionesBaseEnemigos getAnimacionesEnemigos() {
-        return animacionesBaseEnemigos;
+    public static void resetStats() {
+        velocidadBase = VEL_BASE_POLLA;
     }
 
-    @Override
-    public void dispose() {
-        sprite = null;
+    public static void setVelocidadBase(float nuevaVelocidadBase) {
+        velocidadBase = nuevaVelocidadBase;
+    }
+
+    public static float getVelocidadBase() {
+        return velocidadBase;
     }
 }

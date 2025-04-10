@@ -36,6 +36,5 @@ public class AnimacionExamen {
                 tiempoAcumulado = 0;
             }
         }
-        animacionesBaseEnemigos.flipearEnemigo(jugador,sprite);
     }
 }
