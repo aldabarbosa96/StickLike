@@ -5,27 +5,80 @@ El proyecto utiliza el framework [libGDX](https://libgdx.com/).
 
 ---
 
-## Descripción
+# 🖊️ Descripción
 
-En StickLike te sumerges en un mundo **dibujado a mano**, donde el escenario de combate es el **cuaderno** de un adolescente, y tú encarnas a un 'StickMan' que debe **sobrevivir** a oleadas de enemigos variopintos, ganar experiencia y escoger mejoras cada vez que subes de nivel.
-El juego se inspira en el género **roguelike** y en títulos como *Vampire Survivors* o **Brotato**, donde el combate es automático (*autobattle*), pero tú decides cómo **mover** a tu personaje y qué **mejoras** adquirir. Tu objetivo es sobrevivir hasta llegar a **nivel 30** superando los diferentes enemigos de cada fase hasta llegar al **FINALBOSS**.
+**StickLike** te sumerge en un mundo dibujado a mano, donde el campo de batalla es el cuaderno de un adolescente. Encarna a un *StickMan* que debe sobrevivir a oleadas de enemigos tan absurdos como variados, ganar experiencia y elegir mejoras cada vez que subes de nivel.  
+Inspirado en el género *roguelike* y en títulos como **Vampire Survivors** o **Brotato**, el combate es automático (*autobattle*), pero tú decides cómo moverte y qué mejoras elegir.  
+Tu objetivo: **sobrevive hasta el nivel 30 y enfréntate al temido FINALBOSS.**
+
+---
+
+## ✨ Características principales
+
+### ✏️ Estética de estudiante
+Todo el mundo del juego está concebido como dibujos en la libreta de un estudiante (o en la pizarra de clase, o el portátil del cole).  
+Los enemigos y objetos son chistes, criaturas extrañas y obscenas: miedos, prejuicios y metáforas de lo que cualquier adolescente ha vivido o dibujado cuando se aburría en clase. 😜
 
 ---
 
-## Características principales
-
-- **Estética de estudiante**: Todo el mundo del juego está concebido como dibujos en una libreta de un estudiante (o en la pizarra de clase o el portátil del cole). Los enemigos y objetos pueden ser chistes, criaturas extrañas y obscenas… Son miedos, prejuicios y metáforas de lo que vive cualquier chico adolescente o cualquier cosa que uno dibujaría en clase ;)
-- **Progresión de partida**: Al derrotar enemigos, obtienes experiencia que te permite **subir de nivel** y escoger entre varias mejoras (por ejemplo, más velocidad, más daño, proyectiles múltiples, etc.), que te irán potenciando a lo largo de la partida.
-- **Progresión de personaje**: Cada muerte reinicia el nivel y todas nuestras mejoras y habilidades se pierden. Lo que se mantiene es el oro (cacas doradas) y los trazos (lápices), que permiten mejorar de forma permanentemente al jugador a través de potenciar directamente sus estadísticas o a través de ítems de equipo que otorgan poderes únicos.
-- **Combate automático**: Tu personaje ataca a los enemigos de forma automática, pero tú decides **el movimiento** para esquivar y recolectar **objetos de experiencia** y las mejoras y habilidades obtenidas para poder combinarlas de mil formas.
-- **Enemigos variopintos**: Cada oleada puede traer diseños disparatados, haciendo honor al espíritu libre del cuaderno y a lo "tontos que somos cuando tenemos 15 años". Podrás encontrar desde culos y pollas, hasta exámenes suspendidos; la regla que te tira la profe, la alarma que te despierta por las mañanas o sencillamente un váter sucio... Todos con sus comentarios jocosos y satíricos.
-- **Sistema de mejoras**: Cuando subes de nivel, aparece un **pop-up** con mejoras aleatorias a elegir. Éstas podrán ser desde nuevas habilidades pasivas, nuevas armas, habilidades ofensivas, etc. Se ofrece unos dados de "reroll" para descartar las habilidades obtenidas por otras 3 diferentes. Escoge sabiamente para sobrevivir a las oleadas.
-- **Recolectables**: Durante la partida encontrarás múltiples objetos recolectables, como los orbes de experiencia que sueltan los enemigos, oro, trazos y muchos más.
-- **Destrcutibles**: Podrás encontrar también elementos que son **consumibles**, como pizza, patatas fritas o hamburguesas, que te proporcionarán **boosts** que mejorarán alguna estadística al máximo durante un breve período de tiempo.
-- **Tragaperras**: Estas máquinas aparecerán de manera aleatoria por el mapa y al encontrarla podrás gastar tu oro en tiradas para obtener valiosos premios.
-- **FINALBOSS**: Cuando el jugador llega a cierto nivel, y la fase actual se completa te enfrentas al **BOSS** de esa fase, que pondrá a prueba tus habilidades y configuración de personaje. Al final del nivel aparecerá el **FINALBOSS**, mucho más fuerte y temible que los anteriores.
+### 📈 Progresión de partida
+Al derrotar enemigos, obtienes experiencia que te permite **subir de nivel** y escoger entre varias mejoras (como más velocidad, daño, proyectiles múltiples, etc.).  
+Esto te permitirá desarrollar tu propio estilo de juego durante la partida.
 
 ---
+
+### 🧬 Progresión de personaje
+Cada muerte reinicia el nivel y borra tus mejoras y habilidades temporales.  
+Pero el **oro (💩 cacas doradas)** y los **trazos (✏️ lápices)** se conservan, y con ellos puedes mejorar tu personaje de forma permanente: subiendo estadísticas o desbloqueando equipamiento con poderes únicos.
+
+---
+
+### ⚔️ Combate automático
+Tu personaje ataca automáticamente, pero tú controlas el movimiento: esquiva, recolecta orbes de experiencia, y combina habilidades de mil formas distintas para sobrevivir. 
+
+---
+
+### 👾 Enemigos variopintos
+Las oleadas traen enemigos ridículamente creativos: culos y pollas con patas, exámenes suspensos vengativos, reglas voladoras, despertadores asesinos o váteres podridos.  
+Todos con frases sarcásticas, referencias adolescentes y un toque de humor negro. 
+
+---
+
+### 🎲 Sistema de mejoras
+Al subir de nivel, aparece un **pop-up** con 3 mejoras aleatorias.  
+¿No te convencen? Usa los dados de *reroll* 🎲 para cambiar la selección.  
+Puedes obtener habilidades pasivas, nuevas armas o poderes especiales. ¡Escoge sabiamente!
+
+---
+
+### 🧿 Recolectables
+Durante la partida encontrarás objetos útiles como:
+- Orbes de experiencia
+- Oro 💩
+- Trazos ✏️
+- ¡Y muchos más!
+
+---
+
+### 🍕 Consumibles potentes
+Pizza, patatas fritas o hamburguesas aparecen en el mapa como objetos consumibles que te dan **boosts temporales** muy potentes (ej: velocidad, daño al máximo por unos segundos). 🍔⚡
+
+---
+
+### 🎰 Máquinas tragaperras
+Aparecen de forma aleatoria en el mapa.  
+Puedes gastar tu oro en tiradas para obtener **premios aleatorios** muy jugosos. ¡La suerte está echada!
+
+---
+
+### 💀 FINALBOSS
+Cuando llegas al nivel 30 y completas todas las fases, te espera el **FINALBOSS**.  
+Un enemigo colosal, temible y con varias fases que pondrá a prueba tus reflejos y la estrategia que hayas construido durante la partida.
+
+---
+
+📌 **¡Prepárate para el caos, los lápices afilados y las risas!**  
+StickLike no es solo un juego, es una carta de amor al cuaderno del adolescente que todos fuimos.
 
 ## Estado de Desarrollo
 
