@@ -158,7 +158,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         upgradeWindow = new Window(POPUP_HEADER, wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
         upgradeWindow.getTitleLabel().setFontScale(1.25f);
-       upgradeWindow.getTitleTable().padTop(75);
+       upgradeWindow.getTitleTable().padTop(50);
 
         float w = POPUP_WIDTH;
         float h = POPUP_HEIGHT;
@@ -169,6 +169,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
         improvementButtons.clear();
         llenarOpciones(mejoras);
+        selectedIndex = 0;
 
         // Grupo para contener la ventana con borde extra
         popupGroup = new Group();
@@ -197,6 +198,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
         // Guardamos las mejoras actualmente mostradas
         currentMejoras = mejoras;
+        updateButtonHighlight();
     }
 
     private void llenarOpciones(List<Mejora> mejoras) {
@@ -284,7 +286,7 @@ public class PopUpMejoras extends RenderBaseMenus {
             }
         });
 
-        upgradeWindow.row().padTop(25);
+        upgradeWindow.row().padTop(35);
         upgradeWindow.add(rerollButton).center();
         improvementButtons.add(rerollButton);
     }

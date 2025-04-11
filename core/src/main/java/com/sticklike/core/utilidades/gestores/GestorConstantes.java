@@ -63,11 +63,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float POPUP_WIDTH = 330f * 1.4814814815f;
     public static final float POPUP_HEIGHT = 375f * 1.09375f;
-    public static final float POPUP_HEADER_PADDING = 50f;
+    public static final float POPUP_HEADER_PADDING = 75f;
     public static final float POPUP_ROW_PADDING = 13f;
     public static final float LABEL_WIDTH = 6f * 1.4814814815f;
     public static final float BUTTON_WIDTH = 225f * 1.4814814815f;
-    public static final float BUTTON_PADDING = 10f;
+    public static final float BUTTON_PADDING = 12f;
     public static final float POPUP_POSITION_CORRECTION = 150f * 1.09375f;
     public static final String[] POPUP_BUTTON_LABELS = {"X", "Y", "B", "A"};
 
