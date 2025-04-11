@@ -12,14 +12,22 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.gameplay.sistemas.SistemaDeMejoras;
@@ -27,18 +35,17 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.pantallas.menus.renders.RenderBaseMenus;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Representa un pop-up que muestra mejoras disponibles para el jugador.
- * Permite al usuario seleccionar una mejora usando teclado, ratón o mando.
+ * Representa un pop-up que muestra las mejoras disponibles para el jugador.
+ * Se muestran 3 opciones (filas) y, debajo, se añade una fila extra con un botón de reroll.
  */
 public class PopUpMejoras extends RenderBaseMenus {
-
     private static final float EXTRA_BORDE = 12.5f;
-
     private Stage uiStage;
     private Skin uiSkin;
     private SistemaDeMejoras sistemaDeMejoras;
@@ -50,6 +57,10 @@ public class PopUpMejoras extends RenderBaseMenus {
     private int selectedIndex = 0;
     private boolean popUpAbierto = false;
     private FondoAnimadoPopUp fondoAnimadoPopUp;
+
+    // Variables para el reroll
+    private List<Mejora> currentMejoras;
+    private int rerollCount = 1;
 
     public PopUpMejoras(SistemaDeMejoras sistemaDeMejoras, VentanaJuego1 ventanaJuego1) {
         this.ventanaJuego1 = ventanaJuego1;
@@ -64,6 +75,12 @@ public class PopUpMejoras extends RenderBaseMenus {
         Skin skin = new Skin();
         BitmapFont font = new BitmapFont();
         skin.add("default-font", font);
+
+        // Registro de estilo predeterminado para los Label
+        Label.LabelStyle defaultLabelStyle = new Label.LabelStyle();
+        defaultLabelStyle.font = font;
+        defaultLabelStyle.fontColor = Color.WHITE;
+        skin.add("default", defaultLabelStyle);
 
         // Fuente pequeña
         BitmapFont smallFont = new BitmapFont();
@@ -81,7 +98,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
         // Fondo de la ventana
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f)); // opaco
+        pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
         pixmap.fill();
         Texture pixmapTexture = new Texture(pixmap);
         pixmap.dispose();
@@ -99,7 +116,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         defaultButtonStyle.fontColor = Color.BLACK;
         skin.add("default-button", defaultButtonStyle);
 
-        // Textura para botón "resaltado"
+        // Textura para botón resaltado
         Pixmap highlightPixmap = new Pixmap(8, 12, Pixmap.Format.RGBA8888);
         highlightPixmap.setColor(new Color(0.9f, 0.9f, 0.9f, 0.5f));
         highlightPixmap.fill();
@@ -141,6 +158,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         upgradeWindow = new Window(POPUP_HEADER, wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
         upgradeWindow.getTitleLabel().setFontScale(1.25f);
+       upgradeWindow.getTitleTable().padTop(75);
 
         float w = POPUP_WIDTH;
         float h = POPUP_HEIGHT;
@@ -148,66 +166,12 @@ public class PopUpMejoras extends RenderBaseMenus {
         upgradeWindow.padTop(POPUP_HEADER_PADDING);
         upgradeWindow.setModal(true);
         upgradeWindow.setMovable(false);
-        upgradeWindow.getTitleTable().padBottom(-35);
 
         improvementButtons.clear();
+        llenarOpciones(mejoras);
 
-        // Añadimos filas con las mejoras
-        for (int i = 0; i < mejoras.size(); i++) {
-            if (i >= POPUP_BUTTON_LABELS.length) break;
-
-            final int index = i;
-            final Mejora mejora = mejoras.get(i);
-
-            TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
-            TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora() + POPUP_FOOTER2, tbs);
-            btn.setUserObject(mejora);
-            btn.getLabel().setWrap(true);
-            btn.getLabel().setAlignment(Align.center);
-
-            Table rowTable = new Table();
-            rowTable.pad(POPUP_ROW_PADDING);
-            rowTable.defaults().center();
-
-            // Etiqueta de tipo
-            String estiloLabel = mejora.getTipoMejora().equals("HAB") ? "hab" : "stat";
-            Label labelTipo = new Label(mejora.getTipoMejora(), uiSkin, estiloLabel);
-
-            rowTable.add(labelTipo).width(25).center().padLeft(10).padRight(-10f);
-            rowTable.add(btn).expandX().fillX().center();
-            labelTipo.toFront();
-
-            if (mejora.getIcono() != null) {
-                Image iconImage = new Image(mejora.getIcono());
-                iconImage.setScale(1.25f);
-                Container<Image> iconContainer = new Container<>(iconImage);
-                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-10f).height(25);
-            } else {
-                rowTable.add().width(25);
-            }
-
-            upgradeWindow.row();
-            upgradeWindow.add(rowTable).expandX().fillX().center().pad(BUTTON_PADDING);
-
-            improvementButtons.add(btn);
-
-            btn.addListener(new InputListener() {
-                @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    onSelectMejora(index, mejoras);
-                    return true;
-                }
-            });
-        }
-
-        if (!improvementButtons.isEmpty()) {
-            selectedIndex = 0;
-            updateButtonHighlight();
-        }
-
-        // Grupo que contendrá la sombra + la ventana, con margen extra
+        // Grupo para contener la ventana con borde extra
         popupGroup = new Group();
-        // El Group es un poco más grande para que se vea el borde alrededor
         float totalWidth = w + EXTRA_BORDE * 2;
         float totalHeight = h + EXTRA_BORDE * 2;
         popupGroup.setSize(totalWidth, totalHeight);
@@ -219,18 +183,110 @@ public class PopUpMejoras extends RenderBaseMenus {
         borderImage.setSize(totalWidth, totalHeight);
         popupGroup.addActor(borderImage);
 
-        // Añadimos la Window centrada en (EXTRA_BORDE, EXTRA_BORDE) para que el borde quede alrededor
         upgradeWindow.setPosition(EXTRA_BORDE, EXTRA_BORDE);
         popupGroup.addActor(upgradeWindow);
 
         uiStage.addActor(popupGroup);
         uiStage.setKeyboardFocus(upgradeWindow);
 
-        // Ajuste de inputs
+        // Configuramos los inputs
         Controllers.removeListener(ventanaJuego1.getMenuPause().getInputsMenu());
         InputMultiplexer im = new InputMultiplexer(inputHandler, uiStage);
         Gdx.input.setInputProcessor(im);
         Controllers.addListener(inputHandler);
+
+        // Guardamos las mejoras actualmente mostradas
+        currentMejoras = mejoras;
+    }
+
+    private void llenarOpciones(List<Mejora> mejoras) {
+        upgradeWindow.clearChildren();
+        improvementButtons.clear();
+
+        // Se crean las filas para cada mejora
+        for (int i = 0; i < mejoras.size(); i++) {
+            if (i >= POPUP_BUTTON_LABELS.length) break;
+            final int index = i;
+            final Mejora mejora = mejoras.get(i);
+
+            TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
+            TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora() + POPUP_FOOTER2, tbs);
+            btn.setUserObject(mejora);
+            btn.getLabel().setWrap(true);
+            btn.getLabel().setAlignment(Align.center);
+
+            Table rowTable = new Table();
+            rowTable.defaults().center();
+
+            // Se añade la etiqueta de tipo (por ejemplo, "HAB" o "stat")
+            String estiloLabel = mejora.getTipoMejora().equals("HAB") ? "hab" : "stat";
+            Label labelTipo = new Label(mejora.getTipoMejora(), uiSkin, estiloLabel);
+            rowTable.add(labelTipo).width(25).center().padLeft(10).padRight(-10f);
+
+            rowTable.add(btn).expandX().fillX().center();
+
+            // Se añade el icono si está disponible
+            if (mejora.getIcono() != null) {
+                Image iconImage = new Image(mejora.getIcono());
+                iconImage.setScale(1.25f);
+                Container<Image> iconContainer = new Container<>(iconImage);
+                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-10f).height(25);
+            } else {
+                rowTable.add().width(25);
+            }
+
+            upgradeWindow.row();
+            upgradeWindow.add(rowTable).expandX().fillX().center().pad(BUTTON_PADDING);
+            improvementButtons.add(btn);
+
+            btn.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    onSelectMejora(index, currentMejoras);
+                    return true;
+                }
+            });
+        }
+
+        Table rerollTable = new Table();
+        Texture diceTexture = manager.get(DADOS, Texture.class);
+        TextureRegionDrawable diceDrawable = new TextureRegionDrawable(new TextureRegion(diceTexture));
+        Image diceImage = new Image(diceDrawable);
+
+        float scale = 0.45f;
+        float diceWidth = diceDrawable.getMinWidth() * scale;
+        float diceHeight = diceDrawable.getMinHeight() * scale;
+        diceImage.setSize(diceWidth, diceHeight);
+        diceImage.setScaling(Scaling.stretch);
+
+        Container<Image> diceContainer = new Container<>(diceImage);
+        diceContainer.size(diceWidth, diceHeight);
+
+        Label rerollLabel = new Label("x" + rerollCount, uiSkin);
+        rerollLabel.setColor(Color.BLUE);
+
+        rerollTable.add(diceContainer).padLeft(2).size(diceWidth, diceHeight);
+        rerollTable.add(rerollLabel).padLeft(5).padRight(2);
+
+        TextButton.TextButtonStyle defaultButtonStyle = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
+        TextButton rerollButton = new TextButton("", defaultButtonStyle);
+        rerollButton.add(rerollTable);
+
+
+        rerollButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (rerollCount > 0) {
+                    // El botón de reroll se identifica por tener índice igual a currentMejoras.size()
+                    onSelectMejora(currentMejoras.size(), currentMejoras);
+                }
+                return true;
+            }
+        });
+
+        upgradeWindow.row().padTop(25);
+        upgradeWindow.add(rerollButton).center();
+        improvementButtons.add(rerollButton);
     }
 
     private void updateButtonHighlight() {
@@ -240,21 +296,29 @@ public class PopUpMejoras extends RenderBaseMenus {
 
         for (int i = 0; i < improvementButtons.size(); i++) {
             TextButton btn = improvementButtons.get(i);
-            Mejora mejora = (Mejora) btn.getUserObject();
-            if (i == selectedIndex) {
-                if (mejora.getIcono() != null && mejora.getTipoMejora().equals("HAB")) {
-                    btn.setStyle(selectedStyle);
+            if (i < currentMejoras.size()) {
+                Mejora mejora = currentMejoras.get(i);
+                if (i == selectedIndex) {
+                    if (mejora.getIcono() != null && mejora.getTipoMejora().equals("HAB")) btn.setStyle(selectedStyle);
+                    else btn.setStyle(selectedGreenStyle);
                 } else {
-                    btn.setStyle(selectedGreenStyle);
+                    btn.setStyle(defaultStyle);
                 }
-            } else {
-                btn.setStyle(defaultStyle);
+            } else { // Botón de reroll
+                if (i == selectedIndex) btn.setStyle(selectedStyle);
+                else btn.setStyle(defaultStyle);
             }
         }
     }
 
     private void onSelectMejora(int index, List<Mejora> mejoras) {
-        if (index < 0 || index >= mejoras.size()) return;
+        if (index == mejoras.size()) {
+            if (rerollCount > 0) {
+                rerollMejoras();
+            }
+            return;
+        }
+        // Caso normal: se aplica la mejora seleccionada
         Controllers.addListener(ventanaJuego1.getMenuPause().getInputsMenu());
         sistemaDeMejoras.aplicarMejora(mejoras.get(index));
         ventanaJuego1.getRenderHUDComponents().setHabilidadesActivas(sistemaDeMejoras.getHabilidadesActivas());
@@ -267,11 +331,21 @@ public class PopUpMejoras extends RenderBaseMenus {
         ventanaJuego1.getMenuPause().bloquearInputs(false);
         popUpAbierto = false;
 
-        // Desactivamos el input handler
         Gdx.input.setInputProcessor(null);
         Controllers.removeListener(inputHandler);
 
         ventanaJuego1.getSistemaDeNiveles().procesarNivelPendiente();
+    }
+
+    private void rerollMejoras() {
+        if (rerollCount <= 0) return;
+        rerollCount--;
+        List<Mejora> nuevasMejoras = sistemaDeMejoras.generarOpcionesDeMejoraAleatorias(3);
+        currentMejoras = nuevasMejoras;
+        upgradeWindow.clearChildren();
+        llenarOpciones(nuevasMejoras);
+        selectedIndex = 0;
+        updateButtonHighlight();
     }
 
     public Stage getUiStage() {
@@ -288,7 +362,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
     @Override
     public void animarSalida(Runnable callback) {
-        // Implementar animación de salida si fuera necesario
+        // Implementa la animación de salida si es necesario
     }
 
     public void dispose() {
@@ -297,7 +371,7 @@ public class PopUpMejoras extends RenderBaseMenus {
     }
 
     /**
-     * Clase interna para gestionar los inputs (teclado/ratón/mando) del pop-up.
+     * Clase interna para gestionar los inputs (teclado, ratón y mando) del pop-up.
      */
     private class GameInputHandler extends ControllerAdapter implements InputProcessor {
         @Override
@@ -319,28 +393,35 @@ public class PopUpMejoras extends RenderBaseMenus {
                     return true;
                 case Input.Keys.ENTER:
                 case Input.Keys.NUMPAD_ENTER:
-                    onSelectMejora(selectedIndex, sistemaDeMejoras.getMejorasMostradas());
+                    onSelectMejora(selectedIndex, currentMejoras);
                     return true;
                 case Input.Keys.NUM_1:
                 case Input.Keys.NUMPAD_1:
                     selectedIndex = 0;
                     updateButtonHighlight();
-                    onSelectMejora(0, sistemaDeMejoras.getMejorasMostradas());
+                    onSelectMejora(0, currentMejoras);
                     return true;
                 case Input.Keys.NUM_2:
                 case Input.Keys.NUMPAD_2:
-                    if (improvementButtons.size() > 1) {
+                    if (currentMejoras.size() > 1) {
                         selectedIndex = 1;
                         updateButtonHighlight();
-                        onSelectMejora(1, sistemaDeMejoras.getMejorasMostradas());
+                        onSelectMejora(1, currentMejoras);
                     }
                     return true;
                 case Input.Keys.NUM_3:
                 case Input.Keys.NUMPAD_3:
-                    if (improvementButtons.size() > 2) {
+                    if (currentMejoras.size() > 2) {
                         selectedIndex = 2;
                         updateButtonHighlight();
-                        onSelectMejora(2, sistemaDeMejoras.getMejorasMostradas());
+                        onSelectMejora(2, currentMejoras);
+                    }
+                    return true;
+                case Input.Keys.R:
+                    if (rerollCount > 0) {
+                        selectedIndex = improvementButtons.size() - 1;
+                        updateButtonHighlight();
+                        onSelectMejora(selectedIndex, currentMejoras);
                     }
                     return true;
             }
@@ -376,7 +457,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         public boolean buttonDown(Controller controller, int buttonIndex) {
             switch (buttonIndex) {
                 case 0:
-                    onSelectMejora(selectedIndex, sistemaDeMejoras.getMejorasMostradas());
+                    onSelectMejora(selectedIndex, currentMejoras);
                     return true;
                 case 11:
                     if (selectedIndex > 0) {

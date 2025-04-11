@@ -67,7 +67,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float POPUP_ROW_PADDING = 13f;
     public static final float LABEL_WIDTH = 6f * 1.4814814815f;
     public static final float BUTTON_WIDTH = 225f * 1.4814814815f;
-    public static final float BUTTON_PADDING = 5f;
+    public static final float BUTTON_PADDING = 10f;
     public static final float POPUP_POSITION_CORRECTION = 150f * 1.09375f;
     public static final String[] POPUP_BUTTON_LABELS = {"X", "Y", "B", "A"};
 
@@ -82,7 +82,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Texto HUD
     // -------------------------------------------------
     public static final String TEXTO_LVL = "LVL:  ";
-    public static final String POPUP_HEADER = "\n\n<<< M E J O R A S >>> ";
+    public static final String POPUP_HEADER = "<<< M E J O R A S >>> ";
     public static final String POPUP_FOOTER = "  \n";
     public static final String POPUP_FOOTER2 = "   ";
     public static final String VEL_MOV = "Velocidad";

@@ -73,7 +73,7 @@ public class GestorDeAssets {
     public static final String ICONO_VIDA = "hud/vida.png";
     public static final String ICONO_CALEAVELA_KILLS = "hud/calavera.png";
     public static final String TEXTURA_MARCO = "hud/marco2.png";
-    public static final String BOCADILLO = "hud/bocadillo.png";
+    public static final String DADOS = "hud/dados.png";
 
     // Boss y loading
     public static final String BOSS_POLLA = "enemigos/bossPolla.png";
@@ -154,7 +154,7 @@ public class GestorDeAssets {
         manager.load(ICONO_VIDA, Texture.class);
         manager.load(ICONO_CALEAVELA_KILLS, Texture.class);
         manager.load(TEXTURA_MARCO, Texture.class);
-        manager.load(BOCADILLO, Texture.class);
+        manager.load(DADOS, Texture.class);
 
         manager.load(BOSS_POLLA, Texture.class);
         manager.load(BOSS_POLLA_BOCACERRADA, Texture.class);

@@ -32,6 +32,7 @@ public class EnemigoRegla extends EnemigoBase {
         this.vidaEnemigo = VIDA_ENEMIGOREGLA;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         this.coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
+        this.damageAmount = DANYO_REGLA;
     }
 
     @Override
