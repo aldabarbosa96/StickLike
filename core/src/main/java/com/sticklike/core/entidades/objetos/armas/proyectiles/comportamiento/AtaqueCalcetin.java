@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilCalcetin;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilCalcetin;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 

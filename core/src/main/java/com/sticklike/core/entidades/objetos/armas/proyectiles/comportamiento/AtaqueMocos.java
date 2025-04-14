@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.LluviaMocos;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.LluviaMocos;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 public class AtaqueMocos {

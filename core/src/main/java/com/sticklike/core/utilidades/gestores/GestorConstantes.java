@@ -215,6 +215,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_CALCETIN = 13f;
     public static final float DANYO_PAPELCULO = 45f;
     public static final float DANYO_BOLIBIC = 25f;
+    public static final float DANYO_DILDO = 40f;
     public static final float EMPUJE_BASE_PAPELCULO = 200f;
     public static final float SPEED_MULT = 1.8f;
     public static final float PIEDRA_SIZE = 7f;
@@ -230,10 +231,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
     public static final float EMPUJE_BASE_BOLI = 150f;
+    public static final float EMPUJE_BASE_DILDO = 135f;
     public static final float MULT_DANYO = 1f;
-    public static final float TAZO_SIZE = 14.5f;
+    public static final float TAZO_SIZE = 15f;
     public static final float DURACION_NUBE_PEDO = 8f;
-    public static final float RADIO_TAZOS = 52.5f;
+    public static final float RADIO_TAZOS = 25f;
     public static final float RADIO_TAZOS_JUGADOR = 75f;
     public static final float VEL_ROTACION = 180f;
     public static final float INTERVALO_TAZOS = 0.1f;
@@ -242,6 +244,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
     public static final float DANYO_PEDO = 2.5f;
     public static final float DELAY_ENTRE_PEDOS = 3.5f;
+    public static final float IMPACTO_DURACION = 0.1f;
 
     // -------------------------------------------------
     // Configuración TextoFlotante

@@ -297,7 +297,11 @@ public class RenderVentanaJuego1 {
     }
 
     public void dispose() {
-        shapeRenderer.dispose();
+        if (shapeRenderer != null) {
+            shapeRenderer.dispose();
+            shapeRenderer = null;
+        }
+
         ventanaLoading.dispose();
 
         executorService.shutdown();

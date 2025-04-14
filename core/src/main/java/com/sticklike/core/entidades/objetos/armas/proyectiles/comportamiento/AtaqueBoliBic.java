@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 
 import com.sticklike.core.entidades.jugador.InputsJugador;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilBoliBic;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilBoliBic;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 public class AtaqueBoliBic {

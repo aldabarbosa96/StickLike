@@ -55,6 +55,7 @@ public class MainGame extends Game {
         GestorDeAssets.dispose();
         if (ventanaJuego1 != null) {
             ventanaJuego1.dispose();
+            ventanaJuego1 = null;
         }
         gestorDeAudio.dispose();
         batch.dispose();

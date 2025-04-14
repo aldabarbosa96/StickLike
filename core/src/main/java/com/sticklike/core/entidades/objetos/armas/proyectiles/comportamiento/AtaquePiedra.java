@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;

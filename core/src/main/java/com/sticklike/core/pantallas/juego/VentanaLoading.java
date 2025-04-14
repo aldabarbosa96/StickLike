@@ -104,6 +104,9 @@ public class VentanaLoading implements Screen {
     public void dispose() {
         font.dispose();
         dotTexture.dispose();
-        spriteBatch.dispose();
+        if (spriteBatch != null) {
+            spriteBatch.dispose();
+            spriteBatch = null;
+        }
     }
 }

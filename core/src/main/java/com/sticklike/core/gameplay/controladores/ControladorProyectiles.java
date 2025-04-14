@@ -2,16 +2,13 @@ package com.sticklike.core.gameplay.controladores;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.LluviaMocos;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPapelCulo;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilTazo;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.LluviaMocos;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilPapelCulo;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilTazo;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Enemigo;
@@ -207,7 +204,10 @@ public class ControladorProyectiles {
 
     public void dispose() {
         for (Proyectiles proyectil : proyectiles) {
-            proyectil.dispose();
+            if (proyectil != null){
+                proyectil.dispose();
+            }
+
         }
     }
 

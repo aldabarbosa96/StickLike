@@ -9,8 +9,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoBase;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
+
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -60,12 +63,18 @@ public class EnemigoRegla extends EnemigoBase {
     }
 
     @Override
-    public ObjetoVida sueltaObjetoXP() {
+    public ObjetoBase sueltaObjetoXP() {
         // todo --> añadir variedades de droppeo
-        float corazonONo = MathUtils.random(100);
-        if (!haSoltadoXP && corazonONo <= 1f) {
+        float randomNum = MathUtils.random(100);
+        if (!haSoltadoXP && randomNum <= 1f) {
             haSoltadoXP = true;
             return new ObjetoVida(posXMuerte, posYMuerte);
+        } else if (randomNum <= 20) {
+            haSoltadoXP = true;
+            ObjetoXp objetoXp;
+            objetoXp = new ObjetoXp(posXMuerte, posYMuerte);
+            objetoXp.setTipo(2);
+            return objetoXp;
         }
         return null;
     }

@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles;
+package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -39,7 +39,6 @@ public class ProyectilCalcetin implements Proyectiles {
     private RenderParticulasProyectil renderParticulasProyectil;
     private Vector2 centroSprite;
     private float impactoTimer = 0;
-    private static final float IMPACTO_DURACION = 0.1f;
     private final Rectangle collisionRect = new Rectangle();
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador, float extraDamage, Jugador jugador) {

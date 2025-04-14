@@ -368,8 +368,14 @@ public class PopUpMejoras extends RenderBaseMenus {
     }
 
     public void dispose() {
-        if (uiSkin != null) uiSkin.dispose();
-        if (uiStage != null) uiStage.dispose();
+        if (uiSkin != null) {
+            uiSkin.dispose();
+            uiSkin = null;
+        }
+        if (uiStage != null) {
+            uiStage.dispose();
+            uiStage = null;
+        }
     }
 
     /**

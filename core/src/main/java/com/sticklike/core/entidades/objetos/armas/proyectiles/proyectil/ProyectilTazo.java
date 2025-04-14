@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles;
+package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -73,7 +73,7 @@ public class ProyectilTazo implements Proyectiles {
 
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
         int maxLength = (int) (15 * scaleFactor);
-        float scaledWidth = 5 * scaleFactor;
+        float scaledWidth = 6 * scaleFactor;
         this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaledWidth, Color.RED);
         this.centroSprite = new Vector2();
         // Iniciamos con la escala mínima para el efecto de crecimiento

@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles;
+package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -87,7 +87,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE1:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.45f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -117,7 +117,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE2:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.45f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -142,7 +142,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE3:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.45f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }

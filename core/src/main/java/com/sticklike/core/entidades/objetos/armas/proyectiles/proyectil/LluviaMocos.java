@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles;
+package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -190,7 +190,11 @@ public class LluviaMocos implements Proyectiles {
             dropTexture.dispose();
             dropTexture = null;
         }
-        renderParticulasProyectil.dispose();
+        if (renderParticulasProyectil != null){
+            renderParticulasProyectil.dispose();
+            renderParticulasProyectil = null;
+        }
+
     }
 
     // Calculamos la configuración de las manchas solo una vez en la explosión
