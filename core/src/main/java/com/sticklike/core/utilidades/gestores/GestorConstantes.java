@@ -122,8 +122,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_MOV_JUGADOR = 125;
     public static final float DANYO = 25f;
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
-    public static final int VIDA_JUGADOR = 75;
-    public static final int VIDAMAX_JUGADOR = 75;
+    public static final int VIDA_JUGADOR = 50;
+    public static final int VIDAMAX_JUGADOR = 50;
     public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
     public static final float INTERVALO_MIN_DISPARO = 0.05f;
@@ -221,8 +221,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float PIEDRA_SIZE = 7f;
     public static final float CALCETIN_W_SIZE = 20.5f;
     public static final float CALCETIN_H_SIZE = 24.5f;
-    public static final float PAPELCULO_W_SIZE = 16.5f;
-    public static final float PAPELCULO_H_SIZE = 19;
+    public static final float PAPELCULO_W_SIZE = 18;
+    public static final float PAPELCULO_H_SIZE = 21;
     public static final float PAPELCULO_SPEED = 666f;
     public static final float PROJECTILE_BASE_DAMAGE = 8f; //todo --> gestionar en un futuro
     public static final float TEMPORIZADOR_DISPARO = 0f;

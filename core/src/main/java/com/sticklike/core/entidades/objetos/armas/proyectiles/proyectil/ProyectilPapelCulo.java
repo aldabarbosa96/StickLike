@@ -48,8 +48,10 @@ public class ProyectilPapelCulo implements Proyectiles {
     private final float GRAVEDAD_DESCENSO = 200f;
     private float rotationSpeed = 666f;
     private float rotationAngle = 0f;
+    private boolean esFragmento;
+    private boolean canFragment = true;
 
-    public ProyectilPapelCulo(float x, float y, float anguloLanzamiento, float velocidadProyectil, float poderJugador, float extraDamage, Jugador jugador, float direccionHorizontal) {
+    public ProyectilPapelCulo(float x, float y, float anguloLanzamiento, float velocidadProyectil, float poderJugador, float extraDamage, Jugador jugador, float direccionHorizontal, boolean esFragmento) {
         if (textura == null) {
             textura = manager.get(ARMA_PAPELCULO, Texture.class);
         }
@@ -64,6 +66,7 @@ public class ProyectilPapelCulo implements Proyectiles {
         this.velocidadProyectil = velocidadProyectil;
         this.anguloLanzamiento = anguloLanzamiento;
         this.proyectilActivo = true;
+        this.esFragmento = esFragmento;
 
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
         int maxLength = (int) (20 * scaleFactor);
@@ -124,6 +127,10 @@ public class ProyectilPapelCulo implements Proyectiles {
             sprite.setPosition(nuevaPosX, nuevaPosY);
             rotationAngle += rotationSpeed * delta;
             sprite.rotate(rotationSpeed * delta);
+        } else {
+            if (esFragmento) {
+                desactivarProyectil();
+            }
         }
     }
 
@@ -219,16 +226,57 @@ public class ProyectilPapelCulo implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        // Si la animación de impacto aún no se ha activado, se activa una única vez
+        // Si está habilitada la fragmentación y se puede fragmentar este proyectil procedemos
+        if (jugador.getAtaquePapelCulo().isFragmentado() && canFragment) {
+            canFragment = false;  // Así evitamos que se fragmente más veces el mismo proyectil
+            int numFragments = MathUtils.random(2, 5);
+            for (int i = 0; i < numFragments; i++) {
+                float angle = 270f + MathUtils.random(-120f, 120f);
+                float fragmentSpeed = velocidadProyectil * MathUtils.random(0.2f, 0.4f);
+
+                ProyectilPapelCulo fragmento = new ProyectilPapelCulo(sprite.getX(), sprite.getY(), angle, fragmentSpeed, jugador.getPoderJugador(), 0f, jugador, MathUtils.randomBoolean() ? 1f : -1f, true);
+                // Evitamos que los fragmentos sigan fragmentándose
+                fragmento.setCanFragment(false);
+
+                fragmento.getSprite().setSize(fragmento.getSprite().getWidth() * 0.55f, fragmento.getSprite().getHeight() * 0.55f);
+                fragmento.getSprite().setOriginCenter();
+
+                jugador.getControladorProyectiles().anyadirNuevoProyectil(fragmento);
+            }
+
+            // Desactivamos el proyectil original para que no ejecute su animación de impacto habitual
+            desactivarProyectil();
+
+            if (!enemigosImpactados.contains(enemigo)) {
+                enemigosImpactados.add(enemigo);
+                float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
+                float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
+                float dx = enemyCenterX - sprite.getX();
+                float dy = enemyCenterY - sprite.getY();
+                float dist = (float) Math.sqrt(dx * dx + dy * dy);
+                if (dist != 0) {
+                    dx /= dist;
+                    dy /= dist;
+                }
+                enemigo.aplicarKnockback(getKnockbackForce(), dx, dy);
+            }
+            return;
+        }
+
+        // Mantenemos comportamiento original si no hay fragmentación
         if (!impactoAnimacionActiva) {
-            GestorDeAudio.getInstance().reproducirEfecto("explosion", 1);
+            if (!canFragment) {
+                GestorDeAudio.getInstance().reproducirEfecto("explosionFragmentada", 0.75f);
+            } else {
+                GestorDeAudio.getInstance().reproducirEfecto("explosion", 1);
+
+            }
             impactoAnimacionActiva = true;
             animationStateTime = 0f;
             impactX = sprite.getX();
             impactY = sprite.getY();
             impactRotation = sprite.getRotation();
         }
-        // Gestionamos el impacto para cada enemigo (que aún no se haya procesado)
         if (!enemigosImpactados.contains(enemigo)) {
             enemigosImpactados.add(enemigo);
             float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
@@ -244,7 +292,6 @@ public class ProyectilPapelCulo implements Proyectiles {
         }
     }
 
-
     @Override
     public boolean yaImpacto(Enemigo enemigo) {
         return enemigosImpactados.contains(enemigo);
@@ -257,5 +304,25 @@ public class ProyectilPapelCulo implements Proyectiles {
 
     public boolean isImpactoAnimacionActiva() {
         return impactoAnimacionActiva;
+    }
+
+    public float getAnguloLanzamiento() {
+        return anguloLanzamiento;
+    }
+
+    public float getVelocidadProyectil() {
+        return velocidadProyectil;
+    }
+
+    public Jugador getJugador() {
+        return jugador;
+    }
+
+    public void setCanFragment(boolean canFragment) {
+        this.canFragment = canFragment;
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 }

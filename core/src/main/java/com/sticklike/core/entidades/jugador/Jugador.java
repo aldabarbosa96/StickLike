@@ -416,6 +416,10 @@ public class Jugador {
         this.proyectilesPorDisparo = proyectilesPorDisparo;
     }
 
+    public AtaquePapelCulo getAtaquePapelCulo() {
+        return ataquePapelCulo;
+    }
+
     public AtaqueDildo getAtaqueDildo() {
         return ataqueDildo;
     }

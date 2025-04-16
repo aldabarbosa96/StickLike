@@ -13,7 +13,7 @@ public class SistemaDeNiveles {
     private final SistemaDeMejoras sistemaDeMejoras;
     private final PopUpMejoras popUpMejoras;
     private float xpActual = 0f;
-    private float xpHastaSiguienteNivel = 25f;
+    private float xpHastaSiguienteNivel = 100f;
     private int nivelActual = 1;
     private int nivelesPendientes = 0;
 

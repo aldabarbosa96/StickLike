@@ -72,9 +72,6 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡CALCETÍN: PRECOZ!", "Aumenta velocidad de lanzamiento un 25%", () -> {
             jugador.getAtaqueCalcetin().aumentarVelocidadDisparo(0.25f);
         }, 3, null, "CALCETIN_speed"));
-        // Calcetín-ULTIMATE todo --> balancear un poco la ulti del calcetín y buscar forma de optimizarla...
-        /*todasLasMejoras.add(new Mejora("CALCETÍN: ULTIMATE",
-            "?????", ()-> {jugador.getAtaqueCalcetin().ultimateCALCETIN(1.25f);},1,null,"CALCETIN_vel"));*/
 
         // Tazo
         todasLasMejoras.add(new Mejora("¡TAZO: ROTATAZO!", "Aumenta la velocidad de rotación del tazo", () -> {
@@ -99,6 +96,17 @@ public class SistemaDeMejoras {
         }, 1, null, "PEDO_triple"));
 
         // PapelCulo
+        todasLasMejoras.add(new Mejora("¡PAPEL: DOBLE CARA!", "Lanzas 2 rollos de papel simultáneos", () -> {
+            jugador.getAtaquePapelCulo().setMejoraAmbosLados(true);
+        }, 1, null, "PAPEL_doble"));
+        todasLasMejoras.add(new Mejora("¡PAPEL: RÁPIDO!", "Aumenta la velocidad de lanzamiento del rollo", () -> {
+            jugador.getAtaquePapelCulo().aumentarVelocidadDisparo(0.33f);
+        }, 3, null, "PAPEL_rápido"));
+        todasLasMejoras.add(new Mejora("¡PAPEL: FRAGMENTACIÓN!", "El papel se fragmenta en rollos más pequeños al impactar", () -> {
+            jugador.getAtaquePapelCulo().setFragmentado(true);
+        }, 1, null, "PAPEL_frag"));
+
+        // LluviaMocos
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {
