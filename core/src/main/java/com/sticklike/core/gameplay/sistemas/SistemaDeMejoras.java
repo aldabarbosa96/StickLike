@@ -102,11 +102,20 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡PAPEL: RÁPIDO!", "Aumenta la velocidad de lanzamiento del rollo", () -> {
             jugador.getAtaquePapelCulo().aumentarVelocidadDisparo(0.33f);
         }, 3, null, "PAPEL_rápido"));
-        todasLasMejoras.add(new Mejora("¡PAPEL: FRAGMENTACIÓN!", "El papel se fragmenta en rollos más pequeños al impactar", () -> {
+        todasLasMejoras.add(new Mejora("¡PAPEL: FRAGMENTACIÓN!", "Se fragmenta en rollos más pequeños al impactar", () -> {
             jugador.getAtaquePapelCulo().setFragmentado(true);
         }, 1, null, "PAPEL_frag"));
 
         // LluviaMocos
+        todasLasMejoras.add(new Mejora("¡MOCOS: TORMENTA!", "Aumenta la cadencia de la lluvia", () -> {
+            jugador.getAtaqueMocos().tormentaMucosa(0.5f);
+        }, 3, null, "MOCO_tormenta"));
+        todasLasMejoras.add(new Mejora("¡MOCOS: REBOTE!", "Los mocos rebotan al impactar en el suelo", () -> {
+            jugador.getAtaqueMocos().activarReboteMucoso();
+        }, 1, null, "MOCO_rebote")); // todo --> permite gestionar internamente más rebotes
+        todasLasMejoras.add(new Mejora("¡MOCOS: SANGRIENTOS!", "Mocos de sangre que aplican un 250% de daño", () -> {
+            jugador.getAtaqueMocos().mocosConSangre();
+        }, 1, null, "MOCO_sangre"));
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {

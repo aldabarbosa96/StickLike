@@ -349,5 +349,5 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_UPGRADE = 0.75f;
     public static final float AUDIO_PAUSA = 0.75f;
     public static final int MAX_INSTANCIAS_SONIDO = 3;
-    public static final int MAX_INSTANCIAS_SONIDO_EXPL = 1;
+    public static final int MAX_INSTANCIAS_SONIDO_EXPL = 2;
 }
