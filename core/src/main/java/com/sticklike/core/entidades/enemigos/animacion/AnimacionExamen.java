@@ -22,7 +22,7 @@ public class AnimacionExamen {
         this.usandoFrame2 = false;
     }
 
-    public void actualizarAnimacion(float delta, Jugador jugador, Sprite sprite) {
+    public void actualizarAnimacion(float delta, Jugador jugador, Sprite sprite) { // levanta o baja los puños
         if (!animacionesBaseEnemigos.estaEnParpadeo()) {
             tiempoAcumulado += delta;
             if (tiempoAcumulado >= tiempoCambio) {
@@ -36,6 +36,5 @@ public class AnimacionExamen {
                 tiempoAcumulado = 0;
             }
         }
-        animacionesBaseEnemigos.flipearEnemigo(jugador,sprite);
     }
 }

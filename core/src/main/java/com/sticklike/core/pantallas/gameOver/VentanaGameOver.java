@@ -10,6 +10,7 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
+import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 import com.sticklike.core.ui.Mensajes;
@@ -31,9 +32,11 @@ public class VentanaGameOver implements Screen {
     private RenderVentanaGameOver renderVentanaGameOver;
     private OrthographicCamera camera;
     private FitViewport viewport;
+    private ControladorProyectiles controladorProyectiles;
 
-    public VentanaGameOver(MainGame game) {
+    public VentanaGameOver(MainGame game, ControladorProyectiles controladorProyectiles) {
         this.game = game;
+        this.controladorProyectiles = controladorProyectiles;
     }
 
     @Override
@@ -75,6 +78,7 @@ public class VentanaGameOver implements Screen {
         EnemigoCulo.resetStats(); // todo --> habría que gestionar el reseteo de stats de forma centralizada
         EnemigoPolla.resetStats();
         EnemigoExamen.resetStats();
+        controladorProyectiles.reset();
         game.ventanaJuego1.dispose();
         Mensajes.reset();
         MensajesData.getInstance().reset();
@@ -84,7 +88,7 @@ public class VentanaGameOver implements Screen {
     }
 
     private void cerrarJuego() {
-        if(game.ventanaJuego1 != null) {
+        if (game.ventanaJuego1 != null) {
             game.ventanaJuego1.dispose();
         }
         game.setScreen(new MenuPrincipal(game));

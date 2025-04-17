@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles;
+package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -12,7 +12,6 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
-import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -20,86 +19,96 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProyectilBoliBic implements Proyectiles {
+/**
+ * Proyectil Calcetín; se lanza en línea recta con rotación, causando daño y knockback a los enemigos en su trayectoria.
+ */
+public class ProyectilCalcetin implements Proyectiles {
     private static Texture textura;
     private Sprite sprite;
     private float velocidadProyectil;
+    private float multiplicadorVelocidad;
     private float distanciaMaxima;
     private float distanciaRecorrida;
     private boolean proyectilActivo;
     private float direccionX, direccionY;
-    private RenderParticulasProyectil renderParticulas;
+    private float rotationSpeed = VEL_ROTACION_CALCETIN;
     private Set<Enemigo> enemigosImpactados = new HashSet<>();
+    private float damageEscalado;
+    private boolean esCritico;
+    private Jugador jugador;
+    private RenderParticulasProyectil renderParticulasProyectil;
+    private Vector2 centroSprite;
     private float impactoTimer = 0;
-    private static final float IMPACTO_DURACION = 0.1f;
-    private static final Color DEFAULT_PARTICLE_COLOR = new Color(0, 0, 0.75f, 1);
+    private final Rectangle collisionRect = new Rectangle();
 
-    public ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil) {
+    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador, float extraDamage, Jugador jugador) {
         if (textura == null) {
-            textura = manager.get(ARMA_BOLIBIC, Texture.class);
+            textura = manager.get(ARMA_CALCETIN, Texture.class);
         }
+        this.distanciaMaxima = MAX_DISTANCIA;
+        this.distanciaRecorrida = 0;
         sprite = new Sprite(textura);
-        sprite.setSize(25, 25);
+        sprite.setSize(CALCETIN_W_SIZE, CALCETIN_H_SIZE);
+        sprite.setPosition(x, y);
+        sprite.setOriginCenter();
 
-        // Colocamos el sprite de modo que (x,y) sea la punta del proyectil
-        sprite.setPosition(x - sprite.getWidth() / 2, y - sprite.getHeight() / 2);
-
-        sprite.flip(true, false);
-        sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-
-        float offset = 315;
-        float angle = (float) Math.toDegrees(Math.atan2(dirY, dirX)) - offset;
-        sprite.setRotation(angle);
-
-        this.direccionX = dirX;
-        this.direccionY = dirY;
+        this.jugador = jugador;
         this.velocidadProyectil = velocidadProyectil;
-        this.distanciaMaxima = 333;
-        this.distanciaRecorrida = 0f;
+        this.direccionX = direccionX;
+        this.direccionY = direccionY;
+        this.multiplicadorVelocidad = multiplicadorVelocidad;
         this.proyectilActivo = true;
 
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
-        int maxLength = (int) (17.5f * scaleFactor);
-        float scaleWidth = 5f * scaleFactor;
-        this.renderParticulas = new RenderParticulasProyectil(maxLength, scaleWidth, DEFAULT_PARTICLE_COLOR);
+        int maxLength = (int) (17 * scaleFactor);
+        float adjustWidth = 6f * scaleFactor;
+        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, adjustWidth, new Color(1, 1, 1, 0.1f));
+        this.centroSprite = new Vector2();
+
+        float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
+        this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
     }
+
     @Override
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
 
-        // Calculamos el centro del sprite y la posición de la punta para el renderizado de partículas
-        Vector2 center = new Vector2(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-        Vector2 tipOffset = new Vector2(sprite.getWidth() / 2, sprite.getHeight() - 38f);
-        tipOffset.rotateDeg(sprite.getRotation());
-        Vector2 tip = center.cpy().add(tipOffset);
-        renderParticulas.update(tip);
+        // Actualizamos el centro del sprite y lo usamos para las partículas
+        centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+        renderParticulasProyectil.update(centroSprite);
 
         // Movemos el sprite según la dirección y velocidad
-        float desplazamiento = velocidadProyectil * delta;
+        float desplazamiento = velocidadProyectil * multiplicadorVelocidad * delta;
         sprite.translate(direccionX * desplazamiento, direccionY * desplazamiento);
         distanciaRecorrida += desplazamiento;
-        if (distanciaRecorrida >= distanciaMaxima) {
-            desactivarProyectil();
-        }
 
-        // Si hubo impacto, gestionamos el temporizador y reiniciamos el color de sprite y partículas
+        // Actualizamos la rotación del sprite
+        sprite.rotate(rotationSpeed * delta);
+
+        // Actualizamos el rectángulo de colisión preasignado
+        collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+
+        // Gestión de impacto y restauración de color
         if (!enemigosImpactados.isEmpty()) {
             impactoTimer += delta;
             if (impactoTimer >= IMPACTO_DURACION) {
-                // Se reinician los colores, pero no limpiamos el conjunto, evitando reimpactar al mismo enemigo
-                impactoTimer = 0;
                 sprite.setColor(1, 1, 1, 1);
-                renderParticulas.setColor(DEFAULT_PARTICLE_COLOR);
+                renderParticulasProyectil.setColor(new Color(1, 1, 1, 0.1f));
+                impactoTimer = 0;
             }
+        } else {
+            sprite.setColor(1, 1, 1, 1);
+        }
+
+        if (distanciaRecorrida >= distanciaMaxima) {
+            desactivarProyectil();
         }
     }
-
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (proyectilActivo) {
-            renderParticulas.setAlphaMult(0.75f);
-            renderParticulas.render(batch);
+            renderParticulasProyectil.render(batch);
             sprite.draw(batch);
         }
     }
@@ -107,7 +116,7 @@ public class ProyectilBoliBic implements Proyectiles {
     @Override
     public void dispose() {
         textura = null;
-        renderParticulas.dispose();
+        renderParticulasProyectil.dispose();
     }
 
     @Override
@@ -122,7 +131,7 @@ public class ProyectilBoliBic implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        return sprite.getBoundingRectangle();
+        return collisionRect;
     }
 
     @Override
@@ -137,13 +146,18 @@ public class ProyectilBoliBic implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        float baseDamage = 5 + MathUtils.random(DANYO_BOLIBIC);
-        return baseDamage * (1f + (Jugador.getPoderJugador() / 100f));
+        if (MathUtils.random() < jugador.getCritico()) {
+            esCritico = true;
+            return damageEscalado * 1.5f;
+        } else {
+            esCritico = false;
+            return damageEscalado;
+        }
     }
 
     @Override
     public float getKnockbackForce() {
-        return EMPUJE_BASE_BOLI;
+        return EMPUJE_BASE_CALCETIN;
     }
 
     @Override
@@ -156,8 +170,7 @@ public class ProyectilBoliBic implements Proyectiles {
         if (!enemigosImpactados.contains(enemigo)) {
             enemigosImpactados.add(enemigo);
             sprite.setColor(Color.RED);
-            renderParticulas.setColor(Color.RED);
-            GestorDeAudio.getInstance().reproducirEfecto("impactoBase",1);
+            renderParticulasProyectil.setColor(Color.RED);
             impactoTimer = 0;
         }
     }
@@ -169,6 +182,6 @@ public class ProyectilBoliBic implements Proyectiles {
 
     @Override
     public boolean esCritico() {
-        return Math.random() < Jugador.getCritico();
+        return esCritico;
     }
 }

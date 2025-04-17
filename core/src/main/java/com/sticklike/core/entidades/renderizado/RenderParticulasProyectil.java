@@ -39,37 +39,61 @@ public class RenderParticulasProyectil {
     }
 
     public void render(SpriteBatch batch) {
+        // Si hay pocos puntos, no se dibuja la estela
+        if (positions.size < 2) return;
+
         batch.end();
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        for (int i = 0; i < positions.size - 1; i++) {
+        // Array auxiliar para guardar las normales suavizadas
+        Array<Vector2> normals = new Array<>();
+        int count = positions.size;
+        float halfWidth = width / 2f;
+
+        // Calcular la normal en cada punto de la traza
+        for (int i = 0; i < count; i++) {
+            Vector2 current = positions.get(i);
+            Vector2 tangent = new Vector2();
+
+            if (i == 0) {
+                // Para el primer punto, usar la dirección al siguiente
+                tangent.set(positions.get(i + 1)).sub(current);
+            } else if (i == count - 1) {
+                // Para el último, usar la dirección del punto anterior
+                tangent.set(current).sub(positions.get(i - 1));
+            } else {
+                // Para puntos intermedios, promediar la dirección anterior y la siguiente
+                tangent.set(positions.get(i + 1)).sub(positions.get(i - 1));
+            }
+            tangent.nor();
+            // La normal se calcula como (–tangent.y, tangent.x)
+            normals.add(new Vector2(-tangent.y, tangent.x));
+        }
+
+        // Dibujar la estela como una malla continua
+        for (int i = 0; i < count - 1; i++) {
             Vector2 p1 = positions.get(i);
             Vector2 p2 = positions.get(i + 1);
+            Vector2 n1 = normals.get(i);
+            Vector2 n2 = normals.get(i + 1);
 
-            float angle = MathUtils.atan2(p2.y - p1.y, p2.x - p1.x);
-            float halfWidth = width / 2;
-            float x1 = p1.x - halfWidth * MathUtils.cos(angle + MathUtils.PI / 2);
-            float y1 = p1.y - halfWidth * MathUtils.sin(angle + MathUtils.PI / 2);
-            float x2 = p2.x - halfWidth * MathUtils.cos(angle + MathUtils.PI / 2);
-            float y2 = p2.y - halfWidth * MathUtils.sin(angle + MathUtils.PI / 2);
-            float x3 = p2.x + halfWidth * MathUtils.cos(angle + MathUtils.PI / 2);
-            float y3 = p2.y + halfWidth * MathUtils.sin(angle + MathUtils.PI / 2);
-            float x4 = p1.x + halfWidth * MathUtils.cos(angle + MathUtils.PI / 2);
-            float y4 = p1.y + halfWidth * MathUtils.sin(angle + MathUtils.PI / 2);
+            // Calcular los dos vértices en cada punto desplazando según la normal
+            Vector2 v1 = new Vector2(p1.x + n1.x * halfWidth, p1.y + n1.y * halfWidth);
+            Vector2 v2 = new Vector2(p1.x - n1.x * halfWidth, p1.y - n1.y * halfWidth);
+            Vector2 v3 = new Vector2(p2.x - n2.x * halfWidth, p2.y - n2.y * halfWidth);
+            Vector2 v4 = new Vector2(p2.x + n2.x * halfWidth, p2.y + n2.y * halfWidth);
 
-            // Calculamos el valor alpha para el fade y lo multiplicamos por alphaMult para gestionar individualmente el alpha
-            float alpha = (((float) i / (positions.size - 1)) * alphaMult);
+            // Calcular alfa para el segmento (puede ser un promedio, o según la posición en la traza)
+            float alpha = (((float) i / (count - 1)) * alphaMult);
             alpha = MathUtils.clamp(alpha, 0f, 1f);
             shapeRenderer.setColor(color.r, color.g, color.b, alpha);
 
-            // Dibujamos la forma como dos triángulos que forman un cuadrilátero
-            shapeRenderer.triangle(x1, y1, x2, y2, x3, y3);
-            shapeRenderer.triangle(x1, y1, x3, y3, x4, y4);
+            // Dibujar el cuadrilátero del segmento como dos triángulos
+            shapeRenderer.triangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
+            shapeRenderer.triangle(v1.x, v1.y, v3.x, v3.y, v4.x, v4.y);
         }
 
         shapeRenderer.end();
@@ -78,7 +102,11 @@ public class RenderParticulasProyectil {
     }
 
     public void dispose() {
-        shapeRenderer.dispose();
+        if (shapeRenderer != null){
+            shapeRenderer.dispose();
+            shapeRenderer = null;
+        }
+
     }
 
     public void setAlphaMult(float alphaMult) {

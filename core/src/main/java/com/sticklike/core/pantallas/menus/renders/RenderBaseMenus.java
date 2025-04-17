@@ -19,10 +19,16 @@ import java.util.function.IntSupplier;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
+// Se utiliza un FontManager para compartir la fuente común de menús
+import com.sticklike.core.entidades.objetos.texto.FontManager;
+
 public abstract class RenderBaseMenus {
     protected Stage stage;
     protected Skin uiSkin;
     protected ShapeRenderer shapeRenderer;
+    private static TextureRegionDrawable cachedBotonDrawable;
+    private static TextureRegionDrawable cachedHoverDrawable;
+    private static NinePatchDrawable cachedSelectedDrawable;
 
     public RenderBaseMenus() {
         stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
@@ -33,14 +39,12 @@ public abstract class RenderBaseMenus {
 
     protected Skin crearSkinBasico() {
         Skin skin = new Skin();
-        BitmapFont font = new BitmapFont();
-
+        BitmapFont font = FontManager.getMenuFont();
         skin.add("default-font", font);
         skin.add("default", crearLabelStyle(font, Color.BLACK), LabelStyle.class);
         skin.add("default-button", crearDefaultButtonStyle(font), TextButtonStyle.class);
         skin.add("hover-button", crearHoverButtonStyle(font), TextButtonStyle.class);
         skin.add("selected-button", crearSelectedButtonStyle(font), TextButtonStyle.class);
-
         return skin;
     }
 
@@ -56,51 +60,52 @@ public abstract class RenderBaseMenus {
         return style;
     }
 
-    // Crea un Drawable a partir de un Pixmap para el botón (fondo)
+    // Creamos y cacheamos un Drawable a partir de un Pixmap para el botón (fondo)
     private TextureRegionDrawable crearBotonDrawable() {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
-        pm.fill();
-        Texture tex = new Texture(pm);
-        pm.dispose();
-        return new TextureRegionDrawable(new TextureRegion(tex));
+        if (cachedBotonDrawable == null) {
+            Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            pm.setColor(0.97f, 0.88f, 0.6f, 1f);
+            pm.fill();
+            Texture tex = new Texture(pm);
+            pm.dispose();
+            cachedBotonDrawable = new TextureRegionDrawable(new TextureRegion(tex));
+        }
+        return cachedBotonDrawable;
     }
 
     private TextButtonStyle crearHoverButtonStyle(BitmapFont font) {
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
-
-        // Pixmap de 1x1 con relleno semitransparente (sin borde)
-        Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
-        hoverPixmap.fill();
-
-        Texture hoverTexture = new Texture(hoverPixmap);
-        hoverPixmap.dispose();
-
-        style.up = new TextureRegionDrawable(hoverTexture);
+        if (cachedHoverDrawable == null) {
+            Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            hoverPixmap.setColor(1, 1, 1, 0.3f);
+            hoverPixmap.fill();
+            Texture hoverTexture = new Texture(hoverPixmap);
+            hoverPixmap.dispose();
+            cachedHoverDrawable = new TextureRegionDrawable(new TextureRegion(hoverTexture));
+        }
+        style.up = cachedHoverDrawable;
         style.fontColor = Color.DARK_GRAY;
-
         return style;
     }
 
-
-
-    // Crea el estilo para el botón seleccionado (con efecto glow)
+    // Creamos y cacheamos el estilo para el botón seleccionado (con efecto glow)
     private TextButtonStyle crearSelectedButtonStyle(BitmapFont font) {
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
-        Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
-        glowPixmap.fill();
-        Texture glowTexture = new Texture(glowPixmap);
-        glowPixmap.dispose();
-        NinePatch glowNinePatch = new NinePatch(glowTexture, 5, 5, 5, 5);
-        style.up = new NinePatchDrawable(glowNinePatch);
+        if (cachedSelectedDrawable == null) {
+            Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
+            glowPixmap.setColor(1f, 1f, 1f, 0.8f);
+            glowPixmap.fill();
+            Texture glowTexture = new Texture(glowPixmap);
+            glowPixmap.dispose();
+            NinePatch glowNinePatch = new NinePatch(glowTexture, 5, 5, 5, 5);
+            cachedSelectedDrawable = new NinePatchDrawable(glowNinePatch);
+        }
+        style.up = cachedSelectedDrawable;
         style.fontColor = Color.BLUE;
         return style;
     }
-
 
     public void render(float delta) {
         // Limpieza de pantalla
@@ -129,15 +134,12 @@ public abstract class RenderBaseMenus {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
         shapeRenderer.rect(marginX - lineThickness / 2, startY, lineThickness, endY - startY);
-
         shapeRenderer.end();
 
         // Actualización y dibujo del Stage
         stage.act(delta);
         stage.draw();
     }
-
-
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -152,7 +154,6 @@ public abstract class RenderBaseMenus {
     public Stage getStage() {
         return stage;
     }
-
 
     protected Actor tituloConReborde(String text, float fontScale) {
         Stack stack = new Stack();
@@ -181,7 +182,7 @@ public abstract class RenderBaseMenus {
 
     protected Drawable papelFondo() {
         Pixmap pixmap = new Pixmap(200, 40, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.985f, 0.91f, 0.7f, 1.0f));
+        pixmap.setColor(0.985f, 0.91f, 0.7f, 1.0f);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
@@ -189,7 +190,7 @@ public abstract class RenderBaseMenus {
     }
 
     private void agregarVersionLabel() {
-        Label versionLabel = new Label("v1.10.16-dev", uiSkin);
+        Label versionLabel = new Label("v1.10.17-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
         versionLabel.setColor(Color.BLUE);
 
@@ -212,11 +213,10 @@ public abstract class RenderBaseMenus {
         // 1) Dibujamos la sombra como "anillos" concéntricos
         for (int i = 0; i < shadowSize; i++) {
             float alpha = 0.25f * ((float) i / (shadowSize - 1));
-            pixmap.setColor(new Color(shadowColor.r, shadowColor.g, shadowColor.b, alpha));
+            pixmap.setColor(shadowColor.r, shadowColor.g, shadowColor.b, alpha);
 
-            int offset = i;
-            int size = totalSize - offset * 2;
-            pixmap.drawRectangle(offset, offset, size, size);
+            int size = totalSize - i * 2;
+            pixmap.drawRectangle(i, i, size, size);
         }
 
         // 2) Rellenamos la zona del borde
@@ -260,14 +260,14 @@ public abstract class RenderBaseMenus {
         button.clearChildren();
         button.add(contentTable).expand().fill();
 
-        // Podrías guardar los dos labels en una clase auxiliar si quieres.
+        // Se utiliza una clase auxiliar para agrupar los labels
         button.setUserObject(new ButtonLabels(numberLabel, textLabel));
 
         return button;
     }
 
     protected void efectoHover(final java.util.List<TextButton> buttons,
-                                           final IntSupplier selectedIndexSupplier) {
+                               final IntSupplier selectedIndexSupplier) {
         for (final TextButton btn : buttons) {
             btn.addListener(new InputListener() {
                 @Override
@@ -277,7 +277,6 @@ public abstract class RenderBaseMenus {
                         btn.setStyle(uiSkin.get("hover-button", TextButtonStyle.class));
                     }
                 }
-
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     int idx = buttons.indexOf(btn);
@@ -289,43 +288,48 @@ public abstract class RenderBaseMenus {
         }
     }
 
-    protected void actualizarBotonResaltado(java.util.List<TextButton> buttons,
-                                         int selectedIndex) {
+    protected void actualizarBotonResaltado(java.util.List<TextButton> buttons, int selectedIndex) {
         TextButtonStyle defaultStyle = uiSkin.get("default-button", TextButtonStyle.class);
         TextButtonStyle selectedStyle = uiSkin.get("selected-button", TextButtonStyle.class);
 
         for (int i = 0; i < buttons.size(); i++) {
             TextButton button = buttons.get(i);
-            // Importante: usa la misma clase ButtonLabels de la base
             ButtonLabels labels = (ButtonLabels) button.getUserObject();
 
             if (i == selectedIndex) {
                 button.setStyle(selectedStyle);
-                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font,
-                    selectedStyle.fontColor));
-                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font,
-                    selectedStyle.fontColor));
+                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font, selectedStyle.fontColor));
+                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font, selectedStyle.fontColor));
             } else {
                 button.setStyle(defaultStyle);
-                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font,
-                    defaultStyle.fontColor));
-                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font,
-                    defaultStyle.fontColor));
+                labels.text.setStyle(new Label.LabelStyle(labels.text.getStyle().font, defaultStyle.fontColor));
+                labels.number.setStyle(new Label.LabelStyle(labels.number.getStyle().font, defaultStyle.fontColor));
             }
         }
     }
 
-
     protected void animarEntrada(Actor container, float heightOffset) {
         container.setPosition((VIRTUAL_WIDTH - container.getWidth()) / 2, -container.getHeight());
-        container.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - container.getWidth()) / 2, (VIRTUAL_HEIGHT - container.getHeight()) / heightOffset, 0.25f), Actions.fadeIn(0.5f))));
+        container.addAction(Actions.sequence(
+            Actions.delay(0.75f),
+            Actions.parallel(
+                Actions.moveTo((VIRTUAL_WIDTH - container.getWidth()) / 2, (VIRTUAL_HEIGHT - container.getHeight()) / heightOffset, 0.25f),
+                Actions.fadeIn(0.5f)
+            )
+        ));
         stage.addActor(container);
     }
 
     public void animarSalida(Actor container, Runnable callback) {
         float finalX = container.getX();
         float finalY = -container.getHeight();
-        container.addAction(Actions.sequence(Actions.parallel(Actions.moveTo(finalX, finalY, 0.25f), Actions.fadeOut(0.25f)), Actions.run(callback)));
+        container.addAction(Actions.sequence(
+            Actions.parallel(
+                Actions.moveTo(finalX, finalY, 0.25f),
+                Actions.fadeOut(0.25f)
+            ),
+            Actions.run(callback)
+        ));
     }
 
     public abstract void animarSalida(Runnable callback);

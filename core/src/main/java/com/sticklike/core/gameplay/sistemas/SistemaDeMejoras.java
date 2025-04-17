@@ -37,7 +37,7 @@ public class SistemaDeMejoras {
     }
 
     private void inicializarMejoras() {
-        // Mejora global (no relacionada con una habilidad, idHabilidad = null)
+        // STATS (no relacionada con una habilidad, idHabilidad = null)
         todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, manager.get(ICONO_VEL_MOV, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, manager.get(ICONO_RANGO, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 28%", () -> jugador.reducirIntervaloDisparo(0.22f), 5, manager.get(ICONO_VEL_ATAQUE, Texture.class), null));
@@ -52,13 +52,14 @@ public class SistemaDeMejoras {
             jugador.setVidaJugador(Jugador.getVidaJugador() + 15);
         }, 5, manager.get(ICONO_VIDA, Texture.class), null));
 
-        // Mejoras base para habilidades (se especifica el id de la habilidad; no contienen "_" en el id)
+        // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
         todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
         todasLasMejoras.add(new Mejora("LLUVIA DE MOCOS", "Llueven mocardones con impacto mucoso", () -> jugador.setAtaqueMocos(new AtaqueMocos()), 1, manager.get(ARMA_MOCO, Texture.class), "MOCO"));
         todasLasMejoras.add(new Mejora("BOLI BICAZO", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
+        todasLasMejoras.add(new Mejora("SABLE DILDO", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
 
         // Upgrades específicos para las habilidades
         // Calcetín
@@ -71,9 +72,6 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡CALCETÍN: PRECOZ!", "Aumenta velocidad de lanzamiento un 25%", () -> {
             jugador.getAtaqueCalcetin().aumentarVelocidadDisparo(0.25f);
         }, 3, null, "CALCETIN_speed"));
-        // Calcetín-ULTIMATE todo --> balancear un poco la ulti del calcetín y buscar forma de optimizarla...
-        /*todasLasMejoras.add(new Mejora("CALCETÍN: ULTIMATE",
-            "?????", ()-> {jugador.getAtaqueCalcetin().ultimateCALCETIN(1.25f);},1,null,"CALCETIN_vel"));*/
 
         // Tazo
         todasLasMejoras.add(new Mejora("¡TAZO: ROTATAZO!", "Aumenta la velocidad de rotación del tazo", () -> {
@@ -98,6 +96,17 @@ public class SistemaDeMejoras {
         }, 1, null, "PEDO_triple"));
 
         // PapelCulo
+        todasLasMejoras.add(new Mejora("¡PAPEL: DOBLE CARA!", "Lanzas 2 rollos de papel simultáneos", () -> {
+            jugador.getAtaquePapelCulo().setMejoraAmbosLados(true);
+        }, 1, null, "PAPEL_doble"));
+        todasLasMejoras.add(new Mejora("¡PAPEL: RÁPIDO!", "Aumenta la velocidad de lanzamiento del rollo", () -> {
+            jugador.getAtaquePapelCulo().aumentarVelocidadDisparo(0.33f);
+        }, 3, null, "PAPEL_rápido"));
+        todasLasMejoras.add(new Mejora("¡PAPEL: FRAGMENTACIÓN!", "El papel se fragmenta en rollos más pequeños al impactar", () -> {
+            jugador.getAtaquePapelCulo().setFragmentado(true);
+        }, 1, null, "PAPEL_frag"));
+
+        // LluviaMocos
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {

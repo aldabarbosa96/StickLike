@@ -54,8 +54,6 @@ public class Mensajes {
         this.labelStyle = new Label.LabelStyle();
         this.labelStyle.font = font;
         this.labelStyle.fontColor = Color.WHITE;
-
-        // Se crea el drawable con fondo redondeado directamente, eliminando el Pixmap 1x1 innecesario
         this.whiteBackground = createRoundedDrawable(500, 50, 20, Color.WHITE);
     }
 

@@ -40,6 +40,8 @@ public class GestorDeAssets {
     public static final String ARMA_PAPELCULO = "armas/05papelCulo.png";
     public static final String ARMA_MOCO = "armas/06moco.png";
     public static final String ARMA_BOLIBIC = "armas/07boliBic.png";
+    public static final String ARMA_DILDO = "armas/08dildo.png";
+
     // Drops y HUD
     public static final String TROFEO = "hud/trofeo.png";
     public static final String TROFEO2 = "hud/trofeo2.png";
@@ -73,7 +75,7 @@ public class GestorDeAssets {
     public static final String ICONO_VIDA = "hud/vida.png";
     public static final String ICONO_CALEAVELA_KILLS = "hud/calavera.png";
     public static final String TEXTURA_MARCO = "hud/marco2.png";
-    public static final String BOCADILLO = "hud/bocadillo.png";
+    public static final String DADOS = "hud/dados.png";
 
     // Boss y loading
     public static final String BOSS_POLLA = "enemigos/bossPolla.png";
@@ -120,6 +122,7 @@ public class GestorDeAssets {
         manager.load(ARMA_PAPELCULO, Texture.class);
         manager.load(ARMA_MOCO, Texture.class);
         manager.load(ARMA_BOLIBIC, Texture.class);
+        manager.load(ARMA_DILDO, Texture.class);
 
         manager.load(TROFEO, Texture.class);
         manager.load(TROFEO2, Texture.class);
@@ -154,7 +157,7 @@ public class GestorDeAssets {
         manager.load(ICONO_VIDA, Texture.class);
         manager.load(ICONO_CALEAVELA_KILLS, Texture.class);
         manager.load(TEXTURA_MARCO, Texture.class);
-        manager.load(BOCADILLO, Texture.class);
+        manager.load(DADOS, Texture.class);
 
         manager.load(BOSS_POLLA, Texture.class);
         manager.load(BOSS_POLLA_BOCACERRADA, Texture.class);

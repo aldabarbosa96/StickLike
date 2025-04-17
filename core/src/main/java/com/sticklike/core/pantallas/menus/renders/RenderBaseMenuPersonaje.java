@@ -35,7 +35,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         rootTable = new Table();
         rootTable.setFillParent(true);
 
-        // Configuración del ScrollPane (igual que antes)
+        // Configuración del ScrollPane
         ScrollPane.ScrollPaneStyle scrollStyle = new ScrollPane.ScrollPaneStyle();
         Pixmap blankPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         blankPixmap.setColor(1, 1, 1, 0);
@@ -45,7 +45,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         scrollStyle.background = blankDrawable;
         uiSkin.add("default", scrollStyle, ScrollPane.ScrollPaneStyle.class);
 
-        // Fondo "post-it" general (no animado)
+        // Fondo post-it general (no animado)
         TextureRegionDrawable postItDrawable = crearPostItDrawable();
 
         // Creación de los paneles originales
@@ -67,7 +67,6 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         verticalEquipo.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
         rightContainer.add(verticalEquipo);
 
-        // leftContainer (segundo contenedor) contiene el panel de ESTADÍSTICAS y, debajo, el indicador de oro.
         Table leftContainer = new Table();
         Table verticalStats = new Table();
         verticalStats.add(panelEstadisticas).center().padBottom(10);
@@ -77,7 +76,6 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         verticalStats.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
         leftContainer.add(verticalStats);
 
-        // Se añaden al rootTable en el mismo orden que antes
         rootTable.add(rightContainer).expand().fill().width(VIRTUAL_WIDTH / 2);
         rootTable.add(leftContainer).expand().fill().width(VIRTUAL_WIDTH / 2);
         stage.addActor(rootTable);
@@ -87,13 +85,13 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         panelEquipo.getColor().a = 0;
         panelEquipo.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
 
-        // Selector de ítems en el centro (se hace fade-in igual que el título)
+        // Selector de ítems en el centro
         Table selectorContainer = crearSelectorItems();
         selectorContainer.getColor().a = 0;
         selectorContainer.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
         stage.addActor(selectorContainer);
 
-        // Título principal (fade-in igual que antes)
+        // Título principal
         Actor titleActor = tituloConReborde("PERSONAJE", 2.25f);
         titleActor.getColor().a = 0;
         Table titleTable = new Table();
@@ -104,8 +102,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
     }
 
-
-    // Métodos auxiliares para crear los indicadores de oro y powerup:
+    // Métodos auxiliares para crear los indicadores de oro y powerup
     private Table crearContenedorOro() {
         Table container = new Table();
         Texture goldTexture = manager.get(RECOLECTABLE_CACA_DORADA, Texture.class);
@@ -138,7 +135,6 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         return container;
     }
 
-
     private NinePatchDrawable crearSombraConBordeRectangulo(Color shadowColor) {
         int totalWidth = 400 + 2 * (8 + 3);
         int totalHeight = 500 + 2 * (8 + 3);
@@ -151,10 +147,9 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         for (int i = 0; i < 8; i++) {
             float alpha = 0.25f * ((float) i / (8 - 1));
             pixmap.setColor(shadowColor.r, shadowColor.g, shadowColor.b, alpha);
-            int offset = i;
-            int w = totalWidth - 2 * offset;
-            int h = totalHeight - 2 * offset;
-            pixmap.drawRectangle(offset, offset, w, h);
+            int w = totalWidth - 2 * i;
+            int h = totalHeight - 2 * i;
+            pixmap.drawRectangle(i, i, w, h);
         }
 
         // 2) Zona del borde
@@ -168,10 +163,8 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         int insideOffset = 8 + 3;
         int insideW = totalWidth - 2 * insideOffset;
         int insideH = totalHeight - 2 * insideOffset;
-        if (insideW > 0 && insideH > 0) {
-            pixmap.setColor(0, 0, 0, 0);
-            pixmap.fillRectangle(insideOffset, insideOffset, insideW, insideH);
-        }
+        pixmap.setColor(0, 0, 0, 0);
+        pixmap.fillRectangle(insideOffset, insideOffset, insideW, insideH);
 
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
@@ -191,7 +184,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
 
-    // Panel izquierdo: "ESTADÍSTICAS"
+    // Panel derecho: "ESTADÍSTICAS"
     private Table crearPanelEstadisticas(TextureRegionDrawable postItDrawable) {
         // Contenedor interno con fondo "post-it"
         Table centerContainerLeft = new Table();
@@ -260,10 +253,9 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         agregarFilaEstadisticaConUpgrade(statsTable, ICONO_VEL_MOV, statVelMovimientoName, statVelMovimientoValue, 3);
         agregarFilaEstadisticaConUpgrade(statsTable, ICONO_RESISTENCIA, statResistenciaName, statResistenciaValue, 3);
 
-        // Agregar la tabla de estadísticas al contenedor con padding adecuado
         centerContainerLeft.add(statsTable).expandX().fillX().pad(10);
 
-        // Crear contenedor con sombra y borde para las estadísticas
+        // Creamos contenedor con sombra y borde para las estadísticas
         NinePatchDrawable sombraRebordeLeft = crearSombraConBordeRectangulo(new Color(0, 0, 0, 1f));
         Table leftWrapper = new Table();
         leftWrapper.setBackground(sombraRebordeLeft);
@@ -299,7 +291,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
         TextButton.TextButtonStyle plusStyle = new TextButton.TextButtonStyle();
         plusStyle.font = font;
-        plusStyle.fontColor = new Color(0,0.75f,0,1);
+        plusStyle.fontColor = new Color(0, 0.75f, 0, 1);
 
         TextButton plusButton = new TextButton("+", plusStyle);
         Label.LabelStyle shadowStyle = new Label.LabelStyle(font, Color.BLACK);
@@ -326,7 +318,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         });
     }
 
-    // Panel derecho: "EQUIPO" + stickman
+    // Panel izquierdo: "EQUIPO" + stickman
     private Table crearPanelEquipo() {
         // 1) Fondo de cuadrícula
         int cellSize = 50;
@@ -423,7 +415,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         pixmap.dispose();
         Image slotImage = new Image(new TextureRegionDrawable(new TextureRegion(texture)));
 
-        // Usamos un Table para incluir el slot y una etiqueta debajo (opcional)
+        // Usamos un Table para incluir el slot y una etiqueta debajo
         Table slotContainer = new Table();
         slotContainer.add(slotImage).size(slotSize, slotSize);
         BitmapFont font = new BitmapFont();
@@ -438,7 +430,6 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         slotContainer.setSize(slotSize, slotSize + 20);
         return slotContainer;
     }
-
 
     private Table crearSelectorItems() {
         Table itemsTable = new Table();

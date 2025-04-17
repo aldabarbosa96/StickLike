@@ -58,7 +58,7 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         // Si estamos en el estado de ajuste, interpolamos la posición
         if (ajustandoOrbita) {
             ajustarOrbita(delta, sprite);
-            return; // No se procesa el resto hasta finalizar la interpolación
+            return; // No procesamos el resto hasta finalizar la interpolación
         }
 
         float bossCenterX = sprite.getX() + sprite.getWidth() / 2f;
@@ -72,7 +72,7 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
         float difY = playerCenterY - bossCenterY;
         float dist = (float) Math.sqrt(difX * difX + difY * difY);
 
-        // ====== FASE 1: APROXIMACIÓN ======
+        // FASE 1: APROXIMACIÓN
         if (!haAlcanzadoDistanciaOrbita) {
             // Moverse hacia el jugador
             if (dist != 0) {
@@ -100,7 +100,7 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
                 sentidoHorario = MathUtils.randomBoolean();
             }
         }
-        // ====== FASE 2: ÓRBITA / CARGA ======
+        // FASE 2: ÓRBITA / CARGA
         else {
             temporizador += delta;
 

@@ -63,11 +63,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float POPUP_WIDTH = 330f * 1.4814814815f;
     public static final float POPUP_HEIGHT = 375f * 1.09375f;
-    public static final float POPUP_HEADER_PADDING = 50f;
+    public static final float POPUP_HEADER_PADDING = 75f;
     public static final float POPUP_ROW_PADDING = 13f;
     public static final float LABEL_WIDTH = 6f * 1.4814814815f;
     public static final float BUTTON_WIDTH = 225f * 1.4814814815f;
-    public static final float BUTTON_PADDING = 5f;
+    public static final float BUTTON_PADDING = 12f;
     public static final float POPUP_POSITION_CORRECTION = 150f * 1.09375f;
     public static final String[] POPUP_BUTTON_LABELS = {"X", "Y", "B", "A"};
 
@@ -82,7 +82,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Texto HUD
     // -------------------------------------------------
     public static final String TEXTO_LVL = "LVL:  ";
-    public static final String POPUP_HEADER = "\n\n<<< M E J O R A S >>> ";
+    public static final String POPUP_HEADER = "<<< M E J O R A S >>> ";
     public static final String POPUP_FOOTER = "  \n";
     public static final String POPUP_FOOTER2 = "   ";
     public static final String VEL_MOV = "Velocidad";
@@ -122,8 +122,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_MOV_JUGADOR = 125;
     public static final float DANYO = 25f;
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
-    public static final int VIDA_JUGADOR = 75;
-    public static final int VIDAMAX_JUGADOR = 75;
+    public static final int VIDA_JUGADOR = 50;
+    public static final int VIDAMAX_JUGADOR = 50;
     public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
     public static final float INTERVALO_MIN_DISPARO = 0.05f;
@@ -204,7 +204,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TEMPORIZADOR_EMPUJE = 0f;
     public static final float DURACION_EMPUJE = 0.25f;
     public static final float TEMPORIZADOR_ANIMACION_MOV = 0f;
-    public static final float DAMAGE_SPRITE_MUERTE = 0.08f;
+    public static final float DAMAGE_SPRITE_MUERTE_TIMER = 0.08f;
 
     // -------------------------------------------------
     // Configuración del proyectil
@@ -215,13 +215,14 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_CALCETIN = 13f;
     public static final float DANYO_PAPELCULO = 45f;
     public static final float DANYO_BOLIBIC = 25f;
+    public static final float DANYO_DILDO = 40f;
     public static final float EMPUJE_BASE_PAPELCULO = 200f;
     public static final float SPEED_MULT = 1.8f;
     public static final float PIEDRA_SIZE = 7f;
     public static final float CALCETIN_W_SIZE = 20.5f;
     public static final float CALCETIN_H_SIZE = 24.5f;
-    public static final float PAPELCULO_W_SIZE = 16.5f;
-    public static final float PAPELCULO_H_SIZE = 19;
+    public static final float PAPELCULO_W_SIZE = 18;
+    public static final float PAPELCULO_H_SIZE = 21;
     public static final float PAPELCULO_SPEED = 666f;
     public static final float PROJECTILE_BASE_DAMAGE = 8f; //todo --> gestionar en un futuro
     public static final float TEMPORIZADOR_DISPARO = 0f;
@@ -230,10 +231,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_CALCETIN = 100f;
     public static final float EMPUJE_BASE_PIEDRA = 75f;
     public static final float EMPUJE_BASE_BOLI = 150f;
+    public static final float EMPUJE_BASE_DILDO = 135f;
     public static final float MULT_DANYO = 1f;
-    public static final float TAZO_SIZE = 14.5f;
+    public static final float TAZO_SIZE = 15f;
     public static final float DURACION_NUBE_PEDO = 8f;
-    public static final float RADIO_TAZOS = 52.5f;
+    public static final float RADIO_TAZOS = 25f;
     public static final float RADIO_TAZOS_JUGADOR = 75f;
     public static final float VEL_ROTACION = 180f;
     public static final float INTERVALO_TAZOS = 0.1f;
@@ -241,7 +243,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int NUM_TAZOS = 2;
     public static final float INTERVALO_DANYO_TAZOS = 0.5f;
     public static final float DANYO_PEDO = 2.5f;
-    public static final float DELAY_ENTRE_PEDOS = 5f;
+    public static final float DELAY_ENTRE_PEDOS = 3.5f;
+    public static final float IMPACTO_DURACION = 0.1f;
 
     // -------------------------------------------------
     // Configuración TextoFlotante

@@ -36,6 +36,8 @@ public class RenderPausa {
     private Window windowOpciones;
     private float pauseWidth, pauseHeight, pauseSpacing, menuWidth, marginRight, marginTop;
     private Texture blankTexture;
+    private GlyphLayout layoutStart;
+    private GlyphLayout layoutPausa;
     private Array<TextButton> menuButtons = new Array<>();
     private int currentIndex = 0;
 
@@ -54,6 +56,8 @@ public class RenderPausa {
         hudViewport.apply();
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
+        layoutStart = new GlyphLayout();
+        layoutPausa = new GlyphLayout();
         pauseStage = new Stage(hudViewport);
         blankTexture = createSolidTexture(1, 1, Color.WHITE);
         crearSkin();
@@ -62,7 +66,6 @@ public class RenderPausa {
     }
 
     public void drawOverlay() {
-        hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
         spriteBatch.setColor(0, 0, 0, 0.5f);
@@ -72,7 +75,6 @@ public class RenderPausa {
     }
 
     public void drawPauseIcon(ShapeRenderer shapeRenderer) {
-        hudViewport.apply();
         shapeRenderer.setProjectionMatrix(hudCamera.combined);
         float extraVerticalOffset = -50f;
         float pauseButtonX = VIRTUAL_WIDTH - marginRight - menuWidth - START_BUTTON_CORRECTION;
@@ -80,7 +82,7 @@ public class RenderPausa {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(new Color(0.2f, 0.2f, 0.2f, 0.65f));
+        shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.65f);
         shapeRenderer.rect(pauseButtonX, pauseButtonY, menuWidth, menuWidth);
         float pauseX = pauseButtonX + (menuWidth - (pauseWidth * 2 + pauseSpacing)) / 2;
         float pauseY = pauseButtonY + (menuWidth - pauseHeight) / 2;
@@ -95,14 +97,13 @@ public class RenderPausa {
     }
 
     public void drawStartText() {
-        hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
         font.getData().setScale(0.8f);
         float extraVerticalOffset = -50f;
         float pauseButtonX = VIRTUAL_WIDTH - marginRight - menuWidth - START_BUTTON_CORRECTION;
         float pauseButtonY = VIRTUAL_HEIGHT - marginTop - menuWidth - BUTTON_PAUSE_Y_CORRECTION - extraVerticalOffset;
-        GlyphLayout layoutStart = new GlyphLayout(font, START);
+        layoutStart.setText(font, START);
         float startTextX = pauseButtonX + (menuWidth - layoutStart.width) / 2 - START_BUTTON_CORRECTION;
         float startTextY = pauseButtonY - 10;
         font.setColor(Color.BLUE);
@@ -120,11 +121,10 @@ public class RenderPausa {
     }
 
     public void drawPauseText() {
-        hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.begin();
         font.getData().setScale(2.5f);
-        GlyphLayout layoutPausa = new GlyphLayout(font, PAUSA);
+        layoutPausa.setText(font, PAUSA);
         float pauseTextX = (VIRTUAL_WIDTH - layoutPausa.width) / 2;
         float pauseTextY = (VIRTUAL_HEIGHT + layoutPausa.height) / 2 + 250f;
         font.setColor(Color.WHITE);
@@ -138,7 +138,6 @@ public class RenderPausa {
     }
 
     public void drawStage() {
-        hudViewport.apply();
         pauseStage.act(Gdx.graphics.getDeltaTime());
         pauseStage.draw();
     }
@@ -387,7 +386,7 @@ public class RenderPausa {
 
     private Drawable crearFondoPapelDrawable() {
         Pixmap pixmap = new Pixmap(200, 40, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.985f, 0.91f, 0.7f, 1.0f));
+        pixmap.setColor(0.985f, 0.91f, 0.7f, 1.0f);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
         pixmap.dispose();

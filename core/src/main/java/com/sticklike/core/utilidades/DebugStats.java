@@ -6,28 +6,65 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
+
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.util.List;
 
 public class DebugStats {
     private BitmapFont font;
+    private GlyphLayout layout; // Se declara una única instancia a nivel de clase.
     private boolean enabled;
-
-    // Variables para estadísticas adicionales
     private float tiempoEjecucion;
     private float acumuladorDelta;
     private int contadorFrames;
     private float deltaPromedio;
+    private float frameTimeMs;
+    private long accumulatedGCCount;
+    private long lastGCTime;
+    private long previousGCCount;
+    private long previousGCTime;
 
     public DebugStats() {
-        font = new BitmapFont();
+        font = FontManager.getDebugFont();
         font.getData().setScale(0.68f);
-        font.getData().markupEnabled = true; // Habilitamos el uso de etiquetas de color
+        font.getData().markupEnabled = true;
         font.setColor(Color.BLACK);
+        layout = new GlyphLayout();
         enabled = true;
         tiempoEjecucion = 0;
         acumuladorDelta = 0;
         contadorFrames = 0;
         deltaPromedio = 0;
+        frameTimeMs = 0;
 
+        accumulatedGCCount = 0;
+        previousGCCount = 0;
+        previousGCTime = 0;
+        updateGCStats();
+    }
+
+    private void updateGCStats() {
+        long currentCount = 0;
+        long currentTime = 0;
+        List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+        for (GarbageCollectorMXBean bean : gcBeans) {
+            long count = bean.getCollectionCount();
+            long time = bean.getCollectionTime();
+            currentCount += (count < 0 ? 0 : count);
+            currentTime += (time < 0 ? 0 : time);
+        }
+        long deltaCount = currentCount - previousGCCount;
+        long deltaTime = currentTime - previousGCTime;
+
+        accumulatedGCCount += deltaCount;
+        if (deltaTime > 0) {
+            lastGCTime = deltaTime;
+        }
+
+        previousGCCount = currentCount;
+        previousGCTime = currentTime;
     }
 
     public void update() {
@@ -38,10 +75,15 @@ public class DebugStats {
         tiempoEjecucion += delta;
         acumuladorDelta += delta;
         contadorFrames++;
+        frameTimeMs = delta * 1000f;
+
         if (acumuladorDelta >= 1f) {
             deltaPromedio = acumuladorDelta / contadorFrames;
             acumuladorDelta = 0;
             contadorFrames = 0;
+
+            // Actualizamos las estadísticas del GC cada segundo
+            updateGCStats();
         }
     }
 
@@ -52,7 +94,6 @@ public class DebugStats {
         float delta = Gdx.graphics.getDeltaTime();
         float javaHeapMB = Gdx.app.getJavaHeap() / (1024f * 1024f);
         float nativeHeapMB = Gdx.app.getNativeHeap() / (1024f * 1024f);
-
         float memoriaLibreMB = Runtime.getRuntime().freeMemory() / (1024f * 1024f);
         float memoriaTotalMB = Runtime.getRuntime().totalMemory() / (1024f * 1024f);
 
@@ -60,29 +101,14 @@ public class DebugStats {
         float x = margin;
         float y = virtualHeight - margin;
 
-        // Se agrupan todas las estadísticas en un único bloque usando markup para establecer colores colores.
-        String textoDebug = "[GREEN]FPS: " + fps + "[]\n\n" +
-            "[BLACK]Delta: " + String.format("%.3f", delta) + "\n" +
-            "JavaH: " + String.format("%.2f", javaHeapMB) + " MB\n" +
-            "NativeH: " + String.format("%.2f", nativeHeapMB) + " MB\n" +
-            "Runtime: " + String.format("%.1f", tiempoEjecucion) + " s\n" +
-            "Avg. Delta: " + String.format("%.3f", deltaPromedio) + "\n" +
-            "Free RAM: " + String.format("%.2f", memoriaLibreMB) + " MB\n" +
-            "Total RAM: " + String.format("%.2f", memoriaTotalMB) + " MB";
+        String textoDebug = "[GREEN]FPS: " + fps + "[]\n\n" + "[BLACK]Delta: " + String.format("%.3f", delta) + " s\n" + "Frame Time: " + String.format("%.2f", frameTimeMs) + " ms\n" + "JavaH: " + String.format("%.2f", javaHeapMB) + " MB\n" + "NativeH: " + String.format("%.2f", nativeHeapMB) + " MB\n" + "Runtime: " + String.format("%.1f", tiempoEjecucion) + " s\n" + "Avg. Delta: " + String.format("%.3f", deltaPromedio) + " s\n" + "Free RAM: " + String.format("%.2f", memoriaLibreMB) + " MB\n" + "Total RAM: " + String.format("%.2f", memoriaTotalMB) + " MB\n" + "GC Count: " + accumulatedGCCount + "\n" + "GC Time (last): " + lastGCTime + " ms";
 
-        GlyphLayout layout = new GlyphLayout(font, textoDebug);
+        // Actualizamos el layout con el nuevo texto, sin crear una nueva instancia
+        layout.setText(font, textoDebug);
         font.draw(batch, layout, x, y);
     }
 
     public void dispose() {
         font.dispose();
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
     }
 }

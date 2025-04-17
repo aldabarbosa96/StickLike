@@ -36,7 +36,7 @@ public class VentanaLoading implements Screen {
 
     @Override
     public void render(float delta) {
-        // Actualiza el timer y calcula cuántos "puntos" se deben mostrar
+        // Actualizamos el timer y calcula cuántos puntos suspensivos mostramos
         timer += delta;
         int dotIndex = (int) (timer / 0.25f) % 4;
 
@@ -46,7 +46,6 @@ public class VentanaLoading implements Screen {
         camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
 
-        // Texto base
         String textoBase = "Cagando";
         GlyphLayout layout = new GlyphLayout(font, textoBase);
 
@@ -59,7 +58,7 @@ public class VentanaLoading implements Screen {
         float iconSpacing = 5;
         float spaceBetweenTextIcons = 10;
 
-        // Calcula el ancho total del bloque de iconos
+        // Calculamos el ancho total del bloque de iconos
         float iconBlockWidth = dotIndex * (dotSize + iconSpacing);
         if (dotIndex > 0) {
             iconBlockWidth += spaceBetweenTextIcons;
@@ -105,6 +104,9 @@ public class VentanaLoading implements Screen {
     public void dispose() {
         font.dispose();
         dotTexture.dispose();
-        spriteBatch.dispose();
+        if (spriteBatch != null) {
+            spriteBatch.dispose();
+            spriteBatch = null;
+        }
     }
 }

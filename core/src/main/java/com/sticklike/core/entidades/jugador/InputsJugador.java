@@ -23,7 +23,7 @@ public class InputsJugador extends ControllerAdapter {
         }
     }
 
-    public ResultadoInput procesarInput(float delta) {
+    public ResultadoInput procesarInput() {
         float tecladoX = procesarInputTecladoX();
         float tecladoY = procesarInputTecladoY();
         float mandoX = procesarInputMandoX();
@@ -93,7 +93,7 @@ public class InputsJugador extends ControllerAdapter {
     }
 
     public void procesarInputYMovimiento(float delta, MovimientoJugador movimientoJugador, Jugador jugador) {
-        ResultadoInput result = this.procesarInput(delta);
+        ResultadoInput result = this.procesarInput();
         movimientoJugador.mover(jugador, result, delta);
         jugador.setDireccionActual(result.direction);
     }

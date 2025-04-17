@@ -15,7 +15,6 @@ import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
-import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
@@ -72,16 +71,11 @@ public class VentanaJuego1 implements Screen {
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
     private Array<ObjetosXP> objetosXP;
-    private Array<Enemigo> enemigosAEliminar;
-    private Array<Boost> boosts;
-
 
     private int currentScreenWidth;
     private int currentScreenHeight;
-
     private boolean pausado = false;
     private boolean musicChanged = false;
-
 
     public VentanaJuego1(MainGame game, int screenWidth, int screenHeight) {
         this.game = game;
@@ -148,8 +142,6 @@ public class VentanaJuego1 implements Screen {
     private void inicializarListas() {
         textosDanyo = new Array<>();
         objetosXP = new Array<>();
-        enemigosAEliminar = new Array<>();
-        boosts = new Array<>();
     }
 
     @Override
@@ -169,7 +161,7 @@ public class VentanaJuego1 implements Screen {
         pausa.handleInput(); // manejamos el pause cuando haya finalizado la carga
 
         if (jugador.estaMuerto()) {
-            game.setScreen(new VentanaGameOver(game));
+            game.setScreen(new VentanaGameOver(game, controladorProyectiles));
             return;
         }
 
@@ -202,12 +194,12 @@ public class VentanaJuego1 implements Screen {
         sistemaDeEventos.actualizar();
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
-        actualizarRecogidaXP(delta);
+        actualizarRecogidaObjetos(delta);
         actualizarTextoFlotante(delta);
 
     }
 
-    private void actualizarRecogidaXP(float delta) {
+    private void actualizarRecogidaObjetos(float delta) {
         // 1) Primero, actualizamos cada objeto
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
@@ -234,26 +226,29 @@ public class VentanaJuego1 implements Screen {
                     // 2b) Si es algún otro tipo de objeto XP (XP, vida, oro, trazo, etc.)
                 } else {
                     xp.recolectar(gestorDeAudio);
-
-                    if (xp instanceof ObjetoXp objetoXp) {
-                        float xpOtorgada = objetoXp.isEsXPGorda() ? 50f + MathUtils.random(50f) : 10f + MathUtils.random(15f);
-                        sistemaDeNiveles.agregarXP(xpOtorgada);
-
-                    } else if (xp instanceof ObjetoVida) {
-                        float vidaExtra = 6f + MathUtils.random(10f);
-                        float nuevaVida = jugador.getVidaJugador() + vidaExtra;
-                        if (nuevaVida > jugador.getMaxVidaJugador()) {
-                            nuevaVida = jugador.getMaxVidaJugador();
+                    switch (xp) {
+                        case ObjetoXp objetoXp -> {
+                            float xpOtorgada = switch (objetoXp.getTipo()) {
+                                case 0 -> 10f + MathUtils.random(15f);
+                                case 1 -> 50f + MathUtils.random(50f);
+                                case 2 -> 2 * (50f + MathUtils.random(50f));
+                                default -> 0f;
+                            };
+                            sistemaDeNiveles.agregarXP(xpOtorgada);
                         }
-                        jugador.setVidaJugador(nuevaVida);
-                        renderVentanaJuego1.triggerLifeFlash();
-
-
-                    } else if (xp instanceof ObjetoOro) {
-                        jugador.setOroGanado(jugador.getOroGanado() + 1);
-
-                    } else if (xp instanceof ObjetoPowerUp) {
-                        jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
+                        case ObjetoVida objetoVida -> {
+                            float vidaExtra = 6f + MathUtils.random(10f);
+                            float nuevaVida = jugador.getVidaJugador() + vidaExtra;
+                            if (nuevaVida > jugador.getMaxVidaJugador()) {
+                                nuevaVida = jugador.getMaxVidaJugador();
+                            }
+                            jugador.setVidaJugador(nuevaVida);
+                            renderVentanaJuego1.triggerLifeFlash();
+                        }
+                        case ObjetoOro objetoOro -> jugador.setOroGanado(jugador.getOroGanado() + 1);
+                        case ObjetoPowerUp objetoPowerUp -> jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
+                        default -> {
+                        }
                     }
                     objetosXP.removeIndex(i);
                 }
@@ -263,8 +258,7 @@ public class VentanaJuego1 implements Screen {
         // 3) Segunda pasada: eliminamos boosts que ya fueron recogidos y que expiraron
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
-            if (xp instanceof Boost) {
-                Boost boost = (Boost) xp;
+            if (xp instanceof Boost boost) {
                 if (boost.isCollected() && !boost.isActivo()) {
                     if (boost == boostActivo) {
                         boostActivo = null;
@@ -274,7 +268,6 @@ public class VentanaJuego1 implements Screen {
             }
         }
     }
-
 
     private void actualizarTextoFlotante(float delta) {
         for (int i = textosDanyo.size - 1; i >= 0; i--) {
@@ -337,18 +330,29 @@ public class VentanaJuego1 implements Screen {
 
     @Override
     public void dispose() {
-        spriteBatch.dispose();
-        shapeRenderer.dispose();
+        if (spriteBatch != null) {
+            spriteBatch.dispose();
+            spriteBatch = null;
+        }
+        if (shapeRenderer != null) {
+            shapeRenderer.dispose();
+            shapeRenderer = null;
+        }
         renderVentanaJuego1.dispose();
         popUpMejoras.dispose();
-        pausa.dispose();
-        pausa = null;
+
+        if (pausa != null) {
+            pausa.dispose();
+            pausa = null;
+        }
 
         if (jugador != null) {
             jugador.dispose();
+            jugador = null;
         }
         if (controladorEnemigos != null) {
             controladorEnemigos.dispose();
+            controladorEnemigos = null;
         }
 
         textosDanyo.clear();

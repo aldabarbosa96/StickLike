@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles;
+package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -29,19 +29,16 @@ public class NubePedo implements Proyectiles {
     private float powerFactor;
     private boolean esCritico;
 
-
-    // --- Estados para la animación ---
+    // Estados para la animación
     public enum Phase {GROWING, VIBRATE1, PAUSE, VIBRATE2, VIBRATE3, COOLDOWN}
 
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0;
-
     private static final float GROW_DURATION = 0.15f;
     private static final float VIBRATE1_DURATION = 0.3f;
     private static final float PAUSE_DURATION = 0.25f;
     private static final float VIBRATE2_DURATION = 0.3f;
     private static final float COOLDOWN_DURATION = 2.5f;
-
     private static final float MIN_SCALE = 0.1f;
     private float maxScale = 1.35f;
     private static final float MIN_ALPHA = 0.1f;
@@ -90,7 +87,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE1:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.45f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -120,7 +117,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE2:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.45f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -145,7 +142,7 @@ public class NubePedo implements Proyectiles {
                 break;
 
             case VIBRATE3:
-                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.35f);
+                GestorDeAudio.getInstance().reproducirEfecto("pedo", 0.45f);
                 if (phaseTimer < delta) {
                     enemigosImpactados.clear();
                 }
@@ -259,13 +256,12 @@ public class NubePedo implements Proyectiles {
 
     @Override
     public float getKnockbackForce() {
-        // Se aplica knockback solo durante las vibraciones
+        // Aplicamos knockback solo durante las vibraciones
         if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2 || phase == Phase.VIBRATE3) {
             return knockbackForce;
         }
         return 0f;
     }
-
 
     @Override
     public boolean isPersistente() {

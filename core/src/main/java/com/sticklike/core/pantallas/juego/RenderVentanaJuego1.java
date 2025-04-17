@@ -17,6 +17,9 @@ import com.sticklike.core.ui.HUD;
 import com.sticklike.core.ui.Mensajes;
 import com.sticklike.core.utilidades.PoissonPoints;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -27,7 +30,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Genera de forma procedural los elementos visuales del mapa.
  */
 
-public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar los borrones
+public class RenderVentanaJuego1 {
 
     private ShapeRenderer shapeRenderer;
     private VentanaLoading ventanaLoading;
@@ -39,10 +42,10 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
     private boolean flashVidaActivo = false;
     private float flashVidaTimer = 0f;
     private final float FLASH_VIDA_DURATION = 0.25f;
-
+    private ExecutorService executorService;
 
     // Clase interna que gestiona los borrones del mapa
-    private static class Borron { // todo --> (posteriormente se podría mover a una clase separada)
+    private static class Borron {
         Texture textura;
         float posX, posY;
         float scale;
@@ -54,7 +57,6 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
             this.posY = posY;
             this.scale = scale;
             this.rotation = rotation;
-
         }
     }
 
@@ -63,9 +65,13 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         this.ventanaLoading = new VentanaLoading();
         this.tamanyoCeldas = tamanyoCeldas;
 
+        // Inicializamos el ExecutorService; se usa un solo hilo
+        executorService = Executors.newSingleThreadExecutor();
+
         final Vector2 posicionInicialJugador = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
 
-        new Thread(new Runnable() {
+        // enviamos la tarea al ExecutorService en vez de crear un nuevo hilo
+        executorService.submit(new Runnable() {
             @Override
             public void run() {
                 long startTime = System.currentTimeMillis();
@@ -75,17 +81,15 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
                     try {
                         Thread.sleep(1500 - elapsed);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt(); // restauramos el estado de interrupción (buena praxis)
                     }
                 }
                 borronesListos.set(true);
             }
-        }).start();
+        });
     }
 
-
-    public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos,
-                                  Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
+    public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos, Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
 
         ventanaJuego1.actualizarPosCamara();
 
@@ -100,22 +104,22 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
             if (flashVidaTimer <= 0) {
                 flashVidaActivo = false;
             }
-        }else {
-                // 1) Limpiamos la pantalla
-                if (Jugador.getVidaJugador() <= 15) {
-                    if (jugador.getRenderJugador().isEnParpadeo()) {
-                        Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
-                    } else {
-                        Gdx.gl.glClearColor(0.92f, 0.8f, 0.8f, 1);
-                    }
+        } else {
+            // 1) Limpiamos la pantalla
+            if (Jugador.getVidaJugador() <= 15) {
+                if (jugador.getRenderJugador().isEnParpadeo()) {
+                    Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
                 } else {
-                    if (jugador.getRenderJugador().isEnParpadeo()) {
-                        Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
-                    } else {
-                        Gdx.gl.glClearColor(0.91f, 0.91f, 0.91f, 1);
-                    }
+                    Gdx.gl.glClearColor(0.92f, 0.8f, 0.8f, 1);
+                }
+            } else {
+                if (jugador.getRenderJugador().isEnParpadeo()) {
+                    Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
+                } else {
+                    Gdx.gl.glClearColor(0.91f, 0.91f, 0.91f, 1);
                 }
             }
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
@@ -168,6 +172,7 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
 
 
     }
+
     public void renderizarLineasCuadricula(OrthographicCamera camera) {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -195,18 +200,11 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         shapeRenderer.end();
     }
 
-
     private void generarBorronesRandom(int cantidad, Vector2 posicionInicialJugador) {
         borronesMapa = new Array<>();
 
-        // Definimos la región de generación a partir de los límites del mapa
-        float minX = MAP_MIN_X;
-        float minY = MAP_MIN_Y;
-        float maxX = MAP_MAX_X;
-        float maxY = MAP_MAX_Y;
-
         // Generamos puntos candidatos con Poisson Disk Sampling
-        Array<Vector2> candidateCenters = PoissonPoints.getInstance().generatePoissonPoints(minX, minY, maxX, maxY, POISSON_MIN_DISTANCE, POISSON_K);
+        Array<Vector2> candidateCenters = PoissonPoints.getInstance().generatePoissonPoints(MAP_MIN_X, MAP_MIN_Y, MAP_MAX_X, MAP_MAX_Y, POISSON_MIN_DISTANCE, POISSON_K);
         candidateCenters.shuffle();
 
         // Iteramos sobre los puntos candidatos y asignamos datos aleatorios a cada borrón
@@ -298,9 +296,21 @@ public class RenderVentanaJuego1 { // usamos posion disk sampling para organizar
         flashVidaTimer = FLASH_VIDA_DURATION;
     }
 
-
     public void dispose() {
-        shapeRenderer.dispose();
+        if (shapeRenderer != null) {
+            shapeRenderer.dispose();
+            shapeRenderer = null;
+        }
+
         ventanaLoading.dispose();
+
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+        }
     }
 }

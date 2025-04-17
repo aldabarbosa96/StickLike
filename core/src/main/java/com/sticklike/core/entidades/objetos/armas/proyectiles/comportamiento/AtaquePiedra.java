@@ -3,7 +3,7 @@ package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.ProyectilPiedra;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -22,7 +22,6 @@ public class AtaquePiedra {
         this.intervaloDisparo = intervaloDisparoInicial;
         storedDirection = null;
     }
-
 
     public boolean iniciarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         if (jug.getControladorEnemigos() == null) return false;
@@ -58,7 +57,7 @@ public class AtaquePiedra {
             if (proyectilesPendientes > 0) {
                 temporizadorEntreBalas += delta;
                 if (temporizadorEntreBalas >= intervaloEntreBalas) {
-                    // Si el target actual está muerto, buscar uno nuevo y actualizamos dirección
+                    // Si el target actual está muerto, buscamos uno nuevo y actualizamos dirección
                     if (target == null || target.estaMuerto()) {
                         Enemigo nuevoTarget = encontrarEnemigoMasCercano(jugador);
                         if (nuevoTarget != null) {
@@ -80,7 +79,7 @@ public class AtaquePiedra {
                     }
                 }
             } else {
-                // Por si acaso
+                // Por si acaso se interrumpe el target
                 volleyFinished = true;
                 temporizadorDisparo = 0;
             }

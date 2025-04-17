@@ -24,7 +24,6 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RenderBaseMenuOpciones extends RenderBaseMenus {
@@ -55,22 +54,20 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         fadeInActor(titleActor, 0.25f, 0.25f);
         stage.addActor(crearTitulo(titleActor));
 
-        // Creamos tabla de opciones con sliders, checkbox y botón Volver
         Table optionsTable = crearTablaOpciones();
 
-        // Usamos los métodos comunes de RenderMenus para fondo y borde
         Container<Table> innerContainer = new Container<>(optionsTable);
         innerContainer.setBackground(papelFondo());
         innerContainer.pad(20);
         innerContainer.pack();
 
         Container<Container<Table>> borderContainer = new Container<>(innerContainer);
-        borderContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY,10,Color.BLUE,2));
+        borderContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
         borderContainer.pack();
         mainContainer = borderContainer;
 
         // Posicionamos el contenedor fuera de la pantalla para animar su entrada
-       animarEntrada(mainContainer,2);
+        animarEntrada(mainContainer, 2);
     }
 
     private Table crearTablaOpciones() {
@@ -123,7 +120,6 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         optionsTable.add(checkTable).colspan(1).width(220);
         optionsTable.row().padTop(35);
 
-        // Botón Volver
         btnVolver = new TextButton("Volver", uiSkin, "default-button");
         addButtonListeners(btnVolver);
         btnVolver.getLabel().setColor(Color.BLACK);
@@ -214,7 +210,6 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         skin.add("default", new Label.LabelStyle(getFont(), Color.BLACK), Label.LabelStyle.class);
         skin.add("default-button", crearBotonDefault(), TextButton.TextButtonStyle.class);
         skin.add("default-horizontal", crearEstiloSliders(), Slider.SliderStyle.class);
-        // Aquí se registra el estilo para CheckBox con el nombre "default"
         skin.add("default", crearEstiloCheckbox(), CheckBox.CheckBoxStyle.class);
         skin.add("hover-button", crearHoverButton(), TextButton.TextButtonStyle.class);
         skin.add("selected-button", crearSelectedButton(), TextButton.TextButtonStyle.class);

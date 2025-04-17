@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoVater;
 
-public class AnimacionVater {
+public class AnimacionVater { // se implementa una enum para mejorar legibilidad, pero no se necesita como demuestra animacionesBossPolla (todo --> valorar como se deja en un futuro)
 
     private final EnemigoVater enemigoVater;
     private final AnimacionesBaseEnemigos animacionesBaseEnemigos;
@@ -34,7 +34,7 @@ public class AnimacionVater {
         tiempoCerrada = 0.15f;
     }
 
-    public void actualizarAnimacion(float delta, Sprite sprite) {
+    public void actualizarAnimacion(float delta, Sprite sprite) { // cierra o abre la tapa
         if (animacionesBaseEnemigos.estaEnParpadeo()) return;
 
         tiempoAnimacion += delta;

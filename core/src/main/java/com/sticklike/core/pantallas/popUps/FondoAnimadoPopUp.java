@@ -22,8 +22,7 @@ public class FondoAnimadoPopUp extends Actor {
     private static final Texture xpTexture3 =  manager.get(RECOLECTABLE_XP3, Texture.class);
     private List<Particle> particles;
     private float spawnTimer;
-    // Factor de damping para simular resistencia del agua (aplicamos solo a vx para que baje)
-    private static final float DAMPING = 0.98f;
+    private static final float DAMPING = 0.98f; // Factor de damping para simular resistencia del agua (aplicamos solo a vx para que baje)
     private static final float HUD_THRESHOLD = 240;
 
     public FondoAnimadoPopUp() {
@@ -39,7 +38,7 @@ public class FondoAnimadoPopUp extends Actor {
             spawnTimer = 0f;
             spawnParticle();
         }
-        // Actualiza las partículas y marca para fade-out o elimina las que ya han desaparecido
+        // Actualizamos las partículas y marcamos para fade-out o eliminamos las que ya han desaparecido
         Iterator<Particle> iter = particles.iterator();
         while (iter.hasNext()) {
             Particle p = iter.next();
@@ -69,13 +68,12 @@ public class FondoAnimadoPopUp extends Actor {
 
     private void spawnParticle() {
         float x = MathUtils.random() * VIRTUAL_WIDTH;
-        float y = VIRTUAL_HEIGHT;
         // Velocidad horizontal aleatoria
         float vx = (MathUtils.random() - 0.5f) * 50;
         // Velocidad vertical negativa para que caiga
         float vy = -(MathUtils.random() * 50 + 50);
         float size = MathUtils.random(30, 40);
-        particles.add(new Particle(x, y, vx, vy, selectTexture(), size, size));
+        particles.add(new Particle(x, VIRTUAL_HEIGHT, vx, vy, selectTexture(), size, size));
     }
 
     private Texture selectTexture() {

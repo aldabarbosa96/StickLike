@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.gameplay.progreso.Mejora;
@@ -64,7 +65,7 @@ public class RenderHUDComponents {
         this.sistemaDeNiveles = sistemaDeNiveles;
         this.shapeRenderer = shapeRenderer;
         this.layout = new GlyphLayout();
-        this.fuente = new BitmapFont();
+        this.fuente = FontManager.getHudFont();
         this.spriteBatch = spriteBatch;
         this.jugador = jugador;
         this.texturaCorazonVida = manager.get(RECOLECTABLE_VIDA, Texture.class);
@@ -79,7 +80,7 @@ public class RenderHUDComponents {
         hudViewport.apply();
         hudStage = new Stage(hudViewport, spriteBatch);
         chatlogStage = new Stage(hudViewport, spriteBatch);
-        Mensajes.init(chatlogStage, this,VentanaJuego1.getCamara(),spriteBatch);
+        Mensajes.init(chatlogStage, this, VentanaJuego1.getCamara(), spriteBatch);
     }
 
     public void renderizarTemporizador(float delta) {
@@ -320,7 +321,7 @@ public class RenderHUDComponents {
 
     // Se actualiza la posición vertical (baseY) del slot y marco del arma
     public void dibujarAtaqueBasico(Texture texturaArma) {
-        float slotSize = 40f;
+        float slotSize = 42.5f;
         float attackSlotSize = slotSize / 1.8f;
         float offsetX = 500;
         float baseX = VIRTUAL_WIDTH - offsetX;
@@ -348,10 +349,10 @@ public class RenderHUDComponents {
         float baseX = VIRTUAL_WIDTH - 435f;
         float baseY = 75f + EXTRA_HUD_HEIGHT;
         float colGap = 80f;
-        float rowGap = 50f;
+        float rowGap = 55f;
         int columns = 5;
         int totalSlots = 10;
-        float slotSize = 40f;
+        float slotSize = 45f;
         for (int i = 0; i < totalSlots; i++) {
             int rowIndex = i / columns;
             int colIndex = i % columns;
@@ -372,8 +373,14 @@ public class RenderHUDComponents {
                     style.imageUp = drawableIcono;
                     ImageButton boton = new ImageButton(style);
                     float margin = slotsList.get(i).width * 0.175f;
-                    boton.setSize(slotsList.get(i).width - 2 * margin, slotsList.get(i).height - 2 * margin);
-                    boton.setPosition(slotsList.get(i).x + margin, slotsList.get(i).y + margin * 1.75f);
+                    float margin2 = slotsList.get(i).width * 0.0375f;
+                    if (mejora.getIdHabilidad().equals("DILDO")) {
+                        boton.setSize(slotsList.get(i).width - 2, slotsList.get(i).height - 7.5f * margin2);
+                        boton.setPosition(slotsList.get(i).x + margin2, slotsList.get(i).y + margin * 1.35f);
+                    } else {
+                        boton.setSize(slotsList.get(i).width - 2 * margin, slotsList.get(i).height - 2 * margin);
+                        boton.setPosition(slotsList.get(i).x + margin, slotsList.get(i).y + margin * 1.5f);
+                    }
                     boton.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
