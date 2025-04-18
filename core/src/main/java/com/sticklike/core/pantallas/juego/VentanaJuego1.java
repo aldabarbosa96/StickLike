@@ -11,6 +11,7 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
+import com.sticklike.core.pantallas.popUps.PopUpMejorasController;
 import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
@@ -65,6 +66,7 @@ public class VentanaJuego1 implements Screen {
     private ControladorProyectiles controladorProyectiles;
     private GestorDeAudio gestorDeAudio;
     private PopUpMejoras popUpMejoras;
+    private PopUpMejorasController popUpMejorasController;
     private Pausa pausa;
     private Boost boostActivo;
 
@@ -122,9 +124,9 @@ public class VentanaJuego1 implements Screen {
 
     private void inicializarSistemasYControladores() {
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
-        this.popUpMejoras = new PopUpMejoras(sistemaDeMejoras, this);
+        popUpMejoras = new PopUpMejoras();
+        popUpMejorasController = new PopUpMejorasController(sistemaDeMejoras,this,popUpMejoras);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras, popUpMejoras);
-
         controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
 
@@ -285,7 +287,7 @@ public class VentanaJuego1 implements Screen {
     }
 
     public void mostrarPopUpDeMejoras(final List<Mejora> mejoras) {
-        popUpMejoras.mostrarPopUpMejoras(mejoras);
+        popUpMejorasController.show(mejoras);
         setPausado(true);
         reproducirSonidoUpgrade();
     }

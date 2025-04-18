@@ -6,83 +6,123 @@ import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.Proyecti
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 public class AtaqueBoliBic {
+
+    // ――― AJUSTES DE DISPARO ―――
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo = 0.75f;
 
-    // Vector de puntería continuo que se actualiza cada frame; se inicializa a (1,0) y se irá modificando
-    private float aimX = 1f;
-    private float aimY = 0f;
+    // ráfagas acumulables -----------
+    private int proyectilesPorRafaga = 1;   // 1 = disparo simple
+    private int rafagaRestante = 0;
+    private static final float INTERVALO_RAFAGA = 0.12f;
 
-    public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
-        // Actualizamos la puntería en cada frame según el input
-        actualizarAim(delta, jugador);
+    // otros upgrades ----------------
+    private boolean ricochet = false;
+    private boolean splitShotActivo = false;
+    private static final float OFFSET_SPLIT = 8f;
 
-        temporizadorDisparo += delta;
-        if (temporizadorDisparo >= intervaloDisparo) {
-            temporizadorDisparo = 0f;
-            procesarAtaque(jugador, gestorDeAudio);
-        }
+    // vector de puntería continuo
+    private float aimX = 1f, aimY = 0f;
+
+    public void mejorarDoubleTap() {
+        proyectilesPorRafaga++;
     }
 
-    private void actualizarAim(float delta, Jugador jug) {
-        InputsJugador.ResultadoInput input = jug.getInputController().procesarInput();
+    public void activarRicochet() {
+        ricochet = true;
+    }
 
-        // Usamos el input como dirección objetivo
-        // Si no hay input (por ejemplo, teclas soltadas), mantenemos el vector actual
-        float targetX = input.movX;
-        float targetY = input.movY;
-        if (targetX == 0 && targetY == 0) {
-            targetX = aimX;
-            targetY = aimY;
-        }
+    public void activarSplitShot() {
+        splitShotActivo = true;
+    }
 
-        // Normalizamos el vector objetivo para asegurar magnitud 1
-        float magTarget = (float) Math.sqrt(targetX * targetX + targetY * targetY);
-        if (magTarget != 0) {
-            targetX /= magTarget;
-            targetY /= magTarget;
-        }
+    /*-----------------------------------------------------------
+     *  BUCLE DE DISPARO
+     *----------------------------------------------------------*/
+    public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio audio) {
+        actualizarAim(delta, jugador);
+        temporizadorDisparo += delta;
 
-        // Calculamos la diferencia angular entre la dirección actual y la objetivo. Usamos atan2 para obtener los ángulos en grados
-        float currentAngle = (float) Math.toDegrees(Math.atan2(aimY, aimX));
-        float targetAngle = (float) Math.toDegrees(Math.atan2(targetY, targetX));
-        float diff = (((targetAngle - currentAngle) + 180 + 360) % 360) - 180;
-
-        // Si el cambio es muy grande (por ejemplo, ≥ 90°), saltamos instantáneamente
-        if (Math.abs(diff) >= 90f) {
-            aimX = targetX;
-            aimY = targetY;
-        } else {
-            // Si el cambio es moderado, se interpola de forma suave
-            float lerpFactor = 5f * delta;
-            aimX = lerp(aimX, targetX, lerpFactor);
-            aimY = lerp(aimY, targetY, lerpFactor);
-            // Normalizamos nuevamente para evitar errores por la interpolación.
-            float magAim = (float) Math.sqrt(aimX * aimX + aimY * aimY);
-            if (magAim != 0) {
-                aimX /= magAim;
-                aimY /= magAim;
+        if (proyectilesPorRafaga > 1) {                     // ――― modo ráfaga ―――
+            if (rafagaRestante > 0) {
+                if (temporizadorDisparo >= INTERVALO_RAFAGA) {
+                    temporizadorDisparo = 0f;
+                    procesarAtaque(jugador, audio);
+                    rafagaRestante--;
+                }
+            } else if (temporizadorDisparo >= intervaloDisparo) {
+                temporizadorDisparo = 0f;
+                procesarAtaque(jugador, audio);
+                rafagaRestante = proyectilesPorRafaga - 1;  // -1 porque ya lanzamos el primero
+            }
+        } else {                                            // ――― disparo simple ―――
+            if (temporizadorDisparo >= intervaloDisparo) {
+                temporizadorDisparo = 0f;
+                procesarAtaque(jugador, audio);
             }
         }
     }
 
-    // Función lineal de interpolación (lerp) entre dos valores
+    /*-----------------------------------------------------------
+     *  LÓGICA DE PUNTERÍA
+     *----------------------------------------------------------*/
+    private void actualizarAim(float delta, Jugador jug) {
+        InputsJugador.ResultadoInput i = jug.getInputController().procesarInput();
+        float tx = (i.movX != 0 || i.movY != 0) ? i.movX : aimX;
+        float ty = (i.movY != 0 || i.movX != 0) ? i.movY : aimY;
+
+        float mag = (float) Math.hypot(tx, ty);
+        if (mag != 0) {
+            tx /= mag;
+            ty /= mag;
+        }
+
+        float a0 = (float) Math.toDegrees(Math.atan2(aimY, aimX));
+        float a1 = (float) Math.toDegrees(Math.atan2(ty, tx));
+        float diff = (((a1 - a0) + 180 + 360) % 360) - 180;
+
+        if (Math.abs(diff) >= 90f) {
+            aimX = tx;
+            aimY = ty;
+        } else {
+            float f = 5f * delta;
+            aimX = lerp(aimX, tx, f);
+            aimY = lerp(aimY, ty, f);
+            float m2 = (float) Math.hypot(aimX, aimY);
+            if (m2 != 0) {
+                aimX /= m2;
+                aimY /= m2;
+            }
+        }
+    }
+
     private float lerp(float a, float b, float t) {
         return a + t * (b - a);
     }
 
-    public void procesarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
-        float playerCenterX = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
-        float playerCenterY = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
+    /*-----------------------------------------------------------
+     *  CREACIÓN DE PROYECTILES
+     *----------------------------------------------------------*/
+    private void procesarAtaque(Jugador jug, GestorDeAudio audio) {
+        float px = jug.getSprite().getX() + jug.getSprite().getWidth() / 2f;
+        float py = jug.getSprite().getY() + jug.getSprite().getHeight() / 2f;
 
-        // Usamos el vector de puntería actual para determinar la dirección del disparo
-        float dirX = aimX;
-        float dirY = aimY;
+        float dx = aimX, dy = aimY;
 
-        // Creamos el proyectil con la dirección obtenida
-        ProyectilBoliBic proyectil = new ProyectilBoliBic(playerCenterX, playerCenterY, dirX, dirY, 500);
-        jug.getControladorProyectiles().anyadirNuevoProyectil(proyectil);
+        if (splitShotActivo) {                       // abanico ±4°
+            double rad = Math.toRadians(OFFSET_SPLIT * .5f);
+            float c = (float) Math.cos(rad), s = (float) Math.sin(rad);
+            lanzarBoli(px, py, dx * c - dy * s, dx * s + dy * c, jug, audio);
+            lanzarBoli(px, py, dx * c + dy * s, -dx * s + dy * c, jug, audio);
+        } else {
+            lanzarBoli(px, py, dx, dy, jug, audio);
+        }
+    }
 
-        gestorDeAudio.reproducirEfecto("boli", 0.5f);
+    private void lanzarBoli(float x, float y, float dx, float dy, Jugador jug, GestorDeAudio audio) {
+        ProyectilBoliBic p = new ProyectilBoliBic(x, y, dx, dy, 500);
+        if (ricochet) p.enableBounce(1);
+        jug.getControladorProyectiles().anyadirNuevoProyectil(p);
+        audio.reproducirEfecto("boli", 0.5f);
     }
 }

@@ -116,6 +116,17 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡MOCOS: SANGRIENTOS!", "Mocos de sangre que aplican un 250% de daño", () -> {
             jugador.getAtaqueMocos().mocosConSangre();
         }, 1, null, "MOCO_sangre"));
+
+        // BoliBic
+        todasLasMejoras.add(new Mejora("¡BOLI: RICOCHET!", "Los bolis rebotan una vez al impactar", () ->
+            jugador.getAtaqueBoliBic().activarRicochet(),
+            1, null, "BOLI_ricochet"));
+        todasLasMejoras.add(new Mejora("¡BOLI: DOBLE TAP!", "Dispara 2 bolis seguidos", () ->
+            jugador.getAtaqueBoliBic().mejorarDoubleTap(),
+            3, null, "BOLI_doble"));
+        todasLasMejoras.add(new Mejora("¡BOLI: ABANICO!", "Añade +1 boli y dispara en abanico", () ->
+            jugador.getAtaqueBoliBic().activarSplitShot(), 1, null, "BOLI_split"));
+
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {
