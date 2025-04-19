@@ -92,6 +92,7 @@ public class VentanaLoading implements Screen {
 
     @Override
     public void hide() {
+        dispose();
     }
 
     @Override

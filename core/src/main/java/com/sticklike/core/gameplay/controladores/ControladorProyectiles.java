@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.LatigoDildo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.LluviaMocos;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilPapelCulo;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilTazo;
@@ -37,88 +39,103 @@ public class ControladorProyectiles {
     }
 
     public void actualizarProyectiles(float delta, Array<Enemigo> enemies, Array<TextoFlotante> dmgText) {
+
         ultimaYTexto.clear();
 
         Iterator<Proyectiles> iterator = proyectiles.iterator();
-        // Se extrae la variable local para el multiplicador de daño
         float multDanyo = multiplicadorDeDanyo;
 
         while (iterator.hasNext()) {
             Proyectiles proyectil = iterator.next();
             proyectil.actualizarProyectil(delta);
 
-            // Cachear datos del proyectil usados varias veces en el bucle de colisión
             float projX = proyectil.getX();
             float projY = proyectil.getY();
             Rectangle projRect = proyectil.getRectanguloColision();
 
             for (Enemigo enemigo : enemies) {
+
                 boolean colision = false;
 
-                if (proyectil instanceof ProyectilTazo) {
-                    colision = estaEnRadioTazo(enemigo, proyectil);
-                } else if (proyectil instanceof ProyectilPapelCulo proyectilPapelCulo) {
-                    if (proyectilPapelCulo.isImpactoAnimacionActiva()) {
-                        // Usar el área circular de la explosión
-                        Circle explosionArea = proyectilPapelCulo.getCirculoColision();
-                        // Calculamos la posición central del enemigo una sola vez
-                        float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                        float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
-                        colision = explosionArea.contains(enemyCenterX, enemyCenterY);
-                    } else {
-                        colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
+                /* ======================= 1) Colisión por tipo ======================= */
+                switch (proyectil) {
+                    case ProyectilTazo proyectilTazo -> colision = estaEnRadioTazo(enemigo, proyectil);
+                    case ProyectilPapelCulo proyectilPapelCulo -> {
+
+                        if (proyectilPapelCulo.isImpactoAnimacionActiva()) {
+                            Circle explosionArea = proyectilPapelCulo.getCirculoColision();
+                            float enemyCX = enemigo.getX() + enemigo.getSprite().getWidth() * 0.5f;
+                            float enemyCY = enemigo.getY() + enemigo.getSprite().getHeight() * 0.5f;
+                            colision = explosionArea.contains(enemyCX, enemyCY);
+                        } else {
+                            colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
+                        }
                     }
-                } else {
-                    colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
+                    case LatigoDildo dildo when dildo.isHaloActivo() -> {
+                        /* Recorremos cada “segmento” del halo */
+                        for (Vector2 base : dildo.getPuntosHalo()) {
+                            float hx = base.x + dildo.getLado() * dildo.getHaloTravel();
+                            float hy = base.y;
+
+                            if (enemigo.esGolpeadoPorProyectil(hx, hy, dildo.getHaloW(), dildo.getHaloH())) {
+                                colision = true;
+                                break; // ya tenemos colisión con este enemigo
+                            }
+                        }
+
+                        /* --------------- Cualquier otro proyectil ------------------- */
+                    }
+                    default -> colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
                 }
 
-                if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() &&
-                    !proyectil.yaImpacto(enemigo) && colision) {
+                /* ======================= 2) Si hay colisión ========================= */
+                if (enemigo.getVida() > 0 && proyectil.isProyectilActivo() && colision && !proyectil.yaImpacto(enemigo)) {
 
-                    // 1) Calcular daño
+                    /* 2.1) DAÑO */
                     float baseDamage = proyectil.getBaseDamage();
                     float damage = baseDamage * multDanyo;
-
-                    // 2) Aplicar daño y parpadeo
                     enemigo.reducirSalud(damage);
                     enemigo.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
 
-                    // Aplicar knockback solo si no es ProyectilPapelCulo
-                    if (!(proyectil instanceof ProyectilPapelCulo)) {
+                    /* 2.2) KNOCKBACK */
+                    if (proyectil instanceof LatigoDildo dildo && dildo.isHaloActivo()) {
+                        // Empuje sólo horizontal en la dirección del halo
+                        enemigo.aplicarKnockback(proyectil.getKnockbackForce(), dildo.getLado(), 0f);
+                    } else if (!(proyectil instanceof ProyectilPapelCulo)) {
                         aplicarKnockback(enemigo, proyectil);
                     }
 
-                    // 3) Generar texto flotante
-                    float baseX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                    float posicionTextoY = enemigo.getY() + enemigo.getSprite().getHeight() + DESPLAZAMIENTOY_TEXTO2;
-                    Float ultimaY = ultimaYTexto.get(enemigo);
-                    if (ultimaY != null) {
-                        posicionTextoY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
-                    }
-                    boolean golpeCritico = proyectil.esCritico();
-                    TextoFlotante damageText = new TextoFlotante(String.valueOf((int) damage), baseX, posicionTextoY, DURACION_TEXTO, FontManager.getDamageFont(), golpeCritico);
-                    dmgText.add(damageText);
+                    /* 2.3) TEXTO DE DAÑO */
+                    float baseX = enemigo.getX() + enemigo.getSprite().getWidth() * 0.5f;
+                    float posY = enemigo.getY() + enemigo.getSprite().getHeight() + DESPLAZAMIENTOY_TEXTO2;
 
-                    ultimaYTexto.put(enemigo, posicionTextoY);
+                    Float ultimaY = ultimaYTexto.get(enemigo);
+                    if (ultimaY != null) posY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
+
+                    TextoFlotante texto = new TextoFlotante(String.valueOf((int) damage), baseX, posY, DURACION_TEXTO, FontManager.getDamageFont(), proyectil.esCritico());
+                    dmgText.add(texto);
+                    ultimaYTexto.put(enemigo, posY);
+
+                    /* 2.4) Registrar impacto y posible desactivación */
                     proyectil.registrarImpacto(enemigo);
 
-                    // Desactivar si el proyectil no es persistente
                     if (!proyectil.isPersistente()) {
                         proyectil.desactivarProyectil();
-                        break;
+                        break; // No seguimos comprobando con otros enemigos
                     }
                 }
             }
 
-            // Eliminamos proyectiles inactivos (las nubes se eliminan automáticamente cuando tiempoVida <= 0)
+            /* ======================= 3) Limpiar inactivos ========================= */
             if (!proyectil.isProyectilActivo()) {
                 iterator.remove();
-                if (proyectil instanceof ProyectilTazo) {
-                    ((ProyectilTazo) proyectil).getAtaqueTazo().reducirTazosActivos();
+                if (proyectil instanceof ProyectilTazo tazo) {
+                    tazo.getAtaqueTazo().reducirTazosActivos();
                 }
             }
         }
     }
+
 
     private void aplicarKnockback(Enemigo enemigo, Proyectiles proyectil) {
         float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
@@ -204,7 +221,7 @@ public class ControladorProyectiles {
 
     public void dispose() {
         for (Proyectiles proyectil : proyectiles) {
-            if (proyectil != null){
+            if (proyectil != null) {
                 proyectil.dispose();
             }
 

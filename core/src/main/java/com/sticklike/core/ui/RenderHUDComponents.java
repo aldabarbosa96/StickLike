@@ -468,4 +468,5 @@ public class RenderHUDComponents {
     public ControladorEnemigos getControladorEnemigos() {
         return controladorEnemigos;
     }
+
 }

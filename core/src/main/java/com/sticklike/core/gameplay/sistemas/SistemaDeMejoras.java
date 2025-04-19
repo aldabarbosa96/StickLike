@@ -127,6 +127,16 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡BOLI: ABANICO!", "Añade +1 boli y dispara en abanico", () ->
             jugador.getAtaqueBoliBic().activarSplitShot(), 1, null, "BOLI_split"));
 
+        // LátigoDildo
+        todasLasMejoras.add(new Mejora("DILDO: HALO", "Proyecta una onda de energía perforante", () ->
+            jugador.getAtaqueDildo().activarHaloEnergia(),
+            1, null, "DILDO_halo"));
+        todasLasMejoras.add(new Mejora("DILDO: DOBLE", "Repite el golpe una vez más", () ->
+            jugador.getAtaqueDildo().activarGolpeDoble(),
+            2, null, "DILDO_doble"));
+        todasLasMejoras.add(new Mejora("DILDO: VELOZ", "Multiplica x2 la velocidad de golpeo", () ->
+            jugador.getAtaqueDildo().mejorarVelocidadSwing(),
+            1, null, "DILDO_veloz"));
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {
