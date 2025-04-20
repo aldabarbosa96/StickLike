@@ -92,7 +92,7 @@ public class VentanaLoading implements Screen {
 
     @Override
     public void hide() {
-        dispose();
+        dispose(); // todo --> testear si da error al llegar a niveles elevados
     }
 
     @Override

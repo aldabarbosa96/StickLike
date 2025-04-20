@@ -231,6 +231,8 @@ public class RenderPausa {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ventanaJuego1.reproducirSonidoPausa();
+                ventanaJuego1.dispose();
+                ventanaJuego1.getGame().ventanaJuego1 = null;
                 ventanaJuego1.getGame().setScreen(new MenuPrincipal(ventanaJuego1.getGame()));
             }
         });
@@ -245,6 +247,7 @@ public class RenderPausa {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
+                //System.exit(0); todo --> no debería ser necesario forzar el cierre del LWJGL3
             }
         });
         TextButton btnVolver = createButton("Volver", new ClickListener() {

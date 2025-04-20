@@ -328,7 +328,6 @@ public class VentanaJuego1 implements Screen {
 
     @Override
     public void hide() {
-        dispose();
     }
 
     @Override

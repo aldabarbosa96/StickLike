@@ -85,7 +85,7 @@ public class ControladorProyectiles {
 
                         /* --------------- Cualquier otro proyectil ------------------- */
                     }
-                    default -> colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
+                    default -> colision = enemigo.esGolpeadoPorProyectil(projRect.x, projRect.y, projRect.width, projRect.height);
                 }
 
                 /* ======================= 2) Si hay colisión ========================= */

@@ -80,6 +80,10 @@ public class MenuPrincipal extends ScreenAdapter {
     private void ejecutarAccion(int index) {
         switch(index) {
             case 0: // Jugar
+                if (game.ventanaJuego1 != null) {
+                    game.ventanaJuego1.dispose();
+                    game.ventanaJuego1 = null;
+                }
                 GestorDeAudio.getInstance().detenerMusica();
                 Controllers.removeListener(inputsMenu);
                 Gdx.input.setInputProcessor(null);
