@@ -71,21 +71,25 @@ public class ControladorProyectiles {
                             colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
                         }
                     }
-                    case LatigoDildo dildo when dildo.isHaloActivo() -> {
-                        /* Recorremos cada “segmento” del halo */
-                        for (Vector2 base : dildo.getPuntosHalo()) {
-                            float hx = base.x + dildo.getLado() * dildo.getHaloTravel();
-                            float hy = base.y;
-
-                            if (enemigo.esGolpeadoPorProyectil(hx, hy, dildo.getHaloW(), dildo.getHaloH())) {
-                                colision = true;
-                                break; // ya tenemos colisión con este enemigo
+                    case LatigoDildo dildo -> {
+                        // 1) comprobación melee
+                        if (enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height)) {
+                            colision = true;
+                        }
+                        // 2) si tiene halo y no colisionado aún, comprueba segmentos
+                        else if (dildo.isHaloActivo()) {
+                            for (Vector2 base : dildo.getPuntosHalo()) {
+                                float hx = base.x + dildo.getLado() * dildo.getHaloTravel();
+                                float hy = base.y;
+                                if (enemigo.esGolpeadoPorProyectil(hx, hy, dildo.getHaloW(), dildo.getHaloH())) {
+                                    colision = true;
+                                    break;
+                                }
                             }
                         }
-
-                        /* --------------- Cualquier otro proyectil ------------------- */
                     }
-                    default -> colision = enemigo.esGolpeadoPorProyectil(projRect.x, projRect.y, projRect.width, projRect.height);
+                    default ->
+                        colision = enemigo.esGolpeadoPorProyectil(projRect.x, projRect.y, projRect.width, projRect.height);
                 }
 
                 /* ======================= 2) Si hay colisión ========================= */

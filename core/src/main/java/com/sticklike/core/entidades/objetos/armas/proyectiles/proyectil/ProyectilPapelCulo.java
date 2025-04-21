@@ -226,17 +226,27 @@ public final class ProyectilPapelCulo implements Proyectiles {
         // Fragmentación
         if (jugador.getAtaquePapelCulo().isFragmentado() && canFragment) {
             canFragment = false;
-            int cnt = MathUtils.random(2, 5);
+
+            int cnt = MathUtils.random(3, 6);
+            float origSpeed = (float) Math.sqrt(velH * velH + velV * velV);
+
             for (int i = 0; i < cnt; i++) {
-                float ang = 270f + MathUtils.random(-120f, 120f);
-                float spd = (velH != 0 ? velH : velV) * MathUtils.random(0.2f, 0.4f);
-                ProyectilPapelCulo frag = new ProyectilPapelCulo(sprite.getX(), sprite.getY(), ang, spd, jugador.getPoderJugador(), 0f, jugador, MathUtils.randomBoolean() ? 1f : -1f, true);
+                float ang = MathUtils.random(0f, 360f);
+                float speedFactor = MathUtils.random(0.3f, 0.7f);
+                float spd = origSpeed * speedFactor;
+                float offsetX = MathUtils.random(-15f, 15f);
+                float offsetY = MathUtils.random(0f, 10f);
+
+                // Creamos el fragmento
+                ProyectilPapelCulo frag = new ProyectilPapelCulo(sprite.getX() + offsetX, sprite.getY() + offsetY, ang, spd, jugador.getPoderJugador(), 0f, jugador, MathUtils.randomBoolean() ? 1f : -1f, true);
+
                 frag.setCanFragment(false);
                 frag.getSprite().setSize(frag.getSprite().getWidth() * 0.55f, frag.getSprite().getHeight() * 0.55f);
                 frag.getSprite().setOriginCenter();
                 jugador.getControladorProyectiles().anyadirNuevoProyectil(frag);
             }
-            // Desactivar original y aplicar knockback
+
+            // Desactivar el proyectil original y aplicar knockback
             desactivarProyectil();
             if (impactados.add(enemigo)) {
                 applyKnockback(enemigo, impactX, impactY);
