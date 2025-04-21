@@ -11,13 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -153,35 +147,57 @@ public class PopUpMejoras extends RenderBaseMenus {
             final int index = i;
             final Mejora mejora = mejoras.get(i);
 
+            // 1) Botón de texto con nombre y descripción
             TextButton.TextButtonStyle tbs = uiSkin.get("default-button", TextButton.TextButtonStyle.class);
             TextButton btn = new TextButton(mejora.getNombreMejora() + POPUP_FOOTER + mejora.getDescripcionMejora() + POPUP_FOOTER2, tbs);
             btn.getLabel().setWrap(true);
             btn.getLabel().setAlignment(Align.center);
 
+            // 2) Fila contenedora
             Table rowTable = new Table();
             rowTable.defaults().center();
 
-            // Etiqueta HAB / stat
+            float iconSize = 30f;
+            float horizontalPadding = 12f;
+            float innerPadding = 4f;
+
+            // 2a) Etiqueta HAB / stat en celda cuadrada con padding al borde
             String estiloLabel = mejora.getTipoMejora().equals("HAB") ? "hab" : "stat";
             Label labelTipo = new Label(mejora.getTipoMejora(), uiSkin, estiloLabel);
-            rowTable.add(labelTipo).width(25).center().padLeft(10).padRight(-10f);
+            rowTable.add(labelTipo).size(iconSize, iconSize).padLeft(horizontalPadding).padRight(innerPadding).center();
 
-            rowTable.add(btn).expandX().fillX().center();
+            // 2b) Botón con texto ocupa el espacio central, con paddings internos
+            rowTable.add(btn).expandX().fillX().center().padLeft(innerPadding).padRight(innerPadding);
 
-            // Icono
+            // 3) ICONO + ETIQUETA “NEW” con tamaño fijo
+            float tagWidth = 28f, tagHeight = 20f;
+            Group iconGroup = new Group();
+            iconGroup.setSize(iconSize, iconSize);
             if (mejora.getIcono() != null) {
                 Image iconImage = new Image(mejora.getIcono());
-                iconImage.setScale(1.25f);
-                Container<Image> iconContainer = new Container<>(iconImage);
-                rowTable.add(iconContainer).width(25).center().padRight(10f).padLeft(-10f).height(25);
-            } else {
-                rowTable.add().width(25);
-            }
+                iconImage.setSize(iconSize, iconSize);
+                iconImage.setPosition(0, 0);
+                iconGroup.addActor(iconImage);
 
+                if (mejora.getIdHabilidad() != null) {
+                    Texture newTex = manager.get(NEW, Texture.class);
+                    Image newTag = new Image(newTex);
+                    newTag.setSize(tagWidth, tagHeight);
+                    newTag.setPosition(-18f, iconSize - tagHeight + 5f);
+                    iconGroup.addActor(newTag);
+                }
+            }
+            Container<Group> iconContainer = new Container<>(iconGroup);
+
+            // 3c) Celda cuadrada para el icono con padding al borde
+            rowTable.add(iconContainer).size(iconSize, iconSize).padLeft(innerPadding).padRight(horizontalPadding).center();
+
+            // 4) Añadir la fila al upgradeWindow
             upgradeWindow.row();
             upgradeWindow.add(rowTable).expandX().fillX().center().pad(BUTTON_PADDING);
             improvementButtons.add(btn);
 
+            // 5) Listener de selección
             btn.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent e, float x, float y, int p, int b) {
@@ -191,12 +207,11 @@ public class PopUpMejoras extends RenderBaseMenus {
             });
         }
 
-        // Botón REROLL
+        //  Botón de Reroll
         Table rerollTable = new Table();
         Texture diceTexture = manager.get(DADOS, Texture.class);
         TextureRegionDrawable diceDrawable = new TextureRegionDrawable(new TextureRegion(diceTexture));
         Image diceImage = new Image(diceDrawable);
-
         float scale = 0.45f;
         diceImage.setSize(diceDrawable.getMinWidth() * scale, diceDrawable.getMinHeight() * scale);
         diceImage.setScaling(Scaling.stretch);
@@ -313,15 +328,12 @@ public class PopUpMejoras extends RenderBaseMenus {
         // 1‑ Animamos la ventana + borde (popupGroup) con el helper heredado
         animarSalida(popupGroup, () -> {
             // 2‑ Cuando termine, desvanecemos también el fondo animado
-            fondoAnimadoPopUp.addAction(Actions.sequence(
-                Actions.fadeOut(0.25f),
-                Actions.run(() -> {
-                    popupGroup.remove();
-                    fondoAnimadoPopUp.remove();
-                    popUpAbierto = false;
-                    if (callback != null) callback.run();
-                })
-            ));
+            fondoAnimadoPopUp.addAction(Actions.sequence(Actions.fadeOut(0.25f), Actions.run(() -> {
+                popupGroup.remove();
+                fondoAnimadoPopUp.remove();
+                popUpAbierto = false;
+                if (callback != null) callback.run();
+            })));
         });
     }
 }
