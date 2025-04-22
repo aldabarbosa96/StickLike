@@ -194,40 +194,95 @@ public final class LluviaMocos implements Proyectiles {
 
     private void generarStains() {
         numStains = MathUtils.random(3, MAX_STAINS);
+
         float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
-        float maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
+        float maxX = -Float.MAX_VALUE, maxY = -Float.MAX_VALUE;
+
         for (int i = 0; i < numStains; i++) {
             stainOffsetX[i] = MathUtils.random(-7.5f, 7.5f);
             stainOffsetY[i] = MathUtils.random(-7.5f, 7.5f);
-            stainSizes[i] = MathUtils.random(4f, 8f);
+            stainSizes[i] = MathUtils.random(4f, 6f);
             stainScaleX[i] = MathUtils.random(1.3f, 1.7f);
             stainScaleY[i] = MathUtils.random(0.4f, 0.6f);
+
             float sx = x + stainOffsetX[i];
             float sy = y + stainOffsetY[i];
             float w = stainSizes[i] * stainScaleX[i];
             float h = stainSizes[i] * stainScaleY[i];
+
             if (sx < minX) minX = sx;
             if (sy < minY) minY = sy;
             if (sx + w > maxX) maxX = sx + w;
             if (sy + h > maxY) maxY = sy + h;
         }
+
         collisionRect.set(minX, minY, maxX - minX, maxY - minY);
     }
 
-    @Override public Rectangle getRectanguloColision() { return collisionRect; }
-    @Override public boolean isProyectilActivo() { return proyectilActivo; }
-    @Override public void desactivarProyectil() { proyectilActivo = false; }
-    @Override public float getBaseDamage() { return damage; }
-    @Override public float getKnockbackForce() { return 0f; }
-    @Override public boolean isPersistente() { return true; }
-    @Override public void registrarImpacto(Enemigo enemigo) { enemigosImpactados.add(enemigo); }
-    @Override public boolean yaImpacto(Enemigo enemigo) { return enemigosImpactados.contains(enemigo); }
-    @Override public boolean esCritico() { return false; }
-    @Override public float getX() { return x; }
-    @Override public float getY() { return y; }
 
-    public void setReboteActivado(boolean reboteActivado) { this.reboteActivado = reboteActivado; }
-    public void setMaxBounces(int numBounces) { this.maxBounces = numBounces; }
+    @Override
+    public Rectangle getRectanguloColision() {
+        return collisionRect;
+    }
+
+    @Override
+    public boolean isProyectilActivo() {
+        return proyectilActivo;
+    }
+
+    @Override
+    public void desactivarProyectil() {
+        proyectilActivo = false;
+    }
+
+    @Override
+    public float getBaseDamage() {
+        return damage;
+    }
+
+    @Override
+    public float getKnockbackForce() {
+        return 0f;
+    }
+
+    @Override
+    public boolean isPersistente() {
+        return true;
+    }
+
+    @Override
+    public void registrarImpacto(Enemigo enemigo) {
+        enemigosImpactados.add(enemigo);
+    }
+
+    @Override
+    public boolean yaImpacto(Enemigo enemigo) {
+        return enemigosImpactados.contains(enemigo);
+    }
+
+    @Override
+    public boolean esCritico() {
+        return false;
+    }
+
+    @Override
+    public float getX() {
+        return x;
+    }
+
+    @Override
+    public float getY() {
+        return y;
+    }
+
+    public void setReboteActivado(boolean reboteActivado) {
+        this.reboteActivado = reboteActivado;
+    }
+
+    public void setMaxBounces(int numBounces) {
+        this.maxBounces = numBounces;
+    }
+
     public void setDamage(float damage) {
         this.damage = damage;
         sprite.setColor(0.95f, 0.15f, 0.15f, 1f);
@@ -237,5 +292,13 @@ public final class LluviaMocos implements Proyectiles {
     @Override
     public void dispose() {
         renderParticulasProyectil.dispose();
+    }
+
+    public EstadoMoco getEstadoMoco() {
+        return estadoMoco;
+    }
+
+    public float getExplosionTimer() {
+        return explosionTimer;
     }
 }

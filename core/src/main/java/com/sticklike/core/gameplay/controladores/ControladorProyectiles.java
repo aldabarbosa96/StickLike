@@ -58,38 +58,35 @@ public class ControladorProyectiles {
                 boolean colision = false;
 
                 /* ======================= 1) Colisión por tipo ======================= */
-                switch (proyectil) {
-                    case ProyectilTazo proyectilTazo -> colision = estaEnRadioTazo(enemigo, proyectil);
-                    case ProyectilPapelCulo proyectilPapelCulo -> {
-
-                        if (proyectilPapelCulo.isImpactoAnimacionActiva()) {
-                            Circle explosionArea = proyectilPapelCulo.getCirculoColision();
-                            float enemyCX = enemigo.getX() + enemigo.getSprite().getWidth() * 0.5f;
-                            float enemyCY = enemigo.getY() + enemigo.getSprite().getHeight() * 0.5f;
-                            colision = explosionArea.contains(enemyCX, enemyCY);
-                        } else {
-                            colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
-                        }
+                if (proyectil instanceof ProyectilTazo proyectilTazo) {
+                    colision = estaEnRadioTazo(enemigo, proyectil);
+                } else if (proyectil instanceof ProyectilPapelCulo proyectilPapelCulo) {
+                    if (proyectilPapelCulo.isImpactoAnimacionActiva()) {
+                        Circle explosionArea = proyectilPapelCulo.getCirculoColision();
+                        float enemyCX = enemigo.getX() + enemigo.getSprite().getWidth() * 0.5f;
+                        float enemyCY = enemigo.getY() + enemigo.getSprite().getHeight() * 0.5f;
+                        colision = explosionArea.contains(enemyCX, enemyCY);
+                    } else {
+                        colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
                     }
-                    case LatigoDildo dildo -> {
-                        // 1) comprobación melee
-                        if (enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height)) {
-                            colision = true;
-                        }
-                        // 2) si tiene halo y no colisionado aún, comprueba segmentos
-                        else if (dildo.isHaloActivo()) {
-                            for (Vector2 base : dildo.getPuntosHalo()) {
-                                float hx = base.x + dildo.getLado() * dildo.getHaloTravel();
-                                float hy = base.y;
-                                if (enemigo.esGolpeadoPorProyectil(hx, hy, dildo.getHaloW(), dildo.getHaloH())) {
-                                    colision = true;
-                                    break;
-                                }
+                } else if (proyectil instanceof LatigoDildo dildo) {
+                    // 1) comprobación melee
+                    if (enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height)) {
+                        colision = true;
+                    }
+                    // 2) si tiene halo y no colisionado aún, comprueba segmentos
+                    else if (dildo.isHaloActivo()) {
+                        for (Vector2 base : dildo.getPuntosHalo()) {
+                            float hx = base.x + dildo.getLado() * dildo.getHaloTravel();
+                            float hy = base.y;
+                            if (enemigo.esGolpeadoPorProyectil(hx, hy, dildo.getHaloW(), dildo.getHaloH())) {
+                                colision = true;
+                                break;
                             }
                         }
                     }
-                    default ->
-                        colision = enemigo.esGolpeadoPorProyectil(projRect.x, projRect.y, projRect.width, projRect.height);
+                } else {
+                    colision = enemigo.esGolpeadoPorProyectil(projRect.x, projRect.y, projRect.width, projRect.height);
                 }
 
                 /* ======================= 2) Si hay colisión ========================= */

@@ -180,12 +180,46 @@ public class PopUpMejoras extends RenderBaseMenus {
                 iconGroup.addActor(iconImage);
 
                 if (mejora.getIdHabilidad() != null) {
-                    Texture newTex = manager.get(NEW, Texture.class);
-                    Image newTag = new Image(newTex);
-                    newTag.setSize(tagWidth, tagHeight);
-                    newTag.setPosition(-18f, iconSize - tagHeight + 5f);
-                    iconGroup.addActor(newTag);
+                    String idHab = mejora.getIdHabilidad();
+                    if (idHab.contains("_")) {
+                        float scale = 1.65f;
+                        float offset = 0.5f;
+                        float extra = 2f;
+
+                        // calculamos posición base centrada + desplazamiento extra
+                        Label tmp = new Label("+", uiSkin, "default");
+                        tmp.setFontScale(scale);
+                        float px = iconSize - tmp.getPrefWidth() / 2f + extra;
+                        float py = iconSize - tmp.getPrefHeight() / 2f + extra;
+
+                        // dibujamos las 8 sombras negras
+                        for (float dx : new float[]{-offset, 0, offset}) {
+                            for (float dy : new float[]{-offset, 0, offset}) {
+                                if (dx == 0 && dy == 0) continue;
+                                Label border = new Label("+", uiSkin, "default");
+                                border.setFontScale(scale);
+                                border.setColor(Color.DARK_GRAY);
+                                border.setPosition(px + dx, py + dy);
+                                iconGroup.addActor(border);
+                            }
+                        }
+
+                        // y finalmente el “+” verde encima
+                        Label plus = new Label("+", uiSkin, "default");
+                        plus.setFontScale(scale);
+                        plus.setColor(0, 1, 0, 1);
+                        plus.setPosition(px, py);
+                        iconGroup.addActor(plus);
+                    } else {
+                        // etiqueta “new” sin cambios
+                        Texture newTex = manager.get(NEW, Texture.class);
+                        Image newTag = new Image(newTex);
+                        newTag.setSize(tagWidth, tagHeight);
+                        newTag.setPosition(-18f, iconSize - tagHeight + 5f);
+                        iconGroup.addActor(newTag);
+                    }
                 }
+
             }
             Container<Group> iconContainer = new Container<>(iconGroup);
 

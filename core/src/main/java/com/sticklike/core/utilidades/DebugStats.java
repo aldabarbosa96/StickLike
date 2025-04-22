@@ -25,6 +25,9 @@ public class DebugStats {
     private long lastGCTime;
     private long previousGCCount;
     private long previousGCTime;
+    private float fpsInstantaneo;
+    private float fpsMinimoSegundo = Float.MAX_VALUE;
+    private float fpsMinimoVisible = 0f;
 
     public DebugStats() {
         font = FontManager.getDebugFont();
@@ -76,12 +79,19 @@ public class DebugStats {
         acumuladorDelta += delta;
         contadorFrames++;
         frameTimeMs = delta * 1000f;
+        fpsInstantaneo = 1f / delta;
+
+        if (fpsInstantaneo < fpsMinimoSegundo) {
+            fpsMinimoSegundo = fpsInstantaneo;
+        }
 
         if (acumuladorDelta >= 1f) {
             deltaPromedio = acumuladorDelta / contadorFrames;
             acumuladorDelta = 0;
             contadorFrames = 0;
 
+            fpsMinimoVisible = fpsMinimoSegundo;
+            fpsMinimoSegundo = Float.MAX_VALUE;
             // Actualizamos las estadísticas del GC cada segundo
             updateGCStats();
         }
@@ -101,7 +111,8 @@ public class DebugStats {
         float x = margin;
         float y = virtualHeight - margin;
 
-        String textoDebug = "[GREEN]FPS: " + fps + "[]\n\n" + "[BLACK]Delta: " + String.format("%.3f", delta) + " s\n" + "Frame Time: " + String.format("%.2f", frameTimeMs) + " ms\n" + "JavaH: " + String.format("%.2f", javaHeapMB) + " MB\n" + "NativeH: " + String.format("%.2f", nativeHeapMB) + " MB\n" + "Runtime: " + String.format("%.1f", tiempoEjecucion) + " s\n" + "Avg. Delta: " + String.format("%.3f", deltaPromedio) + " s\n" + "Free RAM: " + String.format("%.2f", memoriaLibreMB) + " MB\n" + "Total RAM: " + String.format("%.2f", memoriaTotalMB) + " MB\n" + "GC Count: " + accumulatedGCCount + "\n" + "GC Time (last): " + lastGCTime + " ms";
+        String textoDebug = "[GREEN]FPS (est.): " + fps + "[]\n" +
+            "[BLUE]FPS (min real): " + String.format("%.1f", fpsMinimoVisible) + "[]\n\n" + "[BLACK]Delta: " + String.format("%.3f", delta) + " s\n" + "Frame Time: " + String.format("%.2f", frameTimeMs) + " ms\n" + "JavaH: " + String.format("%.2f", javaHeapMB) + " MB\n" + "NativeH: " + String.format("%.2f", nativeHeapMB) + " MB\n" + "Runtime: " + String.format("%.1f", tiempoEjecucion) + " s\n" + "Avg. Delta: " + String.format("%.3f", deltaPromedio) + " s\n" + "Free RAM: " + String.format("%.2f", memoriaLibreMB) + " MB\n" + "Total RAM: " + String.format("%.2f", memoriaTotalMB) + " MB\n" + "GC Count: " + accumulatedGCCount + "\n" + "GC Time (last): " + lastGCTime + " ms";
 
         // Actualizamos el layout con el nuevo texto, sin crear una nueva instancia
         layout.setText(font, textoDebug);
@@ -110,5 +121,6 @@ public class DebugStats {
 
     public void dispose() {
         font.dispose();
+        layout = null;
     }
 }

@@ -1,5 +1,6 @@
 package com.sticklike.core.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -364,32 +365,38 @@ public class RenderHUDComponents {
 
     public void setHabilidadesActivas(List<Mejora> habilidadesActivas) {
         hudStage.clear();
-        for (int i = 0; i < slotsList.size(); i++) {
-            if (i < habilidadesActivas.size()) {
-                Mejora mejora = habilidadesActivas.get(i);
-                if (mejora.getIcono() != null) {
-                    TextureRegionDrawable drawableIcono = new TextureRegionDrawable(new TextureRegion(mejora.getIcono()));
-                    ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-                    style.imageUp = drawableIcono;
-                    ImageButton boton = new ImageButton(style);
-                    float margin = slotsList.get(i).width * 0.175f;
-                    float margin2 = slotsList.get(i).width * 0.0375f;
-                    if (mejora.getIdHabilidad().equals("DILDO")) {
-                        boton.setSize(slotsList.get(i).width - 2, slotsList.get(i).height - 7.5f * margin2);
-                        boton.setPosition(slotsList.get(i).x + margin2, slotsList.get(i).y + margin * 1.35f);
-                    } else {
-                        boton.setSize(slotsList.get(i).width - 2 * margin, slotsList.get(i).height - 2 * margin);
-                        boton.setPosition(slotsList.get(i).x + margin, slotsList.get(i).y + margin * 1.5f);
-                    }
-                    boton.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            System.out.println("Hiciste clic en " + mejora.getNombreMejora());
-                        }
-                    });
-                    hudStage.addActor(boton);
-                }
+
+        for (int i = 0; i < habilidadesActivas.size() && i < slotsList.size(); i++) {
+            Mejora mejora = habilidadesActivas.get(i);
+            Texture icono = mejora.getIcono();
+            if (icono == null) continue;
+
+            Rectangle slot = slotsList.get(i);
+            TextureRegionDrawable drawableIcono = new TextureRegionDrawable(new TextureRegion(icono));
+
+            ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+            style.imageUp = drawableIcono;
+            ImageButton boton = new ImageButton(style);
+
+            // Ajustamos tamaño y posición idéntico para todas las habilidades, excepto “DILDO” que necesita un pequeño tweak
+            float margin  = slot.width  * 0.175f;
+            float margin2 = slot.width  * 0.0375f;
+            if ("DILDO".equals(mejora.getIdHabilidad())) {
+                boton.setSize(slot.width - 2, slot.height - 7.5f * margin2);
+                boton.setPosition(slot.x + margin2, slot.y + margin * 1.35f);
+            } else {
+                boton.setSize(slot.width - 2 * margin, slot.height - 2 * margin);
+                boton.setPosition(slot.x + margin,   slot.y + margin * 1.5f);
             }
+
+            /*boton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) { // todo --> implementar info de las mejoras en un futuro
+                    Gdx.app.log("MEJORA","Hiciste clic en " + mejora.getNombreMejora());
+                }
+            });*/
+
+            hudStage.addActor(boton);
         }
     }
 
