@@ -40,6 +40,10 @@ public class PopUpMejoras extends RenderBaseMenus {
     private int selectedIndex = 0;
     private boolean popUpAbierto = false;
     private FondoAnimadoPopUp fondoAnimadoPopUp;
+    private static final Color COLOR_LABEL = new Color(0f, 0.5f, 0.25f, 1);
+    private static final Color COLOR_PIXMAP = new Color(0.97f, 0.88f, 0.6f, 1);
+    private static final Color COLOR_PIXMAP_GLOW = new Color(0.9f, 0.9f, 0.9f, 0.5f);
+    private static final Color COLOR_GREEN_SELECTED = new Color(0f, 0.5f, 0.25f, 1);
 
     // Datos mostrados actualmente
     private List<Mejora> currentMejoras = List.of();
@@ -307,10 +311,10 @@ public class PopUpMejoras extends RenderBaseMenus {
         small.getData().setScale(0.75f);
 
         skin.add("hab", new Label.LabelStyle(small, Color.BLUE));
-        skin.add("stat", new Label.LabelStyle(small, new Color(0f, 0.5f, 0.25f, 1)));
+        skin.add("stat", new Label.LabelStyle(small, COLOR_LABEL));
 
         Pixmap p = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        p.setColor(new Color(0.97f, 0.88f, 0.6f, 1));
+        p.setColor(COLOR_PIXMAP);
         p.fill();
         Texture bg = new Texture(p);
         p.dispose();
@@ -324,7 +328,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         skin.add("default-button", defBtn);
 
         Pixmap hiPx = new Pixmap(8, 12, Pixmap.Format.RGBA8888);
-        hiPx.setColor(new Color(0.9f, 0.9f, 0.9f, 0.5f));
+        hiPx.setColor(COLOR_PIXMAP_GLOW);
         hiPx.fill();
         Texture hiTx = new Texture(hiPx);
         hiPx.dispose();
@@ -340,7 +344,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         TextButton.TextButtonStyle selGreen = new TextButton.TextButtonStyle();
         selGreen.font = font;
         selGreen.up = hiD;
-        selGreen.fontColor = new Color(0f, 0.5f, 0.25f, 1);
+        selGreen.fontColor = COLOR_GREEN_SELECTED;
         skin.add("selected-button-green", selGreen);
 
         return skin;

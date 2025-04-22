@@ -55,7 +55,7 @@ public class RenderPausa {
         hudViewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, hudCamera);
         hudViewport.apply();
         spriteBatch = new SpriteBatch();
-        font = new BitmapFont();
+        font = new BitmapFont(); // no usamos la fuente del FontManager porque al volver al menú principal perdemos la fuente y no se renderiza correctamente todo --> revisar
         layoutStart = new GlyphLayout();
         layoutPausa = new GlyphLayout();
         pauseStage = new Stage(hudViewport);

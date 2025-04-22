@@ -47,12 +47,10 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, manager.get(ICONO_CRITICO, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%", () -> jugador.aumentarResistencia(0.2f), 3, manager.get(ICONO_RESISTENCIA, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, manager.get(ICONO_PODER, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
-            jugador.setVidaMax(Jugador.getMaxVidaJugador() + 15);
-            jugador.setVidaJugador(Jugador.getVidaJugador() + 15);
-        }, 5, manager.get(ICONO_VIDA, Texture.class), null));
+        todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {jugador.setVidaMax(Jugador.getMaxVidaJugador() + 15);jugador.setVidaJugador(Jugador.getVidaJugador() + 15);}, 5, manager.get(ICONO_VIDA, Texture.class), null));
 
         // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)
+
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
@@ -63,81 +61,39 @@ public class SistemaDeMejoras {
 
         // Upgrades específicos para las habilidades
         // Calcetín
-        todasLasMejoras.add(new Mejora("¡CALCETÍN: ACARTONADO MÁX!", "Aumenta el daño de los calcetines un 20%", () -> {
-            jugador.getAtaqueCalcetin().aumentarDamage(0.2f);
-        }, 5, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN_damage"));
-        todasLasMejoras.add(new Mejora("¡CALCETÍN: MULTICALCETIN!", "Aumenta el número de calcetines +1", () -> {
-            jugador.getAtaqueCalcetin().incrementarNumeroProyectiles(1);
-        }, 4, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN_multi"));
-        todasLasMejoras.add(new Mejora("¡CALCETÍN: PRECOZ!", "Aumenta velocidad de lanzamiento un 25%", () -> {
-            jugador.getAtaqueCalcetin().aumentarVelocidadDisparo(0.25f);
-        }, 3, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN_speed"));
+        todasLasMejoras.add(new Mejora("¡CALCETÍN: ACARTONADO MÁX!", "Aumenta el daño de los calcetines un 20%", () -> {jugador.getAtaqueCalcetin().aumentarDamage(0.2f);}, 5, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN_damage"));
+        todasLasMejoras.add(new Mejora("¡CALCETÍN: MULTICALCETIN!", "Aumenta el número de calcetines +1", () -> {jugador.getAtaqueCalcetin().incrementarNumeroProyectiles(1);}, 4, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN_multi"));
+        todasLasMejoras.add(new Mejora("¡CALCETÍN: PRECOZ!", "Aumenta velocidad de lanzamiento un 25%", () -> {jugador.getAtaqueCalcetin().aumentarVelocidadDisparo(0.25f);}, 3, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN_speed"));
 
         // Tazo
-        todasLasMejoras.add(new Mejora("¡TAZO: ROTATAZO!", "Aumenta la velocidad de rotación del tazo", () -> {
-            jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);
-        }, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_rotacion"));
-        todasLasMejoras.add(new Mejora("¡TAZO: MULTITETAZO!", "Aumenta el número de tazos +1", () -> {
-            jugador.getAtaqueTazo().aumentarNumTazos(1);
-        }, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_proyectil"));
-        todasLasMejoras.add(new Mejora("¡TAZO: TEMPOTAZO!", "Aumenta el tiempo que dura la habilidad un 50%", () -> {
-            jugador.getAtaqueTazo().aumentarDuracionActivaTazos(4.25f);
-        }, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_duracion"));
+        todasLasMejoras.add(new Mejora("¡TAZO: ROTATAZO!", "Aumenta la velocidad de rotación del tazo", () -> {jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);}, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_rotacion"));
+        todasLasMejoras.add(new Mejora("¡TAZO: MULTITETAZO!", "Aumenta el número de tazos +1", () -> {jugador.getAtaqueTazo().aumentarNumTazos(1);}, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_proyectil"));
+        todasLasMejoras.add(new Mejora("¡TAZO: TEMPOTAZO!", "Aumenta el tiempo que dura la habilidad un 50%", () -> {jugador.getAtaqueTazo().aumentarDuracionActivaTazos(4.25f);}, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_duracion"));
 
         // NubePedo
-        todasLasMejoras.add(new Mejora("¡PEDO: ÁREA PESTOSA!", "Aumenta el area de efecto del pedo un 100%", () -> {
-            jugador.getAtaqueNubePedo().getNubePedo().setEscalaMax(2f);
-        }, 2, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO_maxArea"));
-        todasLasMejoras.add(new Mejora("¡PEDO: EMPUJE PEDORRO!", "Aumenta el empuje del pedo un 30%", () -> {
-            jugador.getAtaqueNubePedo().getNubePedo().setMaxKnockBack(1.3f);
-        }, 2, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO_maxEmpuje"));
-        todasLasMejoras.add(new Mejora("¡PEDO: TRIIIPPPLEEE!", "Añade una vibración pedorra extra", () -> {
-            jugador.getAtaqueNubePedo().setEsTriple(true);
-        }, 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO_triple"));
+        todasLasMejoras.add(new Mejora("¡PEDO: ÁREA PESTOSA!", "Aumenta el area de efecto del pedo un 100%", () -> {jugador.getAtaqueNubePedo().getNubePedo().setEscalaMax(2f);}, 2, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO_maxArea"));
+        todasLasMejoras.add(new Mejora("¡PEDO: EMPUJE PEDORRO!", "Aumenta el empuje del pedo un 30%", () -> {jugador.getAtaqueNubePedo().getNubePedo().setMaxKnockBack(1.3f);}, 2, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO_maxEmpuje"));
+        todasLasMejoras.add(new Mejora("¡PEDO: TRIIIPPPLEEE!", "Añade una vibración pedorra extra", () -> {jugador.getAtaqueNubePedo().setEsTriple(true);}, 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO_triple"));
 
         // PapelCulo
-        todasLasMejoras.add(new Mejora("¡PAPEL: DOBLE CARA!", "Lanzas 2 rollos de papel simultáneos", () -> {
-            jugador.getAtaquePapelCulo().setMejoraAmbosLados(true);
-        }, 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL_doble"));
-        todasLasMejoras.add(new Mejora("¡PAPEL: RÁPIDO!", "Aumenta la velocidad de lanzamiento del rollo", () -> {
-            jugador.getAtaquePapelCulo().aumentarVelocidadDisparo(0.33f);
-        }, 3, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL_rápido"));
-        todasLasMejoras.add(new Mejora("¡PAPEL: FRAGMENTACIÓN!", "Se fragmenta en rollos más pequeños al impactar", () -> {
-            jugador.getAtaquePapelCulo().setFragmentado(true);
-        }, 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL_frag"));
+        todasLasMejoras.add(new Mejora("¡PAPEL: DOBLE CARA!", "Lanzas 2 rollos de papel simultáneos", () -> {jugador.getAtaquePapelCulo().setMejoraAmbosLados(true);}, 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL_doble"));
+        todasLasMejoras.add(new Mejora("¡PAPEL: RÁPIDO!", "Aumenta la velocidad de lanzamiento del rollo", () -> {jugador.getAtaquePapelCulo().aumentarVelocidadDisparo(0.33f);}, 3, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL_rápido"));
+        todasLasMejoras.add(new Mejora("¡PAPEL: FRAGMENTACIÓN!", "Se fragmenta en rollos más pequeños al impactar", () -> {jugador.getAtaquePapelCulo().setFragmentado(true);}, 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL_frag"));
 
         // LluviaMocos
-        todasLasMejoras.add(new Mejora("¡MOCOS: TORMENTA!", "Aumenta la cadencia de la lluvia", () -> {
-            jugador.getAtaqueMocos().tormentaMucosa(0.5f);
-        }, 3, manager.get(ARMA_MOCO, Texture.class), "MOCO_tormenta"));
-        todasLasMejoras.add(new Mejora("¡MOCOS: REBOTE!", "Los mocos rebotan al impactar en el suelo", () -> {
-            jugador.getAtaqueMocos().activarReboteMucoso();
-        }, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_rebote")); // todo --> permite gestionar internamente más rebotes
-        todasLasMejoras.add(new Mejora("¡MOCOS: SANGRIENTOS!", "Mocos de sangre que aplican un 250% de daño", () -> {
-            jugador.getAtaqueMocos().mocosConSangre();
-        }, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_sangre"));
+        todasLasMejoras.add(new Mejora("¡MOCOS: TORMENTA!", "Aumenta la cadencia de la lluvia", () -> {jugador.getAtaqueMocos().tormentaMucosa(0.5f);}, 3, manager.get(ARMA_MOCO, Texture.class), "MOCO_tormenta"));
+        todasLasMejoras.add(new Mejora("¡MOCOS: REBOTE!", "Los mocos rebotan al impactar en el suelo", () -> {jugador.getAtaqueMocos().activarReboteMucoso();}, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_rebote")); // todo --> permite gestionar internamente más rebotes
+        todasLasMejoras.add(new Mejora("¡MOCOS: SANGRIENTOS!", "Mocos de sangre que aplican un 250% de daño", () -> {jugador.getAtaqueMocos().mocosConSangre();}, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_sangre"));
 
         // BoliBic
-        todasLasMejoras.add(new Mejora("¡BOLI: RICOCHET!", "Los bolis rebotan una vez al impactar", () ->
-            jugador.getAtaqueBoliBic().activarRicochet(),
-            1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_ricochet"));
-        todasLasMejoras.add(new Mejora("¡BOLI: DOBLE TAP!", "Dispara 2 bolis seguidos", () ->
-            jugador.getAtaqueBoliBic().mejorarDoubleTap(),
-            3, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_doble"));
-        todasLasMejoras.add(new Mejora("¡BOLI: ABANICO!", "Añade +1 boli y dispara en abanico", () ->
-            jugador.getAtaqueBoliBic().activarSplitShot(),
-            1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_split"));
+        todasLasMejoras.add(new Mejora("¡BOLI: RICOCHET!", "Los bolis rebotan una vez al impactar", () -> jugador.getAtaqueBoliBic().activarRicochet(), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_ricochet"));
+        todasLasMejoras.add(new Mejora("¡BOLI: DOBLE TAP!", "Dispara 2 bolis seguidos", () -> jugador.getAtaqueBoliBic().mejorarDoubleTap(), 3, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_doble"));
+        todasLasMejoras.add(new Mejora("¡BOLI: ABANICO!", "Añade +1 boli y dispara en abanico", () -> jugador.getAtaqueBoliBic().activarSplitShot(), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_split"));
 
         // LátigoDildo
-        todasLasMejoras.add(new Mejora("DILDO: HALO", "Proyecta una onda de energía perforante", () ->
-            jugador.getAtaqueDildo().activarHaloEnergia(),
-            1, manager.get(ARMA_DILDO, Texture.class), "DILDO_halo"));
-        todasLasMejoras.add(new Mejora("DILDO: DOBLE", "Repite el golpe una vez más", () ->
-            jugador.getAtaqueDildo().activarGolpeDoble(),
-            2, manager.get(ARMA_DILDO, Texture.class), "DILDO_doble"));
-        todasLasMejoras.add(new Mejora("DILDO: VELOZ", "Multiplica x2 la velocidad de golpeo", () ->
-            jugador.getAtaqueDildo().mejorarVelocidadSwing(),
-            1, manager.get(ARMA_DILDO, Texture.class), "DILDO_veloz"));
+        todasLasMejoras.add(new Mejora("DILDO: HALO", "Proyecta una onda de energía perforante", () -> jugador.getAtaqueDildo().activarHaloEnergia(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_halo"));
+        todasLasMejoras.add(new Mejora("DILDO: DOBLE", "Repite el golpe una vez más", () -> jugador.getAtaqueDildo().activarGolpeDoble(), 2, manager.get(ARMA_DILDO, Texture.class), "DILDO_doble"));
+        todasLasMejoras.add(new Mejora("DILDO: VELOZ", "Multiplica x2 la velocidad de golpeo", () -> jugador.getAtaqueDildo().mejorarVelocidadSwing(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_veloz"));
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {
@@ -219,10 +175,7 @@ public class SistemaDeMejoras {
         // Si se trata de una habilidad base (su id no contiene "_"), se registra su id para habilitar futuros upgrades.
         // Sólo se añaden al HUD las mejoras de tipo HABILIDAD ("HAB")
         // Después: sólo metemos la habilidad base (la que NO tiene “_” en el Id)
-        if (mejoraSeleccionada.getIcono() != null
-            && mejoraSeleccionada.getTipoMejora().equals("HAB")
-            && mejoraSeleccionada.getIdHabilidad() != null
-            && !mejoraSeleccionada.getIdHabilidad().contains("_")) {
+        if (mejoraSeleccionada.getIcono() != null && mejoraSeleccionada.getTipoMejora().equals("HAB") && mejoraSeleccionada.getIdHabilidad() != null && !mejoraSeleccionada.getIdHabilidad().contains("_")) {
 
             habilidadesActivasIds.add(mejoraSeleccionada.getIdHabilidad());
             habilidadesActivas.add(mejoraSeleccionada);

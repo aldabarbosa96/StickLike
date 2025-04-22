@@ -20,6 +20,7 @@ public class FondoAnimadoPopUp extends Actor {
     private static final Texture xpTexture1 = manager.get(RECOLECTABLE_XP, Texture.class);
     private static final Texture xpTexture2 =  manager.get(RECOLECTABLE_XP2, Texture.class);
     private static final Texture xpTexture3 =  manager.get(RECOLECTABLE_XP3, Texture.class);
+    private static final Color TEMP_COLOR = new Color();
     private List<Particle> particles;
     private float spawnTimer;
     private static final float DAMPING = 0.98f; // Factor de damping para simular resistencia del agua (aplicamos solo a vx para que baje)
@@ -57,13 +58,13 @@ public class FondoAnimadoPopUp extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         // Guardamosd el color original del batch para restaurarlo luego
-        Color originalColor = batch.getColor();
+        TEMP_COLOR.set(batch.getColor());
         for (Particle p : particles) {
             batch.setColor(1, 1, 1, p.alpha);
             // Dibuja la partícula con rotación; el origen es el centro
             batch.draw(p.texture, p.x, p.y, p.width / 2, p.height / 2, p.width, p.height, 1, 1, p.rotation, 0, 0, p.texture.getWidth(), p.texture.getHeight(), false, false);
         }
-        batch.setColor(originalColor);
+        batch.setColor(TEMP_COLOR);
     }
 
     private void spawnParticle() {

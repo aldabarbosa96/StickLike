@@ -34,6 +34,7 @@ public final class ProyectilPapelCulo implements Proyectiles {
     private static final float IMPACT_SCALE = 5f;
     private static final float IMPACT_CIRCLE = 7.5f;
     private static final float FRAG_FACTOR_HOR = 0.25f;
+    private static final Color PARTICLES_COLOR = new Color(0.65f, 0.5f, 0.7f, 1f);
 
     private final Sprite sprite;
     private final RenderParticulasProyectil particles;
@@ -81,7 +82,7 @@ public final class ProyectilPapelCulo implements Proyectiles {
 
         // Partículas
         float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
-        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, new Color(0.65f, 0.5f, 0.7f, 1f));
+        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, PARTICLES_COLOR);
 
         // Altitud final aleatoria
         float minY = jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().position.y - jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().viewportHeight / 2;

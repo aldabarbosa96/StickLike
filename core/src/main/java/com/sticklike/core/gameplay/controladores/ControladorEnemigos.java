@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -20,7 +18,6 @@ import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoVater;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.interfaces.Enemigo;
@@ -29,10 +26,6 @@ import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.PoissonPoints;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Clase que gestiona el spawn, actualización y render de enemigos (se incluyen destructibles por tratarse como enemigos).

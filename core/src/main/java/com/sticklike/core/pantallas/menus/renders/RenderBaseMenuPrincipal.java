@@ -15,11 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
+
 import java.util.ArrayList;
 
 public class RenderBaseMenuPrincipal extends RenderBaseMenus {
@@ -31,6 +34,12 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
     private static TextureRegionDrawable cachedBotonDrawable;
     private static TextureRegionDrawable cachedHoverDrawable;
     private static NinePatchDrawable cachedSelectedDrawable;
+    private static final Color COLOR_PIXMAP = new Color(0.97f, 0.88f, 0.6f, 1f);
+    private static final Color COLOR_PIXMAP_HOVER = new Color(1, 1, 1, 0.3f);
+    private static final Color COLOR_PIXMAP_GLOW = new Color(1f, 1f, 1f, 0.8f);
+    private static final Color COLOR_PIXMAP_SOMBRA_CHINCHETA = new Color(0.65f, 0, 0, 1);
+    private static final Color COLOR_PIXMAP_CHINCHETA = new Color(0, 0, 1, 0.85f);
+    private static final Color COLOR_PIXMAP_CHINCHETA_BRILLO = new Color(1, 1, 1, 0.85f);
 
     public interface MenuListener {
         void onSelectButton(int index);
@@ -219,7 +228,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         // Usamos recursos cacheados para el botón por defecto
         if (cachedBotonDrawable == null) {
             Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            pixmap.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
+            pixmap.setColor(COLOR_PIXMAP);
             pixmap.fill();
             Texture pixmapTexture = new Texture(pixmap);
             pixmap.dispose();
@@ -234,7 +243,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
 
         if (cachedHoverDrawable == null) {
             Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
+            hoverPixmap.setColor(COLOR_PIXMAP_HOVER);
             hoverPixmap.fill();
             Texture hoverTexture = new Texture(hoverPixmap);
             hoverPixmap.dispose();
@@ -249,7 +258,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
 
         if (cachedSelectedDrawable == null) {
             Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-            glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
+            glowPixmap.setColor(COLOR_PIXMAP_GLOW);
             glowPixmap.fill();
             Texture glowTexture = new Texture(glowPixmap);
             glowPixmap.dispose();
@@ -277,12 +286,12 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         int shadowCenterX = mainCenterX + shadowOffset;
         int shadowCenterY = mainCenterY + shadowOffset;
         int radius = size / 2;
-        pixmap.setColor(new Color(0.65f, 0, 0, 1));
+        pixmap.setColor(COLOR_PIXMAP_SOMBRA_CHINCHETA);
         pixmap.fillCircle(shadowCenterX, shadowCenterY, radius);
-        pixmap.setColor(new Color(0, 0, 1, 0.85f));
+        pixmap.setColor(COLOR_PIXMAP_CHINCHETA);
         pixmap.fillCircle(mainCenterX, mainCenterY, radius);
         int innerRadius = (int) (size * 0.2f);
-        pixmap.setColor(new Color(1, 1, 1, 0.85f));
+        pixmap.setColor(COLOR_PIXMAP_CHINCHETA_BRILLO);
         pixmap.fillCircle(mainCenterX, mainCenterY, innerRadius);
         Texture texture = new Texture(pixmap);
         pixmap.dispose();

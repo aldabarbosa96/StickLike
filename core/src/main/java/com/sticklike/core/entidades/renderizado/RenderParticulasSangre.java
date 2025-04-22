@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
  * Clase que maneja la creación y renderizado de manchas (salpicaduras) de sangre, las cuales aparecen estáticas en el mapa y van desapareciendo (fade out) con el tiempo.
  */
 public class RenderParticulasSangre {
+    private static final Color COLOR_SANGRE_BASE = new Color(0.75f, 0, 0, 0.75f);
 
     /**
      * Clase interna que representa cada partícula (gota/mancha) de sangre.
@@ -68,9 +69,8 @@ public class RenderParticulasSangre {
 
             float radius = MathUtils.random(1f, 3f);
             float lifetime = MathUtils.random(2.5f, 5f);
-            Color color = new Color(0.75f, 0, 0, 0.75f);
 
-            particles.add(new BloodParticle(spawnPos, radius, lifetime, color));
+            particles.add(new BloodParticle(spawnPos, radius, lifetime, COLOR_SANGRE_BASE));
         }
     }
 

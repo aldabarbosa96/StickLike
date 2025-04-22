@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
  */
 
 public class FontManager {
-
-    // Fuente principal para los textos de daño
     public static BitmapFont damageFont;
     public static BitmapFont menuFont;
     public static BitmapFont hudFont;
@@ -17,7 +15,7 @@ public class FontManager {
 
     public static void initFonts() {
         damageFont = new BitmapFont();
-        damageFont.getData().setScale(1.0f);
+        damageFont.getData().setScale(1f);
         menuFont = new BitmapFont();
         menuFont.getData().setScale(1.2f);
         hudFont = new BitmapFont();

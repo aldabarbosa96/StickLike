@@ -19,6 +19,7 @@ import com.sticklike.core.interfaces.Enemigo;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public class RenderBaseEnemigos {
+    private static final Color tmpColor = new Color();
 
     /**
      * Dibuja el sprite del enemigo, aplicando efectos de fade o parpadeo.
@@ -27,8 +28,8 @@ public class RenderBaseEnemigos {
         float vidaEnemigo = enemigo.getVida();
         boolean mostrarSprite = (vidaEnemigo > 0) || enemigo.getAnimaciones().estaEnFade() || enemigo.getAnimaciones().estaEnParpadeo();
         if (mostrarSprite) {
-            // Se obtiene una copia del color original para restaurarlo luego.
-            Color originalColor = enemigo.getSprite().getColor().cpy();
+
+            Color originalColor = tmpColor.set(enemigo.getSprite().getColor());
 
             if (enemigo.getAnimaciones().estaEnFade()) {
                 float alphaFade = enemigo.getAnimaciones().getAlphaActual();

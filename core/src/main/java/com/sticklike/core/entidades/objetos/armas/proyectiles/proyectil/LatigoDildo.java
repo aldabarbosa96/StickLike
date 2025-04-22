@@ -67,12 +67,12 @@ public final class LatigoDildo implements Proyectiles {
 
     private float nextSamplePct;
 
-    private final Color colOrig = new Color(1f, 1f, 1f, 1f);
-    private final Color colImpact = new Color(0f, 0f, 1f, 1f);
-    private final Color colPart = new Color(0.85f, 0.4f, 0.7f, 1f);
-    private final Color colPartHit = new Color(0.051f, 0.596f, 1f, 1f);
-    private final Color colHalo = new Color(1f, 0.2f, 0.8f, 1f);
-    private final Color colHaloHit = new Color(0f, 0.8f, 1f, 1f);
+    private static final Color COL_ORIG = new Color(1f, 1f, 1f, 1f);
+    private static final Color COL_IMPACT = new Color(0f, 0f, 1f, 1f);
+    private static final Color COL_PART = new Color(0.85f, 0.4f, 0.7f, 1f);
+    private static final Color COL_PART_HIT = new Color(0.051f, 0.596f, 1f, 1f);
+    private static final Color COL_HALO = new Color(1f, 0.2f, 0.8f, 1f);
+    private static final Color COL_HALO_HIT = new Color(0f, 0.8f, 1f, 1f);
 
     private final float baseDamage;
 
@@ -97,16 +97,16 @@ public final class LatigoDildo implements Proyectiles {
         sprite.setSize(SW_W, SW_H);
         sprite.setOrigin(ORG_X, ORG_Y);
         if (lado == -1) sprite.flip(false, true);
-        sprite.setColor(colOrig);
+        sprite.setColor(COL_ORIG);
 
         rect = new Rectangle(0, 0, COLL_S, COLL_S);
 
         baseDamage = (DANYO_DILDO + extraDamage + MathUtils.random(4f)) * (1f + poderJugador / 100f);
 
-        particles = new RenderParticulasProyectil(20, 45, colPart);
+        particles = new RenderParticulasProyectil(20, 45, COL_PART);
         particles.setAlphaMult(0.8f);
 
-        particlesHalo = new RenderParticulasProyectil(20, 10, colHalo);
+        particlesHalo = new RenderParticulasProyectil(20, 10, COL_HALO);
         particlesHalo.setAlphaMult(1f);
 
         // Inicializar muestreo fijo
@@ -144,12 +144,12 @@ public final class LatigoDildo implements Proyectiles {
             impactT -= delta;
             if (impactT <= 0f) {
                 // Sprite vuelve a blanco
-                sprite.setColor(colOrig);
+                sprite.setColor(COL_ORIG);
                 // Partículas del látigo vuelven a su color y alpha original
-                particles.setColor(colPart);
+                particles.setColor(COL_PART);
                 particles.setAlphaMult(0.8f);
                 // Partículas del halo vuelven a su color y alpha original
-                particlesHalo.setColor(colHalo);
+                particlesHalo.setColor(COL_HALO);
                 particlesHalo.setAlphaMult(1f);
             }
         }
@@ -261,10 +261,10 @@ public final class LatigoDildo implements Proyectiles {
     @Override
     public void registrarImpacto(Enemigo e) {
         if (impactados.add(e)) {
-            sprite.setColor(colImpact);
-            particles.setColor(colPartHit);
+            sprite.setColor(COL_IMPACT);
+            particles.setColor(COL_PART_HIT);
             particles.setAlphaMult(1f);
-            particlesHalo.setColor(colHaloHit);
+            particlesHalo.setColor(COL_HALO_HIT);
             particlesHalo.setAlphaMult(1f);
             impactT = IMPACT_COLOR_TIME;
             GestorDeAudio.getInstance().reproducirEfecto("dildo", 0.8f);

@@ -61,6 +61,7 @@ public class RenderHUDComponents {
     private Viewport hudViewport;
     private List<Rectangle> slotsList = new ArrayList<>();
     private Set<String> statBoosteada = new HashSet<>();
+    private static final Color COLOR_SHAPEREDNDERER = new Color(0.75f, 0.75f, 0.75f, 1);
 
     public RenderHUDComponents(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, Jugador jugador, SistemaDeNiveles sistemaDeNiveles) {
         this.sistemaDeNiveles = sistemaDeNiveles;
@@ -157,7 +158,7 @@ public class RenderHUDComponents {
 
         // Círculos lado izquierdo
         float circleXLeft = margenIzquierdo / 2f;
-        shapeRenderer.setColor(new Color(0.75f, 0.75f, 0.75f, 1));
+        shapeRenderer.setColor(COLOR_SHAPEREDNDERER);
         shapeRenderer.circle(circleXLeft, circleYBottom, circleRadius);
         shapeRenderer.circle(circleXLeft, circleYTop, circleRadius);
     }
@@ -252,9 +253,7 @@ public class RenderHUDComponents {
         String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
         String[] descripciones = {VEL_MOV, RANGO, VEL_ATAQUE, FUERZA, NUM_PROYECTILES};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
-        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class),
-            manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class),
-            manager.get(ICONO_PROYECTILES, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class), manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class), manager.get(ICONO_PROYECTILES, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION + 10;
         float statsY = effectiveHUDHeight - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC1);
@@ -270,9 +269,7 @@ public class RenderHUDComponents {
         String valorCritico = df.format(jugador.getCritico() * 100) + " %";
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
-        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class),
-            manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class),
-            manager.get(ICONO_CRITICO, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class), manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class), manager.get(ICONO_CRITICO, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2 + 10f;
         float statsY = effectiveHUDHeight - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
@@ -379,14 +376,14 @@ public class RenderHUDComponents {
             ImageButton boton = new ImageButton(style);
 
             // Ajustamos tamaño y posición idéntico para todas las habilidades, excepto “DILDO” que necesita un pequeño tweak
-            float margin  = slot.width  * 0.175f;
-            float margin2 = slot.width  * 0.0375f;
+            float margin = slot.width * 0.175f;
+            float margin2 = slot.width * 0.0375f;
             if ("DILDO".equals(mejora.getIdHabilidad())) {
                 boton.setSize(slot.width - 2, slot.height - 7.5f * margin2);
                 boton.setPosition(slot.x + margin2, slot.y + margin * 1.35f);
             } else {
                 boton.setSize(slot.width - 2 * margin, slot.height - 2 * margin);
-                boton.setPosition(slot.x + margin,   slot.y + margin * 1.5f);
+                boton.setPosition(slot.x + margin, slot.y + margin * 1.5f);
             }
 
             /*boton.addListener(new ClickListener() {

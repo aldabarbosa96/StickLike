@@ -41,7 +41,7 @@ public final class LluviaMocos implements Proyectiles {
     private final Sprite sprite;
     private final Rectangle collisionRect = new Rectangle();
     private final Vector2 centroSprite = new Vector2();
-    private final Color colorParticulas = new Color(0.15f, 0.75f, 0.15f, 1f);
+    private static final Color COLOR_VERDE_MOCO = new Color(0.15f, 0.75f, 0.15f, 1f);
 
     private float damage;
     private EstadoMoco estadoMoco;
@@ -87,7 +87,7 @@ public final class LluviaMocos implements Proyectiles {
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(42, 4.5f, colorParticulas);
+        this.renderParticulasProyectil = new RenderParticulasProyectil(42, 4.5f, COLOR_VERDE_MOCO);
         this.collisionRect.set(x, y, width, height);
     }
 
@@ -134,7 +134,7 @@ public final class LluviaMocos implements Proyectiles {
             estadoMoco = EstadoMoco.EXPLODED;
             explosionTimer = 0f;
             gestorDeAudio.reproducirEfecto("moco", 0.33f);
-            dropTexture = getDropTexture(colorParticulas);
+            dropTexture = getDropTexture(COLOR_VERDE_MOCO);
         }
     }
 
@@ -286,7 +286,7 @@ public final class LluviaMocos implements Proyectiles {
     public void setDamage(float damage) {
         this.damage = damage;
         sprite.setColor(0.95f, 0.15f, 0.15f, 1f);
-        colorParticulas.set(0.9f, 0.15f, 0.15f, 1f);
+        COLOR_VERDE_MOCO.set(0.9f, 0.15f, 0.15f, 1f);
     }
 
     @Override

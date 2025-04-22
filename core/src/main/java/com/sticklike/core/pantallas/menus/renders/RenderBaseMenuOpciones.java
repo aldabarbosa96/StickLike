@@ -33,7 +33,9 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
     private Slider sliderEfectos;
     private CheckBox chkPantallaCompleta;
     private TextButton btnVolver;
-    private List<Actor> focus;
+    private static final Color COLOR_PIXMAP = new Color(0.97f, 0.88f, 0.6f, 1f);
+    private static final Color COLOR_PIXMAP_HOVER = new Color(1, 1, 1, 0.3f);
+    private static final Color COLOR_PIXMAP_GLOW = new Color(1f, 1f, 1f, 0.8f);
 
     public interface MenuOpcionesListener {
         void onVolver();
@@ -227,7 +229,7 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
 
     private TextureRegionDrawable crearBotonDrawable() {
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(new Color(0.97f, 0.88f, 0.6f, 1f));
+        pm.setColor(COLOR_PIXMAP);
         pm.fill();
         Texture tex = new Texture(pm);
         pm.dispose();
@@ -288,7 +290,7 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         TextButtonStyle style = new TextButtonStyle();
         style.font = getFont();
         Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        hoverPixmap.setColor(new Color(1, 1, 1, 0.3f));
+        hoverPixmap.setColor(COLOR_PIXMAP_HOVER);
         hoverPixmap.fill();
         Texture hoverTexture = new Texture(hoverPixmap);
         hoverPixmap.dispose();
@@ -301,7 +303,7 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         TextButtonStyle style = new TextButtonStyle();
         style.font = getFont();
         Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        glowPixmap.setColor(new Color(1f, 1f, 1f, 0.8f));
+        glowPixmap.setColor(COLOR_PIXMAP_GLOW);
         glowPixmap.fill();
         Texture glowTexture = new Texture(glowPixmap);
         glowPixmap.dispose();

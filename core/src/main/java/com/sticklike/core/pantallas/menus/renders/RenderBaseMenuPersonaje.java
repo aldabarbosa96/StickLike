@@ -25,6 +25,11 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
     private Table rootTable;
+    private static final Color COLOR_AUX_BLACK =  new Color(0, 0, 0, 1f);
+    private static final Color POSTIT_COLOR =  new Color(0.97f, 0.88f, 0.6f, 1f);
+    private static final Color PLUS_COLOR =   new Color(0, 0.75f, 0, 1);
+    private static final Color COLOR_BASE =   new Color(0.89f, 0.89f, 0.89f, 1f);
+    private static final Color COLOR_GRID =   new Color(0.64f, 0.80f, 0.9f, 1f);
 
     public RenderBaseMenuPersonaje() {
         super();
@@ -175,9 +180,8 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
     }
 
     private TextureRegionDrawable crearPostItDrawable() {
-        Color postItColor = new Color(0.97f, 0.88f, 0.6f, 1f);
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(postItColor);
+        pixmap.setColor(POSTIT_COLOR);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
@@ -256,7 +260,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         centerContainerLeft.add(statsTable).expandX().fillX().pad(10);
 
         // Creamos contenedor con sombra y borde para las estadísticas
-        NinePatchDrawable sombraRebordeLeft = crearSombraConBordeRectangulo(new Color(0, 0, 0, 1f));
+        NinePatchDrawable sombraRebordeLeft = crearSombraConBordeRectangulo(COLOR_AUX_BLACK);
         Table leftWrapper = new Table();
         leftWrapper.setBackground(sombraRebordeLeft);
         leftWrapper.add(centerContainerLeft).size(400, 500).center();
@@ -291,7 +295,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
         TextButton.TextButtonStyle plusStyle = new TextButton.TextButtonStyle();
         plusStyle.font = font;
-        plusStyle.fontColor = new Color(0, 0.75f, 0, 1);
+        plusStyle.fontColor = PLUS_COLOR;
 
         TextButton plusButton = new TextButton("+", plusStyle);
         Label.LabelStyle shadowStyle = new Label.LabelStyle(font, Color.BLACK);
@@ -323,12 +327,10 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         // 1) Fondo de cuadrícula
         int cellSize = 50;
         int textureSize = cellSize + 1;
-        Color baseColor = new Color(0.89f, 0.89f, 0.89f, 1f);
-        Color gridColor = new Color(0.64f, 0.80f, 0.9f, 1f);
         Pixmap gridPixmap = new Pixmap(textureSize, textureSize, Pixmap.Format.RGBA8888);
-        gridPixmap.setColor(baseColor);
+        gridPixmap.setColor(COLOR_BASE);
         gridPixmap.fill();
-        gridPixmap.setColor(gridColor);
+        gridPixmap.setColor(COLOR_GRID);
         gridPixmap.drawLine(textureSize - 1, 0, textureSize - 1, textureSize);
         gridPixmap.drawLine(0, textureSize - 1, textureSize, textureSize - 1);
         Texture gridTexture = new Texture(gridPixmap);
@@ -381,7 +383,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         stack.add(imageContainer);
 
         // 3) Wrapper con sombra y borde para el conjunto de equipo
-        NinePatchDrawable sombraRebordeRight = crearSombraConBordeRectangulo(new Color(0, 0, 0, 1f));
+        NinePatchDrawable sombraRebordeRight = crearSombraConBordeRectangulo(COLOR_AUX_BLACK);
         Table rightWrapper = new Table();
         rightWrapper.setBackground(sombraRebordeRight);
         rightWrapper.add(stack).size(400, 500).center();

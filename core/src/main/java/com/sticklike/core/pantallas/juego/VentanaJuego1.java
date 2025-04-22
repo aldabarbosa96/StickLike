@@ -184,7 +184,7 @@ public class VentanaJuego1 implements Screen {
 
         BoostIconEffectManager.getInstance().update(delta, renderHUDComponents);
         spriteBatch.begin();
-        BoostIconEffectManager.getInstance().render(spriteBatch, camara);
+        BoostIconEffectManager.getInstance().render(spriteBatch);
         spriteBatch.end();
 
         popUpMejoras.getUiStage().act(delta);

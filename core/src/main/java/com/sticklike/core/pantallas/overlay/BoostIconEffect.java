@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -77,7 +76,7 @@ public class BoostIconEffect {
         }
     }
 
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
+    public void render(SpriteBatch batch) {
         if (!active || icon == null) return;
 
         // Terminamos el batch para poder usar shapeRenderer
@@ -119,7 +118,6 @@ public class BoostIconEffect {
 
     public void dispose() {
         shapeRenderer.dispose();
-        //icon = null; todo --> (parece que sí ha resuelto el problema del icono null al reiniciar)
     }
 
     public boolean isActive() {

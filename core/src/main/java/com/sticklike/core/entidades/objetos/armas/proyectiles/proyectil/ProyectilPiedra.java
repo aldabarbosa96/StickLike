@@ -116,8 +116,7 @@ public final class ProyectilPiedra implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        // 21..31
-        float base = 21f + MathUtils.random() * 10f;
+        float base = MathUtils.random(21,31);
         if (MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return base * 1.5f;

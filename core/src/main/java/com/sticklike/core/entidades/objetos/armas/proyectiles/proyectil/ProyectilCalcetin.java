@@ -39,7 +39,6 @@ public final class ProyectilCalcetin implements Proyectiles {
     private final RenderParticulasProyectil particles;
     private final Set<Enemigo> impactados;
     private final Jugador jugador;
-    private final GestorDeAudio audio;
     private final float damageEscalado;
     private final float velocidadProyectil;
     private final float multiplicadorVelocidad;
@@ -65,7 +64,6 @@ public final class ProyectilCalcetin implements Proyectiles {
         this.activo = true;
         this.esCritico = false;
         this.impactoTimer = 0f;
-        this.audio = GestorDeAudio.getInstance();
 
         sprite = new Sprite(TEXTURE);
         sprite.setSize(SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -190,6 +188,7 @@ public final class ProyectilCalcetin implements Proyectiles {
             sprite.setColor(Color.RED);
             particles.setColor(Color.RED);
             impactoTimer = 0f;
+            GestorDeAudio.getInstance().reproducirEfecto("impactoBase",1f);
         }
     }
 

@@ -10,32 +10,37 @@ import com.sticklike.core.entidades.objetos.texto.FontManager;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DebugStats {
     private BitmapFont font;
-    private GlyphLayout layout; // Se declara una única instancia a nivel de clase.
+    private GlyphLayout layout;
     private boolean enabled;
+
     private float tiempoEjecucion;
     private float acumuladorDelta;
     private int contadorFrames;
     private float deltaPromedio;
     private float frameTimeMs;
+
     private long accumulatedGCCount;
     private long lastGCTime;
     private long previousGCCount;
     private long previousGCTime;
-    private float fpsInstantaneo;
-    private float fpsMinimoSegundo = Float.MAX_VALUE;
-    private float fpsMinimoVisible = 0f;
+    private float fps1LowVisible;
+
+    private final List<Float> frameTimesMs;
 
     public DebugStats() {
         font = FontManager.getDebugFont();
-        font.getData().setScale(0.68f);
+        font.getData().setScale(0.675f);
         font.getData().markupEnabled = true;
         font.setColor(Color.BLACK);
         layout = new GlyphLayout();
         enabled = true;
+
         tiempoEjecucion = 0;
         acumuladorDelta = 0;
         contadorFrames = 0;
@@ -46,6 +51,9 @@ public class DebugStats {
         previousGCCount = 0;
         previousGCTime = 0;
         updateGCStats();
+
+        frameTimesMs = new ArrayList<>();
+        fps1LowVisible = 0f;
     }
 
     private void updateGCStats() {
@@ -74,27 +82,39 @@ public class DebugStats {
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             enabled = !enabled;
         }
+
         float delta = Gdx.graphics.getDeltaTime();
         tiempoEjecucion += delta;
         acumuladorDelta += delta;
         contadorFrames++;
+
+        // Tiempo de este frame
         frameTimeMs = delta * 1000f;
-        fpsInstantaneo = 1f / delta;
+        frameTimesMs.add(frameTimeMs);
 
-        if (fpsInstantaneo < fpsMinimoSegundo) {
-            fpsMinimoSegundo = fpsInstantaneo;
-        }
-
+        // Cada segundo, calcula FPS 1% low y reinicia contadores
         if (acumuladorDelta >= 1f) {
             deltaPromedio = acumuladorDelta / contadorFrames;
+            computeOnePercentLow();
+
             acumuladorDelta = 0;
             contadorFrames = 0;
+            frameTimesMs.clear();
 
-            fpsMinimoVisible = fpsMinimoSegundo;
-            fpsMinimoSegundo = Float.MAX_VALUE;
-            // Actualizamos las estadísticas del GC cada segundo
             updateGCStats();
         }
+    }
+
+    // Calcula el percentil 99 de frame-times y lo convierte a FPS
+    private void computeOnePercentLow() {
+        if (frameTimesMs.isEmpty()) {
+            fps1LowVisible = 0f;
+            return;
+        }
+        Collections.sort(frameTimesMs);
+        int idx = Math.min(frameTimesMs.size() - 1, (int)(0.99f * frameTimesMs.size()));
+        float p99ms = frameTimesMs.get(idx);
+        fps1LowVisible = 1000f / p99ms;
     }
 
     public void render(SpriteBatch batch, float virtualHeight) {
@@ -111,10 +131,20 @@ public class DebugStats {
         float x = margin;
         float y = virtualHeight - margin;
 
-        String textoDebug = "[GREEN]FPS (est.): " + fps + "[]\n" +
-            "[BLUE]FPS (min real): " + String.format("%.1f", fpsMinimoVisible) + "[]\n\n" + "[BLACK]Delta: " + String.format("%.3f", delta) + " s\n" + "Frame Time: " + String.format("%.2f", frameTimeMs) + " ms\n" + "JavaH: " + String.format("%.2f", javaHeapMB) + " MB\n" + "NativeH: " + String.format("%.2f", nativeHeapMB) + " MB\n" + "Runtime: " + String.format("%.1f", tiempoEjecucion) + " s\n" + "Avg. Delta: " + String.format("%.3f", deltaPromedio) + " s\n" + "Free RAM: " + String.format("%.2f", memoriaLibreMB) + " MB\n" + "Total RAM: " + String.format("%.2f", memoriaTotalMB) + " MB\n" + "GC Count: " + accumulatedGCCount + "\n" + "GC Time (last): " + lastGCTime + " ms";
+        String textoDebug =
+            "[BLUE]FPS (current)  " + fps + "\n"
+                + "FPS (1% low)  " + String.format("%.1f", fps1LowVisible) + "[]\n\n"
+                + "[BLACK]Delta: " + String.format("%.3f", delta) + " s\n"
+                + "Frame Time: " + String.format("%.2f", frameTimeMs) + " ms\n"
+                + "JavaH: " + String.format("%.2f", javaHeapMB) + " MB\n"
+                + "NativeH: " + String.format("%.2f", nativeHeapMB) + " MB\n"
+                + "Runtime: " + String.format("%.1f", tiempoEjecucion) + " s\n"
+                + "Avg. Delta: " + String.format("%.3f", deltaPromedio) + " s\n"
+                + "Free RAM: " + String.format("%.2f", memoriaLibreMB) + " MB\n"
+                + "Total RAM: " + String.format("%.2f", memoriaTotalMB) + " MB\n"
+                + "GC Count: " + accumulatedGCCount + "\n"
+                + "GC Time (last): " + lastGCTime + " ms";
 
-        // Actualizamos el layout con el nuevo texto, sin crear una nueva instancia
         layout.setText(font, textoDebug);
         font.draw(batch, layout, x, y);
     }
