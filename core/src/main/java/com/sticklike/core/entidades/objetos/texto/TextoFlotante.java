@@ -2,8 +2,8 @@ package com.sticklike.core.entidades.objetos.texto;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
@@ -37,17 +37,17 @@ public class TextoFlotante {
 
     /**
      * Constructor principal.
-     * @param texto Texto a mostrar.
-     * @param x Posición horizontal base.
-     * @param y Posición vertical base.
-     * @param duracion Tiempo total a mostrar el texto.
-     * @param finalScaleX Escala final en X.
-     * @param finalScaleY Escala final en Y.
-     * @param esCritico Indica si el daño es crítico.
+     *
+     * @param texto            Texto a mostrar.
+     * @param x                Posición horizontal base.
+     * @param y                Posición vertical base.
+     * @param duracion         Tiempo total a mostrar el texto.
+     * @param finalScaleX      Escala final en X.
+     * @param finalScaleY      Escala final en Y.
+     * @param esCritico        Indica si el daño es crítico.
      * @param fuenteCompartida Fuente (BitmapFont) compartida.
      */
-    public TextoFlotante(String texto, float x, float y, float duracion,
-                         float finalScaleX, float finalScaleY, boolean esCritico, BitmapFont fuenteCompartida) {
+    public TextoFlotante(String texto, float x, float y, float duracion, float finalScaleX, float finalScaleY, boolean esCritico, BitmapFont fuenteCompartida) {
         this.texto = texto;
         // Alternamos extraOffset para evitar que se solapen
         this.extraOffsetX = alternarOffset ? 4 : -4;
@@ -84,13 +84,13 @@ public class TextoFlotante {
     }
 
     // Constructor simplificado que usa constantes de tamaño predefinido.
-    public TextoFlotante(String texto, float x, float y, float duracion,
-                         BitmapFont fuenteCompartida, boolean esCritico) {
+    public TextoFlotante(String texto, float x, float y, float duracion, BitmapFont fuenteCompartida, boolean esCritico) {
         this(texto, x, y, duracion, TEXTO_WIDTH, TEXTO_HEIGHT, esCritico, fuenteCompartida);
     }
 
     /**
      * Indica si el texto ha caducado.
+     *
      * @return true si la duración ha terminado.
      */
     public boolean haDesaparecido() {
@@ -100,6 +100,7 @@ public class TextoFlotante {
     /**
      * Actualiza el texto flotante: reduce la duración, actualiza la escala y desplaza verticalmente.
      * Además, almacena la posición actual en un buffer circular para potenciales efectos adicionales.
+     *
      * @param delta Tiempo transcurrido desde el último frame.
      */
     public void actualizarTextoFlotante(float delta) {
@@ -120,6 +121,7 @@ public class TextoFlotante {
 
     /**
      * Renderiza el texto y su reborde.
+     *
      * @param batch SpriteBatch para dibujar.
      */
     public void renderizarTextoFlotante(SpriteBatch batch) {
@@ -134,6 +136,7 @@ public class TextoFlotante {
 
     /**
      * Dibuja un reborde para que el texto sea más legible.
+     *
      * @param batch SpriteBatch para dibujar.
      */
     private void dibujarReborde(SpriteBatch batch) {

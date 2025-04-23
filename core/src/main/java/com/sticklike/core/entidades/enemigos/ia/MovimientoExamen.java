@@ -27,9 +27,10 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
     private float objetivoX;
     private float objetivoY;
     private float tParabola = 0f;
-    private Vector2 inicioParabola;
-    private Vector2 controlParabola;
-    private Vector2 finParabola;
+    private final Vector2 inicioParabola = new Vector2();
+    private final Vector2 controlParabola = new Vector2();
+    private final Vector2 finParabola = new Vector2();
+    private final Vector2 tmpBezier = new Vector2();
     private static final float CARGA_RANDOM_OFFSET = 1.5f;
     private static final float DISPARO_RANDOM_OFFSET = 1.25f;
     private static final float PARABOLA_RANDOM_OFFSET = 1.75f;
@@ -115,12 +116,12 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
         tParabola = 0f;
 
         // Punto de partida: donde está el enemigo ahora
-        inicioParabola = new Vector2(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+        inicioParabola.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
 
         // Punto final: la posición del jugador en ese momento con el offset aleatorio
         float jugadorActualX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f + offsetX;
         float jugadorActualY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + offsetY;
-        finParabola = new Vector2(jugadorActualX, jugadorActualY);
+        finParabola.set(jugadorActualX, jugadorActualY);
 
         // Control: para dar la curvatura “por encima”
         float xControl = (inicioParabola.x + finParabola.x) / 2f;
@@ -131,7 +132,7 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
         float controlOffsetX = (float) ((Math.random() - 0.5f) * 2.0f * 30f);
         float controlOffsetY = (float) ((Math.random() - 0.5f) * 2.0f * 50f);
 
-        controlParabola = new Vector2(xControl + controlOffsetX, yControl + controlOffsetY);
+        controlParabola.set(xControl + controlOffsetX, yControl + controlOffsetY);
     }
 
     private void faseParabola(float delta, Sprite sprite, Jugador jugador) {
@@ -196,7 +197,7 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
         float x = oneMinusT * oneMinusT * start.x + 2f * oneMinusT * t * control.x + t * t * end.x;
         float y = oneMinusT * oneMinusT * start.y + 2f * oneMinusT * t * control.y + t * t * end.y;
 
-        return new Vector2(x, y);
+        return tmpBezier.set(x,y);
     }
 
 

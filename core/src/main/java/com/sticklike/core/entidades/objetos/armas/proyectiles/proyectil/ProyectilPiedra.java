@@ -23,6 +23,8 @@ public final class ProyectilPiedra implements Proyectiles {
     private static final float PARTICLE_LEN = 18f;
     private static final float PARTICLE_WID = 3.5f;
     private static final Color PARTICLE_COLOR = Color.BLACK;
+    private float distanciaRecorrida = 0f;
+    private static final float MAX_DISTANCE = 1000f;
 
     private final Sprite sprite;
     private final RenderParticulasProyectil particles;
@@ -67,6 +69,11 @@ public final class ProyectilPiedra implements Proyectiles {
         // Movimiento
         float move = BASE_SPEED * speedMultiplier * delta;
         sprite.translate(dirX * move, dirY * move);
+        distanciaRecorrida += move;
+
+        if (distanciaRecorrida >= MAX_DISTANCE) {
+            desactivarProyectil();
+        }
 
         // Partículas
         center.set(sprite.getX() + sprite.getWidth() * 0.5f, sprite.getY() + sprite.getHeight() * 0.5f);
@@ -139,6 +146,7 @@ public final class ProyectilPiedra implements Proyectiles {
     @Override
     public void registrarImpacto(Enemigo enemigo) {
         audio.reproducirEfecto("impactoBase", 1f);
+        desactivarProyectil();
     }
 
     @Override

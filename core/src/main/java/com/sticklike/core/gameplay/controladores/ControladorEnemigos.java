@@ -55,6 +55,9 @@ public class ControladorEnemigos {
     private static final float INTERVALO_GRUPO_EXAMEN = 0.8f;
     private float temporizadorVaterSpawn = 0f;
     private static float intervaloVaterSpawn = 40f;
+    private final Vector2 tmpRandomSpawn = new Vector2();
+    private final Vector2 tmpPlayerCenter = new Vector2();
+    private final Vector2 tmpNearSpawn = new Vector2();
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;
@@ -156,12 +159,13 @@ public class ControladorEnemigos {
         float rightLimit = playerX + (VentanaJuego1.worldWidth / 2f) - CORRECCION_SPAWN;
         float bottomLimit = playerY - (VentanaJuego1.worldHeight / 2f) - CORRECCION_SPAWN;
         float topLimit = playerY + (VentanaJuego1.worldHeight / 2f) - CORRECCION_SPAWN;
-        return switch (MathUtils.random(3)) {
-            case 0 -> new Vector2(MathUtils.random(leftLimit, rightLimit), topLimit);
-            case 1 -> new Vector2(MathUtils.random(leftLimit, rightLimit), bottomLimit);
-            case 2 -> new Vector2(leftLimit, MathUtils.random(bottomLimit, topLimit));
-            default -> new Vector2(rightLimit, MathUtils.random(bottomLimit, topLimit));
-        };
+        switch (MathUtils.random(3)) {
+            case 0 -> tmpRandomSpawn.set(MathUtils.random(leftLimit, rightLimit), topLimit);
+            case 1 -> tmpRandomSpawn.set(MathUtils.random(leftLimit, rightLimit), bottomLimit);
+            case 2 -> tmpRandomSpawn.set(leftLimit, MathUtils.random(bottomLimit, topLimit));
+            default -> tmpRandomSpawn.set(rightLimit, MathUtils.random(bottomLimit, topLimit));
+        }
+        return tmpRandomSpawn;
     }
 
     private void spawnEnGrupo(String tipoElegido, float randomSpeed) {
@@ -169,17 +173,16 @@ public class ControladorEnemigos {
             return;
         }
         temporizadorGruposExamen = INTERVALO_GRUPO_EXAMEN;
-        int groupSize = 18;
-        if (enemigos.size + groupSize > MAX_ENEMIGOS) {
-            groupSize = MAX_ENEMIGOS - enemigos.size;
-        }
+        int groupSize = Math.min(18, MAX_ENEMIGOS - enemigos.size);
+        // getRandomSpawnPosition() ya setea tmpRandomSpawn y lo devuelve
         Vector2 basePos = getRandomSpawnPosition();
         for (int i = 0; i < groupSize; i++) {
-            Vector2 spawnPos = new Vector2(basePos.x, basePos.y);
-            Enemigo enemigo = fabricaEnemigos(tipoElegido, spawnPos.x, spawnPos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
+            // No creamos un nuevo Vector2, usamos directamente basePos
+            Enemigo enemigo = fabricaEnemigos(tipoElegido, basePos.x, basePos.y, jugador, randomSpeed, ventanaJuego1.getOrtographicCamera());
             enemigos.add(enemigo);
         }
     }
+
 
     private void spawnVaterEnemigo() {
         if (enemigos.size >= MAX_ENEMIGOS) return;
@@ -196,12 +199,11 @@ public class ControladorEnemigos {
         Array<Vector2> candidatePositions = PoissonPoints.getInstance().generatePoissonPoints(MAP_MIN_X, MAP_MIN_Y, MAP_MAX_X, MAP_MAX_Y, MIN_DIST_SAME_TEXTURE, 30);
         candidatePositions.shuffle();
 
-        float playerCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
-        float playerCenterY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
-        Vector2 playerCenter = new Vector2(playerCenterX, playerCenterY);
+        // Calculamos y guardamos el centro del jugador en tmpPlayerCenter
+        tmpPlayerCenter.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f, jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f);
 
         for (Vector2 candidateCenter : candidatePositions) {
-            if (candidateCenter.dst(playerCenter) < 750f) {
+            if (candidateCenter.dst(tmpPlayerCenter) < 750f) {
                 continue;
             }
             float spawnX = candidateCenter.x - ANCHO_DESTRUCT / 2f;
@@ -211,8 +213,7 @@ public class ControladorEnemigos {
             }
             Destructibles d = new Destructibles(spawnX, spawnY, renderBaseEnemigos);
             enemigos.add(d);
-            count++;
-            if (count >= MAX_DESTRUCTIBLES) {
+            if (++count >= MAX_DESTRUCTIBLES) {
                 break;
             }
         }
@@ -225,19 +226,19 @@ public class ControladorEnemigos {
         }
         yaSpawneadosDestructibles2 = true;
 
+        // La primera posición cerca del jugador
         Vector2 firstPos = getSpawnPositionNearPlayer(500f, 500f);
-        Destructibles2 d2 = new Destructibles2(firstPos.x, firstPos.y, renderBaseEnemigos);
-        enemigos.add(d2);
+        enemigos.add(new Destructibles2(firstPos.x, firstPos.y, renderBaseEnemigos));
+
         int count = 1;
         Array<Vector2> candidatePositions = PoissonPoints.getInstance().generatePoissonPoints(MAP_MIN_X, MAP_MIN_Y, MAP_MAX_X, MAP_MAX_Y, MIN_DIST_SAME_TEXTURE2, 30);
         candidatePositions.shuffle();
 
-        float playerCenterX = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f;
-        float playerCenterY = jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f;
-        Vector2 playerCenter = new Vector2(playerCenterX, playerCenterY);
+        // Recalculamos tmpPlayerCenter
+        tmpPlayerCenter.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f, jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f);
 
         for (Vector2 candidateCenter : candidatePositions) {
-            if (candidateCenter.dst(playerCenter) < 750) {
+            if (candidateCenter.dst(tmpPlayerCenter) < 750f) {
                 continue;
             }
             float spawnX = candidateCenter.x - ANCHO_DESTRUCT / 2f;
@@ -245,10 +246,8 @@ public class ControladorEnemigos {
             if (spawnX < MAP_MIN_X || spawnX + ANCHO_DESTRUCT > MAP_MAX_X || spawnY < MAP_MIN_Y || spawnY + ALTO_DESTRUCT > MAP_MAX_Y) {
                 continue;
             }
-            Destructibles2 d2rest = new Destructibles2(spawnX, spawnY, renderBaseEnemigos);
-            enemigos.add(d2rest);
-            count++;
-            if (count >= MAX_DESTRUCTIBLES2) {
+            enemigos.add(new Destructibles2(spawnX, spawnY, renderBaseEnemigos));
+            if (++count >= MAX_DESTRUCTIBLES2) {
                 break;
             }
         }
@@ -263,7 +262,8 @@ public class ControladorEnemigos {
         float spawnY = playerY + MathUtils.sin(angle) * distance;
         spawnX = MathUtils.clamp(spawnX, MAP_MIN_X, MAP_MAX_X - ANCHO_DESTRUCT_LATA - 50f);
         spawnY = MathUtils.clamp(spawnY, MAP_MIN_Y, MAP_MAX_Y - ALTO_DESTRUCT_LATA - 50f);
-        return new Vector2(spawnX, spawnY);
+        tmpNearSpawn.set(spawnX, spawnY);
+        return tmpNearSpawn;
     }
 
     public static Enemigo fabricaEnemigos(String tipoEnemigo, float x, float y, Jugador jugador, float velocidad, OrthographicCamera camera) {

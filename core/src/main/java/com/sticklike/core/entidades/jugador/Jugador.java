@@ -40,6 +40,8 @@ public class Jugador {
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
     private RenderParticulasSangre renderParticulasSangre;
+    private final Vector2 tmpVector = new Vector2();
+
 
     // Atributos de stats todo --> mover a clase modelo dedicada
     private static float velocidadJugador;
@@ -257,7 +259,9 @@ public class Jugador {
             if (renderParticulasSangre != null) {
                 float cx = sprite.getX() + sprite.getWidth() / 2;
                 float cy = sprite.getY() + sprite.getHeight() / 2;
-                renderParticulasSangre.spawnBlood(new Vector2(cx, cy), 8);
+                tmpVector.set(cx, cy);
+                renderParticulasSangre.spawnBlood(tmpVector, 8);
+
             }
         }
     }

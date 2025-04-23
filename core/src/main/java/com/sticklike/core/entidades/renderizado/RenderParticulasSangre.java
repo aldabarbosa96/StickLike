@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
  */
 public class RenderParticulasSangre {
     private static final Color COLOR_SANGRE_BASE = new Color(0.75f, 0, 0, 0.75f);
+    private static Vector2 tmp = new Vector2();
 
     /**
      * Clase interna que representa cada partícula (gota/mancha) de sangre.
@@ -65,7 +66,7 @@ public class RenderParticulasSangre {
         for (int i = 0; i < cantidadGotas; i++) {
             float offsetX = MathUtils.random(-7.5f, 7.5f);
             float offsetY = MathUtils.random(-7.5f, 7.5f);
-            Vector2 spawnPos = new Vector2(center.x + offsetX, center.y + offsetY);
+            Vector2 spawnPos = tmp.set(center).add(offsetX, offsetY);
 
             float radius = MathUtils.random(1f, 3f);
             float lifetime = MathUtils.random(2.5f, 5f);

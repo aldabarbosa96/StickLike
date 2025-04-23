@@ -1,11 +1,10 @@
-
 buildscript {
   repositories {
     gradlePluginPortal()
   }
   dependencies {
     classpath "io.github.fourlastor:construo:1.4.3"
-    if(enableGraalNative == 'true') {
+    if (enableGraalNative == 'true') {
       classpath "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin:0.9.28"
     }
   }
@@ -18,14 +17,14 @@ apply plugin: 'io.github.fourlastor.construo'
 
 import io.github.fourlastor.construo.Target
 
-sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
+sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
 mainClassName = 'com.sticklike.lwjgl3.Lwjgl3Launcher'
 application.setMainClass(mainClassName)
 eclipse.project.name = appName + '-lwjgl3'
 java.sourceCompatibility = 21
 java.targetCompatibility = 21
 if (JavaVersion.current().isJava9Compatible()) {
-        compileJava.options.release.set(21)
+  compileJava.options.release.set(21)
 }
 
 dependencies {
@@ -36,14 +35,14 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation project(':core')
-  implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion"){exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'}
+  implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion") { exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl' }
 
-  if(enableGraalNative == 'true') {
+  if (enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-bullet:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
-    }
+    implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
+    implementation "io.github.berstanio:gdx-svmhelper-extension-bullet:$graalHelperVersion"
+    implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
+  }
 
 }
 
@@ -53,7 +52,16 @@ run {
   workingDir = rootProject.file('assets').path
   setIgnoreExitValue(true)
 
-  if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
+  if (os.contains('mac')) {
+    jvmArgs += "-XstartOnFirstThread"
+  }
+
+  // ajustes de memoria para la JVM (en el IDE) todo --> [RECORDAR] --> mover estos mismos flags a applicationDefaultJvmArgs para los scripts de producción
+  jvmArgs += ["-Xms512m",
+              "-Xmx1024m",
+              "-XX:+UseG1GC",
+              "-XX:MaxGCPauseMillis=5",
+              "-XX:InitiatingHeapOccupancyPercent=30"]
 }
 
 jar {
@@ -79,41 +87,41 @@ jar {
 }
 
 construo {
-    // name of the executable
-    name.set(appName)
-    // human-readable name, used for example in the `.app` name for macOS
-    humanName.set(appName)
-    // Optional, defaults to project version property
-    version.set("$projectVersion")
+  // name of the executable
+  name.set(appName)
+  // human-readable name, used for example in the `.app` name for macOS
+  humanName.set(appName)
+  // Optional, defaults to project version property
+  version.set("$projectVersion")
 
-    targets.configure {
-      create("linuxX64", Target.Linux) {
-        architecture.set(Target.Architecture.X86_64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.12_7.tar.gz")
-      }
-      create("macM1", Target.MacOs) {
-        architecture.set(Target.Architecture.AARCH64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.12_7.tar.gz")
-        // macOS needs an identifier
-        identifier.set("com.sticklike." + appName)
-        // Optional: icon for macOS
-        macIcon.set(project.file("icons/logo.icns"))
-      }
-      create("macX64", Target.MacOs) {
-        architecture.set(Target.Architecture.X86_64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_mac_hotspot_17.0.12_7.tar.gz")
-        // macOS needs an identifier
-        identifier.set("com.sticklike." + appName)
-        // Optional: icon for macOS
-        macIcon.set(project.file("icons/logo.icns"))
-      }
-      create("winX64", Target.Windows) {
-        architecture.set(Target.Architecture.X86_64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.12_7.zip")
-        // Uncomment the next line to show a console when the game runs, to print messages.
-        //useConsole.set(true)
-      }
+  targets.configure {
+    create("linuxX64", Target.Linux) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.12_7.tar.gz")
     }
+    create("macM1", Target.MacOs) {
+      architecture.set(Target.Architecture.AARCH64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.12_7.tar.gz")
+      // macOS needs an identifier
+      identifier.set("com.sticklike." + appName)
+      // Optional: icon for macOS
+      macIcon.set(project.file("icons/logo.icns"))
+    }
+    create("macX64", Target.MacOs) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_mac_hotspot_17.0.12_7.tar.gz")
+      // macOS needs an identifier
+      identifier.set("com.sticklike." + appName)
+      // Optional: icon for macOS
+      macIcon.set(project.file("icons/logo.icns"))
+    }
+    create("winX64", Target.Windows) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.12_7.zip")
+      // Uncomment the next line to show a console when the game runs, to print messages.
+      //useConsole.set(true)
+    }
+  }
 }
 
 // Equivalent to the jar task; here for compatibility with gdx-setup.
@@ -125,10 +133,8 @@ distributions {
   main {
     contents {
       into('libs') {
-        project.configurations.runtimeClasspath.files.findAll { file ->
-          file.getName() != project.tasks.jar.outputs.files.singleFile.name
-        }.each { file ->
-          exclude file.name
+        project.configurations.runtimeClasspath.files.findAll { file -> file.getName() != project.tasks.jar.outputs.files.singleFile.name
+        }.each { file -> exclude file.name
         }
       }
     }
@@ -138,6 +144,6 @@ distributions {
 startScripts.dependsOn(':lwjgl3:jar')
 startScripts.classpath = project.tasks.jar.outputs.files
 
-if(enableGraalNative == 'true') {
+if (enableGraalNative == 'true') {
   apply from: file("nativeimage.gradle")
 }
