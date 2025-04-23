@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.jugador;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.controllers.Controllers;
 
 /**
  * Clase que gestiona la entrada de teclas y mando para controlar el movimiento del jugador.
- * Detecta entradas del teclado y de un gamepad, permitiendo su uso simultáneo
+ * Detecta entradas del teclado y de un gamepad, permitiendo su uso simultáneo.
  */
 public class InputsJugador extends ControllerAdapter {
     private float movX = 0;
@@ -17,9 +18,13 @@ public class InputsJugador extends ControllerAdapter {
     private Controller mando; // Referencia al mando conectado
 
     public InputsJugador() {
-        if (!Controllers.getControllers().isEmpty()) {
-            mando = Controllers.getControllers().first();
-            mando.addListener(this);
+        // Solo registramos el listener si NO estamos en Android
+        if (Gdx.app.getType() != Application.ApplicationType.Android) {
+            Controllers.addListener(this);
+            if (!Controllers.getControllers().isEmpty()) {
+                mando = Controllers.getControllers().first();
+                mando.addListener(this);
+            }
         }
     }
 
@@ -33,11 +38,9 @@ public class InputsJugador extends ControllerAdapter {
         movX = tecladoX + mandoX;
         movY = tecladoY + mandoY;
 
-        // NormalizaMOS valores para evitar que la suma sea mayor a 1 en diagonal
-        if (movX > 1) movX = 1;
-        if (movX < -1) movX = -1;
-        if (movY > 1) movY = 1;
-        if (movY < -1) movY = -1;
+        // Normalizamos para evitar valores mayores a 1
+        movX = Math.max(-1, Math.min(1, movX));
+        movY = Math.max(-1, Math.min(1, movY));
 
         if (movX < 0) {
             direction = Direction.LEFT;
@@ -68,11 +71,9 @@ public class InputsJugador extends ControllerAdapter {
         return 0;
     }
 
-
     private float procesarInputMandoX() {
         if (mando == null) return 0;
         float axisX = mando.getAxis(0); // Stick izquierdo horizontal
-
         if (axisX < -0.2f) return -1;
         if (axisX > 0.2f) return 1;
         return 0;
@@ -81,7 +82,6 @@ public class InputsJugador extends ControllerAdapter {
     private float procesarInputMandoY() {
         if (mando == null) return 0;
         float axisY = mando.getAxis(1); // Stick izquierdo vertical
-
         if (axisY < -0.2f) return 1;
         if (axisY > 0.2f) return -1;
         return 0;
@@ -89,6 +89,7 @@ public class InputsJugador extends ControllerAdapter {
 
     @Override
     public boolean buttonDown(Controller controller, int buttonIndex) {
+        // Puedes ajustar la lógica según lo que se necesite hacer cuando se presione un botón
         return true;
     }
 
@@ -110,9 +111,7 @@ public class InputsJugador extends ControllerAdapter {
     }
 
     /**
-     * Clase contenedora del resultado del input:
-     * - movX, movY (normalizados)
-     * - direction (LEFT, RIGHT, IDLE)
+     * Clase contenedora del resultado del input: movX, movY (normalizados) y direction.
      */
     public static class ResultadoInput {
         public float movX;

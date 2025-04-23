@@ -1,5 +1,6 @@
 package com.sticklike.core.utilidades;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -46,6 +47,11 @@ public class DebugStats {
     }
 
     private void updateGCStats() {
+        // En Android, ManagementFactory no está disponible, así que saltamos este proceso.
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            return;
+        }
+
         long currentCount = 0;
         long currentTime = 0;
         List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();

@@ -1,5 +1,6 @@
 package com.sticklike.core.ui;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -19,6 +20,7 @@ public class Pausa {
         this.isPaused = false;
         this.inputsBloqueados = false;
         this.ventanaJuego1 = ventanaJuego1;
+
         inputsMenu = new InputsMenu(new InputsMenu.MenuInputListener() {
             @Override public void onNavigateUp()    { if(isPaused) renderPausa.navigateUp(); }
             @Override public void onNavigateDown()  { if(isPaused) renderPausa.navigateDown(); }
@@ -26,7 +28,12 @@ public class Pausa {
             @Override public void onBack()          { if(isPaused) alternarPausa(); }
             @Override public void onPauseToggle()   { alternarPausa(); }
         });
-        Controllers.addListener(inputsMenu);
+
+        // Solo se agrega el listener de Controllers si no se está en Android
+        if (Gdx.app.getType() != Application.ApplicationType.Android) {
+            Controllers.addListener(inputsMenu);
+        }
+
         renderPausa = new RenderPausa(this, ventanaJuego1);
     }
 
@@ -72,7 +79,10 @@ public class Pausa {
     }
 
     public void dispose() {
-        Controllers.removeListener(inputsMenu);
+        // Se elimina el listener solo si se agregó previamente
+        if (Gdx.app.getType() != Application.ApplicationType.Android) {
+            Controllers.removeListener(inputsMenu);
+        }
         renderPausa.dispose();
     }
 
@@ -83,5 +93,4 @@ public class Pausa {
     public InputsMenu getInputsMenu() {
         return inputsMenu;
     }
-
 }

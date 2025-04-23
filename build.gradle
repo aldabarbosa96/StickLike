@@ -9,7 +9,7 @@ buildscript {
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
   dependencies {
-
+    classpath 'com.android.tools.build:gradle:8.9.1'
 
   }
 }
@@ -27,24 +27,16 @@ allprojects {
   }
 }
 
-configure(subprojects) {
+configure(subprojects.findAll { it.name != "android" }) {
   apply plugin: 'java-library'
   sourceCompatibility = 21
 
-  // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
-  // The article can be helpful when using assets.txt in your project.
+  // Resto de configuraciones que sean pertinentes para módulos Java
   tasks.register('generateAssetList') {
     inputs.dir("${project.rootDir}/assets/")
-    // projectFolder/assets
     File assetsFolder = new File("${project.rootDir}/assets/")
-    // projectFolder/assets/assets.txt
     File assetsFile = new File(assetsFolder, "assets.txt")
-    // delete that file in case we've already created it
     assetsFile.delete()
-
-    // iterate through all files inside that folder
-    // convert it to a relative path
-    // and append it to the file assets.txt
     fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
       assetsFile.append(it + "\n")
     }
@@ -55,6 +47,7 @@ configure(subprojects) {
     options.incremental = true
   }
 }
+
 
 subprojects {
   version = '$projectVersion'
