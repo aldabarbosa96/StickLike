@@ -27,8 +27,8 @@ public class ColisionesJugador {
 
     public boolean enColision(Enemigo enemigo, Jugador jugador) {
         Rectangle fullRect = enemigo.getSprite().getBoundingRectangle();
-        float scaleX = 0.75f;
-        float scaleY = 0.75f;
+        float scaleX = 0.5f;
+        float scaleY = 0.33f;
 
         float newWidth = fullRect.width * scaleX;
         float newHeight = fullRect.height * scaleY;
