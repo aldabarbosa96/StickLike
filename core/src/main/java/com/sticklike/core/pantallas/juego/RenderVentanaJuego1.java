@@ -37,7 +37,7 @@ public class RenderVentanaJuego1 {
     private final int tamanyoCeldas;
     private Array<Borron> borronesMapa;
     private AtomicBoolean borronesListos = new AtomicBoolean(false);
-    private static final float POISSON_MIN_DISTANCE = 500f;
+    private static final float POISSON_MIN_DISTANCE = 750f;
     private static final int POISSON_K = 30;
     private boolean flashVidaActivo = false;
     private float flashVidaTimer = 0f;
@@ -99,7 +99,7 @@ public class RenderVentanaJuego1 {
         }
 
         if (flashVidaActivo) {
-            Gdx.gl.glClearColor(0.82f, 0.88f, 0.82f, 1); // todo --> revisar el color (no queda muy bien de momento)
+            Gdx.gl.glClearColor(0.8f, 0.88f, 0.8f, 1); // todo --> revisar el color (no queda muy bien de momento)
             flashVidaTimer -= Gdx.graphics.getDeltaTime();
             if (flashVidaTimer <= 0) {
                 flashVidaActivo = false;
@@ -108,13 +108,13 @@ public class RenderVentanaJuego1 {
             // 1) Limpiamos la pantalla
             if (Jugador.getVidaJugador() <= 15) {
                 if (jugador.getRenderJugador().isEnParpadeo()) {
-                    Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
+                    Gdx.gl.glClearColor(1, 0.55f, 0.55f, 1);
                 } else {
-                    Gdx.gl.glClearColor(0.92f, 0.8f, 0.8f, 1);
+                    Gdx.gl.glClearColor(0.93f, 0.8f, 0.8f, 1);
                 }
             } else {
                 if (jugador.getRenderJugador().isEnParpadeo()) {
-                    Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
+                    Gdx.gl.glClearColor(1, 0.75f, 0.75f, 1);
                 } else {
                     Gdx.gl.glClearColor(0.91f, 0.91f, 0.91f, 1);
                 }
@@ -125,8 +125,12 @@ public class RenderVentanaJuego1 {
         // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
         spriteBatch.setProjectionMatrix(camara.combined);
 
-        // 3) Dibujamos borrones
+        // 3) Renderizamos la cuadrícula
+        renderizarLineasCuadricula(camara, jugador);
+
+        // 4) Dibujamos borrones
         spriteBatch.begin();
+        spriteBatch.setColor(1f, 1f, 1f, 0.5f);
         for (Borron b : borronesMapa) {
             float drawWidth = b.textura.getWidth() * b.scale;
             float drawHeight = b.textura.getHeight() * b.scale;
@@ -134,11 +138,10 @@ public class RenderVentanaJuego1 {
             float originY = drawHeight / 2f;
 
             spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
-        }
-        spriteBatch.end(); // Cerramos SpriteBatch después de dibujar borrones
 
-        // 4) Renderizamos la cuadrícula
-        renderizarLineasCuadricula(camara);
+        }
+        spriteBatch.setColor(1f, 1f, 1f, 1f);
+        spriteBatch.end(); // Cerramos SpriteBatch después de dibujar borrones
 
         spriteBatch.begin();
         jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
@@ -169,14 +172,18 @@ public class RenderVentanaJuego1 {
         Mensajes.getInstance().update();
         Mensajes.getInstance().draw(camara);
         hud.renderizarHUD(delta);
-
-
     }
 
-    public void renderizarLineasCuadricula(OrthographicCamera camera) {
+    private void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
+        if (jugador.getRenderJugador().isEnParpadeo() || flashVidaActivo) {
+            return;
+        }
+
         shapeRenderer.setProjectionMatrix(camera.combined);
+        Gdx.gl.glLineWidth(1.5f);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+        // Aquí sólo entramos si no estamos en parpadeo ni en flashVidaActivo
         if (Jugador.getVidaJugador() <= 15) {
             shapeRenderer.setColor(0.9f, 0.64f, 0.7f, 1f);
         } else {
@@ -198,7 +205,9 @@ public class RenderVentanaJuego1 {
         }
 
         shapeRenderer.end();
+        Gdx.gl.glLineWidth(1f);
     }
+
 
     private void generarBorronesRandom(int cantidad, Vector2 posicionInicialJugador) {
         borronesMapa = new Array<>();
@@ -216,7 +225,7 @@ public class RenderVentanaJuego1 {
 
             // Seleccionar textura, escala y rotación aleatorias
             Texture tex = borrones.random();
-            float scale = MathUtils.random(0.5f, 1f);
+            float scale = MathUtils.random(0.75f, 1.35f);
             float rotation = MathUtils.random(-85f, 85f);
             float drawWidth = tex.getWidth() * scale;
             float drawHeight = tex.getHeight() * scale;

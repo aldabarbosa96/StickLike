@@ -84,6 +84,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
     public void clearPopUp() {
         if (!popUpAbierto) return;
+        uiStage.clear();
         popupGroup.remove();
         fondoAnimadoPopUp.remove();
         popUpAbierto = false;
@@ -161,7 +162,11 @@ public class PopUpMejoras extends RenderBaseMenus {
             Table rowTable = new Table();
             rowTable.defaults().center();
 
-            float iconSize = 30f;
+            float iconsizePlus = 35;
+            float iconSize = 32;
+            if (mejora.getNombreMejora().contains("DILDO")) {
+                iconSize = iconsizePlus;
+            }
             float horizontalPadding = 12f;
             float innerPadding = 4f;
 
@@ -174,7 +179,7 @@ public class PopUpMejoras extends RenderBaseMenus {
             rowTable.add(btn).expandX().fillX().center().padLeft(innerPadding).padRight(innerPadding);
 
             // 3) ICONO + ETIQUETA “NEW” con tamaño fijo
-            float tagWidth = 28f, tagHeight = 20f;
+            float tagWidth = 30, tagHeight = 20f;
             Group iconGroup = new Group();
             iconGroup.setSize(iconSize, iconSize);
             if (mejora.getIcono() != null) {

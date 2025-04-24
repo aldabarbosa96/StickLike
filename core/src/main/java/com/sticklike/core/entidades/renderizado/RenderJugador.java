@@ -66,7 +66,7 @@ public class RenderJugador {
         float barHeight = 2.5f;
 
         float barX = jugador.getSprite().getX() + (jugador.getSprite().getWidth() - barWidth) / 2f;
-        float barY = jugador.getSprite().getY() - barHeight - 1.75f;
+        float barY = jugador.getSprite().getY() - barHeight - 2.5f;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 

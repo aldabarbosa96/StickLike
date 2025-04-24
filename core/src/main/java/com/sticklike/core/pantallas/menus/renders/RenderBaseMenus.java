@@ -115,8 +115,9 @@ public abstract class RenderBaseMenus {
         // Dibujo de cuadrícula
         shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        Gdx.gl.glLineWidth(1.5f);
         shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
-        float cellSize = 32;
+        float cellSize = GRID_CELL_SIZE;
         float startX = stage.getCamera().position.x - stage.getViewport().getWorldWidth() / 2;
         float endX = stage.getCamera().position.x + stage.getViewport().getWorldWidth() / 2;
         float startY = stage.getCamera().position.y - stage.getViewport().getWorldHeight() / 2;
@@ -128,6 +129,7 @@ public abstract class RenderBaseMenus {
             shapeRenderer.line(startX, y, endX, y);
         }
         shapeRenderer.end();
+        Gdx.gl.glLineWidth(1f);
 
         float lineThickness = 1f;
         float marginX = startX + 64;

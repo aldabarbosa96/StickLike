@@ -37,7 +37,7 @@ public class EnemigoVater extends EnemigoBase {
         damageTexture = manager.get(DAMAGE_VATER_TEXTURE, Texture.class);
 
         sprite = new Sprite(spriteTapaLevantada);
-        sprite.setSize(52, 77.5f);
+        sprite.setSize(55, 80);
         sprite.setPosition(x, y);
 
         this.vidaEnemigo = VIDA_ENEMIGO_VATER;

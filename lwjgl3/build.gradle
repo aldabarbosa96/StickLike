@@ -2,7 +2,7 @@
 
 plugins {
   id 'application'
-  id 'io.github.fourlastor.construo' version '1.7.1'   //  ▲  actualizado
+  id 'io.github.fourlastor.construo' version '1.7.1'
   id 'org.graalvm.buildtools.native' version '0.9.28' apply false
 }
 
@@ -21,10 +21,7 @@ sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
 
 application {
   mainClass = 'com.sticklike.lwjgl3.Lwjgl3Launcher'
-  applicationDefaultJvmArgs = ['-Xms512m', '-Xmx1024m',
-                               '-XX:+UseG1GC',
-                               '-XX:MaxGCPauseMillis=5',
-                               '-XX:InitiatingHeapOccupancyPercent=30']
+  applicationDefaultJvmArgs = ['-Xms512m', '-Xmx1G', '-XX:+UseG1GC']
 }
 
 eclipse.project.name = "${appName}-lwjgl3"

@@ -44,11 +44,11 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
 
     public BossPolla(Jugador jugador, float x, float y) {
         sprite = new Sprite(manager.get(BOSS_POLLA, Texture.class));
-        sprite.setSize(90, 125);
+        sprite.setSize(92, 128);
         spriteBocaAbierta = new Sprite(manager.get(BOSS_POLLA, Texture.class));
-        spriteBocaAbierta.setSize(90, 125);
+        spriteBocaAbierta.setSize(92, 128);
         spriteBocaCerrada = new Sprite(manager.get(BOSS_POLLA_BOCACERRADA, Texture.class));
-        spriteBocaCerrada.setSize(90, 125);
+        spriteBocaCerrada.setSize(92, 128);
         sprite.setRegion(spriteBocaCerrada);
         sprite.setPosition(x, y);
 

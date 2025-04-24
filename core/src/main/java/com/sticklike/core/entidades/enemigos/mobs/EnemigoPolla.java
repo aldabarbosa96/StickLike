@@ -24,7 +24,7 @@ public class EnemigoPolla extends EnemigoBase {
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_POLLA, Texture.class));
-        sprite.setSize(30, 30);
+        sprite.setSize(32, 32);
         sprite.setPosition(x, y);
         movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.damageTexture = manager.get(DAMAGE_POLLA_TEXTURE, Texture.class);

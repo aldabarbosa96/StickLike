@@ -83,6 +83,9 @@ public class FondoAnimadoPopUp extends Actor {
         else if (randomTexture <= 9) return xpTexture2;
         else return xpTexture3;
     }
+    public void clearParticles() {
+        particles.clear();
+    }
 
     /**
      * Representa una partícula con posición, velocidad, textura, dimensiones, rotación, y efecto de fade-out.

@@ -128,8 +128,8 @@ public class RenderHUDComponents {
     }
 
     public void renderizarLineasHorizontalesCuadricula(float alturaHUD) {
-        shapeRenderer.setColor(0.725f, 0.825f, 0.875f, 1);
-        float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
+        shapeRenderer.setColor(0.72f, 0.82f, 0.875f, 1);
+        float cellSize = GRID_CELL_SIZE_HUD - GRID_CELL_SIZE_CORRECTION;
         for (float y = 0; y <= alturaHUD; y += cellSize) {
             shapeRenderer.rectLine(0, y, VIRTUAL_WIDTH, y, 2);
         }

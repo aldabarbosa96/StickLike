@@ -285,8 +285,8 @@ public final class LluviaMocos implements Proyectiles {
 
     public void setDamage(float damage) {
         this.damage = damage;
-        sprite.setColor(0.95f, 0.15f, 0.15f, 1f);
-        COLOR_VERDE_MOCO.set(0.9f, 0.15f, 0.15f, 1f);
+        sprite.setColor(0.9f, 0.1f, 0.1f, 1f);
+        COLOR_VERDE_MOCO.set(1, 0, 0, 1f);
     }
 
     @Override

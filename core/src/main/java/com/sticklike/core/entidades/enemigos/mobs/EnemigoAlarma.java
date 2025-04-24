@@ -29,7 +29,7 @@ public class EnemigoAlarma extends EnemigoBase {
         super(jugador);
         sprite = new Sprite(escogerTextura());
         sprite.setPosition(x, y);
-        sprite.setSize(38, 38);
+        sprite.setSize(40, 40);
         this.movimientoAlarma = new MovimientoCulo(velocidadBase, true);
         this.damageTexture = manager.get(DAMAGE_ALARMA_TEXTURE, Texture.class);
         this.vidaEnemigo = VIDA_ENEMIGO_ALARMA;
