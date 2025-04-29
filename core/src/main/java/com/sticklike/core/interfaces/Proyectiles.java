@@ -1,6 +1,7 @@
 package com.sticklike.core.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
@@ -33,5 +34,6 @@ public interface Proyectiles {
     void registrarImpacto(Enemigo enemigo);
 
     boolean yaImpacto(Enemigo enemigo);
+
     boolean esCritico();
 }

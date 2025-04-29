@@ -34,6 +34,7 @@ public abstract class ObjetoBase implements ObjetosXP {
         this.sprite = new Sprite(texturaInicial);
         this.sprite.setSize(getWidth(), getHeight());
         this.sprite.setPosition(x, y);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.x = x;
         this.y = y;
     }

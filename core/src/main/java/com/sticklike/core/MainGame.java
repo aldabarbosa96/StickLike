@@ -1,6 +1,7 @@
 package com.sticklike.core;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
@@ -9,6 +10,7 @@ import com.sticklike.core.utilidades.DebugStats;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_HEIGHT;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_WIDTH;
@@ -24,9 +26,13 @@ public class MainGame extends Game {
     private SpriteBatch batch;
     private DebugStats debugStats;
     private ExtendViewport mainViewport;
+    private static GLProfiler glProfiler;
 
     @Override
     public void create() {
+        glProfiler = new GLProfiler(Gdx.graphics);
+        glProfiler.enable();
+
         // Cargamos todos los recursos al iniciar
         GestorDeAssets.cargarRecursos();
         FontManager.initFonts();
@@ -70,5 +76,9 @@ public class MainGame extends Game {
 
     public VentanaJuego1 getVentanaJuego1() {
         return ventanaJuego1;
+    }
+
+    public static GLProfiler getGlProfiler() {
+        return glProfiler;
     }
 }

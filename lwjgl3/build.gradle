@@ -11,7 +11,7 @@ if (enableGraalNative?.toBoolean()) {
   apply plugin: 'org.graalvm.buildtools.native'
 }
 
-/* ─────────────────────  COMPILACIÓN: Java 17 con Toolchain  ─────────────── */
+/* ─────────────────────  COMPILACIÓN: Java 21 con Toolchain  ─────────────── */
 java {
   toolchain { languageVersion = JavaLanguageVersion.of(21) }
 }
@@ -21,7 +21,17 @@ sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
 
 application {
   mainClass = 'com.sticklike.lwjgl3.Lwjgl3Launcher'
-  applicationDefaultJvmArgs = ['-Xms512m', '-Xmx1G', '-XX:+UseG1GC']
+  applicationDefaultJvmArgs = ['-Xms512m',
+                               '-Xmx1G',
+                               '-XX:+UseG1GC',
+                               '-XX:MaxGCPauseMillis=5',
+                               '-XX:+UnlockExperimentalVMOptions',
+                               '-XX:ParallelGCThreads=4',
+                               '-XX:ConcGCThreads=2',
+                               '-XX:G1NewSizePercent=20',
+                               '-XX:G1ReservePercent=15',
+                               '-XX:InitiatingHeapOccupancyPercent=30']
+  // todo --> revisar a futuro si es la mejor config para el GC
 }
 
 eclipse.project.name = "${appName}-lwjgl3"
@@ -54,10 +64,14 @@ def os = System.properties['os.name'].toLowerCase()
 
 tasks.named('run') {
   workingDir = rootProject.file('assets').path
-  if (os.contains('mac')) jvmArgs += '-XstartOnFirstThread'
+  setIgnoreExitValue(true)
+
+  if (os.contains('mac')) {
+    jvmArgs += "-XstartOnFirstThread"
+
+  }
   jvmArgs += application.applicationDefaultJvmArgs
 }
-
 /* ─────────────────────  JAR FAT / auto-ejecutable  ───────────────────────── */
 tasks.named('jar') {
   archiveFileName = "${appName}-${projectVersion}.jar"

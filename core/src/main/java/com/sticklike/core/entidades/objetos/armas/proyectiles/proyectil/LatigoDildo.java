@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -118,7 +120,7 @@ public final class LatigoDildo implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!activo) return;
 
-        // — Swing —
+        /* -------- 1. Avance del swing -------- */
         tSwing += delta;
         float p = Math.min(tSwing * invDuration, 1f);
 
@@ -135,11 +137,16 @@ public final class LatigoDildo implements Proyectiles {
         float vy = R * MathUtils.cos(theta);
         sprite.setRotation(MathUtils.atan2(vy, vx) * MathUtils.radiansToDegrees);
 
-        // actualizar rastro principal
+        /* -------- 2. Trail principal (parche) -------- */
         tmpVec1.set(nx + SW_W * .5f, ny + SW_H * .5f);
         particles.update(tmpVec1);
 
-        // restaurar colores tras impacto
+        // SOLO mientras el látigo está en pantalla → evita el destello final
+        if (tSwing < duration) {
+            TrailRender.get().submit(particles);
+        }
+
+        /* -------- 3. Restaurar colores tras impacto -------- */
         if (impactT > 0f) {
             impactT -= delta;
             if (impactT <= 0f) {
@@ -151,11 +158,10 @@ public final class LatigoDildo implements Proyectiles {
             }
         }
 
-        // muestreo del arco para halo (sin colecciones dinámicas)
+        /* -------- 4. Muestreo del arco para el halo -------- */
         if (haloUpgrade && !projectionStarted) {
             while (p >= nextSamplePct && nextSamplePct <= PROJ_START_PERC && arcCount < arcPoints.length) {
                 float thetaS = MathUtils.PI * (0.5f + nextSamplePct);
-                // calcula el centro en tmpVec1
                 float sx = cx - lado * R * MathUtils.cos(thetaS) + SW_W * .5f;
                 float sy = cy + R * MathUtils.sin(thetaS) - SW_H * .5f + SW_H * .5f;
                 arcPoints[arcCount++].set(sx, sy);
@@ -164,19 +170,19 @@ public final class LatigoDildo implements Proyectiles {
             }
         }
 
-        // arrancamos proyección del halo
+        /* -------- 5. Arranque de la proyección del halo -------- */
         if (!projectionStarted && haloUpgrade && p >= PROJ_START_PERC) {
             projectionStarted = true;
             projectedCount = arcCount;
-            // copiar referencias a un array del tamaño justo
             projectedPoints = new Vector2[projectedCount];
             System.arraycopy(arcPoints, 0, projectedPoints, 0, projectedCount);
             haloTravel = 0f;
         }
 
-        // avance del halo tras proyección
+        /* -------- 6. Avance del halo proyectado -------- */
         if (projectionStarted && haloUpgrade) {
             haloTravel += HALO_V * delta;
+
             for (int i = 0; i < projectedCount; i++) {
                 Vector2 base = projectedPoints[i];
                 float x = base.x + lado * haloTravel;
@@ -184,25 +190,26 @@ public final class LatigoDildo implements Proyectiles {
                 tmpVec2.set(x, y);
                 particlesHalo.update(tmpVec2);
             }
+            TrailRender.get().submit(particlesHalo);
+
             if (haloTravel >= HALO_RANGE) {
                 activo = false;
             }
         }
 
-        // desactivar si no hay halo y termina el swing
+        /* -------- 7. Fin del swing cuando no hay halo -------- */
         if (!haloUpgrade && tSwing >= duration) {
             activo = false;
         }
     }
 
+
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (!activo) return;
-        if (projectionStarted && haloUpgrade) {
-            particlesHalo.render(batch);
-        }
+
+        // el rastro se dibuja vía TrailRender.flush(...)
         if (tSwing < duration) {
-            particles.render(batch);
             sprite.draw(batch);
         }
     }
@@ -236,6 +243,7 @@ public final class LatigoDildo implements Proyectiles {
     @Override
     public void desactivarProyectil() {
         activo = false;
+        particles.reset();
     }
 
     @Override

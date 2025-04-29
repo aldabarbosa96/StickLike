@@ -9,6 +9,7 @@ import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
@@ -30,6 +31,7 @@ public class Destructibles2 implements Enemigo {
         this.damageTexture = manager.get(DESTRUCTIBLE_LATA_DMG, Texture.class);
         sprite.setSize(ANCHO_DESTRUCT_LATA, ALTO_DESTRUCT_LATA);
         sprite.setPosition(x, y);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear,Texture.TextureFilter.Linear);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.renderBaseEnemigos = renderBaseEnemigos;
     }
@@ -73,7 +75,10 @@ public class Destructibles2 implements Enemigo {
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
+        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
+        RectanglePoolManager.liberarRectangulo(projectileRect);
+        return overlaps;
     }
 
     @Override

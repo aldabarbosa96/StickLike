@@ -30,8 +30,8 @@ public class AnimacionVater { // se implementa una enum para mejorar legibilidad
 
         estadoActual = EstadoTapa.CERRADA;
         tiempoAnimacion = 0;
-        tiempoAbierta = 0.15f;
-        tiempoCerrada = 0.15f;
+        tiempoAbierta = 0.5f;
+        tiempoCerrada = 1.5f;
     }
 
     public void actualizarAnimacion(float delta, Sprite sprite) { // cierra o abre la tapa

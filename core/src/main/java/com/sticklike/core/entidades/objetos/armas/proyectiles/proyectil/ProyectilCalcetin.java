@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -20,6 +21,9 @@ import java.util.Set;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
+/**
+ * Proyectil «Calcetín».
+ */
 public final class ProyectilCalcetin implements Proyectiles {
     private static final float SPRITE_WIDTH = CALCETIN_W_SIZE;
     private static final float SPRITE_HEIGHT = CALCETIN_H_SIZE;
@@ -51,10 +55,9 @@ public final class ProyectilCalcetin implements Proyectiles {
     private float impactoTimer;
 
     public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador, float extraDamage, Jugador jugador) {
-        // Carga única de textura
-        if (TEXTURE == null) {
-            TEXTURE = manager.get(ARMA_CALCETIN, Texture.class);
-        }
+
+        if (TEXTURE == null) TEXTURE = manager.get(ARMA_CALCETIN, Texture.class);
+
         this.jugador = jugador;
         this.direccionX = direccionX;
         this.direccionY = direccionY;
@@ -74,12 +77,12 @@ public final class ProyectilCalcetin implements Proyectiles {
         int maxLen = (int) (PARTICLE_LEN_FACTOR * factor);
         float partWid = PARTICLE_WID_FACTOR * factor;
         particles = new RenderParticulasProyectil(maxLen, partWid, DEFAULT_PARTICLE_COLOR);
+        particles.setAlphaMult(0.75f);
 
         center = new Vector2();
         collisionRect = new Rectangle(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         impactados = new HashSet<>(4);
 
-        // Calcular daño escalado
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
         this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
     }
@@ -88,22 +91,21 @@ public final class ProyectilCalcetin implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!activo) return;
 
-        // Actualizar partículas en el centro del sprite
+        /* ---------- actualización del trail ---------- */
         center.set(sprite.getX() + SPRITE_ORIGIN_X, sprite.getY() + SPRITE_ORIGIN_Y);
         particles.update(center);
+        TrailRender.get().submit(particles);
 
-        // Mover proyectil
-        float desplazamiento = velocidadProyectil * multiplicadorVelocidad * delta;
-        sprite.translate(direccionX * desplazamiento, direccionY * desplazamiento);
-        distanciaRecorrida += desplazamiento;
-
-        // Rotar sprite
+        /* ---------- movimiento y giro ---------- */
+        float despl = velocidadProyectil * multiplicadorVelocidad * delta;
+        sprite.translate(direccionX * despl, direccionY * despl);
+        distanciaRecorrida += despl;
         sprite.rotate(ROTATION_SPEED * delta);
 
-        // Actualizar rectángulo de colisión
+        /* ---------- colisión ---------- */
         collisionRect.set(sprite.getX(), sprite.getY(), SPRITE_WIDTH, SPRITE_HEIGHT);
 
-        // Restaurar colores tras impacto
+        /* ---------- restaurar colores tras impacto ---------- */
         if (!impactados.isEmpty()) {
             impactoTimer += delta;
             if (impactoTimer >= IMPACT_DURATION) {
@@ -115,23 +117,17 @@ public final class ProyectilCalcetin implements Proyectiles {
             sprite.setColor(1f, 1f, 1f, 1f);
         }
 
-        // Desactivar al alcanzar distancia máxima
-        if (distanciaRecorrida >= MAX_DISTANCE) {
-            desactivarProyectil();
-        }
+        /* ---------- distancia máxima ---------- */
+        if (distanciaRecorrida >= MAX_DISTANCE) desactivarProyectil();
     }
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
-        if (activo) {
-            particles.render(batch);
-            sprite.draw(batch);
-        }
+        if (activo) sprite.draw(batch);   // el rastro lo pinta TrailRender
     }
 
     @Override
     public void dispose() {
-        // Liberar recursos
         TEXTURE = null;
         particles.dispose();
     }
@@ -159,6 +155,7 @@ public final class ProyectilCalcetin implements Proyectiles {
     @Override
     public void desactivarProyectil() {
         activo = false;
+        particles.reset();
     }
 
     @Override
@@ -166,10 +163,9 @@ public final class ProyectilCalcetin implements Proyectiles {
         if (MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return damageEscalado * 1.5f;
-        } else {
-            esCritico = false;
-            return damageEscalado;
         }
+        esCritico = false;
+        return damageEscalado;
     }
 
     @Override
@@ -188,13 +184,13 @@ public final class ProyectilCalcetin implements Proyectiles {
             sprite.setColor(Color.RED);
             particles.setColor(Color.RED);
             impactoTimer = 0f;
-            GestorDeAudio.getInstance().reproducirEfecto("impactoBase",1f);
+            GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 1f);
         }
     }
 
     @Override
-    public boolean yaImpacto(Enemigo enemigo) {
-        return impactados.contains(enemigo);
+    public boolean yaImpacto(Enemigo e) {
+        return impactados.contains(e);
     }
 
     @Override

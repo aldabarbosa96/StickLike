@@ -24,8 +24,8 @@ public class Lwjgl3Launcher {
         config.setTitle("StickLike");
         config.useVsync(true);
 
-        // Limitamos FPS al refresco del monitor
-        config.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);
+        // **NO** limitamos FPS al refresco del monitor (se desfasa con el Vsync)
+        //config.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);
 
         config.setResizable(false);
         Graphics.DisplayMode dm = Lwjgl3ApplicationConfiguration.getDisplayMode();

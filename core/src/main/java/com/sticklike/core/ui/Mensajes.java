@@ -1,3 +1,4 @@
+// Mensajes.java
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.graphics.Color;
@@ -34,7 +35,6 @@ public class Mensajes {
     private BitmapFont font;
     private Label.LabelStyle labelStyle;
     private Drawable whiteBackground;
-    // Referencia a la textura creada para el fondo redondeado, para poder disponerla después
     private Texture roundedBackgroundTexture;
     private static final float FADE_IN_DURATION = 0.25f;
     private static final float FADE_OUT_DURATION = 0.25f;
@@ -76,18 +76,15 @@ public class Mensajes {
         String colorNombre = esEnemigo ? "[RED]" : "[#0A0AFF]";
         String fullMessage = colorNombre + "[" + nombre + "]:  []" + "[DARK_GRAY]" + mensaje + "[]";
 
-        // Crear el Label (actor del texto)
         Label label = new Label(fullMessage, labelStyle);
         label.setAlignment(Align.center);
         label.pack();
 
-        // Crear el fondo usando whiteBackground
         Image backgroundImage = new Image(whiteBackground);
         float paddingX = 7.5f;
         float paddingY = 5;
         backgroundImage.setSize(label.getPrefWidth() + paddingX, label.getPrefHeight() + paddingY);
 
-        // Crear un Group para agrupar fondo y texto
         Group messageGroup = new Group();
         messageGroup.addActor(backgroundImage);
         label.setPosition(paddingX / 2f, paddingY / 2f);
@@ -96,14 +93,11 @@ public class Mensajes {
 
         backgroundImage.setColor(1, 1, 1, 0.75f);
 
-        // Posicionar el Group en el Stage
         messageGroup.setPosition(posX, posY);
 
-        // Crear y almacenar el ChatMessage con las referencias
         ChatMessage cm = new ChatMessage(fullMessage, displayDuration, label, backgroundImage, messageGroup, renderHUDComponents.getTiempoTranscurrido(), enemy, esEnemigo);
         messages.add(cm);
 
-        // Agregar el Group al Stage correspondiente
         if (esEnemigo) {
             enemyStage.addActor(messageGroup);
         } else {
@@ -164,8 +158,12 @@ public class Mensajes {
                 iter.remove();
             }
         }
-        chatStage.act();
-        enemyStage.act();
+
+        // Punto B: sólo actualizamos los Stages si hay mensajes activos
+        if (!messages.isEmpty()) {
+            chatStage.act();
+            enemyStage.act();
+        }
     }
 
     public void draw(OrthographicCamera worldCamera) {
@@ -198,17 +196,14 @@ public class Mensajes {
         pixmap.setBlending(Pixmap.Blending.None);
         pixmap.setColor(color);
 
-        // Rellenar la zona central y laterales sin las esquinas
         pixmap.fillRectangle(radius, 0, width - 2 * radius, height);
         pixmap.fillRectangle(0, radius, width, height - 2 * radius);
 
-        // Rellenar las cuatro esquinas con círculos
         pixmap.fillCircle(radius, radius, radius);
         pixmap.fillCircle(width - radius, radius, radius);
         pixmap.fillCircle(radius, height - radius, radius);
         pixmap.fillCircle(width - radius, height - radius, radius);
 
-        // Crear la textura y guardar la referencia para disponerla en reset()
         roundedBackgroundTexture = new Texture(pixmap);
         pixmap.dispose();
         return new TextureRegionDrawable(new TextureRegion(roundedBackgroundTexture));

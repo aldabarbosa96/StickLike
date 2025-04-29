@@ -5,13 +5,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
-import com.sticklike.core.pantallas.popUps.PopUpMejorasController;
+import com.sticklike.core.pantallas.popUps.PopUpMejorasInputProcessor;
 import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
@@ -66,7 +67,7 @@ public class VentanaJuego1 implements Screen {
     private ControladorProyectiles controladorProyectiles;
     private GestorDeAudio gestorDeAudio;
     private PopUpMejoras popUpMejoras;
-    private PopUpMejorasController popUpMejorasController;
+    private PopUpMejorasInputProcessor popUpMejorasInputProcessor;
     private Pausa pausa;
     private Boost boostActivo;
 
@@ -125,7 +126,7 @@ public class VentanaJuego1 implements Screen {
     private void inicializarSistemasYControladores() {
         sistemaDeMejoras = new SistemaDeMejoras(jugador, game);
         popUpMejoras = new PopUpMejoras();
-        popUpMejorasController = new PopUpMejorasController(sistemaDeMejoras,this,popUpMejoras);
+        popUpMejorasInputProcessor = new PopUpMejorasInputProcessor(sistemaDeMejoras, this, popUpMejoras);
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras, popUpMejoras);
         controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
@@ -133,7 +134,7 @@ public class VentanaJuego1 implements Screen {
     }
 
     private void inicializarCuadriculaYHUD() {
-        renderVentanaJuego1 = new RenderVentanaJuego1((int) GRID_CELL_SIZE, jugador);
+        renderVentanaJuego1 = new RenderVentanaJuego1((int) GRID_CELL_SIZE, jugador, spriteBatch, camara);
         hud = new HUD(jugador, sistemaDeNiveles, shapeRenderer, spriteBatch);
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
@@ -155,13 +156,15 @@ public class VentanaJuego1 implements Screen {
 
     @Override
     public void render(float delta) {
+        //final float dt = Math.min(delta, 0.05f);
+
         if (!renderVentanaJuego1.isLoadingComplete()) {
             gestorDeAudio.pausarMusica();
-            renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
+            renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud);
             return;
         }
-        pausa.handleInput(); // manejamos el pause cuando haya finalizado la carga
 
+        pausa.handleInput();
         if (jugador.estaMuerto()) {
             game.setScreen(new VentanaGameOver(game, controladorProyectiles));
             return;
@@ -173,12 +176,11 @@ public class VentanaJuego1 implements Screen {
                 musicChanged = true;
             }
             actualizarLogica(delta, gestorDeAudio);
-
         } else {
             gestorDeAudio.pausarMusica();
         }
 
-        renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud, spriteBatch, camara);
+        renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud);
 
         pausa.render(shapeRenderer);
 
@@ -187,8 +189,12 @@ public class VentanaJuego1 implements Screen {
         BoostIconEffectManager.getInstance().render(spriteBatch);
         spriteBatch.end();
 
-        popUpMejoras.getUiStage().act(delta);
-        popUpMejoras.getUiStage().draw();
+        Stage stage = popUpMejoras.getUiStage();
+        if (stage.getActors().size > 0) {
+            stage.act(delta);
+            stage.draw();
+        }
+
     }
 
     private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
@@ -198,7 +204,6 @@ public class VentanaJuego1 implements Screen {
 
         actualizarRecogidaObjetos(delta);
         actualizarTextoFlotante(delta);
-
     }
 
     private void actualizarRecogidaObjetos(float delta) {
@@ -287,7 +292,7 @@ public class VentanaJuego1 implements Screen {
     }
 
     public void mostrarPopUpDeMejoras(final List<Mejora> mejoras) {
-        popUpMejorasController.show(mejoras);
+        popUpMejorasInputProcessor.show(mejoras);
         setPausado(true);
         reproducirSonidoUpgrade();
     }

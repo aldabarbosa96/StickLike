@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Controlador del pop‑up de mejoras.  Gestiona teclado y gamepad, comunica al modelo y actualiza el HUD.
  */
-public class PopUpMejorasController extends ControllerAdapter implements InputProcessor {
+public class PopUpMejorasInputProcessor extends ControllerAdapter implements InputProcessor {
 
     private final SistemaDeMejoras modelo;
     private final VentanaJuego1 ventanaJuego1;
@@ -27,7 +27,7 @@ public class PopUpMejorasController extends ControllerAdapter implements InputPr
     private int rerollCount = 1;
     private boolean axisLock = false;
 
-    public PopUpMejorasController(SistemaDeMejoras modelo, VentanaJuego1 ventanaJuego1, PopUpMejoras view) {
+    public PopUpMejorasInputProcessor(SistemaDeMejoras modelo, VentanaJuego1 ventanaJuego1, PopUpMejoras view) {
         this.modelo = modelo;
         this.ventanaJuego1 = ventanaJuego1;
         this.view = view;

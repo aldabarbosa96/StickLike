@@ -62,6 +62,8 @@ public class RenderHUDComponents {
     private List<Rectangle> slotsList = new ArrayList<>();
     private Set<String> statBoosteada = new HashSet<>();
     private static final Color COLOR_SHAPEREDNDERER = new Color(0.75f, 0.75f, 0.75f, 1);
+    private final DecimalFormat dfStats1 = new DecimalFormat("#.##");
+    private final DecimalFormat dfStats2 = new DecimalFormat("#.#");
 
     public RenderHUDComponents(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, Jugador jugador, SistemaDeNiveles sistemaDeNiveles) {
         this.sistemaDeNiveles = sistemaDeNiveles;
@@ -165,27 +167,34 @@ public class RenderHUDComponents {
 
     public void renderizarTextoNivelPlayer() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        fuente.getData().setScale(0.95f);
-        GlyphLayout layoutLVL = new GlyphLayout(fuente, TEXTO_LVL);
-        float widthLVL = layoutLVL.width;
 
+        // Título "LVL"
+        fuente.getData().setScale(0.95f);
+        layout.setText(fuente, TEXTO_LVL);
+        float widthLVL = layout.width;
+
+        // Número de nivel
         String nivelStr = String.valueOf(sistemaDeNiveles.getNivelActual());
         fuente.getData().setScale(1.4f);
-        GlyphLayout layoutNumero = new GlyphLayout(fuente, nivelStr);
+        layout.setText(fuente, nivelStr);
+        float widthNumero = layout.width;
 
-        float widthNumero = layoutNumero.width;
+        // Calculamos posición centrada
         float spacing = 2f;
         float totalWidth = widthLVL + spacing + widthNumero;
         float groupX = (VIRTUAL_WIDTH - totalWidth) / 2;
+
         float textY = effectiveHUDHeight - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
         float textYNumber = effectiveHUDHeight - NUMBER_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
 
+        // Dibujamos
         fuente.getData().setScale(0.95f);
         dibujarTextoConReborde(spriteBatch, TEXTO_LVL, groupX, textY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
 
         fuente.getData().setScale(1.4f);
         dibujarTextoConReborde(spriteBatch, nivelStr, groupX + widthLVL + spacing, textYNumber, BASIC_OFFSET, Color.BLUE, Color.WHITE);
     }
+
 
     public void renderizarBarraXPFondo() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
@@ -232,7 +241,8 @@ public class RenderHUDComponents {
         float textX = barX + (barWidth) / 2;
         float textY = barY + (barHeight + textHeight) / 2 + XPTEXT_Y_CORRECTION;
         fuente.getData().setScale(0.8f);
-        dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, UNDER_OFFSET, Color.BLACK, Color.WHITE);
+        fuente.setColor(Color.BLACK);
+        fuente.draw(spriteBatch, experienceText, textX, textY);
     }
 
     public void renderizarIconoConTexto(Texture iconTexture, float iconWidth, float iconHeight, float posX, float posY, String texto, float scaleFuente, Color colorTexto, Color colorReborde) {
@@ -245,12 +255,13 @@ public class RenderHUDComponents {
 
     public void renderizarStatsJugadorBloque1() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        DecimalFormat df = new DecimalFormat("#.##");
-        String valorVelocidad = df.format(jugador.getVelocidadJugador());
-        String valorRango = df.format(jugador.getRangoAtaqueJugador());
-        String valorVelAtaque = df.format(jugador.getVelocidadAtaque()) + " %";
-        String valorFuerza = df.format(jugador.getDanyoAtaqueJugador());
-        String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
+
+        String valorVelocidad = dfStats1.format(jugador.getVelocidadJugador());
+        String valorRango = dfStats1.format(jugador.getRangoAtaqueJugador());
+        String valorVelAtaque = dfStats1.format(jugador.getVelocidadAtaque()) + " %";
+        String valorFuerza = dfStats1.format(jugador.getDanyoAtaqueJugador());
+        String valorProyectiles = "+" + dfStats1.format(jugador.getProyectilesPorDisparo());
+
         String[] descripciones = {VEL_MOV, RANGO, VEL_ATAQUE, FUERZA, NUM_PROYECTILES};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
         Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class), manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class), manager.get(ICONO_PROYECTILES, Texture.class)};
@@ -261,12 +272,13 @@ public class RenderHUDComponents {
 
     public void renderizarStatsJugadorBloque2() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        DecimalFormat df = new DecimalFormat("#.#");
-        String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + df.format(jugador.getMaxVidaJugador());
-        String valorRegeneracionVida = df.format(jugador.getRegVidaJugador() * 100) + " %";
-        String valorPoderAtaque = df.format(jugador.getPoderJugador()) + " %";
-        String valorResistencia = df.format(jugador.getResistenciaJugador() * 100) + " %";
-        String valorCritico = df.format(jugador.getCritico() * 100) + " %";
+
+        String valorVidaMaxima = dfStats2.format(jugador.getVidaJugador()) + " / " + dfStats2.format(jugador.getMaxVidaJugador());
+        String valorRegeneracionVida = dfStats2.format(jugador.getRegVidaJugador() * 100) + " %";
+        String valorPoderAtaque = dfStats2.format(jugador.getPoderJugador()) + " %";
+        String valorResistencia = dfStats2.format(jugador.getResistenciaJugador() * 100) + " %";
+        String valorCritico = dfStats2.format(jugador.getCritico() * 100) + " %";
+
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
         Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class), manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class), manager.get(ICONO_CRITICO, Texture.class)};
@@ -274,6 +286,7 @@ public class RenderHUDComponents {
         float statsY = effectiveHUDHeight - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
     }
+
 
     private void renderizarBloqueStatsConIconos(String[] descripciones, Texture[] iconos, String[] valores, float statsX, float statsY, float anchoDescripcion) {
         // Ajustamos el tamaño de la fuente

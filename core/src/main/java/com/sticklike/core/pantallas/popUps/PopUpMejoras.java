@@ -84,6 +84,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
     public void clearPopUp() {
         if (!popUpAbierto) return;
+        fondoAnimadoPopUp.clearParticles();
         uiStage.clear();
         popupGroup.remove();
         fondoAnimadoPopUp.remove();
@@ -369,14 +370,15 @@ public class PopUpMejoras extends RenderBaseMenus {
     @Override
     public void animarSalida(Runnable callback) { // todo --> usar en un futuro
         // 1‑ Animamos la ventana + borde (popupGroup) con el helper heredado
-        animarSalida(popupGroup, () -> {
+        /*animarSalida(popupGroup, () -> {
             // 2‑ Cuando termine, desvanecemos también el fondo animado
             fondoAnimadoPopUp.addAction(Actions.sequence(Actions.fadeOut(0.25f), Actions.run(() -> {
                 popupGroup.remove();
                 fondoAnimadoPopUp.remove();
+                fondoAnimadoPopUp.clearParticles();
                 popUpAbierto = false;
                 if (callback != null) callback.run();
             })));
-        });
+        });*/
     }
 }

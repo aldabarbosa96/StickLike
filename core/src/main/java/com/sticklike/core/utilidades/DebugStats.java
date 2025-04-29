@@ -6,151 +6,159 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
+import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/** Overlay de métricas de rendimiento (debug). TAB para mostrar/ocultar. */
 public class DebugStats {
-    private BitmapFont font;
-    private GlyphLayout layout;
-    private boolean enabled;
+
+    private final BitmapFont font;
+    private final GlyphLayout layout = new GlyphLayout();
+    private boolean enabled = true;
+
+    private static final DecimalFormat F1 = new DecimalFormat("0.0");
+    private static final DecimalFormat F2 = new DecimalFormat("0.00");
+    private static final DecimalFormat F3 = new DecimalFormat("0.000");
+    private final StringBuilder sb = new StringBuilder(256);
 
     private float tiempoEjecucion;
     private float acumuladorDelta;
-    private int contadorFrames;
+    private int   contadorFrames;
     private float deltaPromedio;
     private float frameTimeMs;
+    private final List<Float> frameTimesMs = new ArrayList<>();
+    private float fps1LowVisible;
 
     private long accumulatedGCCount;
     private long lastGCTime;
     private long previousGCCount;
     private long previousGCTime;
-    private float fps1LowVisible;
 
-    private final List<Float> frameTimesMs;
+    private final GLProfiler gl = MainGame.getGlProfiler();   // instancia global
+    private int drawCalls, shaderSwitches, texBindings, vertices;
 
     public DebugStats() {
         font = FontManager.getDebugFont();
         font.getData().setScale(0.675f);
         font.getData().markupEnabled = true;
         font.setColor(Color.BLACK);
-        layout = new GlyphLayout();
-        enabled = true;
 
-        tiempoEjecucion = 0;
-        acumuladorDelta = 0;
-        contadorFrames = 0;
-        deltaPromedio = 0;
-        frameTimeMs = 0;
-
-        accumulatedGCCount = 0;
-        previousGCCount = 0;
-        previousGCTime = 0;
-        updateGCStats();
-
-        frameTimesMs = new ArrayList<>();
-        fps1LowVisible = 0f;
+        updateGCStats();   // inicializar contadores GC
     }
 
-    private void updateGCStats() {
-        long currentCount = 0;
-        long currentTime = 0;
-        List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
-        for (GarbageCollectorMXBean bean : gcBeans) {
-            long count = bean.getCollectionCount();
-            long time = bean.getCollectionTime();
-            currentCount += (count < 0 ? 0 : count);
-            currentTime += (time < 0 ? 0 : time);
-        }
-        long deltaCount = currentCount - previousGCCount;
-        long deltaTime = currentTime - previousGCTime;
-
-        accumulatedGCCount += deltaCount;
-        if (deltaTime > 0) {
-            lastGCTime = deltaTime;
-        }
-
-        previousGCCount = currentCount;
-        previousGCTime = currentTime;
-    }
 
     public void update() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-            enabled = !enabled;
-        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) enabled = !enabled;
 
         float delta = Gdx.graphics.getDeltaTime();
         tiempoEjecucion += delta;
         acumuladorDelta += delta;
-        contadorFrames++;
+        contadorFrames ++;
 
-        // Tiempo de este frame
         frameTimeMs = delta * 1000f;
         frameTimesMs.add(frameTimeMs);
 
-        // Cada segundo, calcula FPS 1% low y reinicia contadores
+        if (gl != null && gl.isEnabled()) {
+            drawCalls      = gl.getDrawCalls();
+            shaderSwitches = gl.getShaderSwitches();
+            texBindings    = gl.getTextureBindings();
+            vertices       = (int) gl.getVertexCount().total;
+            gl.reset();                         // MUY IMPORTANTE
+        }
+
+        // ---------- estadísticas / 1 seg ----------
         if (acumuladorDelta >= 1f) {
             deltaPromedio = acumuladorDelta / contadorFrames;
             computeOnePercentLow();
 
             acumuladorDelta = 0;
-            contadorFrames = 0;
+            contadorFrames  = 0;
             frameTimesMs.clear();
 
             updateGCStats();
         }
     }
 
-    // Calcula el percentil 99 de frame-times y lo convierte a FPS
-    private void computeOnePercentLow() {
-        if (frameTimesMs.isEmpty()) {
-            fps1LowVisible = 0f;
-            return;
-        }
-        Collections.sort(frameTimesMs);
-        int idx = Math.min(frameTimesMs.size() - 1, (int)(0.99f * frameTimesMs.size()));
-        float p99ms = frameTimesMs.get(idx);
-        fps1LowVisible = 1000f / p99ms;
-    }
-
     public void render(SpriteBatch batch, float virtualHeight) {
         if (!enabled) return;
 
-        int fps = Gdx.graphics.getFramesPerSecond();
-        float delta = Gdx.graphics.getDeltaTime();
+        // Recopilación de datos
+        int fps          = Gdx.graphics.getFramesPerSecond();
+        float delta      = Gdx.graphics.getDeltaTime();
+        float frameMs    = frameTimeMs;  // calculado en update()
         float javaHeapMB = Gdx.app.getJavaHeap() / (1024f * 1024f);
         float nativeHeapMB = Gdx.app.getNativeHeap() / (1024f * 1024f);
-        float memoriaLibreMB = Runtime.getRuntime().freeMemory() / (1024f * 1024f);
-        float memoriaTotalMB = Runtime.getRuntime().totalMemory() / (1024f * 1024f);
+        float memFreeMB  = Runtime.getRuntime().freeMemory() / (1024f * 1024f);
+        float memTotalMB = Runtime.getRuntime().totalMemory() / (1024f * 1024f);
 
-        float margin = 12f;
-        float x = margin;
-        float y = virtualHeight - margin;
+        // Coordenadas de dibujo
+        float x = 12f;
+        float y = virtualHeight - 12f;
 
-        String textoDebug =
-            "[BLUE]FPS (current)  " + fps + "\n"
-                + "FPS (1% low)  " + String.format("%.1f", fps1LowVisible) + "[]\n\n"
-                + "[BLACK]Delta: " + String.format("%.3f", delta) + " s\n"
-                + "Frame Time: " + String.format("%.2f", frameTimeMs) + " ms\n"
-                + "JavaH: " + String.format("%.2f", javaHeapMB) + " MB\n"
-                + "NativeH: " + String.format("%.2f", nativeHeapMB) + " MB\n"
-                + "Runtime: " + String.format("%.1f", tiempoEjecucion) + " s\n"
-                + "Avg. Delta: " + String.format("%.3f", deltaPromedio) + " s\n"
-                + "Free RAM: " + String.format("%.2f", memoriaLibreMB) + " MB\n"
-                + "Total RAM: " + String.format("%.2f", memoriaTotalMB) + " MB\n"
-                + "GC Count: " + accumulatedGCCount + "\n"
-                + "GC Time (last): " + lastGCTime + " ms";
+        // Construcción eficiente del texto
+        sb.setLength(0);
+        sb.append("[BLUE]FPS (current)  ").append(fps).append('\n')
+            .append("FPS (1% low)  ").append(F1.format(fps1LowVisible)).append("[]\n\n")
 
-        layout.setText(font, textoDebug);
+            .append("[BLACK]Delta: ").append(F3.format(delta)).append(" s\n")
+            .append("Frame Time: ").append(F2.format(frameMs)).append(" ms\n\n")
+
+            .append("JavaH: ").append(F2.format(javaHeapMB)).append(" MB\n")
+            .append("NativeH: ").append(F2.format(nativeHeapMB)).append(" MB\n")
+            .append("Free RAM: ").append(F2.format(memFreeMB)).append(" MB\n")
+            .append("Total RAM: ").append(F2.format(memTotalMB)).append(" MB\n\n")
+
+            .append("Runtime: ").append(F1.format(tiempoEjecucion)).append(" s\n")
+            .append("Avg delta: ").append(F3.format(deltaPromedio)).append(" s\n\n")
+
+            .append("GC Count: ").append(accumulatedGCCount).append('\n')
+            .append("GC Time (last): ").append(lastGCTime).append(" ms\n\n")
+
+            .append("[PURPLE]DrawCalls: ").append(drawCalls).append('\n')
+            .append("ShaderSwitches: ").append(shaderSwitches).append('\n')
+            .append("TexBindings: ").append(texBindings).append('\n')
+            .append("Vertices: ").append(vertices);
+
+        // Dibujo del texto
+        layout.setText(font, sb);
         font.draw(batch, layout, x, y);
     }
 
-    public void dispose() {
-        font.dispose();
-        layout = null;
+    // ------------------------- HELPERS -----------------------------------
+
+    private void updateGCStats() {
+        long currCnt = 0, currTime = 0;
+        for (GarbageCollectorMXBean bean : ManagementFactory.getGarbageCollectorMXBeans()) {
+            long c = bean.getCollectionCount();
+            long t = bean.getCollectionTime();
+            currCnt  += c < 0 ? 0 : c;
+            currTime += t < 0 ? 0 : t;
+        }
+        accumulatedGCCount += (currCnt  - previousGCCount);
+        long deltaTime = currTime - previousGCTime;
+        if (deltaTime > 0) lastGCTime = deltaTime;
+
+        previousGCCount = currCnt;
+        previousGCTime  = currTime;
     }
+
+    /** Calcula FPS 1 % low (percentil 99 de frame-times). */
+    private void computeOnePercentLow() {
+        if (frameTimesMs.isEmpty()) { fps1LowVisible = 0; return; }
+        Collections.sort(frameTimesMs);
+        int idx = Math.min(frameTimesMs.size() - 1, (int)(0.99f * frameTimesMs.size()));
+        float p99 = frameTimesMs.get(idx);
+        fps1LowVisible = 1000f / p99;
+    }
+
+    public void dispose() { font.dispose(); }
 }

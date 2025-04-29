@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.TrailRender;          // ← nuevo
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -26,7 +27,7 @@ public final class ProyectilTazo implements Proyectiles {
 
     public enum Phase {GROWING, ACTIVE, COOLDOWN}
 
-    // constantes de configuración
+    /* ---------- constantes ---------- */
     private static final float MIN_SCALE = 0.1f;
     private static final float MAX_SCALE = 0.9f;
     private static final float GROW_DURATION = 0.5f;
@@ -36,12 +37,12 @@ public final class ProyectilTazo implements Proyectiles {
     private static final float PARTICLE_LEN = 15f;
     private static final float PARTICLE_WID = 6f;
 
-    // recursos estáticos
+    /* ---------- recursos ---------- */
     private final Sprite sprite;
     private final RenderParticulasProyectil particles;
     private final GestorDeAudio audio = GestorDeAudio.getInstance();
 
-    // estado externo
+    /* ---------- estado externo ---------- */
     private final Jugador jugador;
     private AtaqueTazo ataqueTazo;
     private float offsetAngle;
@@ -49,12 +50,12 @@ public final class ProyectilTazo implements Proyectiles {
     private float radioColision;
     private float powerFactor;
 
-    // reutilización interna
+    /* ---------- reutilización------------- */
     private final Rectangle collisionRect = new Rectangle();
     private final Vector2 center = new Vector2();
     private final Set<Enemigo> impactados = new HashSet<>(8);
 
-    // ciclo y temporizadores
+    /* ---------- ciclo ---------- */
     private boolean activo = true;
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0f;
@@ -62,14 +63,14 @@ public final class ProyectilTazo implements Proyectiles {
     private float damageTimer = 0f;
     private float rotationAccum = 0f;
 
-    // setters/getters expuestos
-    private float activeDuration = 8.5f;  // aunque el código usa ataqueTazo.getDuracionActivaTazo()
+    /* ---------- config pública ---------- */
+    private float activeDuration = 8.5f;
     private boolean esCritico;
 
     public ProyectilTazo(Jugador jugador, AtaqueTazo ataqueTazo, float offsetAngle, float radio, GestorDeAudio gestor) {
-        if (TEXTURE == null) {
-            TEXTURE = manager.get(ARMA_TAZOS, Texture.class);
-        }
+
+        if (TEXTURE == null) TEXTURE = manager.get(ARMA_TAZOS, Texture.class);
+
         this.jugador = jugador;
         this.ataqueTazo = ataqueTazo;
         this.offsetAngle = offsetAngle;
@@ -86,20 +87,26 @@ public final class ProyectilTazo implements Proyectiles {
         particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, Color.RED);
     }
 
+    /* ----------------------------------------------------------- */
+    /*                       LÓGICA                                */
+    /* ----------------------------------------------------------- */
+
     @Override
     public void actualizarProyectil(float delta) {
         if (!activo) return;
         phaseTimer += delta;
 
-        // cálculo de posición orbital
+        /* posición orbital */
         float ang = MathUtils.degreesToRadians * (ataqueTazo.getGlobalAngle() + offsetAngle);
-        float px = jugador.getSprite().getX() + jugador.getSprite().getWidth() * 0.5f;
-        float py = jugador.getSprite().getY() + jugador.getSprite().getHeight() * 0.5f - 5f;
-        float x = px + MathUtils.cos(ang) * radio - sprite.getWidth() * 0.5f;
-        float y = py + MathUtils.sin(ang) * radio - sprite.getHeight() * 0.5f;
+        float px = jugador.getSprite().getX() + jugador.getSprite().getWidth() * .5f;
+        float py = jugador.getSprite().getY() + jugador.getSprite().getHeight() * .5f - 5f;
+        float x = px + MathUtils.cos(ang) * radio - sprite.getWidth() * .5f;
+        float y = py + MathUtils.sin(ang) * radio - sprite.getHeight() * .5f;
 
         switch (phase) {
-            case GROWING:
+            case GROWING -> {
+                // Reset al inicio de GROWING para limpiar el trail
+                particles.reset();
                 growthTimer += delta;
                 float gp = Math.min(growthTimer / GROW_DURATION, 1f);
                 sprite.setScale(MIN_SCALE + gp * (MAX_SCALE - MIN_SCALE));
@@ -107,33 +114,27 @@ public final class ProyectilTazo implements Proyectiles {
                 sprite.setRotation(rotationAccum);
                 if (growthTimer >= GROW_DURATION) {
                     phase = Phase.ACTIVE;
-                    phaseTimer = 0f;
-                    damageTimer = 0f;
+                    phaseTimer = damageTimer = growthTimer = 0f;
                     impactados.clear();
                     sprite.setColor(1f, 1f, 1f, 1f);
                 }
-                break;
-
-            case ACTIVE:
+            }
+            case ACTIVE -> {
                 sprite.setScale(MAX_SCALE);
                 rotationAccum += ROT_ACTIVE * delta;
                 sprite.setRotation(rotationAccum);
-
-                // lógica de daño cíclico
                 damageTimer += delta;
                 if (damageTimer >= INTERVALO_TAZOS) {
                     damageTimer = 0f;
                     impactados.clear();
                     sprite.setColor(1f, 1f, 1f, 1f);
                 }
-
                 if (phaseTimer >= ataqueTazo.getDuracionActivaTazo()) {
                     phase = Phase.COOLDOWN;
                     phaseTimer = 0f;
                 }
-                break;
-
-            case COOLDOWN:
+            }
+            case COOLDOWN -> {
                 if (phaseTimer < GROW_DURATION) {
                     float cp = Math.min(phaseTimer / GROW_DURATION, 1f);
                     sprite.setScale(MAX_SCALE - cp * (MAX_SCALE - MIN_SCALE));
@@ -142,31 +143,48 @@ public final class ProyectilTazo implements Proyectiles {
                     sprite.setColor(1f, 1f, 1f, 0f);
                 }
                 if (phaseTimer >= COOLDOWN_DURATION) {
+                    // Preparamos de nuevo el ciclo
                     phase = Phase.GROWING;
-                    phaseTimer = growthTimer = 0f;
+                    phaseTimer = growthTimer = damageTimer = 0f;
                     sprite.setScale(MIN_SCALE);
                     sprite.setColor(1f, 1f, 1f, 1f);
                 }
-                break;
+            }
         }
 
+        // Actualizamos posición y trail sólo en GROWING/ACTIVE
         sprite.setPosition(x, y);
-        center.set(x + sprite.getWidth() * 0.5f, y + sprite.getHeight() * 0.5f);
-        particles.update(center);
+        if (phase != Phase.COOLDOWN) {
+            center.set(x + sprite.getWidth() * .5f, y + sprite.getHeight() * .5f);
+            particles.update(center);
+            TrailRender.get().submit(particles);
+        } else {
+            // al acabar, opcionalmente limpiamos también
+            particles.reset();
+        }
 
+        // Hit-box
         if (phase == Phase.ACTIVE) {
-            collisionRect.set(center.x - radioColision * 0.5f, center.y - radioColision * 0.5f, radioColision, radioColision);
+            collisionRect.set(center.x - radioColision * .5f, center.y - radioColision * .5f, radioColision, radioColision);
         } else {
             collisionRect.set(0, 0, 0, 0);
         }
     }
 
+    /* ----------------------------------------------------------- */
+    /*                       RENDER                                */
+    /* ----------------------------------------------------------- */
+
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (!activo) return;
-        if (sprite.getColor().a > 0f) particles.render(batch);
+        // el rastro lo pinta TrailRender
         sprite.draw(batch);
     }
+
+    /* ----------------------------------------------------------- */
+    /*                       INTERFAZ                              */
+    /* ----------------------------------------------------------- */
 
     @Override
     public Rectangle getRectanguloColision() {
@@ -197,6 +215,7 @@ public final class ProyectilTazo implements Proyectiles {
     @Override
     public void desactivarProyectil() {
         activo = false;
+        particles.reset();
     }
 
     @Override
@@ -240,7 +259,7 @@ public final class ProyectilTazo implements Proyectiles {
         return esCritico;
     }
 
-    // setters / getters preservados
+    /* ---------- getters / setters auxiliares ---------- */
     public AtaqueTazo getAtaqueTazo() {
         return ataqueTazo;
     }

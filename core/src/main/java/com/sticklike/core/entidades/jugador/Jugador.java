@@ -83,6 +83,7 @@ public class Jugador {
         this.sprite = new Sprite(manager.get(STICKMAN, Texture.class));
         this.sprite.setSize(WIDTH_JUGADOR, HEIGHT_JUGADOR);
         this.sprite.setPosition(startX, startY);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear,Texture.TextureFilter.Linear);
 
         // Inicializar controladores
         this.inputController = inputController;

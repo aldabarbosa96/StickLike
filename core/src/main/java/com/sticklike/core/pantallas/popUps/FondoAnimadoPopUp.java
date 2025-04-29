@@ -5,131 +5,115 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.manager;
 
-/**
- * Dibuja y actualiza el fondo animado con partículas de experiencia que caen, rotan y se desplazan como si fueran impulsadas bajo el agua.
- */
 public class FondoAnimadoPopUp extends Actor {
-    private static final Texture xpTexture1 = manager.get(RECOLECTABLE_XP, Texture.class);
-    private static final Texture xpTexture2 =  manager.get(RECOLECTABLE_XP2, Texture.class);
-    private static final Texture xpTexture3 =  manager.get(RECOLECTABLE_XP3, Texture.class);
-    private static final Color TEMP_COLOR = new Color();
-    private List<Particle> particles;
-    private float spawnTimer;
-    private static final float DAMPING = 0.98f; // Factor de damping para simular resistencia del agua (aplicamos solo a vx para que baje)
-    private static final float HUD_THRESHOLD = 240;
 
-    public FondoAnimadoPopUp() {
-        this.particles = new ArrayList<>();
-        this.spawnTimer = 0f;
-    }
+    private static final Texture xp1 = manager.get(RECOLECTABLE_XP, Texture.class);
+    private static final Texture xp2 = manager.get(RECOLECTABLE_XP2, Texture.class);
+    private static final Texture xp3 = manager.get(RECOLECTABLE_XP3, Texture.class);
+
+    private static final float SPAWN_INTERVAL = .085f;
+    private static final float DAMPING = .98f;
+    private static final float HUD_THRESHOLD = 240f;
+
+    private final Array<Particle> live = new Array<>(false, 128);
+    private final Pool<Particle> pool = new Pool<>(64, 256) {
+        @Override
+        protected Particle newObject() {
+            return new Particle();
+        }
+    };
+
+    private float spawnTimer = 0f;
+    private final Color tmpColor = new Color();
 
     @Override
     public void act(float delta) {
-        super.act(delta);
         spawnTimer += delta;
-        if (spawnTimer >= 0.085f) {
-            spawnTimer = 0f;
+        if (spawnTimer >= SPAWN_INTERVAL) {
+            spawnTimer -= SPAWN_INTERVAL;
             spawnParticle();
         }
-        // Actualizamos las partículas y marcamos para fade-out o eliminamos las que ya han desaparecido
-        Iterator<Particle> iter = particles.iterator();
-        while (iter.hasNext()) {
-            Particle p = iter.next();
+
+        for (int i = live.size - 1; i >= 0; i--) {
+            Particle p = live.get(i);
             p.update(delta);
-            // Cuando la partícula alcanza el umbral del HUD, inicia el fade-out
-            if (!p.fading && (p.y + p.height < HUD_THRESHOLD)) {
-                p.fading = true;
-            }
-            // Si la partícula ya está en fade-out y se ha desvanecido completamente, se elimina
-            if (p.fading && p.alpha <= 0) {
-                iter.remove();
+            if (!p.fading && p.y + p.height < HUD_THRESHOLD) p.fading = true;
+            if (p.fading && p.alpha <= 0f) {
+                live.removeIndex(i);
+                pool.free(p);
             }
         }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Guardamosd el color original del batch para restaurarlo luego
-        TEMP_COLOR.set(batch.getColor());
-        for (Particle p : particles) {
+        tmpColor.set(batch.getColor());
+        for (Particle p : live) {
             batch.setColor(1, 1, 1, p.alpha);
-            // Dibuja la partícula con rotación; el origen es el centro
-            batch.draw(p.texture, p.x, p.y, p.width / 2, p.height / 2, p.width, p.height, 1, 1, p.rotation, 0, 0, p.texture.getWidth(), p.texture.getHeight(), false, false);
+            batch.draw(p.tex, p.x, p.y, p.width * .5f, p.height * .5f, p.width, p.height, 1, 1, p.rot, 0, 0, p.tex.getWidth(), p.tex.getHeight(), false, false);
         }
-        batch.setColor(TEMP_COLOR);
+        batch.setColor(tmpColor);
     }
+
+    /* ---------- helpers ---------- */
 
     private void spawnParticle() {
-        float x = MathUtils.random() * VIRTUAL_WIDTH;
-        // Velocidad horizontal aleatoria
-        float vx = (MathUtils.random() - 0.5f) * 50;
-        // Velocidad vertical negativa para que caiga
-        float vy = -(MathUtils.random() * 50 + 50);
+        Particle p = pool.obtain();
         float size = MathUtils.random(30, 40);
-        particles.add(new Particle(x, VIRTUAL_HEIGHT, vx, vy, selectTexture(), size, size));
+        float vx = (MathUtils.random() - .5f) * 50f;
+        float vy = -(MathUtils.random() * 50f + 50f);
+        p.init(MathUtils.random() * VIRTUAL_WIDTH, VIRTUAL_HEIGHT, vx, vy, selectTex(), size);
+        live.add(p);
     }
 
-    private Texture selectTexture() {
-        float randomTexture = MathUtils.random(10);
-        if (randomTexture <= 4.5f) return xpTexture1;
-        else if (randomTexture <= 9) return xpTexture2;
-        else return xpTexture3;
+    private static Texture selectTex() {
+        float r = MathUtils.random(10f);
+        return r <= 4.5f ? xp1 : (r <= 9f ? xp2 : xp3);
     }
+
     public void clearParticles() {
-        particles.clear();
+        for (Particle p : live) pool.free(p);
+        live.clear();
     }
 
-    /**
-     * Representa una partícula con posición, velocidad, textura, dimensiones, rotación, y efecto de fade-out.
-     */
-    private static class Particle {
-        float x, y;
-        float vx, vy;
-        float width, height;
-        Texture texture;
-        float rotation;
-        float angularVelocity; // Velocidad angular en grados/segundo
-        float time;
+    /* ---------- poolable ---------- */
+    private static class Particle implements Pool.Poolable {
+        float x, y, vx, vy, width, height, rot, angVel, alpha;
+        Texture tex;
         boolean fading;
-        float alpha;
-        private static final float FADE_RATE = 2f;
+        float t;
 
-        public Particle(float x, float y, float vx, float vy, Texture texture, float width, float height) {
+        void init(float x, float y, float vx, float vy, Texture tex, float size) {
             this.x = x;
             this.y = y;
             this.vx = vx;
             this.vy = vy;
-            this.texture = texture;
-            this.width = width;
-            this.height = height;
-            this.rotation = MathUtils.random(360);
-            this.angularVelocity = MathUtils.random(-90, 90);
-            this.time = 0;
-            this.fading = false;
+            this.tex = tex;
+            this.width = this.height = size;
+            this.rot = MathUtils.random(360f);
+            this.angVel = MathUtils.random(-90f, 90f);
             this.alpha = 1f;
+            this.fading = false;
+            this.t = 0f;
         }
 
-        public void update(float delta) {
-            time += delta;
-            float oscillation = MathUtils.sin(time * 5) * 10; // Oscilación horizontal de 10 píxeles
-            x += (vx * delta) + oscillation * delta;
-            y += vy * delta;  // Actualiza la posición vertical
-            vx *= DAMPING;   // Aplica damping solo a la velocidad horizontal
-            rotation += angularVelocity * delta;
-            if (fading) {
-                alpha -= FADE_RATE * delta;
-                if (alpha < 0) {
-                    alpha = 0;
-                }
-            }
+        void update(float d) {
+            t += d;
+            x += (vx * d) + MathUtils.sin(t * 5f) * 10f * d;
+            y += vy * d;
+            vx *= DAMPING;
+            rot += angVel * d;
+            if (fading) alpha = Math.max(0f, alpha - 2f * d);
         }
+
+        @Override
+        public void reset() {
+        } // nada
     }
 }

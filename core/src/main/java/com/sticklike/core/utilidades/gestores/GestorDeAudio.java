@@ -136,7 +136,8 @@ public class GestorDeAudio {
             return;
         }
 
-        sonido.play(volumen * efectosVolumen);
+        long id = sonido.play(volumen * efectosVolumen);
+        sonido.setLooping(id, false);
         contadorInstancias.put(nombre, instancias + 1);
 
         // Programar la disminución del contador después de la duración estimada

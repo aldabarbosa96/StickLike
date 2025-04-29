@@ -134,8 +134,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float CRITICO = 0.07f;
     public static final float REGENERACION_VIDA = 0.001f;
     public static final float PODER_JUGADOR = 10f;
-    public static final float WIDTH_JUGADOR = 15f;
-    public static final float HEIGHT_JUGADOR = 40f;
+    public static final float WIDTH_JUGADOR = 14.5f;
+    public static final float HEIGHT_JUGADOR = 39f;
     public static final float PARPADEO_JUGADOR_DANYO = 0.2f;
     public static final float PARPADEO_JUGADOR_VIDA = 0.2f;
 
@@ -234,7 +234,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_BOLI = 150f;
     public static final float EMPUJE_BASE_DILDO = 135f;
     public static final float MULT_DANYO = 1f;
-    public static final float TAZO_SIZE = 15f;
+    public static final float TAZO_SIZE = 16f;
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 25f;
     public static final float RADIO_TAZOS_JUGADOR = 75f;

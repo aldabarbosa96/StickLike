@@ -25,6 +25,8 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.PoissonPoints;
 
+import java.util.Comparator;
+
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 /**
@@ -38,18 +40,18 @@ public class ControladorEnemigos {
     private float temporizadorDeAparicion;
     private int killCounter = 0;
     private int spawnCounter = 0; // posiblemente se use en un futuro
-    private final Array<Enemigo> enemigosAEliminar = new Array<>();
+    //private final Array<Enemigo> enemigosAEliminar = new Array<>();
     private String[] tiposDeEnemigos = TIPOS_ENEMIGOS;
     private boolean bossSpawned = false;
     private final RenderBaseEnemigos renderBaseEnemigos;
-    private static final int MAX_ENEMIGOS = 1350;
+    private static final int MAX_ENEMIGOS = 1400;
     private static final int MAX_DESTRUCTIBLES = 250;
-    private static final int MAX_DESTRUCTIBLES2 = 500;
+    private static final int MAX_DESTRUCTIBLES2 = 450;
     private boolean destructiblesSpawned = false; // para asegurarnos que solo spawnean 1 vez
     private boolean yaSpawneadosDestructibles2 = false;
     private boolean ventanaRedimensionada = false;
     private float temporizadorRedimension = 0f;
-    private static final float TIEMPO_ESPERA_REDIMENSION = 0.5f;
+    //private static final float TIEMPO_ESPERA_REDIMENSION = 0.5f;
     private boolean necesitaOrdenar = false;
     private float temporizadorGruposExamen = 0f;
     private static final float INTERVALO_GRUPO_EXAMEN = 0.8f;
@@ -58,6 +60,10 @@ public class ControladorEnemigos {
     private final Vector2 tmpRandomSpawn = new Vector2();
     private final Vector2 tmpPlayerCenter = new Vector2();
     private final Vector2 tmpNearSpawn = new Vector2();
+    private static final Comparator<Enemigo> COMP_Y = (a, b) -> Float.compare(b.getY(), a.getY());
+    private static final int SORT_INTERVAL = 10;
+    private int sortCounter = 0;
+    private float speedMult = 1;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;
@@ -71,57 +77,96 @@ public class ControladorEnemigos {
     }
 
     public void actualizarSpawnEnemigos(float delta) {
-        if (jugador.estaMuerto()) {
-            return;
-        }
+        if (jugador.estaMuerto()) return;
 
-        // Reducir llamadas dentro del bucle: actualizamos temporizadores externos
-        if (temporizadorGruposExamen > 0) {
-            temporizadorGruposExamen -= delta;
-        }
+        /* ─── 1. Actualizamos timers de spawn ─────────────────────────── */
+        temporizadorGruposExamen = Math.max(0f, temporizadorGruposExamen - delta);
+
         temporizadorDeAparicion += delta;
         if (temporizadorDeAparicion >= intervaloDeAparicion) {
             spawnEnemigo();
-            temporizadorDeAparicion = 0;
+            temporizadorDeAparicion = 0f;
         }
 
         temporizadorVaterSpawn += delta;
         if (temporizadorVaterSpawn >= intervaloVaterSpawn) {
             spawnVaterEnemigo();
-            temporizadorVaterSpawn = 0;
+            temporizadorVaterSpawn = 0f;
         }
 
-        // Actualizamos cada enemigo
-        for (Enemigo enemigo : enemigos) {
-            enemigo.actualizar(delta);
-            if (enemigo.estaMuerto() && !enemigo.isProcesado()) {
-                killCounter++;
+        /* ─── 2. Calculamos límites de reposición SOLO una vez ────────── */
+        final float margin = 175f;
+        OrthographicCamera cam = ventanaJuego1.getOrtographicCamera();
+        float halfW = ventanaJuego1.getViewport().getWorldWidth() * 0.5f;
+        float halfH = ventanaJuego1.getViewport().getWorldHeight() * 0.5f;
+        float camX = cam.position.x, camY = cam.position.y;
+        float left = camX - halfW - margin;
+        float right = camX + halfW + margin;
+        float bottom = camY - halfH - margin;
+        float top = camY + halfH + margin;
 
-                if (enemigo instanceof Destructibles destructible) {
-                    Boost boost = destructible.sueltaBoost(ventanaJuego1.getRenderHUDComponents());
-                    ventanaJuego1.addXPObject(boost);
-                } else {
-                    ObjetosXP xpObject = enemigo.sueltaObjetoXP();
-                    if (xpObject != null) {
-                        ventanaJuego1.addXPObject(xpObject);
+        /* ─── 3. UNA sola pasada por la lista ─────────────────────────── */
+        for (int i = enemigos.size - 1; i >= 0; i--) {
+            Enemigo e = enemigos.get(i);
+            e.actualizar(delta);
+
+            /* 3A. Si muere -> procesamos drop y quitamos del array */
+            if (e.estaMuerto()) {
+                if (!e.isProcesado()) {
+                    if (e instanceof Destructibles d) {
+                        Boost boost = d.sueltaBoost(ventanaJuego1.getRenderHUDComponents());
+                        ventanaJuego1.addXPObject(boost);
+                    } else {
+                        ObjetosXP xp = e.sueltaObjetoXP();
+                        if (xp != null) ventanaJuego1.addXPObject(xp);
                     }
+                    e.setProcesado(true);
                 }
-                enemigo.setProcesado(true);
-                enemigosAEliminar.add(enemigo);
+                enemigos.removeIndex(i);     // compactamos el Array
+                killCounter++;
+                continue;                    // siguiente elemento
             }
+
+            /* 3B. Reposición si sale del viewport y NO es destructible */
+            if (!esDestructible(e)) reposiciona(e, left, right, bottom, top);
         }
-        enemigos.removeAll(enemigosAEliminar, true);
-        enemigosAEliminar.clear();
-        reposicionarEnemigos();
+
+        //Gdx.app.log("ControladorEnemigos", "Enemigos vivos: " + enemigos.size);
     }
+
 
     public void renderizarEnemigos(SpriteBatch batch) {
         if (jugador.estaMuerto()) {
             return;
         }
-        // Se ordena en función de Y (de mayor a menor) para el render adecuado
-        enemigos.sort((e1, e2) -> Float.compare(e2.getY(), e1.getY()));
+
+        if (++sortCounter >= SORT_INTERVAL) {
+            enemigos.sort(COMP_Y);
+            sortCounter = 0;
+        }
+
+        OrthographicCamera cam = ventanaJuego1.getOrtographicCamera();
+
+        // Precalculamos límites de la cámara
+        float halfW = cam.viewportWidth * cam.zoom * 0.5f;
+        float halfH = cam.viewportHeight * cam.zoom * 0.5f;
+        float left = cam.position.x - halfW;
+        float right = cam.position.x + halfW;
+        float bottom = cam.position.y - halfH;
+        float top = cam.position.y + halfH;
+
         for (Enemigo enemigo : enemigos) {
+            Sprite sprite = enemigo.getSprite();
+            float x = sprite.getX();
+            float y = sprite.getY();
+            float w = sprite.getWidth();
+            float h = sprite.getHeight();
+
+            // Frustum culling manual
+            if (x + w < left || x > right || y + h < bottom || y > top) {
+                continue;
+            }
+
             enemigo.renderizar(batch);
         }
     }
@@ -136,7 +181,7 @@ public class ControladorEnemigos {
     private void spawnEnemigo() {
         if (enemigos.size >= MAX_ENEMIGOS) return;
         String tipoElegido = tiposDeEnemigos[MathUtils.random(tiposDeEnemigos.length - 1)];
-        float randomSpeed = MathUtils.random(45f, 55f);
+        float randomSpeed = MathUtils.random(45f, 55f) * speedMult;
         seleccionarTipoSpawn(tipoElegido, randomSpeed);
         necesitaOrdenar = true;
     }
@@ -187,7 +232,7 @@ public class ControladorEnemigos {
     private void spawnVaterEnemigo() {
         if (enemigos.size >= MAX_ENEMIGOS) return;
         Vector2 spawnPos = getRandomSpawnPosition();
-        Enemigo enemigo = fabricaEnemigos("VATER", spawnPos.x, spawnPos.y, jugador, 0, ventanaJuego1.getOrtographicCamera());
+        Enemigo enemigo = fabricaEnemigos("VATER", spawnPos.x, spawnPos.y, jugador, 10 * speedMult, ventanaJuego1.getOrtographicCamera());
         enemigos.add(enemigo);
     }
 
@@ -285,47 +330,6 @@ public class ControladorEnemigos {
         }
     }
 
-    // Reposiciona enemigos que salen del área visible para que vuelvan a aparecer por el otro lado.
-    private void reposicionarEnemigos() {
-        if (ventanaRedimensionada) {
-            temporizadorRedimension += Gdx.graphics.getDeltaTime();
-            if (temporizadorRedimension < TIEMPO_ESPERA_REDIMENSION) {
-                return;
-            }
-            ventanaRedimensionada = false;
-        }
-        float margin = 175f;
-        OrthographicCamera cam = ventanaJuego1.getOrtographicCamera();
-        float worldWidth = ventanaJuego1.getViewport().getWorldWidth();
-        float worldHeight = ventanaJuego1.getViewport().getWorldHeight();
-        float camX = cam.position.x;
-        float camY = cam.position.y;
-
-        float leftBound = camX - (worldWidth / 2) - margin;
-        float rightBound = camX + (worldWidth / 2) + margin;
-        float bottomBound = camY - (worldHeight / 2) - margin;
-        float topBound = camY + (worldHeight / 2) + margin;
-
-        // Recorremos los enemigos y reposicionamos según límites previamente calculados.
-        for (Enemigo enemigo : enemigos) {
-            if (enemigo instanceof Destructibles || enemigo instanceof Destructibles2) {
-                continue;
-            }
-            Sprite sprite = enemigo.getSprite();
-            float x = sprite.getX();
-            float y = sprite.getY();
-            if (x < leftBound) {
-                sprite.setX(rightBound);
-            } else if (x > rightBound) {
-                sprite.setX(leftBound);
-            }
-            if (y < bottomBound) {
-                sprite.setY(topBound);
-            } else if (y > topBound) {
-                sprite.setY(bottomBound);
-            }
-        }
-    }
 
     public void spawnBossPollaAleatorio() {
         if (bossSpawned) {
@@ -336,6 +340,29 @@ public class ControladorEnemigos {
         enemigos.add(boss);
         bossSpawned = true;
     }
+
+    private static boolean esDestructible(Enemigo e) {
+        return (e instanceof Destructibles) || (e instanceof Destructibles2);
+    }
+
+    private void reposiciona(Enemigo e, float left, float right, float bottom, float top) {
+
+        Sprite s = e.getSprite();
+        float x = s.getX(), y = s.getY();
+
+        if (x < left) s.setX(right);
+        else if (x > right) s.setX(left);
+
+        if (y < bottom) s.setY(top);
+        else if (y > top) s.setY(bottom);
+    }
+
+    /*public void resetTimers() {
+        temporizadorDeAparicion = 0f;
+        temporizadorVaterSpawn = 0f;
+        temporizadorGruposExamen = 0f;
+    }*/
+
 
     public void dispose() {
         for (Enemigo enemigo : enemigos) {
@@ -383,5 +410,13 @@ public class ControladorEnemigos {
 
     public VentanaJuego1 getVentanaJuego1() {
         return ventanaJuego1;
+    }
+
+    public float getSpeedMult() {
+        return speedMult;
+    }
+
+    public void setSpeedMult(float speedMult) {
+        this.speedMult = speedMult;
     }
 }

@@ -114,9 +114,11 @@ public abstract class RenderBaseMenus {
 
         // Dibujo de cuadrícula
         shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         Gdx.gl.glLineWidth(1.5f);
-        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
+        shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 0.9f);
         float cellSize = GRID_CELL_SIZE;
         float startX = stage.getCamera().position.x - stage.getViewport().getWorldWidth() / 2;
         float endX = stage.getCamera().position.x + stage.getViewport().getWorldWidth() / 2;
@@ -129,6 +131,7 @@ public abstract class RenderBaseMenus {
             shapeRenderer.line(startX, y, endX, y);
         }
         shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
         Gdx.gl.glLineWidth(1f);
 
         float lineThickness = 1f;
@@ -192,7 +195,7 @@ public abstract class RenderBaseMenus {
     }
 
     private void agregarVersionLabel() {
-        Label versionLabel = new Label("v1.10.19-dev", uiSkin);
+        Label versionLabel = new Label("v1.11-dev", uiSkin);
         versionLabel.setFontScale(0.95f);
         versionLabel.setColor(Color.BLUE);
 

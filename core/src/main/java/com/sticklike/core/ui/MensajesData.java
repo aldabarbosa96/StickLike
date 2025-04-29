@@ -1,9 +1,9 @@
+// MensajesData.java
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoAlarma;
@@ -18,29 +18,23 @@ public class MensajesData {
     // Estados y listas para mensajes de culos
     private boolean mensajeCulosActivado;
     private List<ChatOption> opcionesChatCulos;
-    private List<ChatOption> mensajesCulosPorMostrar;
     private int nextMessageCulosIndex;
-    private float lastCuloMessageTime;
+    private Timer.Task culoTask;
 
     // Estados y listas para mensajes de pollas
     private boolean mensajesPollasActivado;
     private List<ChatOption> opcionesChatPollas;
-    private List<ChatOption> mensajesPollasPorMostrar;
     private int nextMessagePollasIndex;
-    private float lastPollaMessageTime;
+    private Timer.Task pollaTask;
 
     // Estados y listas para mensajes de alarmas
     private boolean mensajeAlarmasActivado;
     private List<ChatOption> opcionesAlarmasAlarma;
     private List<ChatOption> opcionesAlarmasCrono;
-    private List<ChatOption> mensajesAlarmasAlarmaPorMostrar;
-    private List<ChatOption> mensajesAlarmasCronoPorMostrar;
     private int nextMessageAlarmasAlarmaIndex;
     private int nextMessageAlarmasCronoIndex;
-    private float lastAlarmaAlarmaMessageTime;
-    private float lastAlarmaCronoMessageTime;
-
-    private float delayBetweenMessages = 0;
+    private Timer.Task alarmaAlarmaTask;
+    private Timer.Task alarmaCronoTask;
 
     private MensajesData() {
         mensajeCulosActivado = false;
@@ -50,18 +44,15 @@ public class MensajesData {
         // Inicializamos mensajes de culos
         opcionesChatCulos = new ArrayList<>();
         mensajesCulos();
-        resetMensajesCulos();
 
         // Inicializamos mensajes de pollas
         opcionesChatPollas = new ArrayList<>();
         mensajesPollas();
-        resetMensajesPollas();
 
         // Inicializamos mensajes de alarmas
         opcionesAlarmasAlarma = new ArrayList<>();
         opcionesAlarmasCrono = new ArrayList<>();
         initMensajesAlarmas();
-        resetMensajesAlarmas();
     }
 
     public static MensajesData getInstance() {
@@ -71,166 +62,137 @@ public class MensajesData {
         return instance;
     }
 
-    private Enemigo getRandomEnemyOfType(RenderHUDComponents renderHUDComponents, Class<?> enemyClass) {
-        Array<Enemigo> filtered = new Array<>();
-        for (Enemigo e : renderHUDComponents.getControladorEnemigos().getEnemigos()) {
-            if (enemyClass.isInstance(e)) {
-                filtered.add(e);
-            }
-        }
-        return filtered.size > 0 ? filtered.random() : null;
-    }
-
-    private void resetMensajesCulos() {
-        mensajesCulosPorMostrar = new ArrayList<>(opcionesChatCulos);
-        Collections.shuffle(mensajesCulosPorMostrar);
+    /**
+     * Punto A: en cuanto arranque la fase de "culos", llamamos a este método
+     * en lugar de hacer polling cada frame.
+     */
+    public void activarMensajesCulos(final RenderHUDComponents renderHUD) {
+        if (mensajeCulosActivado) return;
+        mensajeCulosActivado = true;
         nextMessageCulosIndex = 0;
-        lastCuloMessageTime = 0;
+        scheduleNextCulo(renderHUD);
     }
 
-    private void resetMensajesPollas() {
-        mensajesPollasPorMostrar = new ArrayList<>(opcionesChatPollas);
-        Collections.shuffle(mensajesPollasPorMostrar);
+    private void scheduleNextCulo(final RenderHUDComponents renderHUD) {
+        if (nextMessageCulosIndex >= opcionesChatCulos.size()) return;
+        float delay = MathUtils.random(10f, 20f);
+        if (culoTask != null) culoTask.cancel();
+        culoTask = Timer.schedule(new Timer.Task() {
+            @Override public void run() {
+                lanzarMensajeCulos(renderHUD);
+                nextMessageCulosIndex++;
+                scheduleNextCulo(renderHUD);
+            }
+        }, delay);
+    }
+
+    private void lanzarMensajeCulos(RenderHUDComponents renderHUD) {
+        Enemigo e = pickRandom(renderHUD, EnemigoCulo.class);
+        if (e != null) {
+            ChatOption opt = opcionesChatCulos.get(nextMessageCulosIndex);
+            Mensajes.getInstance().addEnemyMessage(opt.nombre, opt.mensaje, e);
+        }
+    }
+
+    public void activarMensajesPollas(final RenderHUDComponents renderHUD) {
+        if (mensajesPollasActivado) return;
+        mensajesPollasActivado = true;
         nextMessagePollasIndex = 0;
-        lastPollaMessageTime = 0;
+        scheduleNextPolla(renderHUD);
     }
 
-    private void resetMensajesAlarmas() {
-        mensajesAlarmasAlarmaPorMostrar = new ArrayList<>(opcionesAlarmasAlarma);
-        Collections.shuffle(mensajesAlarmasAlarmaPorMostrar);
+    private void scheduleNextPolla(final RenderHUDComponents renderHUD) {
+        if (nextMessagePollasIndex >= opcionesChatPollas.size()) return;
+        float delay = MathUtils.random(15f, 30f);
+        if (pollaTask != null) pollaTask.cancel();
+        pollaTask = Timer.schedule(new Timer.Task() {
+            @Override public void run() {
+                lanzarMensajePollas(renderHUD);
+                nextMessagePollasIndex++;
+                scheduleNextPolla(renderHUD);
+            }
+        }, delay);
+    }
+
+    private void lanzarMensajePollas(RenderHUDComponents renderHUD) {
+        Enemigo e = pickRandom(renderHUD, EnemigoPolla.class);
+        if (e != null) {
+            ChatOption opt = opcionesChatPollas.get(nextMessagePollasIndex);
+            Mensajes.getInstance().addEnemyMessage(opt.nombre, opt.mensaje, e);
+        }
+    }
+
+    public void activarMensajesAlarmas(final RenderHUDComponents renderHUD) {
+        if (mensajeAlarmasActivado) return;
+        mensajeAlarmasActivado = true;
         nextMessageAlarmasAlarmaIndex = 0;
-        lastAlarmaAlarmaMessageTime = 0;
-
-        mensajesAlarmasCronoPorMostrar = new ArrayList<>(opcionesAlarmasCrono);
-        Collections.shuffle(mensajesAlarmasCronoPorMostrar);
         nextMessageAlarmasCronoIndex = 0;
-        lastAlarmaCronoMessageTime = 0;
+        scheduleNextAlarmaAlarma(renderHUD);
+        scheduleNextAlarmaCrono(renderHUD);
     }
 
-    public void mostrarMensajeCulos(RenderHUDComponents renderHUDComponents) {
-        if (renderHUDComponents.getTiempoTranscurrido() >= 10 && !mensajeCulosActivado) {
-            Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoCulo.class);
-            if (enemy != null) {
-                ChatOption option = mensajesCulosPorMostrar.getFirst();
-                Mensajes.getInstance().addEnemyMessage(option.nombre, option.mensaje, enemy);
-                nextMessageCulosIndex = 1;
-                lastCuloMessageTime = renderHUDComponents.getTiempoTranscurrido();
+    private void scheduleNextAlarmaAlarma(final RenderHUDComponents renderHUD) {
+        if (nextMessageAlarmasAlarmaIndex >= opcionesAlarmasAlarma.size()) return;
+        float delay = MathUtils.random(10f, 15f);
+        if (alarmaAlarmaTask != null) alarmaAlarmaTask.cancel();
+        alarmaAlarmaTask = Timer.schedule(new Timer.Task() {
+            @Override public void run() {
+                lanzarMensajeAlarma(renderHUD, false);
+                nextMessageAlarmasAlarmaIndex++;
+                scheduleNextAlarmaAlarma(renderHUD);
             }
-            mensajeCulosActivado = true;
-        }
+        }, delay);
     }
 
-    public void mostrarMensajePollas(RenderHUDComponents renderHUDComponents) {
-        if (renderHUDComponents.getTiempoTranscurrido() >= 15 && !mensajesPollasActivado) {
-            Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoPolla.class);
-            if (enemy != null) {
-                ChatOption option = mensajesPollasPorMostrar.getFirst();
-                Mensajes.getInstance().addEnemyMessage(option.nombre, option.mensaje, enemy);
-                nextMessagePollasIndex = 1;
-                lastPollaMessageTime = renderHUDComponents.getTiempoTranscurrido();
+    private void scheduleNextAlarmaCrono(final RenderHUDComponents renderHUD) {
+        if (nextMessageAlarmasCronoIndex >= opcionesAlarmasCrono.size()) return;
+        float delay = MathUtils.random(10f, 15f);
+        if (alarmaCronoTask != null) alarmaCronoTask.cancel();
+        alarmaCronoTask = Timer.schedule(new Timer.Task() {
+            @Override public void run() {
+                lanzarMensajeAlarma(renderHUD, true);
+                nextMessageAlarmasCronoIndex++;
+                scheduleNextAlarmaCrono(renderHUD);
             }
-            mensajesPollasActivado = true;
-        }
+        }, delay);
     }
 
-
-    public void mostrarMensajeAlarmas(RenderHUDComponents renderHUDComponents) {
-        if (renderHUDComponents.getTiempoTranscurrido() >= 20 && !mensajeAlarmasActivado) {
-            Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoAlarma.class);
-            if (enemy != null) {
-                EnemigoAlarma alarma = (EnemigoAlarma) enemy;
-                ChatOption option;
-                if (!alarma.isEsCrono()) {
-                    option = mensajesAlarmasAlarmaPorMostrar.getFirst();
-                    nextMessageAlarmasAlarmaIndex = 1;
-                    lastAlarmaAlarmaMessageTime = renderHUDComponents.getTiempoTranscurrido();
-                } else {
-                    option = mensajesAlarmasCronoPorMostrar.getFirst();
-                    nextMessageAlarmasCronoIndex = 1;
-                    lastAlarmaCronoMessageTime = renderHUDComponents.getTiempoTranscurrido();
-                }
-                Mensajes.getInstance().addEnemyMessage(option.nombre, option.mensaje, enemy);
-            }
-            mensajeAlarmasActivado = true;
-        }
-    }
-
-    public void updateCulos(RenderHUDComponents renderHUDComponents) {
-        delayBetweenMessages = MathUtils.random(10, 20f);
-        if (mensajeCulosActivado && nextMessageCulosIndex < mensajesCulosPorMostrar.size()) {
-            float currentTime = renderHUDComponents.getTiempoTranscurrido();
-            if (currentTime - lastCuloMessageTime >= delayBetweenMessages) {
-                Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoCulo.class);
-                if (enemy != null) {
-                    ChatOption option = mensajesCulosPorMostrar.get(nextMessageCulosIndex);
-                    Mensajes.getInstance().addEnemyMessage(option.nombre, option.mensaje, enemy);
-                    nextMessageCulosIndex++;
-                    lastCuloMessageTime = currentTime;
-                }
+    private void lanzarMensajeAlarma(RenderHUDComponents renderHUD, boolean crono) {
+        Enemigo e = pickRandom(renderHUD, EnemigoAlarma.class);
+        if (e != null) {
+            EnemigoAlarma alarma = (EnemigoAlarma)e;
+            if (alarma.isEsCrono() == crono) {
+                ChatOption opt = crono
+                    ? opcionesAlarmasCrono.get(nextMessageAlarmasCronoIndex)
+                    : opcionesAlarmasAlarma.get(nextMessageAlarmasAlarmaIndex);
+                Mensajes.getInstance().addEnemyMessage(opt.nombre, opt.mensaje, e);
             }
         }
     }
 
-    public void updatePollas(RenderHUDComponents renderHUDComponents) {
-        delayBetweenMessages = MathUtils.random(15, 30f);
-        if (mensajesPollasActivado && nextMessagePollasIndex < mensajesPollasPorMostrar.size()) {
-            float currentTime = renderHUDComponents.getTiempoTranscurrido();
-            if (currentTime - lastPollaMessageTime >= delayBetweenMessages) {
-                Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoPolla.class);
-                if (enemy != null) {
-                    ChatOption option = mensajesPollasPorMostrar.get(nextMessagePollasIndex);
-                    Mensajes.getInstance().addEnemyMessage(option.nombre, option.mensaje, enemy);
-                    nextMessagePollasIndex++;
-                    lastPollaMessageTime = currentTime;
-                }
-            }
+    private <T extends Enemigo> T pickRandom(RenderHUDComponents renderHUD, Class<T> cls) {
+        com.badlogic.gdx.utils.Array<T> candidates = new com.badlogic.gdx.utils.Array<>();
+        for (Enemigo en : renderHUD.getControladorEnemigos().getEnemigos()) {
+            if (cls.isInstance(en)) candidates.add(cls.cast(en));
         }
+        return candidates.size > 0 ? candidates.random() : null;
     }
 
-    public void updateAlarmas(RenderHUDComponents renderHUDComponents) {
-        float currentTime = renderHUDComponents.getTiempoTranscurrido();
-        // Actualización para alarma
-        if (mensajeAlarmasActivado && nextMessageAlarmasAlarmaIndex < mensajesAlarmasAlarmaPorMostrar.size()) {
-            float delay = MathUtils.random(10f, 15f);
-            if (currentTime - lastAlarmaAlarmaMessageTime >= delay) {
-                Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoAlarma.class);
-                if (enemy != null) {
-                    EnemigoAlarma alarma = (EnemigoAlarma) enemy;
-                    if (!alarma.isEsCrono()) {
-                        ChatOption option = mensajesAlarmasAlarmaPorMostrar.get(nextMessageAlarmasAlarmaIndex);
-                        Mensajes.getInstance().addEnemyMessage(option.nombre, option.mensaje, enemy);
-                        nextMessageAlarmasAlarmaIndex++;
-                        lastAlarmaAlarmaMessageTime = currentTime;
-                    }
-                }
-            }
-        }
-        // Actualización para crono
-        if (mensajeAlarmasActivado && nextMessageAlarmasCronoIndex < mensajesAlarmasCronoPorMostrar.size()) {
-            float delay = MathUtils.random(10f, 15f);
-            if (currentTime - lastAlarmaCronoMessageTime >= delay) {
-                Enemigo enemy = getRandomEnemyOfType(renderHUDComponents, EnemigoAlarma.class);
-                if (enemy != null) {
-                    EnemigoAlarma alarma = (EnemigoAlarma) enemy;
-                    if (alarma.isEsCrono()) {
-                        ChatOption option = mensajesAlarmasCronoPorMostrar.get(nextMessageAlarmasCronoIndex);
-                        Mensajes.getInstance().addEnemyMessage(option.nombre, option.mensaje, enemy);
-                        nextMessageAlarmasCronoIndex++;
-                        lastAlarmaCronoMessageTime = currentTime;
-                    }
-                }
-            }
-        }
-    }
-
+    /**
+     * Cancela cualquier task pendiente y resetea los estados para volver
+     * a un estado limpio (por ejemplo, al reiniciar nivel o salir de pantalla).
+     */
     public void reset() {
         mensajeCulosActivado = false;
         mensajesPollasActivado = false;
         mensajeAlarmasActivado = false;
-        resetMensajesCulos();
-        resetMensajesPollas();
-        resetMensajesAlarmas();
+        if (culoTask != null) culoTask.cancel();
+        if (pollaTask != null) pollaTask.cancel();
+        if (alarmaAlarmaTask != null) alarmaAlarmaTask.cancel();
+        if (alarmaCronoTask != null) alarmaCronoTask.cancel();
     }
+
+    // ---------------------- Mensajes de Cul os ----------------------
 
     private void mensajesCulos() {
         opcionesChatCulos.add(new ChatOption("Ojete1", "¡Todos a dejarle la cara de culo!"));
@@ -255,6 +217,8 @@ public class MensajesData {
         opcionesChatCulos.add(new ChatOption("Ojete 20", "Culet culet"));
         opcionesChatCulos.add(new ChatOption("Ojete 21", "¿Alguna polla quiere entrar?"));
     }
+
+    // ---------------------- Mensajes de Pollas ----------------------
 
     private void mensajesPollas() {
         opcionesChatPollas.add(new ChatOption("Polla1", "¡Chúpame!"));
@@ -281,6 +245,7 @@ public class MensajesData {
         opcionesChatPollas.add(new ChatOption("Polla22", "To impress a chick do the helicopter dick"));
     }
 
+    // ---------------------- Mensajes de Alarmas ----------------------
 
     private void initMensajesAlarmas() {
         // Mensajes para la variante Alarma (esCrono == false)
@@ -296,12 +261,11 @@ public class MensajesData {
         opcionesAlarmasAlarma.add(new ChatOption("Alarma10", "Hora de que te calles para siempre"));
         opcionesAlarmasAlarma.add(new ChatOption("Alarma11", "10..9..8..7..5digo6...4..mierda..."));
 
-
         // Mensajes para la variante Crono (esCrono == true)
         opcionesAlarmasCrono.add(new ChatOption("Crono1", "¡TIC-TAC-HIJO-DE-PUTA!"));
         opcionesAlarmasCrono.add(new ChatOption("Crono2", "Según mis cálculos, vas a morir"));
-        opcionesAlarmasCrono.add(new ChatOption("Crono3", "1..2..3..4..5..6..7..8..9.. <<algo está mal>>")); // comprobar si funciona el troleito
-        opcionesAlarmasCrono.add(new ChatOption("Crono3", "1..2..3..4..5..6..7..8..9.. <<algo está mal>>")); // todo --> podría acabar enlazándose con el easter egg de alguna manera
+        opcionesAlarmasCrono.add(new ChatOption("Crono3", "1..2..3..4..5..6..7..8..9.. <<algo está mal>>"));
+        opcionesAlarmasCrono.add(new ChatOption("Crono3", "1..2..3..4..5..6..7..8..9.. <<algo está mal>>"));
         opcionesAlarmasCrono.add(new ChatOption("Crono3", "1..2..3..4..5..6..7...8..9.. <<algo está mal>>"));
         opcionesAlarmasCrono.add(new ChatOption("Crono3", "1..2..3..4..5..6..7..8..9..1 <<algo está mal>>"));
         opcionesAlarmasCrono.add(new ChatOption("Crono3", "0..2..3..4..5..6..7..8..9.. <<algo está mal>>"));
@@ -314,13 +278,12 @@ public class MensajesData {
         opcionesAlarmasCrono.add(new ChatOption("Crono10", "Recuerda: a las 2 serán las 3 y a las 3 te chupo las tetas"));
     }
 
-
-    // La clase interna para representar una opción de mensaje
+    // Clase interna para representar una opción de mensaje
     private static class ChatOption {
         String nombre;
         String mensaje;
 
-        public ChatOption(String nombre, String mensaje) {
+        ChatOption(String nombre, String mensaje) {
             this.nombre = nombre;
             this.mensaje = mensaje;
         }

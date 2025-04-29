@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntMap;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.TrailRender;   // ← nuevo helper global
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
@@ -21,10 +22,13 @@ import java.util.Set;
 
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_MOCO;
 
+/**
+ * Proyectil «Lluvia de mocos».
+ * Ahora el rastro se pinta a través de {@link TrailRender}.
+ */
 public final class LluviaMocos implements Proyectiles {
-    public enum EstadoMoco {
-        FALLING, EXPLODED
-    }
+
+    public enum EstadoMoco {FALLING, EXPLODED}
 
     private static final float GRAVITY = 150f;
     private static final float EXPLOSION_DURATION = 3.5f;
@@ -87,7 +91,7 @@ public final class LluviaMocos implements Proyectiles {
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(42, 4.5f, COLOR_VERDE_MOCO);
+        this.renderParticulasProyectil = new RenderParticulasProyectil(38, 4.5f, COLOR_VERDE_MOCO);
         this.collisionRect.set(x, y, width, height);
     }
 
@@ -102,6 +106,7 @@ public final class LluviaMocos implements Proyectiles {
 
             centroSprite.set(x + width * 0.5f, y + height * 0.5f);
             renderParticulasProyectil.update(centroSprite);
+            TrailRender.get().submit(renderParticulasProyectil);
 
             collisionRect.set(x, y, width, height);
 
@@ -142,10 +147,11 @@ public final class LluviaMocos implements Proyectiles {
     public void renderizarProyectil(SpriteBatch batch) {
         if (!proyectilActivo) return;
 
+        batch.begin();
+
         renderParticulasProyectil.setAlphaMult(0.5f);
 
         if (estadoMoco == EstadoMoco.FALLING) {
-            renderParticulasProyectil.render(batch);
             sprite.setBounds(x, y, width, height);
             sprite.setOrigin(width * 0.5f, height * 0.5f);
             sprite.setRotation(rotation);
@@ -176,7 +182,9 @@ public final class LluviaMocos implements Proyectiles {
 
             batch.setColor(r, g, b, a);
         }
+        batch.end();
     }
+
 
     private static Texture getDropTexture(Color color) {
         int key = Color.rgba8888(color);
@@ -219,6 +227,7 @@ public final class LluviaMocos implements Proyectiles {
         collisionRect.set(minX, minY, maxX - minX, maxY - minY);
     }
 
+    /* ------------- Interface Proyectiles ------------------------- */
 
     @Override
     public Rectangle getRectanguloColision() {
@@ -233,6 +242,7 @@ public final class LluviaMocos implements Proyectiles {
     @Override
     public void desactivarProyectil() {
         proyectilActivo = false;
+        renderParticulasProyectil.reset();
     }
 
     @Override
