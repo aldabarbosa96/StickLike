@@ -25,6 +25,11 @@ public class Boost extends ObjetoBase {
     private boolean collected;
     private float totalBonus;
     private float originalMultiplier;
+    private static final Color COLOR_VEL = new Color(0.75f, 0.75f, 0, 1f);
+    private static final Color COLOR_ATAQUE = new Color(0.75f, 0f, 0.75f, 1f);
+    private static final Color COLOR_AMMO =  new Color(0f, 0.25f, 0f, 1f);
+    private static final Color COLOR_RES =  new Color(0f, 0.25f, 0f, 1f);
+    private static final Color COLOR_VEL_ATAQUE = new Color(0.5f, 0.5f, 0f, 1f);
 
     public Boost(Texture texture, float duracion, BoostType tipo, float x, float y, RenderHUDComponents renderHUDComponents) {
         super(x, y, texture);
@@ -246,23 +251,23 @@ public class Boost extends ObjetoBase {
         switch (tipo) {
             case VELOCIDAD:
                 gestorDeAudio.reproducirEfecto("boostVel", 0.8f);
-                BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.75f, 0.75f, 0, 1f), duracion, iconX, iconY, desiredIconSize);
+                BoostIconEffectManager.getInstance().getEffect().activate(texture, COLOR_VEL, duracion, iconX, iconY, desiredIconSize);
                 break;
             case ATAQUE:
                 gestorDeAudio.reproducirEfecto("boostAttack", 0.8f);
-                BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.75f, 0f, 0.75f, 1f), duracion, iconX, iconY, desiredIconSize);
+                BoostIconEffectManager.getInstance().getEffect().activate(texture, COLOR_ATAQUE, duracion, iconX, iconY, desiredIconSize);
                 break;
             case MUNICION:
                 gestorDeAudio.reproducirEfecto("boostAmo", 0.8f);
-                BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0f, 0.25f, 0f, 1f), duracion, iconX, iconY, desiredIconSize);
+                BoostIconEffectManager.getInstance().getEffect().activate(texture, COLOR_AMMO, duracion, iconX, iconY, desiredIconSize);
                 break;
             case INVULNERABILIDAD:
                 gestorDeAudio.reproducirEfecto("boostRes", 0.8f);
-                BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.5f, 0.5f, 1f, 1f), duracion, iconX, iconY, desiredIconSize);
+                BoostIconEffectManager.getInstance().getEffect().activate(texture, COLOR_RES, duracion, iconX, iconY, desiredIconSize);
                 break;
             case VELATAQUE:
                 gestorDeAudio.reproducirEfecto("boostVelAttack", 0.8f);
-                BoostIconEffectManager.getInstance().getEffect().activate(texture, new Color(0.5f, 0.5f, 0f, 1f), duracion, iconX, iconY, desiredIconSize);
+                BoostIconEffectManager.getInstance().getEffect().activate(texture, COLOR_VEL_ATAQUE, duracion, iconX, iconY, desiredIconSize);
                 break;
             default:
                 break;

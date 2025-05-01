@@ -1,5 +1,6 @@
 package com.sticklike.core.entidades.renderizado;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -56,6 +57,7 @@ public class RenderJugador {
         batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),
             jugador.getSprite().getWidth(), jugador.getSprite().getHeight());
 
+
         if (enParpadeo) {
             batch.setColor(1, 1, 1, 1);
         }
@@ -66,7 +68,7 @@ public class RenderJugador {
         float barHeight = 2.5f;
 
         float barX = jugador.getSprite().getX() + (jugador.getSprite().getWidth() - barWidth) / 2f;
-        float barY = jugador.getSprite().getY() - barHeight - 1.75f;
+        float barY = jugador.getSprite().getY() - barHeight - 2.5f;
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 

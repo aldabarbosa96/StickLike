@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.interfaces.Enemigo;
@@ -85,6 +86,7 @@ public class Destructibles implements Enemigo {
         // Asignar la textura y la textura de daño según el tipo seleccionado
         this.sprite = new Sprite(manager.get(tipo.getTextureKey(), Texture.class));
         this.damageTexture = manager.get(tipo.getDamageTextureKey(), Texture.class);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         // Configurar el tamaño y la posición del sprite
         sprite.setSize(tipo.getWidth(), tipo.getHeight());
@@ -162,7 +164,10 @@ public class Destructibles implements Enemigo {
 
     @Override
     public boolean esGolpeadoPorProyectil(float projectileX, float projectileY, float projectileWidth, float projectileHeight) {
-        return sprite.getBoundingRectangle().overlaps(new Rectangle(projectileX, projectileY, projectileWidth, projectileHeight));
+        Rectangle projectileRect = RectanglePoolManager.obtenerRectangulo(projectileX, projectileY, projectileWidth, projectileHeight);
+        boolean overlaps = sprite.getBoundingRectangle().overlaps(projectileRect);
+        RectanglePoolManager.liberarRectangulo(projectileRect);
+        return overlaps;
     }
 
     @Override

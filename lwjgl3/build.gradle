@@ -1,143 +1,131 @@
+//build.gradle  –  módulo :lwjgl3  (desktop)
 
-buildscript {
-  repositories {
-    gradlePluginPortal()
-  }
-  dependencies {
-    classpath "io.github.fourlastor:construo:1.4.3"
-    if(enableGraalNative == 'true') {
-      classpath "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin:0.9.28"
-    }
-  }
-}
 plugins {
-  id "application"
-}
-apply plugin: 'io.github.fourlastor.construo'
-
-
-import io.github.fourlastor.construo.Target
-
-sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
-mainClassName = 'com.sticklike.lwjgl3.Lwjgl3Launcher'
-application.setMainClass(mainClassName)
-eclipse.project.name = appName + '-lwjgl3'
-java.sourceCompatibility = 21
-java.targetCompatibility = 21
-if (JavaVersion.current().isJava9Compatible()) {
-        compileJava.options.release.set(21)
+  id 'application'
+  id 'io.github.fourlastor.construo' version '1.7.1'
+  id 'org.graalvm.buildtools.native' version '0.9.28' apply false
 }
 
+/* ───── aplica el plugin de GraalVM sólo si la propiedad está a true ─────── */
+if (enableGraalNative?.toBoolean()) {
+  apply plugin: 'org.graalvm.buildtools.native'
+}
+
+/* ─────────────────────  COMPILACIÓN: Java 21 con Toolchain  ─────────────── */
+java {
+  toolchain { languageVersion = JavaLanguageVersion.of(21) }
+}
+
+/* ─────────────────────  RECURSOS Y CLASE PRINCIPAL  ─────────────────────── */
+sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
+
+application {
+  mainClass = 'com.sticklike.lwjgl3.Lwjgl3Launcher'
+  applicationDefaultJvmArgs = ['-Xms512m',
+                               '-Xmx1G',
+                               '-XX:+UseG1GC',
+                               '-XX:MaxGCPauseMillis=5',
+                               '-XX:+UnlockExperimentalVMOptions',
+                               '-XX:ParallelGCThreads=4',
+                               '-XX:ConcGCThreads=2',
+                               '-XX:G1NewSizePercent=20',
+                               '-XX:G1ReservePercent=15',
+                               '-XX:InitiatingHeapOccupancyPercent=30']
+  // todo --> revisar a futuro si es la mejor config para el GC
+}
+
+eclipse.project.name = "${appName}-lwjgl3"
+
+/* ─────────────────────  DEPENDENCIAS  ────────────────────────────────────── */
 dependencies {
-  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
   implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
-  implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+
+  implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion") {
+    exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'
+  }
+
   implementation project(':core')
-  implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion"){exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'}
 
-  if(enableGraalNative == 'true') {
+  if (enableGraalNative?.toBoolean()) {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-bullet:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
-    }
-
+    implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
+    implementation "io.github.berstanio:gdx-svmhelper-extension-bullet:$graalHelperVersion"
+    implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
+  }
 }
 
+/* ─────────────────────  TAREA run (IDE)  ─────────────────────────────────── */
 def os = System.properties['os.name'].toLowerCase()
 
-run {
+tasks.named('run') {
   workingDir = rootProject.file('assets').path
   setIgnoreExitValue(true)
 
-  if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
-}
+  if (os.contains('mac')) {
+    jvmArgs += "-XstartOnFirstThread"
 
-jar {
-// sets the name of the .jar file this produces to the name of the game or app, with the version after.
-  archiveFileName.set("${appName}-${projectVersion}.jar")
-// the duplicatesStrategy matters starting in Gradle 7.0; this setting works.
-  duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+  }
+  jvmArgs += application.applicationDefaultJvmArgs
+}
+/* ─────────────────────  JAR FAT / auto-ejecutable  ───────────────────────── */
+tasks.named('jar') {
+  archiveFileName = "${appName}-${projectVersion}.jar"
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   dependsOn configurations.runtimeClasspath
   from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-// these "exclude" lines remove some unnecessary duplicate files in the output JAR.
-  exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
-  dependencies {
-    exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
-  }
-// setting the manifest makes the JAR runnable.
-  manifest {
-    attributes 'Main-Class': project.mainClassName
-  }
-// this last step may help on some OSes that need extra instruction to make runnable JARs.
-  doLast {
-    file(archiveFile).setExecutable(true, false)
-  }
+  exclude 'META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+  manifest.attributes 'Main-Class': application.mainClass
+  doLast { archiveFile.get().asFile.setExecutable(true, false) }
 }
+
+/* Compatibilidad con gdx-setup */
+tasks.register('dist') { dependsOn 'jar' }
+
+/* -------------------------------------------------------------------------- */
+/*                      EMPAQUETADOS NATIVOS  (CONSTRUO)                      */
+/* -------------------------------------------------------------------------- */
+
+import io.github.fourlastor.construo.Target
 
 construo {
-    // name of the executable
-    name.set(appName)
-    // human-readable name, used for example in the `.app` name for macOS
-    humanName.set(appName)
-    // Optional, defaults to project version property
-    version.set("$projectVersion")
+  name.set(appName)
+  humanName.set(appName)
+  version.set(projectVersion)
 
-    targets.configure {
-      create("linuxX64", Target.Linux) {
-        architecture.set(Target.Architecture.X86_64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.12_7.tar.gz")
-      }
-      create("macM1", Target.MacOs) {
-        architecture.set(Target.Architecture.AARCH64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.12_7.tar.gz")
-        // macOS needs an identifier
-        identifier.set("com.sticklike." + appName)
-        // Optional: icon for macOS
-        macIcon.set(project.file("icons/logo.icns"))
-      }
-      create("macX64", Target.MacOs) {
-        architecture.set(Target.Architecture.X86_64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_mac_hotspot_17.0.12_7.tar.gz")
-        // macOS needs an identifier
-        identifier.set("com.sticklike." + appName)
-        // Optional: icon for macOS
-        macIcon.set(project.file("icons/logo.icns"))
-      }
-      create("winX64", Target.Windows) {
-        architecture.set(Target.Architecture.X86_64)
-        jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.12_7.zip")
-        // Uncomment the next line to show a console when the game runs, to print messages.
-        //useConsole.set(true)
-      }
+  targets.configure {
+    /* ───────── Linux x64 ───────── */
+    create('linuxX64', Target.Linux) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set('https://github.com/adoptium/temurin21-binaries/releases/download/' + 'jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_linux_hotspot_21.0.2_13.tar.gz')
     }
-}
 
-// Equivalent to the jar task; here for compatibility with gdx-setup.
-tasks.register('dist') {
-  dependsOn 'jar'
-}
+    /* ───────── Windows x64 ─────── */
+    create('winX64', Target.Windows) {
+      architecture.set(Target.Architecture.X86_64)
+      jdkUrl.set('https://github.com/adoptium/temurin21-binaries/releases/download/' + 'jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_windows_hotspot_21.0.2_13.zip')
+      // useConsole.set(true)
+    }
 
-distributions {
-  main {
-    contents {
-      into('libs') {
-        project.configurations.runtimeClasspath.files.findAll { file ->
-          file.getName() != project.tasks.jar.outputs.files.singleFile.name
-        }.each { file ->
-          exclude file.name
-        }
-      }
+    /* ───────── macOS Intel ─────── */
+    create('macX64', Target.MacOs) {
+      architecture.set(Target.Architecture.X86_64)
+      identifier.set("com.sticklike.${appName}")
+      jdkUrl.set('https://github.com/adoptium/temurin21-binaries/releases/download/' + 'jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_mac_hotspot_21.0.2_13.tar.gz')
+      macIcon.set(project.file('icons/logo.icns'))
+    }
+
+    /* ───────── macOS Apple Silicon ─ */
+    create('macM1', Target.MacOs) {
+      architecture.set(Target.Architecture.AARCH64)
+      identifier.set("com.sticklike.${appName}")
+      jdkUrl.set('https://github.com/adoptium/temurin21-binaries/releases/download/' + 'jdk-21.0.2%2B13/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.2_13.tar.gz')
+      macIcon.set(project.file('icons/logo.icns'))
     }
   }
 }
 
-startScripts.dependsOn(':lwjgl3:jar')
-startScripts.classpath = project.tasks.jar.outputs.files
-
-if(enableGraalNative == 'true') {
-  apply from: file("nativeimage.gradle")
-}

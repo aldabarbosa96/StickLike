@@ -31,6 +31,7 @@ public class GestorDeAssets {
     public static final String ENEMIGO_VATER2 = "enemigos/07vater2.png";
     public static final String ENEMIGO_ALARMA = "enemigos/08alarma.png";
     public static final String ENEMIGO_ALARMA2 = "enemigos/08alarma2.png";
+    public static final String ENEMIGO_CONDON = "enemigos/09preservativo.png";
     public static final String CORAZON_VIDA = "hud/life.png";
     public static final String ARMA_PIEDRA = "armas/01piedra.png";
     public static final String ARMA_CALCETIN = "armas/02calcetin.png";
@@ -76,6 +77,7 @@ public class GestorDeAssets {
     public static final String ICONO_CALEAVELA_KILLS = "hud/calavera.png";
     public static final String TEXTURA_MARCO = "hud/marco2.png";
     public static final String DADOS = "hud/dados.png";
+    public static final String NEW = "hud/new.png";
 
     // Boss y loading
     public static final String BOSS_POLLA = "enemigos/bossPolla.png";
@@ -90,6 +92,7 @@ public class GestorDeAssets {
     public static final String DAMAGE_VATER_TEXTURE = "enemigos/damageSprites/07waterD.png";
     public static final String DAMAGE_BOSS_POLLA_TEXTURE = "enemigos/damageSprites/bossPollaD.png";
     public static final String DAMAGE_ALARMA_TEXTURE = "enemigos/damageSprites/08alarmaD.png";
+    public static final String DAMAGE_CONDON = "enemigos/damageSprites/09preservativoD.png";
 
     public static void cargarRecursos() {
         cargarTexturas();
@@ -113,6 +116,7 @@ public class GestorDeAssets {
         manager.load(ENEMIGO_VATER2, Texture.class);
         manager.load(ENEMIGO_ALARMA, Texture.class);
         manager.load(ENEMIGO_ALARMA2, Texture.class);
+        manager.load(ENEMIGO_CONDON, Texture.class);
         manager.load(CORAZON_VIDA, Texture.class);
         manager.load(ARMA_PIEDRA, Texture.class);
         manager.load(ARMA_CALCETIN, Texture.class);
@@ -158,6 +162,7 @@ public class GestorDeAssets {
         manager.load(ICONO_CALEAVELA_KILLS, Texture.class);
         manager.load(TEXTURA_MARCO, Texture.class);
         manager.load(DADOS, Texture.class);
+        manager.load(NEW, Texture.class);
 
         manager.load(BOSS_POLLA, Texture.class);
         manager.load(BOSS_POLLA_BOCACERRADA, Texture.class);
@@ -170,6 +175,7 @@ public class GestorDeAssets {
         manager.load(DAMAGE_VATER_TEXTURE, Texture.class);
         manager.load(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
         manager.load(DAMAGE_ALARMA_TEXTURE, Texture.class);
+        manager.load(DAMAGE_CONDON, Texture.class);
 
         // Animaciones
         manager.load("acciones/movement/stickman_idle00.png", Texture.class);
@@ -222,6 +228,10 @@ public class GestorDeAssets {
         manager.load("enemigos/animaciones/alarma2Muerte01.png", Texture.class);
         manager.load("enemigos/animaciones/alarma2Muerte02.png", Texture.class);
         manager.load("enemigos/animaciones/alarma2Muerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/preservativoMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/preservativoMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/preservativoMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/preservativoMuerte03.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte00.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte01.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte02.png", Texture.class);
@@ -268,6 +278,7 @@ public class GestorDeAssets {
         animations.put("vaterMuerte", crearAnimacion("enemigos/animaciones/vaterMuerte", 4,0.08f));
         animations.put("alarmaMuerte", crearAnimacion("enemigos/animaciones/alarmaMuerte", 4,0.08f));
         animations.put("alarmaMuerte2", crearAnimacion("enemigos/animaciones/alarma2Muerte", 4,0.08f));
+        animations.put("condonMuerte", crearAnimacion("enemigos/animaciones/preservativoMuerte", 4,0.08f));
         animations.put("bossPollaMuerte", crearAnimacion("enemigos/animaciones/bossPollaMuerte", 8,0.2f));
     }
 

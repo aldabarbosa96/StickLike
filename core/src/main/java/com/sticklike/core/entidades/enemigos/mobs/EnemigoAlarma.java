@@ -4,14 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.ObjetosXP;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -31,7 +29,8 @@ public class EnemigoAlarma extends EnemigoBase {
         super(jugador);
         sprite = new Sprite(escogerTextura());
         sprite.setPosition(x, y);
-        sprite.setSize(38, 38);
+        sprite.setSize(40, 40);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoAlarma = new MovimientoCulo(velocidadBase, true);
         this.damageTexture = manager.get(DAMAGE_ALARMA_TEXTURE, Texture.class);
         this.vidaEnemigo = VIDA_ENEMIGO_ALARMA;

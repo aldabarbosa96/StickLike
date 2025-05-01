@@ -9,6 +9,9 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 public class AtaqueMocos {
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo = 0.8f;
+    private boolean reboteMocoActivado = false;
+    private int maxBouncesAcumulado = 0; // todo --> se gestiona por si en un futuro se pretende manejar individualmente el aumento del nº de rebotes
+    private boolean mocosSangre = false;
 
     public void procesarAtaque(Jugador jug, GestorDeAudio gestorDeAudio) {
         OrthographicCamera cam = jug.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera();
@@ -20,6 +23,13 @@ public class AtaqueMocos {
         float fallSpeed = MathUtils.random(250, 300);
 
         LluviaMocos mocos = new LluviaMocos(randomX, top, fallSpeed, gestorDeAudio);
+        if (reboteMocoActivado) {
+            mocos.setReboteActivado(true);
+            mocos.setMaxBounces(maxBouncesAcumulado);
+        }
+        if (mocosSangre) {
+            mocos.setDamage(mocos.getBaseDamage() * 2.5f);
+        }
         jug.getControladorProyectiles().anyadirNuevoProyectil(mocos);
     }
 
@@ -29,5 +39,18 @@ public class AtaqueMocos {
             temporizadorDisparo = 0;
             procesarAtaque(jugador, gestorDeAudio);
         }
+    }
+
+    public void tormentaMucosa(float factorIntervalo) {
+        this.intervaloDisparo *= factorIntervalo;
+    }
+
+    public void activarReboteMucoso() {
+        this.reboteMocoActivado = true;
+        maxBouncesAcumulado++;
+    }
+
+    public void mocosConSangre() {
+        mocosSangre = true;
     }
 }

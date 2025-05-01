@@ -73,23 +73,35 @@ public class VentanaGameOver implements Screen {
         });
     }
 
-    // En VentanaGameOver.java
     private void reiniciarJuego() {
-        EnemigoCulo.resetStats(); // todo --> habría que gestionar el reseteo de stats de forma centralizada
+        // 1) Reset de stats y proyectiles todo --> manejar reseteo de todas las entidades en un futuro
+        EnemigoCulo.resetStats();
         EnemigoPolla.resetStats();
         EnemigoExamen.resetStats();
         controladorProyectiles.reset();
-        game.ventanaJuego1.dispose();
+
+        // 2) Liberamos la instancia anterior de VentanaJuego1
+        if (game.ventanaJuego1 != null) {
+            game.ventanaJuego1.dispose();
+        }
+
+        // 3) Reiniciamos mensajes y datos
         Mensajes.reset();
         MensajesData.getInstance().reset();
-        game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
-        game.ventanaJuego1.resize(VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
-        game.setScreen(game.ventanaJuego1);
+
+        // 4) Creamos y asignamos la nueva pantalla de juego
+        VentanaJuego1 nueva = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
+        nueva.resize(VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
+        game.ventanaJuego1 = nueva;
+
+        // 5) Mostramos la nueva pantalla
+        game.setScreen(nueva);
     }
 
     private void cerrarJuego() {
         if (game.ventanaJuego1 != null) {
             game.ventanaJuego1.dispose();
+            game.ventanaJuego1 = null;
         }
         game.setScreen(new MenuPrincipal(game));
     }

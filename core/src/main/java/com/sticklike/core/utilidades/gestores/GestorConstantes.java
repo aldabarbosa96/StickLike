@@ -16,7 +16,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Configuración de la cámara
     // -------------------------------------------------
     public static final float CAMERA_OFFSET_Y = -95f;
-    public static final float CAMERA_JUGADOR_OFFSET_X = 6.25f;
+    public static final float CAMERA_JUGADOR_OFFSET_X = 23.5f;
     public static final float CAMERA_JUGADOR_OFFSET_Y = 142.5f;
 
     // -------------------------------------------------
@@ -24,6 +24,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float HUD_HEIGHT = 175f;
     public static final float GRID_CELL_SIZE = 32;
+    public static final float GRID_CELL_SIZE_HUD = 40;
     public static final float GRID_CELL_SIZE_CORRECTION = 18f * 1.09375f;
     public static final float HUD_BAR_WIDTH = 200f * 1.4814814815f;
     public static final float HUD_BAR_HEIGHT = 11.5f * 1.09375f;
@@ -133,8 +134,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float CRITICO = 0.07f;
     public static final float REGENERACION_VIDA = 0.001f;
     public static final float PODER_JUGADOR = 10f;
-    public static final float WIDTH_JUGADOR = 14f;
-    public static final float HEIGHT_JUGADOR = 36f;
+    public static final float WIDTH_JUGADOR = 14.5f;
+    public static final float HEIGHT_JUGADOR = 39f;
     public static final float PARPADEO_JUGADOR_DANYO = 0.2f;
     public static final float PARPADEO_JUGADOR_VIDA = 0.2f;
 
@@ -164,6 +165,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_ALARMA = 75f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
+    public static final float MULT_VELOCIDAD_CONDON = 2.75f;
     public static final float MULT_VELOCIDAD_POLLA = 1.5f;
     public static final float MULT_VELOCIDAD_EXAMEN = 1.75f;
     public static final float TEMPORIZADOR_DANYO = 0f;
@@ -233,7 +235,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_BOLI = 150f;
     public static final float EMPUJE_BASE_DILDO = 135f;
     public static final float MULT_DANYO = 1f;
-    public static final float TAZO_SIZE = 15f;
+    public static final float TAZO_SIZE = 16f;
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 25f;
     public static final float RADIO_TAZOS_JUGADOR = 75f;
@@ -271,18 +273,18 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
     public static final float VIDA_DESTRUCTIBLE2 = 75f;
-    public static final float ANCHO_DESTRUCT = 40f;
-    public static final float ALTO_DESTRUCT = 36f;
-    public static final float ANCHO_DESTRUCT1 = 44f;
-    public static final float ALTO_DESTRUCT1 = 44;
-    public static final float ANCHO_DESTRUCT2 = 40f;
-    public static final float ALTO_DESTRUCT2 = 40f;
-    public static final float ANCHO_DESTRUCT3 = 38f;
-    public static final float ALTO_DESTRUCT3 = 40f;
-    public static final float ANCHO_DESTRUCT_LATA = 40f;
-    public static final float ALTO_DESTRUCT_LATA = 60f;
-    public static final float ANCHO_BOOST = 18f;
-    public static final float ALTO_BOOST = 18f;
+    public static final float ANCHO_DESTRUCT = 42f;
+    public static final float ALTO_DESTRUCT = 38f;
+    public static final float ANCHO_DESTRUCT1 = 46f;
+    public static final float ALTO_DESTRUCT1 = 46;
+    public static final float ANCHO_DESTRUCT2 = 42f;
+    public static final float ALTO_DESTRUCT2 = 42f;
+    public static final float ANCHO_DESTRUCT3 = 40f;
+    public static final float ALTO_DESTRUCT3 = 42f;
+    public static final float ANCHO_DESTRUCT_LATA = 42f;
+    public static final float ALTO_DESTRUCT_LATA = 62f;
+    public static final float ANCHO_BOOST = 22f;
+    public static final float ALTO_BOOST = 22f;
 
     // -------------------------------------------------
     // Controlador Evento
@@ -308,7 +310,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] LISTA_ALARMA = {"ALARMA"};
     public static final String[] LISTA_REGLA = {"REGLA"};
     public static final String[] TIPOS_ENEMIGOS = {"CULO"};
-    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "CONDON"};
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA"};
     public static final String[] TIPOS_ENEMIGOS4 = {"REGLA","ALARMA","EXAMEN"};
 
@@ -349,5 +351,5 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float AUDIO_UPGRADE = 0.75f;
     public static final float AUDIO_PAUSA = 0.75f;
     public static final int MAX_INSTANCIAS_SONIDO = 3;
-    public static final int MAX_INSTANCIAS_SONIDO_EXPL = 1;
+    public static final int MAX_INSTANCIAS_SONIDO_EXPL = 2;
 }

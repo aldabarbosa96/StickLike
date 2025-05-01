@@ -3,15 +3,12 @@ package com.sticklike.core.entidades.enemigos.mobs;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoPolla;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.ObjetosXP;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -27,8 +24,9 @@ public class EnemigoPolla extends EnemigoBase {
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
         super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_POLLA, Texture.class));
-        sprite.setSize(30, 30);
+        sprite.setSize(34, 34);
         sprite.setPosition(x, y);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
         this.damageTexture = manager.get(DAMAGE_POLLA_TEXTURE, Texture.class);
         this.vidaEnemigo = VIDA_ENEMIGO_POLLA;

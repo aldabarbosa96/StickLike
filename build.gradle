@@ -59,6 +59,13 @@ configure(subprojects) {
 subprojects {
   version = '$projectVersion'
   ext.appName = 'StickLike'
+  plugins.withType(JavaPlugin) {
+    java {
+      toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+      }
+    }
+  }
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }

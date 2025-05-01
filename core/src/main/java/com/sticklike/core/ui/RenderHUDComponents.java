@@ -9,10 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -60,6 +58,9 @@ public class RenderHUDComponents {
     private Viewport hudViewport;
     private List<Rectangle> slotsList = new ArrayList<>();
     private Set<String> statBoosteada = new HashSet<>();
+    private static final Color COLOR_SHAPEREDNDERER = new Color(0.75f, 0.75f, 0.75f, 1);
+    private final DecimalFormat dfStats1 = new DecimalFormat("#.##");
+    private final DecimalFormat dfStats2 = new DecimalFormat("#.#");
 
     public RenderHUDComponents(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, Jugador jugador, SistemaDeNiveles sistemaDeNiveles) {
         this.sistemaDeNiveles = sistemaDeNiveles;
@@ -126,8 +127,8 @@ public class RenderHUDComponents {
     }
 
     public void renderizarLineasHorizontalesCuadricula(float alturaHUD) {
-        shapeRenderer.setColor(0.725f, 0.825f, 0.875f, 1);
-        float cellSize = GRID_CELL_SIZE - GRID_CELL_SIZE_CORRECTION;
+        shapeRenderer.setColor(0.72f, 0.82f, 0.875f, 1);
+        float cellSize = GRID_CELL_SIZE_HUD - GRID_CELL_SIZE_CORRECTION;
         for (float y = 0; y <= alturaHUD; y += cellSize) {
             shapeRenderer.rectLine(0, y, VIRTUAL_WIDTH, y, 2);
         }
@@ -156,34 +157,41 @@ public class RenderHUDComponents {
 
         // Círculos lado izquierdo
         float circleXLeft = margenIzquierdo / 2f;
-        shapeRenderer.setColor(new Color(0.75f, 0.75f, 0.75f, 1));
+        shapeRenderer.setColor(COLOR_SHAPEREDNDERER);
         shapeRenderer.circle(circleXLeft, circleYBottom, circleRadius);
         shapeRenderer.circle(circleXLeft, circleYTop, circleRadius);
     }
 
     public void renderizarTextoNivelPlayer() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        fuente.getData().setScale(0.95f);
-        GlyphLayout layoutLVL = new GlyphLayout(fuente, TEXTO_LVL);
-        float widthLVL = layoutLVL.width;
 
+        // Título "LVL"
+        fuente.getData().setScale(0.95f);
+        layout.setText(fuente, TEXTO_LVL);
+        float widthLVL = layout.width;
+
+        // Número de nivel
         String nivelStr = String.valueOf(sistemaDeNiveles.getNivelActual());
         fuente.getData().setScale(1.4f);
-        GlyphLayout layoutNumero = new GlyphLayout(fuente, nivelStr);
+        layout.setText(fuente, nivelStr);
+        float widthNumero = layout.width;
 
-        float widthNumero = layoutNumero.width;
+        // Calculamos posición centrada
         float spacing = 2f;
         float totalWidth = widthLVL + spacing + widthNumero;
         float groupX = (VIRTUAL_WIDTH - totalWidth) / 2;
+
         float textY = effectiveHUDHeight - TEXT_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
         float textYNumber = effectiveHUDHeight - NUMBER_Y_CORRECTION + DESPLAZAMIENTO_VERTICAL_HUD;
 
+        // Dibujamos
         fuente.getData().setScale(0.95f);
         dibujarTextoConReborde(spriteBatch, TEXTO_LVL, groupX, textY, BASIC_OFFSET, Color.BLACK, Color.WHITE);
 
         fuente.getData().setScale(1.4f);
         dibujarTextoConReborde(spriteBatch, nivelStr, groupX + widthLVL + spacing, textYNumber, BASIC_OFFSET, Color.BLUE, Color.WHITE);
     }
+
 
     public void renderizarBarraXPFondo() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
@@ -230,7 +238,8 @@ public class RenderHUDComponents {
         float textX = barX + (barWidth) / 2;
         float textY = barY + (barHeight + textHeight) / 2 + XPTEXT_Y_CORRECTION;
         fuente.getData().setScale(0.8f);
-        dibujarTextoConReborde(spriteBatch, experienceText, textX, textY, UNDER_OFFSET, Color.BLACK, Color.WHITE);
+        fuente.setColor(Color.BLACK);
+        fuente.draw(spriteBatch, experienceText, textX, textY);
     }
 
     public void renderizarIconoConTexto(Texture iconTexture, float iconWidth, float iconHeight, float posX, float posY, String texto, float scaleFuente, Color colorTexto, Color colorReborde) {
@@ -243,17 +252,16 @@ public class RenderHUDComponents {
 
     public void renderizarStatsJugadorBloque1() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        DecimalFormat df = new DecimalFormat("#.##");
-        String valorVelocidad = df.format(jugador.getVelocidadJugador());
-        String valorRango = df.format(jugador.getRangoAtaqueJugador());
-        String valorVelAtaque = df.format(jugador.getVelocidadAtaque()) + " %";
-        String valorFuerza = df.format(jugador.getDanyoAtaqueJugador());
-        String valorProyectiles = "+" + df.format(jugador.getProyectilesPorDisparo());
+
+        String valorVelocidad = dfStats1.format(jugador.getVelocidadJugador());
+        String valorRango = dfStats1.format(jugador.getRangoAtaqueJugador());
+        String valorVelAtaque = dfStats1.format(jugador.getVelocidadAtaque()) + " %";
+        String valorFuerza = dfStats1.format(jugador.getDanyoAtaqueJugador());
+        String valorProyectiles = "+" + dfStats1.format(jugador.getProyectilesPorDisparo());
+
         String[] descripciones = {VEL_MOV, RANGO, VEL_ATAQUE, FUERZA, NUM_PROYECTILES};
         String[] valores = {valorVelocidad, valorRango, valorVelAtaque, valorFuerza, valorProyectiles};
-        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class),
-            manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class),
-            manager.get(ICONO_PROYECTILES, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VEL_MOV, Texture.class), manager.get(ICONO_RANGO, Texture.class), manager.get(ICONO_VEL_ATAQUE, Texture.class), manager.get(ICONO_FUERZA, Texture.class), manager.get(ICONO_PROYECTILES, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION + 10;
         float statsY = effectiveHUDHeight - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC1);
@@ -261,21 +269,21 @@ public class RenderHUDComponents {
 
     public void renderizarStatsJugadorBloque2() {
         float effectiveHUDHeight = HUD_HEIGHT + EXTRA_HUD_HEIGHT;
-        DecimalFormat df = new DecimalFormat("#.#");
-        String valorVidaMaxima = df.format(jugador.getVidaJugador()) + " / " + df.format(jugador.getMaxVidaJugador());
-        String valorRegeneracionVida = df.format(jugador.getRegVidaJugador() * 100) + " %";
-        String valorPoderAtaque = df.format(jugador.getPoderJugador()) + " %";
-        String valorResistencia = df.format(jugador.getResistenciaJugador() * 100) + " %";
-        String valorCritico = df.format(jugador.getCritico() * 100) + " %";
+
+        String valorVidaMaxima = dfStats2.format(jugador.getVidaJugador()) + " / " + dfStats2.format(jugador.getMaxVidaJugador());
+        String valorRegeneracionVida = dfStats2.format(jugador.getRegVidaJugador() * 100) + " %";
+        String valorPoderAtaque = dfStats2.format(jugador.getPoderJugador()) + " %";
+        String valorResistencia = dfStats2.format(jugador.getResistenciaJugador() * 100) + " %";
+        String valorCritico = dfStats2.format(jugador.getCritico() * 100) + " %";
+
         String[] descripciones = {VIDA_MAX, REG_VIDA, PODER, RESIST, CRITIC};
         String[] valores = {valorVidaMaxima, valorRegeneracionVida, valorPoderAtaque, valorResistencia, valorCritico};
-        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class),
-            manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class),
-            manager.get(ICONO_CRITICO, Texture.class)};
+        Texture[] iconos = {manager.get(ICONO_VIDA, Texture.class), manager.get(ICONO_REGENERACION, Texture.class), manager.get(ICONO_PODER, Texture.class), manager.get(ICONO_RESISTENCIA, Texture.class), manager.get(ICONO_CRITICO, Texture.class)};
         float statsX = VIRTUAL_WIDTH - STATS_X_CORRECTION2 + 10f;
         float statsY = effectiveHUDHeight - STATS_Y_CORRECTION - 20f;
         renderizarBloqueStatsConIconos(descripciones, iconos, valores, statsX, statsY, ANCHO_DESC2);
     }
+
 
     private void renderizarBloqueStatsConIconos(String[] descripciones, Texture[] iconos, String[] valores, float statsX, float statsY, float anchoDescripcion) {
         // Ajustamos el tamaño de la fuente
@@ -364,51 +372,106 @@ public class RenderHUDComponents {
 
     public void setHabilidadesActivas(List<Mejora> habilidadesActivas) {
         hudStage.clear();
-        for (int i = 0; i < slotsList.size(); i++) {
-            if (i < habilidadesActivas.size()) {
-                Mejora mejora = habilidadesActivas.get(i);
-                if (mejora.getIcono() != null) {
-                    TextureRegionDrawable drawableIcono = new TextureRegionDrawable(new TextureRegion(mejora.getIcono()));
-                    ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-                    style.imageUp = drawableIcono;
-                    ImageButton boton = new ImageButton(style);
-                    float margin = slotsList.get(i).width * 0.175f;
-                    float margin2 = slotsList.get(i).width * 0.0375f;
-                    if (mejora.getIdHabilidad().equals("DILDO")) {
-                        boton.setSize(slotsList.get(i).width - 2, slotsList.get(i).height - 7.5f * margin2);
-                        boton.setPosition(slotsList.get(i).x + margin2, slotsList.get(i).y + margin * 1.35f);
-                    } else {
-                        boton.setSize(slotsList.get(i).width - 2 * margin, slotsList.get(i).height - 2 * margin);
-                        boton.setPosition(slotsList.get(i).x + margin, slotsList.get(i).y + margin * 1.5f);
-                    }
-                    boton.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            System.out.println("Hiciste clic en " + mejora.getNombreMejora());
-                        }
-                    });
-                    hudStage.addActor(boton);
-                }
+
+        for (int i = 0; i < habilidadesActivas.size() && i < slotsList.size(); i++) {
+            Mejora mejora = habilidadesActivas.get(i);
+            Texture icono = mejora.getIcono();
+            if (icono == null) continue;
+
+            Rectangle slot = slotsList.get(i);
+            TextureRegionDrawable drawableIcono = new TextureRegionDrawable(new TextureRegion(icono));
+
+            ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+            style.imageUp = drawableIcono;
+            ImageButton boton = new ImageButton(style);
+
+            // Ajustamos tamaño y posición idéntico para todas las habilidades, excepto “DILDO” que necesita un pequeño tweak
+            float margin = slot.width * 0.175f;
+            float margin2 = slot.width * 0.0375f;
+            if ("DILDO".equals(mejora.getIdHabilidad())) {
+                boton.setSize(slot.width - 2, slot.height - 7.5f * margin2);
+                boton.setPosition(slot.x + margin2, slot.y + margin * 1.35f);
+            } else {
+                boton.setSize(slot.width - 2 * margin, slot.height - 2 * margin);
+                boton.setPosition(slot.x + margin, slot.y + margin * 1.5f);
             }
+
+            /*boton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) { // todo --> implementar info de las mejoras en un futuro
+                    Gdx.app.log("MEJORA","Hiciste clic en " + mejora.getNombreMejora());
+                }
+            });*/
+
+            hudStage.addActor(boton);
+        }
+    }
+
+    private String toRoman(int num) {
+        switch (num) {
+            case 1:
+                return "I";
+            case 2:
+                return "I I";
+            case 3:
+                return "I I I";
+            case 4:
+                return "I V";
+            case 5:
+                return "V";
+            case 6:
+                return "V I";
+            case 7:
+                return "V I I";
+            case 8:
+                return "V I I I";
+            case 9:
+                return "I X";
+            case 10:
+                return "X";
+            default:
+                return "";
         }
     }
 
     public void renderizarMarcosMejoras() {
         fuente.getData().setScale(0.65f);
+        List<Mejora> habilidades = sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas();
+
         for (int i = 0; i < slotsList.size(); i++) {
-            Rectangle rectangle = slotsList.get(i);
-            spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-            if (i >= sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas().size()) {
-                String textoNumero = String.valueOf(i + 1);
-                GlyphLayout layoutNumero = new GlyphLayout(fuente, textoNumero);
-                float textWidth = layoutNumero.width;
-                float textHeight = layoutNumero.height;
-                float textX = rectangle.x + (rectangle.width - textWidth) / 2;
-                float textY = rectangle.y + (rectangle.height + textHeight) / 2;
-                fuente.setColor(Color.BLUE);
-                fuente.draw(spriteBatch, textoNumero, textX, textY);
+            Rectangle rect = slotsList.get(i);
+            spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rect.x, rect.y, rect.width, rect.height);
+
+            if (i < habilidades.size()) {
+                Mejora mejora = habilidades.get(i);
+                String baseId = mejora.getIdHabilidad();
+
+                // Recuperamos sólo el número de upgrades aplicados de esta habilidad
+                int upgrades = sistemaDeNiveles.getSistemaDeMejoras().getUpgradeCount(baseId);
+
+                if (upgrades > 0) {
+                    // Convertimos a romano
+                    String romano = toRoman(upgrades);
+
+                    // Escala ligeramente mayor para el número
+                    float prevScale = fuente.getData().scaleX;
+                    fuente.getData().setScale(0.8f);
+
+                    // Medida del texto
+                    layout.setText(fuente, romano);
+                    float padding = 4f;
+                    float textX = rect.x + rect.width + padding;
+                    float textY = rect.y + layout.height + padding;
+
+                    dibujarTextoConReborde(spriteBatch, romano, textX, textY, BASIC_OFFSET, Color.BLACK, Color.GREEN);
+
+                    // Restauramos escala
+                    fuente.getData().setScale(prevScale);
+                }
             }
         }
+
+        fuente.setColor(Color.WHITE);
     }
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
@@ -468,4 +531,5 @@ public class RenderHUDComponents {
     public ControladorEnemigos getControladorEnemigos() {
         return controladorEnemigos;
     }
+
 }

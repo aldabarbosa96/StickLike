@@ -3,12 +3,17 @@ package com.sticklike.core.pantallas.juego;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.BufferUtils;
+import com.sticklike.core.entidades.renderizado.TrailRender;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
@@ -17,278 +22,294 @@ import com.sticklike.core.ui.HUD;
 import com.sticklike.core.ui.Mensajes;
 import com.sticklike.core.utilidades.PoissonPoints;
 
+import java.nio.IntBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.borrones;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
-
-/**
- * Renderiza la ventana de juego, incluyendo el fondo, entidades y HUD.
- * Genera de forma procedural los elementos visuales del mapa.
- */
 
 public class RenderVentanaJuego1 {
 
-    private ShapeRenderer shapeRenderer;
-    private VentanaLoading ventanaLoading;
+    private final ShapeRenderer shapeRenderer;
+    private final VentanaLoading ventanaLoading;
     private final int tamanyoCeldas;
+
+    // Para prerenderizar BORRONES
     private Array<Borron> borronesMapa;
-    private AtomicBoolean borronesListos = new AtomicBoolean(false);
-    private static final float POISSON_MIN_DISTANCE = 500f;
+    private final AtomicBoolean borronesListos = new AtomicBoolean(false);
+    private final FrameBuffer borronesFbo;
+    private final TextureRegion borronesRegion;
+    private volatile boolean borronesReady = false;
+    private static final float POISSON_MIN_DISTANCE = 750f;
     private static final int POISSON_K = 30;
+
+    // Cámara para prerender FBO
+    private final OrthographicCamera worldCam;
+    private final int mapPixelWidth, mapPixelHeight;
+
+    // Control de flash
     private boolean flashVidaActivo = false;
     private float flashVidaTimer = 0f;
-    private final float FLASH_VIDA_DURATION = 0.25f;
-    private ExecutorService executorService;
+    private static final float FLASH_VIDA_DURATION = 0.25f;
 
-    // Clase interna que gestiona los borrones del mapa
+    // Hilo background
+    private final ExecutorService executorService;
+    private final long startLoadTime;
+    private static final long MIN_LOAD_DURATION_MS = 1750;
+
+    // Referencias externas
+    private final SpriteBatch spriteBatch;
+    private final OrthographicCamera camara;
+
+    // Límites mundo
+    private final float mapMinX = MAP_MIN_X, mapMinY = MAP_MIN_Y, mapMaxX = MAP_MAX_X, mapMaxY = MAP_MAX_Y;
+
     private static class Borron {
-        Texture textura;
-        float posX, posY;
-        float scale;
-        float rotation;
+        final Texture textura;
+        final float x, y, s, r;
 
-        public Borron(Texture textura, float posX, float posY, float scale, float rotation) {
-            this.textura = textura;
-            this.posX = posX;
-            this.posY = posY;
-            this.scale = scale;
-            this.rotation = rotation;
+        Borron(Texture t, float x, float y, float s, float r) {
+            textura = t;
+            this.x = x;
+            this.y = y;
+            this.s = s;
+            this.r = r;
         }
     }
 
-    public RenderVentanaJuego1(int tamanyoCeldas, Jugador jugador) {
+    public RenderVentanaJuego1(int tamanyoCeldas, Jugador jugador, SpriteBatch spriteBatch, OrthographicCamera camara) {
+        this.tamanyoCeldas = tamanyoCeldas;
         this.shapeRenderer = new ShapeRenderer();
         this.ventanaLoading = new VentanaLoading();
-        this.tamanyoCeldas = tamanyoCeldas;
+        this.spriteBatch = spriteBatch;
+        this.camara = camara;
 
-        // Inicializamos el ExecutorService; se usa un solo hilo
+        // dimensiones mapa en píxeles
+        mapPixelWidth = Math.round(mapMaxX - mapMinX);
+        mapPixelHeight = Math.round(mapMaxY - mapMinY);
+
+        // Cámara global
+        worldCam = new OrthographicCamera(mapMaxX - mapMinX, mapMaxY - mapMinY);
+        worldCam.position.set(mapMinX + (mapMaxX - mapMinX) / 2f, mapMinY + (mapMaxY - mapMinY) / 2f, 0);
+        worldCam.update();
+
+        // FBO solo para BORRONES
+        IntBuffer buffer = BufferUtils.newIntBuffer(1);
+        Gdx.gl.glGetIntegerv(GL20.GL_MAX_RENDERBUFFER_SIZE, buffer);
+        int maxFboSize = buffer.get(0);
+        System.out.println("Máximo tamaño permitido para FrameBuffer: " + maxFboSize);
+
+        // Limita el tamaño real
+        int safeWidth = Math.min(mapPixelWidth, maxFboSize);
+        int safeHeight = Math.min(mapPixelHeight, maxFboSize);
+
+        // Crea el FBO con dimensiones seguras
+        borronesFbo = new FrameBuffer(Pixmap.Format.RGBA8888, safeWidth, safeHeight, true);;
+        borronesRegion = new TextureRegion(borronesFbo.getColorBufferTexture());
+        Texture borronesTex = borronesFbo.getColorBufferTexture();
+        borronesTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        borronesRegion.flip(false, true);
         executorService = Executors.newSingleThreadExecutor();
+        startLoadTime = System.currentTimeMillis();
+        Vector2 posInit = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
 
-        final Vector2 posicionInicialJugador = new Vector2(jugador.getSprite().getX(), jugador.getSprite().getY());
-
-        // enviamos la tarea al ExecutorService en vez de crear un nuevo hilo
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                long startTime = System.currentTimeMillis();
-                generarBorronesRandom(CANTIDAD_BORRONES, posicionInicialJugador);
-                long elapsed = System.currentTimeMillis() - startTime;
-                if (elapsed < 1500) {
-                    try {
-                        Thread.sleep(1500 - elapsed);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt(); // restauramos el estado de interrupción (buena praxis)
-                    }
-                }
-                borronesListos.set(true);
-            }
+        executorService.submit(() -> {
+            generarBorronesRandom(CANTIDAD_BORRONES, posInit);
+            borronesListos.set(true);
         });
     }
 
-    public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos controladorEnemigos, Array<TextoFlotante> textosDanyo, HUD hud, SpriteBatch spriteBatch, OrthographicCamera camara) {
-
+    public void renderizarVentana(float delta, VentanaJuego1 ventanaJuego1, Jugador jugador, Array<ObjetosXP> objetosXP, ControladorEnemigos ctrlEnemigos, Array<TextoFlotante> textos, HUD hud) {
         ventanaJuego1.actualizarPosCamara();
 
-        if (!borronesListos.get()) {
+        // 1) Prerender BORRONES una sola vez
+        long elapsed = System.currentTimeMillis() - startLoadTime;
+
+        if (borronesListos.get() && !borronesReady && elapsed >= MIN_LOAD_DURATION_MS) {
+            prerenderBorrones();
+        }
+
+        if (!borronesReady) {
             ventanaLoading.render(delta);
             return;
         }
 
-        if (flashVidaActivo) {
-            Gdx.gl.glClearColor(0.82f, 0.88f, 0.82f, 1); // todo --> revisar el color (no queda muy bien de momento)
-            flashVidaTimer -= Gdx.graphics.getDeltaTime();
-            if (flashVidaTimer <= 0) {
-                flashVidaActivo = false;
-            }
-        } else {
-            // 1) Limpiamos la pantalla
-            if (Jugador.getVidaJugador() <= 15) {
-                if (jugador.getRenderJugador().isEnParpadeo()) {
-                    Gdx.gl.glClearColor(0.95f, 0.75f, 0.75f, 1);
-                } else {
-                    Gdx.gl.glClearColor(0.92f, 0.8f, 0.8f, 1);
-                }
-            } else {
-                if (jugador.getRenderJugador().isEnParpadeo()) {
-                    Gdx.gl.glClearColor(0.92f, 0.85f, 0.85f, 1);
-                } else {
-                    Gdx.gl.glClearColor(0.91f, 0.91f, 0.91f, 1);
-                }
-            }
-        }
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // 2) Clear + flash color
+        actualizarColorDeFondo(jugador, delta);
 
-        // 2) Ajustamos la matriz de proyección del SpriteBatch a la cámara actual
+        // 3) Dibujar GRID **cada frame** con ShapeRenderer
+        renderizarLineasCuadricula(camara, jugador);
+
+        // 4) Dibujar BORRONES prerenderizados
+        // Calculamos origen en floats
+        float camXf = camara.position.x - camara.viewportWidth / 2f;
+        float camYf = camara.position.y - camara.viewportHeight / 2f;
+        // Ancho/alto de región en enteros
+        int regionW = Math.round(camara.viewportWidth);
+        int regionH = Math.round(camara.viewportHeight);
+
+        // “Snap” de la cámara al píxel de la textura (coordenadas de lectura)
+        int iCamX = Math.round(camXf - mapMinX);
+        int iCamY = Math.round(camYf - mapMinY);
+
+        // Clamp para no salirse del FBO
+        int regionX = MathUtils.clamp(iCamX, 0, mapPixelWidth - regionW);
+        int regionY = MathUtils.clamp(mapPixelHeight - iCamY - regionH, 0, mapPixelHeight - regionH);
+
+        // Aplicamos la región
+        borronesRegion.setRegion(regionX, regionY, regionW, regionH);
+
+        // Dibujamos “snapeado” a enteros para que srcRegion y dstRect casen píxel a píxel
         spriteBatch.setProjectionMatrix(camara.combined);
-
-        // 3) Dibujamos borrones
         spriteBatch.begin();
-        for (Borron b : borronesMapa) {
-            float drawWidth = b.textura.getWidth() * b.scale;
-            float drawHeight = b.textura.getHeight() * b.scale;
-            float originX = drawWidth / 2f;
-            float originY = drawHeight / 2f;
-
-            spriteBatch.draw(b.textura, b.posX, b.posY, originX, originY, drawWidth, drawHeight, 1f, 1f, b.rotation, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, false);
-        }
-        spriteBatch.end(); // Cerramos SpriteBatch después de dibujar borrones
-
-        // 4) Renderizamos la cuadrícula
-        renderizarLineasCuadricula(camara);
-
-        spriteBatch.begin();
-        jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
+        spriteBatch.draw(borronesRegion, Math.round(camXf),  // posición X enterita
+            Math.round(camYf),  // posición Y enterita
+            camara.viewportWidth, camara.viewportHeight);
         spriteBatch.end();
 
-        // 5) Dibujamos sombras de los enemigos
+
+        // 5) Dinámico: proyectiles fondo, trails, sombras, entidades, HUD…
+        spriteBatch.setProjectionMatrix(camara.combined);
+        // todo --> si en un futuro hay más proyectiles que usen el renderizado en el fondo se debería gestionar desde aquí el begin/end (actualmente se gestiona solamente para LluviaMocos)
+        jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
+        TrailRender.get().flush(camara.combined);
+
         shapeRenderer.setProjectionMatrix(camara.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        controladorEnemigos.dibujarSombrasEnemigos(shapeRenderer);
+        ctrlEnemigos.dibujarSombrasEnemigos(shapeRenderer);
         shapeRenderer.end();
 
-        // 6) Dibujo de entidades (usando SpriteBatch)
         spriteBatch.begin();
-        // Objetos XP
         for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
-        // Jugador
         jugador.aplicarRenderizadoAlJugador(spriteBatch, shapeRenderer);
-        // Enemigos
-        controladorEnemigos.renderizarEnemigos(spriteBatch);
-        // Proyectiles
+        ctrlEnemigos.renderizarEnemigos(spriteBatch);
         jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
-
-        // Textos flotantes
-        for (TextoFlotante txt : textosDanyo) txt.renderizarTextoFlotante(spriteBatch);
+        for (TextoFlotante t : textos) t.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();
 
-        // 7) Renderizamos HUD
         Mensajes.getInstance().update();
         Mensajes.getInstance().draw(camara);
         hud.renderizarHUD(delta);
-
-
     }
 
-    public void renderizarLineasCuadricula(OrthographicCamera camera) {
+    private void prerenderBorrones() {
+        borronesFbo.begin();
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        spriteBatch.setProjectionMatrix(worldCam.combined);
+        spriteBatch.begin();
+        spriteBatch.setColor(1, 1, 1, 0.6f);
+        for (Borron b : borronesMapa) {
+            float w = b.textura.getWidth() * b.s;
+            float h = b.textura.getHeight() * b.s;
+            spriteBatch.draw(b.textura, b.x, b.y, w / 2f, h / 2f, w, h, 1, 1, -b.r, 0, 0, b.textura.getWidth(), b.textura.getHeight(), false, true);
+        }
+        spriteBatch.setColor(1, 1, 1, 1);
+        spriteBatch.end();
+        borronesFbo.end();
+
+        borronesReady = true;
+    }
+
+    private void renderizarLineasCuadricula(OrthographicCamera camera, Jugador jugador) {
+        // Si el jugador está en parpadeo o en flash de vida, no dibujamos la grid
+        if (jugador.getRenderJugador().isEnParpadeo() || flashVidaActivo) {
+            return;
+        }
+
+        // 1) Ajustamos la proyección al viewport de la cámara
         shapeRenderer.setProjectionMatrix(camera.combined);
+        // 2) Grosor de línea
+        Gdx.gl.glLineWidth(2f);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+        // 3) Color según vida del jugador
         if (Jugador.getVidaJugador() <= 15) {
             shapeRenderer.setColor(0.9f, 0.64f, 0.7f, 1f);
         } else {
             shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
         }
 
-        float startX = camera.position.x - camera.viewportWidth / 2;
-        float endX = camera.position.x + camera.viewportWidth / 2;
-        float startY = camera.position.y - camera.viewportHeight / 2;
-        float endY = camera.position.y + camera.viewportHeight / 2;
+        // 4) Calculamos límites del área visible
+        float startX = camera.position.x - camera.viewportWidth / 2f;
+        float endX = camera.position.x + camera.viewportWidth / 2f;
+        float startY = camera.position.y - camera.viewportHeight / 2f;
+        float endY = camera.position.y + camera.viewportHeight / 2f;
 
-        // Líneas verticales
-        for (float x = startX - (startX % tamanyoCeldas); x <= endX; x += tamanyoCeldas) {
+        // 5) Líneas verticales, alineadas a la celda más cercana
+        float x0 = startX - (startX % tamanyoCeldas);
+        for (float x = x0; x <= endX; x += tamanyoCeldas) {
             shapeRenderer.line(x, startY, x, endY);
         }
-        // Líneas horizontales
-        for (float y = startY - (startY % tamanyoCeldas); y <= endY; y += tamanyoCeldas) {
+        // 6) Líneas horizontales
+        float y0 = startY - (startY % tamanyoCeldas);
+        for (float y = y0; y <= endY; y += tamanyoCeldas) {
             shapeRenderer.line(startX, y, endX, y);
         }
 
+        // 7) Cerramos y restauramos ancho de línea
         shapeRenderer.end();
+        Gdx.gl.glLineWidth(1f);
     }
 
-    private void generarBorronesRandom(int cantidad, Vector2 posicionInicialJugador) {
+
+    private void actualizarColorDeFondo(Jugador j, float dt) {
+        if (flashVidaActivo) {
+            Gdx.gl.glClearColor(0.8f, 0.88f, 0.8f, 1f);
+            flashVidaTimer -= dt;
+            if (flashVidaTimer <= 0) flashVidaActivo = false;
+        } else {
+            boolean low = Jugador.getVidaJugador() <= 15;
+            boolean blink = j.getRenderJugador().isEnParpadeo();
+            float r = low ? (blink ? 1f : 0.93f) : (blink ? 1f : 0.91f);
+            float g = low ? (blink ? 0.55f : 0.80f) : (blink ? 0.75f : 0.91f);
+            float b = g;
+            Gdx.gl.glClearColor(r, g, b, 1f);
+        }
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
+    private void generarBorronesRandom(int cantidad, Vector2 posInit) {
         borronesMapa = new Array<>();
-
-        // Generamos puntos candidatos con Poisson Disk Sampling
-        Array<Vector2> candidateCenters = PoissonPoints.getInstance().generatePoissonPoints(MAP_MIN_X, MAP_MIN_Y, MAP_MAX_X, MAP_MAX_Y, POISSON_MIN_DISTANCE, POISSON_K);
-        candidateCenters.shuffle();
-
-        // Iteramos sobre los puntos candidatos y asignamos datos aleatorios a cada borrón
-        for (Vector2 center : candidateCenters) {
-            if (center.dst(posicionInicialJugador) < 350f) {
-                continue;
-            }
+        Array<Vector2> pts = PoissonPoints.getInstance().generatePoissonPoints(mapMinX, mapMinY, mapMaxX, mapMaxY, POISSON_MIN_DISTANCE, POISSON_K);
+        pts.shuffle();
+        for (Vector2 c : pts) {
             if (borronesMapa.size >= cantidad) break;
-
-            // Seleccionar textura, escala y rotación aleatorias
-            Texture tex = borrones.random();
-            float scale = MathUtils.random(0.5f, 1f);
-            float rotation = MathUtils.random(-85f, 85f);
-            float drawWidth = tex.getWidth() * scale;
-            float drawHeight = tex.getHeight() * scale;
-
-            // Convertir el punto candidato (centro) en la posición (esquina inferior izquierda)
-            float posX = center.x - drawWidth / 2f;
-            float posY = center.y - drawHeight / 2f;
-
-            // Verificar que el borrón quepa totalmente dentro de los límites del mapa
-            if (posX < MAP_MIN_X || posX + drawWidth > MAP_MAX_X || posY < MAP_MIN_Y || posY + drawHeight > MAP_MAX_Y) {
-                continue; // descartamos este candidato
-            }
-
-            // Comprobar que no se solape con otro borrón ya colocado
-            if (seSolapaConOtroBorron(posX, posY, drawWidth, drawHeight)) continue;
-            // Comprobar que no esté demasiado cerca de otro borrón con la misma textura
-            if (estaDemasiadoCercaMismoBorron(tex, posX, posY, scale)) continue;
-
-            // Si pasa todas las comprobaciones, se añade el borrón
-            Borron nuevoBorron = new Borron(tex, posX, posY, scale, rotation);
-            borronesMapa.add(nuevoBorron);
+            if (c.dst(posInit) < 350f) continue;
+            Texture t = borrones.random();
+            float s = MathUtils.random(0.75f, 1.35f), r = MathUtils.random(-45f, 45f);
+            float w = t.getWidth() * s, h = t.getHeight() * s;
+            float x = c.x - w / 2f, y = c.y - h / 2f;
+            if (x < mapMinX || x + w > mapMaxX || y < mapMinY || y + h > mapMaxY) continue;
+            if (seSolapa(x, y, w, h) || estaCerca(t, x, y, s)) continue;
+            borronesMapa.add(new Borron(t, x, y, s, r));
         }
     }
 
-    private boolean seSolapaConOtroBorron(float x, float y, float width, float height) {
-        float leftA = x;
-        float rightA = x + width;
-        float bottomA = y;
-        float topA = y + height;
-
+    private boolean seSolapa(float x, float y, float w, float h) {
         for (Borron b : borronesMapa) {
-            float bw = b.textura.getWidth() * b.scale;
-            float bh = b.textura.getHeight() * b.scale;
-
-            float leftB = b.posX;
-            float rightB = b.posX + bw;
-            float bottomB = b.posY;
-            float topB = b.posY + bh;
-
-            // Si no hay separación entre los rectángulos, hay solapamiento
-            if (!(rightA < leftB || leftA > rightB || topA < bottomB || bottomA > topB)) {
-                return true;
-            }
+            float bw = b.textura.getWidth() * b.s, bh = b.textura.getHeight() * b.s;
+            if (!(x + w < b.x || x > b.x + bw || y + h < b.y || y > b.y + bh)) return true;
         }
         return false;
     }
 
-    private boolean estaDemasiadoCercaMismoBorron(Texture tex, float x, float y, float scale) {
-        // Centro del borrón candidato
-        float cx = x + tex.getWidth() * scale / 2f;
-        float cy = y + tex.getHeight() * scale / 2f;
-
-        for (Borron b : borronesMapa) {
+    private boolean estaCerca(Texture tex, float x, float y, float s) {
+        float cx = x + tex.getWidth() * s / 2f, cy = y + tex.getHeight() * s / 2f;
+        for (Borron b : borronesMapa)
             if (b.textura == tex) {
-                // Centro del borrón existente
-                float bx = b.posX + b.textura.getWidth() * b.scale / 2f;
-                float by = b.posY + b.textura.getHeight() * b.scale / 2f;
-
-                float distX = bx - cx;
-                float distY = by - cy;
-                float sqDist = distX * distX + distY * distY;
-
-                if (sqDist < (MIN_DIST_SAME_TEXTURE * MIN_DIST_SAME_TEXTURE)) {
-                    return true; // Demasiado cerca
-                }
+                float bx = b.x + b.textura.getWidth() * b.s / 2f, by = b.y + b.textura.getHeight() * b.s / 2f;
+                if ((bx - cx) * (bx - cx) + (by - cy) * (by - cy) < MIN_DIST_SAME_TEXTURE * MIN_DIST_SAME_TEXTURE)
+                    return true;
             }
-        }
         return false;
     }
 
     public boolean isLoadingComplete() {
-        return borronesListos.get();
+        return borronesReady && System.currentTimeMillis() - startLoadTime >= MIN_LOAD_DURATION_MS;
     }
 
     public void triggerLifeFlash() {
@@ -297,20 +318,9 @@ public class RenderVentanaJuego1 {
     }
 
     public void dispose() {
-        if (shapeRenderer != null) {
-            shapeRenderer.dispose();
-            shapeRenderer = null;
-        }
-
+        shapeRenderer.dispose();
         ventanaLoading.dispose();
-
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executorService.shutdownNow();
-        }
+        borronesFbo.dispose();
+        executorService.shutdownNow();
     }
 }

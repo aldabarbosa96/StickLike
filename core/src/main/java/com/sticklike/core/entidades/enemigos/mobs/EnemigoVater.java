@@ -3,13 +3,10 @@ package com.sticklike.core.entidades.enemigos.mobs;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionVater;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoVater;
-import com.sticklike.core.entidades.pools.RectanglePoolManager;
-import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
@@ -35,11 +32,10 @@ public class EnemigoVater extends EnemigoBase {
         spriteTapaBajada = new Sprite(manager.get(ENEMIGO_VATER, Texture.class));
         spriteTapaLevantada = new Sprite(manager.get(ENEMIGO_VATER2, Texture.class));
         damageTexture = manager.get(DAMAGE_VATER_TEXTURE, Texture.class);
-
         sprite = new Sprite(spriteTapaLevantada);
-        sprite.setSize(52, 77.5f);
+        sprite.setSize(55, 80);
         sprite.setPosition(x, y);
-
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.vidaEnemigo = VIDA_ENEMIGO_VATER;
         this.damageAmount = DANYO_VATER;
         this.coolDownDanyo = COOLDOWN_VATER;

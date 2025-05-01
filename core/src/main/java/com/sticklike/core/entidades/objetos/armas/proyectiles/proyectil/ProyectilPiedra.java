@@ -10,79 +10,99 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
-/**
- * Proyectil Piedra; se lanza en línea recta con velocidad ajustable, causando daño y knockback a los enemigos impactados.
- */
-public class ProyectilPiedra implements Proyectiles {
-    private static Texture textura;
-    private Sprite sprite;
-    private float velocidadProyectil = PROJECTILE_PIEDRA_SPEED;
-    private float multiplicadorVelocidad;
-    private float direccionX, direccionY;
-    private boolean proyectilActivo;
-    private boolean esCritico;
-    private Jugador jugador;
-    private RenderParticulasProyectil renderParticulasProyectil;
-    private Vector2 center;
+public final class ProyectilPiedra implements Proyectiles {
+
+    private static Texture TEXTURE;
+    private static final float BASE_SPEED = PROJECTILE_PIEDRA_SPEED;
+    private static final float PARTICLE_LEN = 18f;
+    private static final float PARTICLE_WID = 3.5f;
+    private static final Color PARTICLE_COLOR = Color.BLACK;
+    private static final float MAX_DISTANCE = 1000f;
+    private float distanciaRecorrida = 0f;
+    private final Sprite sprite;
+    private final RenderParticulasProyectil particles;
+    private final Vector2 center = new Vector2();
     private final Rectangle collisionRect = new Rectangle();
+    private final Jugador jugador;
+
+    private final float speedMultiplier;
+    private float dirX, dirY;
+    private boolean activo = true;
+    private boolean esCritico;
+    private final GestorDeAudio audio = GestorDeAudio.getInstance();
 
     public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad, Jugador jugador) {
-        if (textura == null) {
-            textura = manager.get(ARMA_PIEDRA, Texture.class);
+
+        // Carga única de textura
+        if (TEXTURE == null) {
+            TEXTURE = manager.get(ARMA_PIEDRA, Texture.class);
         }
-        sprite = new Sprite(textura);
+
+        this.jugador = jugador;
+        this.dirX = direccionX;
+        this.dirY = direccionY;
+        this.speedMultiplier = multiplicadorVelocidad;
+
+        // Sprite
+        sprite = new Sprite(TEXTURE);
         sprite.setSize(PIEDRA_SIZE, PIEDRA_SIZE);
         sprite.setPosition(x, y);
 
-        this.direccionX = direccionX;
-        this.direccionY = direccionY;
-        this.proyectilActivo = true;
-        this.multiplicadorVelocidad = multiplicadorVelocidad;
-        this.jugador = jugador;
+        // Partículas
+        float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
+        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, PARTICLE_COLOR);
+        particles.setAlphaMult(0.5f);   // mismo alpha que antes
 
-        float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
-        int maxLength = (int) (18 * scaleFactor);
-        float scaledWidth = 3.5f * scaleFactor;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaledWidth, Color.BLACK);
-        renderParticulasProyectil.setAlphaMult(0.5f);
-        center = new Vector2();
+        // Hit-box inicial
+        collisionRect.set(x, y, PIEDRA_SIZE, PIEDRA_SIZE);
     }
 
+    /* -------------------------- Update -------------------------- */
     @Override
     public void actualizarProyectil(float delta) {
-        if (proyectilActivo) {
-            // Movimiento del sprite
-            sprite.translate(direccionX * velocidadProyectil * multiplicadorVelocidad * delta, direccionY * velocidadProyectil * multiplicadorVelocidad * delta);
-            // Actualización del rastro de partículas
-            center.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-            renderParticulasProyectil.update(center);
+        if (!activo) return;
 
-            // Actualizamos el rectángulo de colisión preasignado
-            collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        // Movimiento lineal
+        float move = BASE_SPEED * speedMultiplier * delta;
+        sprite.translate(dirX * move, dirY * move);
+        distanciaRecorrida += move;
+
+        if (distanciaRecorrida >= MAX_DISTANCE) {
+            desactivarProyectil();
         }
+
+        // Trail
+        center.set(sprite.getX() + sprite.getWidth() * 0.5f, sprite.getY() + sprite.getHeight() * 0.5f);
+        particles.update(center);
+        TrailRender.get().submit(particles);   // << nuevo sistema de rastro
+
+        // Hit-box
+        collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
+    /* -------------------------- Render -------------------------- */
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
-        if (proyectilActivo) {
-            renderParticulasProyectil.render(batch);
-            sprite.draw(batch);
-        }
+        if (!activo) return;
+        sprite.draw(batch);                    // el trail lo pinta TrailRender
     }
 
+    /* -------------------------- Limpieza ------------------------ */
     @Override
     public void dispose() {
-        textura = null;
-        renderParticulasProyectil.dispose();
+        TEXTURE = null;
+        particles.dispose();
     }
 
+    /* -------------------------- Getters / lógica de daño -------- */
     @Override
     public float getX() {
         return sprite.getX();
@@ -95,31 +115,29 @@ public class ProyectilPiedra implements Proyectiles {
 
     @Override
     public Rectangle getRectanguloColision() {
-        // Se retorna el rectángulo preasignado, actualizado en cada frame
         return collisionRect;
     }
 
     @Override
     public boolean isProyectilActivo() {
-        return proyectilActivo;
+        return activo;
     }
 
     @Override
     public void desactivarProyectil() {
-        proyectilActivo = false;
+        activo = false;
+        particles.reset();
     }
 
     @Override
     public float getBaseDamage() {
-        // Daño base aleatorio entre 21 y 31
-        float base = 21 + MathUtils.random() * 10;
+        float base = MathUtils.random(21, 31);
         if (MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return base * 1.5f;
-        } else {
-            esCritico = false;
-            return base;
         }
+        esCritico = false;
+        return base;
     }
 
     @Override
@@ -128,13 +146,15 @@ public class ProyectilPiedra implements Proyectiles {
     }
 
     @Override
-    public boolean isPersistente() { // La piedra no persiste tras el impacto.
+    public boolean isPersistente() {
         return false;
     }
 
+    /* -------------------------- Impacto ------------------------- */
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 1);
+        audio.reproducirEfecto("impactoBase", 1f);
+        //desactivarProyectil();
     }
 
     @Override
@@ -142,6 +162,7 @@ public class ProyectilPiedra implements Proyectiles {
         return false;
     }
 
+    @Override
     public boolean esCritico() {
         return esCritico;
     }

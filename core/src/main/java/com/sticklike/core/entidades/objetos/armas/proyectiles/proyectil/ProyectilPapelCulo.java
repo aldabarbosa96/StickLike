@@ -13,152 +13,165 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProyectilPapelCulo implements Proyectiles {
-    private static Texture textura;
-    private Sprite sprite;
-    private Animation<TextureRegion> impactoAnimation;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+
+public final class ProyectilPapelCulo implements Proyectiles {
+
+    /* ---------- Constantes ---------- */
+    private static Texture TEXTURE;
+    private static Animation<TextureRegion> IMPACT_ANIMATION;
+    private static final float GRAVITY_ASC = 450f;
+    private static final float GRAVITY_DESC = 200f;
+    private static final float ROTATION_SPEED = 666f;
+    private static final float PARTICLE_LEN = 20f;
+    private static final float PARTICLE_WID = 10f;
+    private static final float IMPACT_SCALE = 5f;
+    private static final float IMPACT_CIRCLE = 7.5f;
+    private static final float FRAG_FACTOR_HOR = 0.25f;
+    private static final Color PARTICLES_COLOR = new Color(0.65f, 0.5f, 0.7f, 1f);
+
+    /* ---------- Atributos ---------- */
+    private final Sprite sprite;
+    private final RenderParticulasProyectil particles;
+    private final Rectangle collisionRect = new Rectangle();
+    private final Circle collisionCircle = new Circle();
+    private final Set<Enemigo> impactados = new HashSet<>(8);
+    private final Vector2 center = new Vector2();
+    private final Jugador jugador;
+    private final float damageEscalado;
+
+    private final float anguloLanzamiento;
+    private final boolean isFragment;
+    private boolean canFragment = true;
+    private float velH, velV;
+    private boolean landed = false;
+    private final float altitudeFinal;
+    private boolean activo = true;
+    private boolean esCritico;
+
     private float animationStateTime = 0f;
     private boolean impactoAnimacionActiva = false;
-    private float impactX, impactY;
-    private float impactRotation;
-    private float velocidadProyectil;
-    private float anguloLanzamiento;
-    private float velocidadHorizontal;
-    private float velocidadVertical;
-    private boolean proyectilActivo;
-    private boolean aterrizado = false;
-    private float alturaFinal;
-    private Set<Enemigo> enemigosImpactados = new HashSet<>();
-    private float damageEscalado;
-    private boolean esCritico;
-    private Jugador jugador;
-    private RenderParticulasProyectil renderParticulasProyectil;
-    private Vector2 centroSprite;
-    private final float GRAVEDAD_ASCENSO = 450f;
-    private final float GRAVEDAD_DESCENSO = 200f;
-    private float rotationSpeed = 666f;
-    private float rotationAngle = 0f;
-    private boolean esFragmento;
-    private boolean canFragment = true;
+    private float impactX, impactY, impactRotation;
+    private final GestorDeAudio audio = GestorDeAudio.getInstance();
 
+    /* ---------- Constructor ---------- */
     public ProyectilPapelCulo(float x, float y, float anguloLanzamiento, float velocidadProyectil, float poderJugador, float extraDamage, Jugador jugador, float direccionHorizontal, boolean esFragmento) {
-        if (textura == null) {
-            textura = manager.get(ARMA_PAPELCULO, Texture.class);
-        }
-        sprite = new Sprite(textura);
-        sprite.setSize(PAPELCULO_W_SIZE, PAPELCULO_H_SIZE);
-        sprite.setPosition(x, y);
-        sprite.setOriginCenter();
 
-        impactoAnimation = animations.get("papelCuloImpacto");
+        // Carga única de recursos
+        if (TEXTURE == null) TEXTURE = manager.get(ARMA_PAPELCULO, Texture.class);
+        if (IMPACT_ANIMATION == null) IMPACT_ANIMATION = animations.get("papelCuloImpacto");
 
         this.jugador = jugador;
-        this.velocidadProyectil = velocidadProyectil;
         this.anguloLanzamiento = anguloLanzamiento;
-        this.proyectilActivo = true;
-        this.esFragmento = esFragmento;
+        this.isFragment = esFragmento;
 
-        float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
-        int maxLength = (int) (20 * scaleFactor);
-        float scaleWidth = 10 * scaleFactor;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(maxLength, scaleWidth, new Color(0.65f, 0.5f, 0.7f, 1));
-        this.centroSprite = new Vector2();
+        velV = velocidadProyectil * MathUtils.sinDeg(anguloLanzamiento);
+        velH = direccionHorizontal * velocidadProyectil * MathUtils.cosDeg(anguloLanzamiento) * FRAG_FACTOR_HOR;
 
-        this.velocidadVertical = velocidadProyectil * MathUtils.sinDeg(anguloLanzamiento);
-        float factorHorizontal = 0.25f;
-        this.velocidadHorizontal = direccionHorizontal * velocidadProyectil * MathUtils.cosDeg(anguloLanzamiento) * factorHorizontal;
+        // Sprite
+        sprite = new Sprite(TEXTURE);
+        sprite.setSize(PAPELCULO_W_SIZE, PAPELCULO_H_SIZE);
+        sprite.setOriginCenter();
+        sprite.setPosition(x, y);
 
-        float limiteInferiorVisible = jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().position.y - jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().viewportHeight / 2;
-        float playerTop = jugador.getSprite().getY() + jugador.getSprite().getHeight() - 10f;
-        this.alturaFinal = MathUtils.random(limiteInferiorVisible, playerTop);
+        // Partículas (trail)
+        float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
+        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, PARTICLES_COLOR);
+        particles.setAlphaMult(0.9f);                     // mismo alpha que usabas
 
+        // Altitud final aleatoria
+        float camHalfH = jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().viewportHeight / 2f;
+        float minY = jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().position.y - camHalfH;
+        float maxY = jugador.getSprite().getY() + jugador.getSprite().getHeight() - 10f;
+        altitudeFinal = MathUtils.random(minY, maxY);
+
+        // Daño escalado
         float baseDamage = DANYO_PAPELCULO + extraDamage + MathUtils.random(15f);
-        this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
+        damageEscalado = baseDamage * (1f + poderJugador / 100f);
+
+        // Hit-boxes iniciales
+        collisionRect.set(x, y, sprite.getWidth(), sprite.getHeight());
+        collisionCircle.set(x + sprite.getWidth() / 2f, y + sprite.getHeight() / 2f, sprite.getWidth() / 2f);
     }
 
+    /* ---------- Lógica ---------- */
     @Override
     public void actualizarProyectil(float delta) {
-        if (!proyectilActivo) return;
+        if (!activo) return;
 
-        centroSprite.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-        renderParticulasProyectil.update(centroSprite);
+        /* 1) Trail */
+        center.set(sprite.getX() + sprite.getWidth() * 0.5f, sprite.getY() + sprite.getHeight() * 0.5f);
+        particles.update(center);
+        TrailRender.get().submit(particles);    // <-- nuevo sistema de rastro
 
-        // Si la animación de impacto está activa, actualizamos su temporizador y esperamos a que termine para desactivar el proyectil
+        /* 2) Animación de impacto */
         if (impactoAnimacionActiva) {
             animationStateTime += delta;
-            if (impactoAnimation.isAnimationFinished(animationStateTime)) {
-                desactivarProyectil();
+            if (IMPACT_ANIMATION.isAnimationFinished(animationStateTime)) {
                 impactoAnimacionActiva = false;
+                desactivarProyectil();
             }
             return;
         }
 
-        // Movimiento del proyectil en vuelo
-        if (!aterrizado) {
-            float nuevaPosX = sprite.getX() + velocidadHorizontal * delta;
+        /* 3) Movimiento (vuelo / caída) */
+        if (!landed) {
+            float nx = sprite.getX() + velH * delta;
 
-            if (velocidadVertical > 0) {
-                velocidadVertical -= GRAVEDAD_ASCENSO * delta;
-            } else {
-                velocidadVertical -= GRAVEDAD_DESCENSO * delta;
-            }
-            float nuevaPosY = sprite.getY() + velocidadVertical * delta;
+            velV -= (velV > 0 ? GRAVITY_ASC : GRAVITY_DESC) * delta;
+            float ny = sprite.getY() + velV * delta;
 
-            if (nuevaPosY <= alturaFinal) {
-                nuevaPosY = alturaFinal;
-                aterrizado = true;
-                velocidadVertical = 0;
-                velocidadHorizontal = 0;
-
-                sprite.setRotation(-5f);
-                rotationAngle = 0f;
+            if (ny <= altitudeFinal) {
+                ny = altitudeFinal;
+                landed = true;
+                velH = velV = 0f;
+                sprite.setRotation(-5f);        // pequeño giro al aterrizar
             }
 
-            sprite.setPosition(nuevaPosX, nuevaPosY);
-            rotationAngle += rotationSpeed * delta;
-            sprite.rotate(rotationSpeed * delta);
-        } else {
-            if (esFragmento) {
-                desactivarProyectil();
-            }
+            sprite.setPosition(nx, ny);
+            sprite.rotate(ROTATION_SPEED * delta);
+
+        } else if (isFragment) {                // los fragmentos se destruyen al aterrizar
+            desactivarProyectil();
         }
+
+        /* 4) Hit-boxes actualizados */
+        collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        collisionCircle.set(sprite.getX() + sprite.getWidth() / 2f, sprite.getY() + sprite.getHeight() / 2f, sprite.getWidth() / 2f);
     }
 
+    /* ---------- Render ---------- */
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
-        if (proyectilActivo) {
-            renderParticulasProyectil.render(batch);
-            if (!aterrizado && !impactoAnimacionActiva) {
-                sprite.draw(batch);
-            } else if (impactoAnimacionActiva) {
-                TextureRegion currentFrame = impactoAnimation.getKeyFrame(animationStateTime, false);
-                float scaleFactorImpact = 5f;
-                float scaleX = sprite.getScaleX() * scaleFactorImpact;
-                float scaleY = sprite.getScaleY() * scaleFactorImpact;
-                // Dibujamos la animación de impacto usando la posición y rotación almacenadas
-                batch.draw(currentFrame, impactX, impactY, sprite.getOriginX(), sprite.getOriginY(), sprite.getWidth(), sprite.getHeight(), scaleX, scaleY, impactRotation);
-            } else {
-                sprite.draw(batch);
-            }
+        if (!activo) return;
+
+        if (!landed && !impactoAnimacionActiva) {
+            sprite.draw(batch);
+        } else if (impactoAnimacionActiva) {
+            TextureRegion frame = IMPACT_ANIMATION.getKeyFrame(animationStateTime, false);
+            batch.draw(frame, impactX, impactY, sprite.getOriginX(), sprite.getOriginY(), sprite.getWidth(), sprite.getHeight(), sprite.getScaleX() * IMPACT_SCALE, sprite.getScaleY() * IMPACT_SCALE, impactRotation);
+        } else {
+            sprite.draw(batch);
         }
     }
 
+    /* ---------- Limpieza ---------- */
     @Override
     public void dispose() {
-        textura = null;
-        renderParticulasProyectil.dispose();
+        TEXTURE = null;
+        particles.dispose();
     }
 
+    /* ---------- Getters simples ---------- */
     @Override
     public float getX() {
         return sprite.getX();
@@ -170,48 +183,43 @@ public class ProyectilPapelCulo implements Proyectiles {
     }
 
     @Override
-    public Rectangle getRectanguloColision() {
+    public Rectangle getRectanguloColision() {                      // ajustado si hay impacto
         if (impactoAnimacionActiva) {
-            float scaleFactorImpact = 5f;
-            float width = sprite.getWidth() * scaleFactorImpact;
-            float height = sprite.getHeight() * scaleFactorImpact;
-            float rectX = impactX - sprite.getScaleX() * scaleFactorImpact;
-            float rectY = impactY - sprite.getScaleY() * scaleFactorImpact;
-            return new Rectangle(rectX, rectY, width, height);
+            float w = sprite.getWidth() * IMPACT_SCALE;
+            float h = sprite.getHeight() * IMPACT_SCALE;
+            collisionRect.set(impactX - sprite.getOriginX() * IMPACT_SCALE, impactY - sprite.getOriginY() * IMPACT_SCALE, w, h);
         }
-        return sprite.getBoundingRectangle();
+        return collisionRect;
     }
 
     public Circle getCirculoColision() {
         if (impactoAnimacionActiva) {
-            float scaleFactorImpact = 7.5f;
-            float radius = (sprite.getWidth() * scaleFactorImpact) / 2f;
-            return new Circle(impactX, impactY, radius);
+            float r = (sprite.getWidth() * IMPACT_CIRCLE) / 2f;
+            collisionCircle.set(impactX, impactY, r);
         }
-        // Si no está en fase de explosión, devolvemos un círculo aproximado en base al sprite
-        return new Circle(sprite.getX() + sprite.getWidth() / 2f, sprite.getY() + sprite.getHeight() / 2f, sprite.getWidth() / 2f);
+        return collisionCircle;
     }
-
 
     @Override
     public boolean isProyectilActivo() {
-        return proyectilActivo;
+        return activo;
     }
 
     @Override
     public void desactivarProyectil() {
-        proyectilActivo = false;
+        activo = false;
+        particles.reset();
     }
 
+    /* ---------- Daño / knockback ---------- */
     @Override
     public float getBaseDamage() {
         if (MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return damageEscalado * 1.5f;
-        } else {
-            esCritico = false;
-            return damageEscalado;
         }
+        esCritico = false;
+        return damageEscalado;
     }
 
     @Override
@@ -224,77 +232,64 @@ public class ProyectilPapelCulo implements Proyectiles {
         return true;
     }
 
+    /* ---------- Impacto ---------- */
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        // Si está habilitada la fragmentación y se puede fragmentar este proyectil procedemos
+
+        /* --- Fragmentación si procede --- */
         if (jugador.getAtaquePapelCulo().isFragmentado() && canFragment) {
-            canFragment = false;  // Así evitamos que se fragmente más veces el mismo proyectil
-            int numFragments = MathUtils.random(2, 5);
-            for (int i = 0; i < numFragments; i++) {
-                float angle = 270f + MathUtils.random(-120f, 120f);
-                float fragmentSpeed = velocidadProyectil * MathUtils.random(0.2f, 0.4f);
+            canFragment = false;
 
-                ProyectilPapelCulo fragmento = new ProyectilPapelCulo(sprite.getX(), sprite.getY(), angle, fragmentSpeed, jugador.getPoderJugador(), 0f, jugador, MathUtils.randomBoolean() ? 1f : -1f, true);
-                // Evitamos que los fragmentos sigan fragmentándose
-                fragmento.setCanFragment(false);
+            int cnt = MathUtils.random(3, 6);
+            float origSpeed = (float) Math.sqrt(velH * velH + velV * velV);
 
-                fragmento.getSprite().setSize(fragmento.getSprite().getWidth() * 0.55f, fragmento.getSprite().getHeight() * 0.55f);
-                fragmento.getSprite().setOriginCenter();
+            for (int i = 0; i < cnt; i++) {
+                float ang = MathUtils.random(0f, 360f);
+                float speedFactor = MathUtils.random(0.3f, 0.7f);
+                float spd = origSpeed * speedFactor;
+                float offsetX = MathUtils.random(-15f, 15f);
+                float offsetY = MathUtils.random(0f, 10f);
 
-                jugador.getControladorProyectiles().anyadirNuevoProyectil(fragmento);
+                ProyectilPapelCulo frag = new ProyectilPapelCulo(sprite.getX() + offsetX, sprite.getY() + offsetY, ang, spd, jugador.getPoderJugador(), 0f, jugador, MathUtils.randomBoolean() ? 1f : -1f, true);
+
+                frag.setCanFragment(false);
+                frag.getSprite().setSize(frag.getSprite().getWidth() * 0.55f, frag.getSprite().getHeight() * 0.55f);
+                frag.getSprite().setOriginCenter();
+                jugador.getControladorProyectiles().anyadirNuevoProyectil(frag);
             }
 
-            // Desactivamos el proyectil original para que no ejecute su animación de impacto habitual
-            desactivarProyectil();
-
-            if (!enemigosImpactados.contains(enemigo)) {
-                enemigosImpactados.add(enemigo);
-                float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-                float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
-                float dx = enemyCenterX - sprite.getX();
-                float dy = enemyCenterY - sprite.getY();
-                float dist = (float) Math.sqrt(dx * dx + dy * dy);
-                if (dist != 0) {
-                    dx /= dist;
-                    dy /= dist;
-                }
-                enemigo.aplicarKnockback(getKnockbackForce(), dx, dy);
-            }
+            desactivarProyectil();                       // se va el original
+            if (impactados.add(enemigo)) applyKnockback(enemigo, impactX, impactY);
             return;
         }
 
-        // Mantenemos comportamiento original si no hay fragmentación
+        /* --- Impacto normal + animación --- */
         if (!impactoAnimacionActiva) {
-            if (!canFragment) {
-                GestorDeAudio.getInstance().reproducirEfecto("explosionFragmentada", 0.75f);
-            } else {
-                GestorDeAudio.getInstance().reproducirEfecto("explosion", 1);
-
-            }
+            audio.reproducirEfecto(canFragment ? "explosion" : "explosionFragmentada", canFragment ? 1f : 0.75f);
             impactoAnimacionActiva = true;
             animationStateTime = 0f;
             impactX = sprite.getX();
             impactY = sprite.getY();
             impactRotation = sprite.getRotation();
         }
-        if (!enemigosImpactados.contains(enemigo)) {
-            enemigosImpactados.add(enemigo);
-            float enemyCenterX = enemigo.getX() + enemigo.getSprite().getWidth() / 2f;
-            float enemyCenterY = enemigo.getY() + enemigo.getSprite().getHeight() / 2f;
-            float dx = enemyCenterX - impactX;
-            float dy = enemyCenterY - impactY;
-            float dist = (float) Math.sqrt(dx * dx + dy * dy);
-            if (dist != 0) {
-                dx /= dist;
-                dy /= dist;
-            }
-            enemigo.aplicarKnockback(getKnockbackForce(), dx, dy);
+        if (impactados.add(enemigo)) applyKnockback(enemigo, impactX, impactY);
+    }
+
+    private void applyKnockback(Enemigo e, float ix, float iy) {
+        float ex = e.getX() + e.getSprite().getWidth() * 0.5f;
+        float ey = e.getY() + e.getSprite().getHeight() * 0.5f;
+        float dx = ex - ix, dy = ey - iy;
+        float dist = (float) Math.sqrt(dx * dx + dy * dy);
+        if (dist != 0f) {
+            dx /= dist;
+            dy /= dist;
         }
+        e.aplicarKnockback(getKnockbackForce(), dx, dy);
     }
 
     @Override
-    public boolean yaImpacto(Enemigo enemigo) {
-        return enemigosImpactados.contains(enemigo);
+    public boolean yaImpacto(Enemigo e) {
+        return impactados.contains(e);
     }
 
     @Override
@@ -302,6 +297,7 @@ public class ProyectilPapelCulo implements Proyectiles {
         return esCritico;
     }
 
+    /* ---------- Auxiliares público ---------- */
     public boolean isImpactoAnimacionActiva() {
         return impactoAnimacionActiva;
     }
@@ -311,15 +307,15 @@ public class ProyectilPapelCulo implements Proyectiles {
     }
 
     public float getVelocidadProyectil() {
-        return velocidadProyectil;
+        return velH != 0 ? velH : velV;
     }
 
     public Jugador getJugador() {
         return jugador;
     }
 
-    public void setCanFragment(boolean canFragment) {
-        this.canFragment = canFragment;
+    public void setCanFragment(boolean v) {
+        canFragment = v;
     }
 
     public Sprite getSprite() {

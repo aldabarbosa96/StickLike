@@ -6,44 +6,77 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-
+/**
+ * Lógica de disparo del Látigo‑dildo con gestión de sus upgrades.
+ */
 public class AtaqueDildo {
     private float cooldownTimer = 0f;
     private final float intervaloDisparo = 3f;
-    private float extraDamage = 0f;
-    private boolean ataqueEnProgreso = false;
-    private float timerAtaque = 0f;
 
-    public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio gestorDeAudio) {
+    private boolean ataqueEnProgreso = false;
+    private int totalSwings;
+    private int currentSwing;
+    private float timerSwing = 0f;
+    private float delayEntreSwings = 0.5f;
+
+    private float extraDamage = 0f;
+    private boolean haloActivo = false;
+
+    private int swingsPerSide = 1;
+    private boolean rapidoActivo = false;
+
+    public void aumentarDamage(float incremento) {
+        extraDamage += DANYO_DILDO * incremento;
+    }
+
+    public void activarHaloEnergia() {
+        haloActivo = true;
+    }
+
+    public void mejorarCrackDoble() {
+        delayEntreSwings *= 0.5f;
+    }
+
+    public void activarGolpeDoble() {
+        swingsPerSide++;
+    }
+
+    public void mejorarVelocidadSwing() {
+        rapidoActivo = true;
+    }
+
+    public void manejarDisparo(float delta, Jugador jugador, GestorDeAudio audio) {
         if (!ataqueEnProgreso) {
             cooldownTimer += delta;
             if (cooldownTimer >= intervaloDisparo) {
-                // Se inicia el ataque: se dispara el proyectil derecho
-                float poderHabilidad = jugador.getPoderJugador();
-                LatigoDildo latigoDerecha = new LatigoDildo(jugador, 1, poderHabilidad, extraDamage);
-                jugador.getControladorProyectiles().anyadirNuevoProyectil(latigoDerecha);
-                gestorDeAudio.reproducirEfecto("dildo", 0.6f);
-
-                // Se inicia el temporizador del ataque y se reinicia el cooldown
                 ataqueEnProgreso = true;
-                timerAtaque = 0f;
                 cooldownTimer = 0f;
+                timerSwing = 0f;
+                currentSwing = 0;
+                totalSwings = swingsPerSide * 2;
+                ejecutarSwing(jugador, audio);
             }
         } else {
-            // Se está en espera para disparar el proyectil izquierdo.
-            timerAtaque += delta;
-            if (timerAtaque >= 0.5f) {
-                float poderHabilidad = jugador.getPoderJugador();
-                LatigoDildo latigoIzquierda = new LatigoDildo(jugador, -1, poderHabilidad, extraDamage);
-                jugador.getControladorProyectiles().anyadirNuevoProyectil(latigoIzquierda);
-                gestorDeAudio.reproducirEfecto("dildo", 0.6f);
-                // Finalizamos el ataque para poder procesar el siguiente.
-                ataqueEnProgreso = false;
+            timerSwing += delta;
+            if (timerSwing >= delayEntreSwings) {
+                if (currentSwing < totalSwings) {
+                    ejecutarSwing(jugador, audio);
+                } else {
+                    ataqueEnProgreso = false;
+                }
+                timerSwing = 0f;
             }
         }
     }
 
-    public void aumentarDamage(float incremento) {
-        extraDamage += DANYO_DILDO + (DANYO_DILDO * incremento);
+    private void ejecutarSwing(Jugador jugador, GestorDeAudio audio) {
+        currentSwing++;
+        int group = (currentSwing - 1) / swingsPerSide;
+        int lado = (group % 2 == 0) ? 1 : -1;
+
+        float poder = jugador.getPoderJugador();
+        LatigoDildo latigo = new LatigoDildo(jugador, lado, poder, extraDamage, haloActivo, rapidoActivo);
+        jugador.getControladorProyectiles().anyadirNuevoProyectil(latigo);
+        audio.reproducirEfecto("dildo", 0.6f);
     }
 }

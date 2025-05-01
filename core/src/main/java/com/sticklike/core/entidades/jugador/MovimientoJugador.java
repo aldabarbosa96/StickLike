@@ -1,28 +1,30 @@
 package com.sticklike.core.entidades.jugador;
 
+import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.InputsJugador.ResultadoInput;
 
 /**
- * Esta clase se encarga de la lógica de movimiento del jugador: normalizar diagonales, aplicar velocidad y
+ * Esta clase se encarga de la lógica de movimiento del jugador:
+ * normalizar cualquier vector de entrada, aplicar velocidad y
  * modificar la posición del sprite.
  */
 public class MovimientoJugador {
-    public void mover(Jugador jugador, ResultadoInput resInput, float delta) {
-        // Tomamos el movX, movY tal como los da la clase interna ResultadoInput
-        float movX = resInput.movX;
-        float movY = resInput.movY;
+    // Vector de trabajo (para no crear uno nuevo cada frame)
+    private final Vector2 direccion = new Vector2();
 
-        // Normalizamos si hay diagonal
-        if (movX != 0 && movY != 0) {
-            float factor = (float)(1 / Math.sqrt(2));
-            movX *= factor;
-            movY *= factor;
+    public void mover(Jugador jugador, ResultadoInput resInput, float delta) {
+        // 1) Construimos el vector de dirección
+        direccion.set(resInput.movX, resInput.movY);
+
+        // 2) Si hay entrada (no es 0,0) normalizamos a longitud 1
+        if (direccion.len2() > 0f) {
+            direccion.nor();
         }
 
-        // Aplicamos la velocidad del jugador
-        float finalX = movX * jugador.getVelocidadJugador() * delta;
-        float finalY = movY * jugador.getVelocidadJugador() * delta;
-        jugador.getSprite().translate(finalX, finalY);
-    }
+        // 3) Escalamos por velocidad y delta time
+        direccion.scl(jugador.getVelocidadJugador() * delta);
 
+        // 4) Movemos el sprite
+        jugador.getSprite().translate(direccion.x, direccion.y);
+    }
 }
