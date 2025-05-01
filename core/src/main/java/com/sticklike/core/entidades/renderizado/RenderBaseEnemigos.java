@@ -8,7 +8,11 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.destructibles.Destructibles;
 import com.sticklike.core.entidades.enemigos.destructibles.Destructibles2;
-import com.sticklike.core.entidades.enemigos.mobs.*;
+import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoExamen;
+import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoRegla;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCondon;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoPolla;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -66,7 +70,7 @@ public class RenderBaseEnemigos {
                 case EnemigoPolla polla -> drawPolla(polla, r, ex, ey, ew, eh);
                 case EnemigoExamen exam -> drawExamen(exam, r, ex, ey, ew, eh);
                 case EnemigoRegla regla -> drawSimple(regla, r, ex, ey, ew, eh, ew * 0.75f, eh * 0.3f, 3.5f);
-                case EnemigoCondon condon -> drawSimple(condon, r, ex, ey, ew, eh, ew , eh * 0.225f, 6f);
+                case EnemigoCondon condon -> drawSimple(condon, r, ex, ey, ew, eh, ew , eh * 0.225f, 10f);
                 default -> drawVater(e, r, ex, ey, ew, eh);
             }
         }

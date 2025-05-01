@@ -60,7 +60,6 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
-
     @Override
     public void actualizar(float delta) {
         animaciones.actualizarFade(delta);
@@ -81,7 +80,6 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         }
     }
 
-
     @Override
     public void renderizar(SpriteBatch batch) {
         if (vida > 0) {
@@ -98,6 +96,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         vida -= amount;
         if (vida <= 0) {
             if (!animaciones.estaEnFade() && !animaciones.enAnimacionMuerte()) { // todo --> gestionar animación de muerte desde actualizar
+                GestorDeAudio.getInstance().pausarMusica();
                 Animation<TextureRegion> animMuerteBoss = GestorDeAssets.animations.get("bossPollaMuerte");
                 animaciones.iniciarAnimacionMuerte(animMuerteBoss);
                 animaciones.iniciarFadeMuerte(DURACION_FADE_BOSS);

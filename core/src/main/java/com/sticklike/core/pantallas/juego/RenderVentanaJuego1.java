@@ -99,14 +99,14 @@ public class RenderVentanaJuego1 {
         IntBuffer buffer = BufferUtils.newIntBuffer(1);
         Gdx.gl.glGetIntegerv(GL20.GL_MAX_RENDERBUFFER_SIZE, buffer);
         int maxFboSize = buffer.get(0);
-        System.out.println("Máximo tamaño permitido para FrameBuffer: " + maxFboSize);
+        Gdx.app.log("max_fbo_size","Máximo tamaño permitido para FrameBuffer: " + maxFboSize);
 
         // Limita el tamaño real
         int safeWidth = Math.min(mapPixelWidth, maxFboSize);
         int safeHeight = Math.min(mapPixelHeight, maxFboSize);
 
         // Crea el FBO con dimensiones seguras
-        borronesFbo = new FrameBuffer(Pixmap.Format.RGBA8888, safeWidth, safeHeight, true);;
+        borronesFbo = new FrameBuffer(Pixmap.Format.RGBA8888, safeWidth, safeHeight, true);
         borronesRegion = new TextureRegion(borronesFbo.getColorBufferTexture());
         Texture borronesTex = borronesFbo.getColorBufferTexture();
         borronesTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -164,9 +164,7 @@ public class RenderVentanaJuego1 {
         // Dibujamos “snapeado” a enteros para que srcRegion y dstRect casen píxel a píxel
         spriteBatch.setProjectionMatrix(camara.combined);
         spriteBatch.begin();
-        spriteBatch.draw(borronesRegion, Math.round(camXf),  // posición X enterita
-            Math.round(camYf),  // posición Y enterita
-            camara.viewportWidth, camara.viewportHeight);
+        spriteBatch.draw(borronesRegion, Math.round(camXf), Math.round(camYf), camara.viewportWidth, camara.viewportHeight);
         spriteBatch.end();
 
 

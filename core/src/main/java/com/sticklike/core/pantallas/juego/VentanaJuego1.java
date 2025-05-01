@@ -15,7 +15,7 @@ import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.pantallas.popUps.PopUpMejorasInputProcessor;
 import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
+import com.sticklike.core.entidades.objetos.armas.comportamiento.AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;

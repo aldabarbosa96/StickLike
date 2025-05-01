@@ -41,6 +41,7 @@ public class RenderHUDComponents {
     private static final float EXTRA_HUD_HEIGHT = 20f;
     private ShapeRenderer shapeRenderer;
     private GlyphLayout layout;
+    private GlyphLayout layoutNum;
     private BitmapFont fuente;
     private SpriteBatch spriteBatch;
     private Jugador jugador;
@@ -66,6 +67,7 @@ public class RenderHUDComponents {
         this.sistemaDeNiveles = sistemaDeNiveles;
         this.shapeRenderer = shapeRenderer;
         this.layout = new GlyphLayout();
+        this.layoutNum = new GlyphLayout();
         this.fuente = FontManager.getHudFont();
         this.spriteBatch = spriteBatch;
         this.jugador = jugador;
@@ -436,6 +438,7 @@ public class RenderHUDComponents {
 
     public void renderizarMarcosMejoras() {
         fuente.getData().setScale(0.65f);
+
         List<Mejora> habilidades = sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas();
 
         for (int i = 0; i < slotsList.size(); i++) {
@@ -443,21 +446,14 @@ public class RenderHUDComponents {
             spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rect.x, rect.y, rect.width, rect.height);
 
             if (i < habilidades.size()) {
-                Mejora mejora = habilidades.get(i);
-                String baseId = mejora.getIdHabilidad();
-
-                // Recuperamos sólo el número de upgrades aplicados de esta habilidad
-                int upgrades = sistemaDeNiveles.getSistemaDeMejoras().getUpgradeCount(baseId);
+                int upgrades = sistemaDeNiveles.getSistemaDeMejoras().getUpgradeCount(habilidades.get(i).getIdHabilidad());
 
                 if (upgrades > 0) {
-                    // Convertimos a romano
                     String romano = toRoman(upgrades);
 
-                    // Escala ligeramente mayor para el número
                     float prevScale = fuente.getData().scaleX;
                     fuente.getData().setScale(0.8f);
 
-                    // Medida del texto
                     layout.setText(fuente, romano);
                     float padding = 4f;
                     float textX = rect.x + rect.width + padding;
@@ -465,12 +461,22 @@ public class RenderHUDComponents {
 
                     dibujarTextoConReborde(spriteBatch, romano, textX, textY, BASIC_OFFSET, Color.BLACK, Color.GREEN);
 
-                    // Restauramos escala
                     fuente.getData().setScale(prevScale);
                 }
+
+            } else {
+                String textoNumero = String.valueOf(i + 1);
+
+                layoutNum.setText(fuente, textoNumero);
+                float textWidth = layoutNum.width;
+                float textHeight = layoutNum.height;
+                float textX = rect.x + (rect.width - textWidth) / 2;
+                float textY = rect.y + (rect.height + textHeight) / 2;
+
+                fuente.setColor(Color.BLUE);
+                fuente.draw(spriteBatch, textoNumero, textX, textY);
             }
         }
-
         fuente.setColor(Color.WHITE);
     }
 

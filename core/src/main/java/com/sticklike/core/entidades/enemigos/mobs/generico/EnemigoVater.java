@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos.mobs;
+package com.sticklike.core.entidades.enemigos.mobs.generico;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionVater;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoVater;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;

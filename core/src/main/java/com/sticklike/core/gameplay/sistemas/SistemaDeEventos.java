@@ -2,8 +2,6 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.utils.Timer;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.interfaces.Enemigo;
@@ -82,6 +80,7 @@ public class SistemaDeEventos {
         ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS2);
         float nuevaVel = ctrlEnemigos.getSpeedMult() * EVENTO1_SPEED_MULT;
         ctrlEnemigos.setSpeedMult(nuevaVel);
+        MensajesData.getInstance().activarMensajesPollas(hud);
     }
 
     private void eventoAumentaEnemigos2() {
@@ -94,8 +93,6 @@ public class SistemaDeEventos {
         if (efectoPollasActivo) return;
 
         efectoPollasActivo = true;
-        // Activamos mensajes de pollas con scheduling
-        MensajesData.getInstance().activarMensajesPollas(hud);
 
         ctrlEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);

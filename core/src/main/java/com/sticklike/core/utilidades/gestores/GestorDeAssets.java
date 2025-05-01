@@ -240,6 +240,14 @@ public class GestorDeAssets {
         manager.load("enemigos/animaciones/bossPollaMuerte05.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte06.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte07.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte07.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte08.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte09.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte010.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte011.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte012.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte013.png", Texture.class);
+        manager.load("enemigos/animaciones/bossPollaMuerte014.png", Texture.class);
 
 
         // Cargar borrones
@@ -270,16 +278,16 @@ public class GestorDeAssets {
         animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.05f));
         animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.05f));
         animations.put("papelCuloImpacto", crearAnimacion("armas/05papelCuloImpacto", 3, 0.05f));
-        animations.put("muerteCulo", crearAnimacion("enemigos/animaciones/culoMuerte", 4,0.08f));
-        animations.put("muerteCulo2", crearAnimacion("enemigos/animaciones/culo2Muerte", 4,0.08f));
-        animations.put("muertePolla", crearAnimacion("enemigos/animaciones/pollaMuerte", 4,0.08f));
-        animations.put("reglaMuerte", crearAnimacion("enemigos/animaciones/reglaMuerte", 4,0.08f));
-        animations.put("examenMuerte", crearAnimacion("enemigos/animaciones/examenMuerte", 4,0.08f));
-        animations.put("vaterMuerte", crearAnimacion("enemigos/animaciones/vaterMuerte", 4,0.08f));
-        animations.put("alarmaMuerte", crearAnimacion("enemigos/animaciones/alarmaMuerte", 4,0.08f));
-        animations.put("alarmaMuerte2", crearAnimacion("enemigos/animaciones/alarma2Muerte", 4,0.08f));
-        animations.put("condonMuerte", crearAnimacion("enemigos/animaciones/preservativoMuerte", 4,0.08f));
-        animations.put("bossPollaMuerte", crearAnimacion("enemigos/animaciones/bossPollaMuerte", 8,0.2f));
+        animations.put("muerteCulo", crearAnimacion("enemigos/animaciones/culoMuerte", 4,0.09f));
+        animations.put("muerteCulo2", crearAnimacion("enemigos/animaciones/culo2Muerte", 4,0.09f));
+        animations.put("muertePolla", crearAnimacion("enemigos/animaciones/pollaMuerte", 4,0.09f));
+        animations.put("reglaMuerte", crearAnimacion("enemigos/animaciones/reglaMuerte", 4,0.09f));
+        animations.put("examenMuerte", crearAnimacion("enemigos/animaciones/examenMuerte", 4,0.09f));
+        animations.put("vaterMuerte", crearAnimacion("enemigos/animaciones/vaterMuerte", 4,0.09f));
+        animations.put("alarmaMuerte", crearAnimacion("enemigos/animaciones/alarmaMuerte", 4,0.09f));
+        animations.put("alarmaMuerte2", crearAnimacion("enemigos/animaciones/alarma2Muerte", 4,0.09f));
+        animations.put("condonMuerte", crearAnimacion("enemigos/animaciones/preservativoMuerte", 4,0.09f));
+        animations.put("bossPollaMuerte", crearAnimacion("enemigos/animaciones/bossPollaMuerte", 15,0.1f));
     }
 
     private static Animation<TextureRegion> crearAnimacion(String ruta, int contadorFrames, float duracionContador) {

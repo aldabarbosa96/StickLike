@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
+package com.sticklike.core.entidades.objetos.armas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaqueTazo;
+import com.sticklike.core.entidades.objetos.armas.comportamiento.AtaqueTazo;
 import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
 import com.sticklike.core.entidades.renderizado.TrailRender;          // ← nuevo
 import com.sticklike.core.interfaces.Enemigo;

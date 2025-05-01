@@ -1,6 +1,5 @@
 package com.sticklike.core.gameplay.controladores;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,7 +10,9 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.destructibles.Destructibles;
 import com.sticklike.core.entidades.enemigos.destructibles.Destructibles2;
-import com.sticklike.core.entidades.enemigos.mobs.*;
+import com.sticklike.core.entidades.enemigos.mobs.escuela.*;
+import com.sticklike.core.entidades.enemigos.mobs.generico.*;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.*;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
@@ -321,7 +322,7 @@ public class ControladorEnemigos {
             case "ALARMA":
                 return new EnemigoAlarma(x, y, jugador);
             case "CONDON":
-                return new EnemigoCondon(jugador,x,y,velocidad * MULT_VELOCIDAD_CONDON, camera);
+                return new EnemigoCondon(jugador, x, y, velocidad * MULT_VELOCIDAD_CONDON, camera);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }

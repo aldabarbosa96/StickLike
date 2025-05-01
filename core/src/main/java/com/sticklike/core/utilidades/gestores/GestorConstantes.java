@@ -165,7 +165,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_ALARMA = 75f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
-    public static final float MULT_VELOCIDAD_CONDON = 2.75f;
+    public static final float MULT_VELOCIDAD_CONDON = 3.25f;
     public static final float MULT_VELOCIDAD_POLLA = 1.5f;
     public static final float MULT_VELOCIDAD_EXAMEN = 1.75f;
     public static final float TEMPORIZADOR_DANYO = 0f;
@@ -198,7 +198,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
     public static final float DURACION_PARPADEO_ENEMIGO = 0.09f;
     public static final float DURACION_FADE_ENEMIGO = 0.6f;
-    public static final float DURACION_FADE_BOSS = 1.6f;
+    public static final float DURACION_FADE_BOSS = 1.5f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
     public static final float TIEMPO_FADE_TOTAL = 1f;
     public static final float ALPHA_ACTUAL = 1f;
@@ -320,7 +320,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float MIN_DIST_SAME_TEXTURE = 1000f;
     public static final float MIN_DIST_SAME_TEXTURE2 = 750;
     public static final int MAX_ATTEMPTS = 5;
-    public static final int CANTIDAD_BORRONES = 1000; // todo --> dibujar más borrones
+    public static final int CANTIDAD_BORRONES = 1500; // todo --> dibujar más borrones
     public static final float MAP_MIN_X = -10000;
     public static final float MAP_MAX_X = 10500;
     public static final float MAP_MIN_Y = -10000;

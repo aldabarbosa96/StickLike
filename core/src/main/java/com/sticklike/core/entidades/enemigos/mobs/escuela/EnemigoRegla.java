@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos.mobs;
+package com.sticklike.core.entidades.enemigos.mobs.escuela;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,28 +8,30 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
+import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoBase;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
-import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
-import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
-import static com.sticklike.core.utilidades.gestores.GestorConstantes.DANYO_REGLA;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-public class EnemigoCondon extends EnemigoBase{
+/**
+ * Enemigo Regla; gestiona su comportamiento y daño.
+ */
+public class EnemigoRegla extends EnemigoBase {
     private MovimientoRegla movimientoRegla;
 
-    public EnemigoCondon(Jugador jugador,float x, float y, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
+    public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         super(jugador);
-        sprite = new Sprite(manager.get(ENEMIGO_CONDON, Texture.class));
-        sprite.setSize(16, 42);
+        sprite = new Sprite(manager.get(ENEMIGO_REGLA_CRUZADA, Texture.class));
+        sprite.setSize(26, 26);
         sprite.setPosition(x, y);
-        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 500, orthographicCamera, true);
+        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
-        this.damageTexture = manager.get(DAMAGE_CONDON, Texture.class);
+        this.damageTexture = manager.get(DAMAGE_REGLA_TEXTURE, Texture.class);
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
         this.vidaEnemigo = VIDA_ENEMIGOREGLA;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
@@ -50,7 +52,7 @@ public class EnemigoCondon extends EnemigoBase{
 
     @Override
     protected void iniciarAnimacionMuerte() {
-        Animation<TextureRegion> animMuerteRegla = GestorDeAssets.animations.get("condonMuerte");
+        Animation<TextureRegion> animMuerteRegla = GestorDeAssets.animations.get("reglaMuerte");
         animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteRegla);
         animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
         animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
@@ -62,7 +64,7 @@ public class EnemigoCondon extends EnemigoBase{
     }
 
     @Override
-    public ObjetosXP sueltaObjetoXP() {
+    public ObjetoBase sueltaObjetoXP() {
         // todo --> añadir variedades de droppeo
         float randomNum = MathUtils.random(100);
         if (!haSoltadoXP && randomNum <= 1f) {

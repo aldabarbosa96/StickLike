@@ -2,13 +2,15 @@
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoAlarma;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
+import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoAlarma;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoPolla;
 import com.sticklike.core.interfaces.Enemigo;
 
 public class MensajesData {
@@ -78,7 +80,8 @@ public class MensajesData {
         float delay = MathUtils.random(10f, 20f);
         if (culoTask != null) culoTask.cancel();
         culoTask = Timer.schedule(new Timer.Task() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 lanzarMensajeCulos(renderHUD);
                 nextMessageCulosIndex++;
                 scheduleNextCulo(renderHUD);
@@ -106,7 +109,8 @@ public class MensajesData {
         float delay = MathUtils.random(15f, 30f);
         if (pollaTask != null) pollaTask.cancel();
         pollaTask = Timer.schedule(new Timer.Task() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 lanzarMensajePollas(renderHUD);
                 nextMessagePollasIndex++;
                 scheduleNextPolla(renderHUD);
@@ -136,7 +140,8 @@ public class MensajesData {
         float delay = MathUtils.random(10f, 15f);
         if (alarmaAlarmaTask != null) alarmaAlarmaTask.cancel();
         alarmaAlarmaTask = Timer.schedule(new Timer.Task() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 lanzarMensajeAlarma(renderHUD, false);
                 nextMessageAlarmasAlarmaIndex++;
                 scheduleNextAlarmaAlarma(renderHUD);
@@ -149,7 +154,8 @@ public class MensajesData {
         float delay = MathUtils.random(10f, 15f);
         if (alarmaCronoTask != null) alarmaCronoTask.cancel();
         alarmaCronoTask = Timer.schedule(new Timer.Task() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 lanzarMensajeAlarma(renderHUD, true);
                 nextMessageAlarmasCronoIndex++;
                 scheduleNextAlarmaCrono(renderHUD);
@@ -158,20 +164,17 @@ public class MensajesData {
     }
 
     private void lanzarMensajeAlarma(RenderHUDComponents renderHUD, boolean crono) {
-        Enemigo e = pickRandom(renderHUD, EnemigoAlarma.class);
+        EnemigoAlarma e = pickRandom(renderHUD, EnemigoAlarma.class);
         if (e != null) {
-            EnemigoAlarma alarma = (EnemigoAlarma)e;
-            if (alarma.isEsCrono() == crono) {
-                ChatOption opt = crono
-                    ? opcionesAlarmasCrono.get(nextMessageAlarmasCronoIndex)
-                    : opcionesAlarmasAlarma.get(nextMessageAlarmasAlarmaIndex);
+            if (e.isEsCrono() == crono) {
+                ChatOption opt = crono ? opcionesAlarmasCrono.get(nextMessageAlarmasCronoIndex) : opcionesAlarmasAlarma.get(nextMessageAlarmasAlarmaIndex);
                 Mensajes.getInstance().addEnemyMessage(opt.nombre, opt.mensaje, e);
             }
         }
     }
 
     private <T extends Enemigo> T pickRandom(RenderHUDComponents renderHUD, Class<T> cls) {
-        com.badlogic.gdx.utils.Array<T> candidates = new com.badlogic.gdx.utils.Array<>();
+        Array<T> candidates = new com.badlogic.gdx.utils.Array<>();
         for (Enemigo en : renderHUD.getControladorEnemigos().getEnemigos()) {
             if (cls.isInstance(en)) candidates.add(cls.cast(en));
         }

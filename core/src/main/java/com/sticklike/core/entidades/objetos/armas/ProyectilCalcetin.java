@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil;
+package com.sticklike.core.entidades.objetos.armas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

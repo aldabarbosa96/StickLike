@@ -1,8 +1,8 @@
-package com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento;
+package com.sticklike.core.entidades.objetos.armas.comportamiento;
 
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.proyectil.ProyectilTazo;
+import com.sticklike.core.entidades.objetos.armas.ProyectilTazo;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
