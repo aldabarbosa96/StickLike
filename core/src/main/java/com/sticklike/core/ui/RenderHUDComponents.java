@@ -1,6 +1,5 @@
 package com.sticklike.core.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,10 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -410,22 +407,71 @@ public class RenderHUDComponents {
         }
     }
 
+    private String toRoman(int num) {
+        switch (num) {
+            case 1:
+                return "I";
+            case 2:
+                return "I I";
+            case 3:
+                return "I I I";
+            case 4:
+                return "I V";
+            case 5:
+                return "V";
+            case 6:
+                return "V I";
+            case 7:
+                return "V I I";
+            case 8:
+                return "V I I I";
+            case 9:
+                return "I X";
+            case 10:
+                return "X";
+            default:
+                return "";
+        }
+    }
+
     public void renderizarMarcosMejoras() {
         fuente.getData().setScale(0.65f);
+        List<Mejora> habilidades = sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas();
+
         for (int i = 0; i < slotsList.size(); i++) {
-            Rectangle rectangle = slotsList.get(i);
-            spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-            if (i >= sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas().size()) {
-                String textoNumero = String.valueOf(i + 1);
-                GlyphLayout layoutNumero = new GlyphLayout(fuente, textoNumero);
-                float textWidth = layoutNumero.width;
-                float textHeight = layoutNumero.height;
-                float textX = rectangle.x + (rectangle.width - textWidth) / 2;
-                float textY = rectangle.y + (rectangle.height + textHeight) / 2;
-                fuente.setColor(Color.BLUE);
-                fuente.draw(spriteBatch, textoNumero, textX, textY);
+            Rectangle rect = slotsList.get(i);
+            spriteBatch.draw(manager.get(TEXTURA_MARCO, Texture.class), rect.x, rect.y, rect.width, rect.height);
+
+            if (i < habilidades.size()) {
+                Mejora mejora = habilidades.get(i);
+                String baseId = mejora.getIdHabilidad();
+
+                // Recuperamos sólo el número de upgrades aplicados de esta habilidad
+                int upgrades = sistemaDeNiveles.getSistemaDeMejoras().getUpgradeCount(baseId);
+
+                if (upgrades > 0) {
+                    // Convertimos a romano
+                    String romano = toRoman(upgrades);
+
+                    // Escala ligeramente mayor para el número
+                    float prevScale = fuente.getData().scaleX;
+                    fuente.getData().setScale(0.8f);
+
+                    // Medida del texto
+                    layout.setText(fuente, romano);
+                    float padding = 4f;
+                    float textX = rect.x + rect.width + padding;
+                    float textY = rect.y + layout.height + padding;
+
+                    dibujarTextoConReborde(spriteBatch, romano, textX, textY, BASIC_OFFSET, Color.BLACK, Color.GREEN);
+
+                    // Restauramos escala
+                    fuente.getData().setScale(prevScale);
+                }
             }
         }
+
+        fuente.setColor(Color.WHITE);
     }
 
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {

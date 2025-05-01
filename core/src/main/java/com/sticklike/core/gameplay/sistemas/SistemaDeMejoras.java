@@ -9,11 +9,7 @@ import com.sticklike.core.MainGame;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Gestiona el sistema de mejoras en el juego.
@@ -26,6 +22,7 @@ public class SistemaDeMejoras {
     private final List<Mejora> mejorasMostradas;
     private final List<Mejora> habilidadesActivas = new ArrayList<>();
     private final Set<String> habilidadesActivasIds = new HashSet<>();
+    private final Map<String, Integer> upgradeCounts = new HashMap<>();
     private final MainGame game;
 
     public SistemaDeMejoras(Jugador jugador, MainGame game) {
@@ -180,6 +177,12 @@ public class SistemaDeMejoras {
         // Se aplica la mejora (se decrementa el contador de usos)
         mejoraSeleccionada.apply();
 
+        String idHabilidad = mejoraSeleccionada.getIdHabilidad();
+        if (idHabilidad != null && idHabilidad.contains("_")) {
+            String baseId = idHabilidad.split("_")[0];
+            upgradeCounts.put(baseId, upgradeCounts.getOrDefault(baseId, 0) + 1);
+        }
+
         // marcamos las mejoras de stats para aplicar el cambio de color al escogerlas
         if (mejoraSeleccionada.getNombreMejora().equals("¡PIES VELOCES!"))
             game.ventanaJuego1.getRenderHUDComponents().marcarStatComoMejorado(VEL_MOV);
@@ -216,6 +219,9 @@ public class SistemaDeMejoras {
 
     }
 
+    public int getUpgradeCount(String baseId) {
+        return upgradeCounts.getOrDefault(baseId, 0);
+    }
     public List<Mejora> getMejorasMostradas() {
         return mejorasMostradas;
     }

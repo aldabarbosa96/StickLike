@@ -144,7 +144,7 @@ public class SistemaDeEventos {
     private void spawnReglas() {
         ctrlEnemigos.setTiposDeEnemigos(LISTA_REGLA);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
-        ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.5f);
+        ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.35f);
     }
 
     public void dispose() {

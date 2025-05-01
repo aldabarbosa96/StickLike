@@ -37,6 +37,7 @@ public class EnemigoCulo extends EnemigoBase {
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         esConOjo();
         sprite.setPosition(x, y);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
         this.animacionCulo = new AnimacionCulo(this, animacionesBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
         this.damageTexture = manager.get(DAMAGE_CULO_TEXTURE, Texture.class);
@@ -47,14 +48,14 @@ public class EnemigoCulo extends EnemigoBase {
         float random = MathUtils.random(10);
         if (random >= 2.5f) {
             sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
-            sprite.setSize(34, 30);
+            sprite.setSize(36, 32);
             esConOjo = false;
         } else {
             tieneOjo = true;
             spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
-            spriteOjoAbierto.setSize(38, 34);
+            spriteOjoAbierto.setSize(40, 36);
             spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
-            spriteOjoCerrado.setSize(38, 34);
+            spriteOjoCerrado.setSize(40, 36);
             sprite = new Sprite(spriteOjoAbierto);
             // Con ojo, el enemigo tiene el doble de vida.
             this.vidaEnemigo = VIDA_ENEMIGOCULO * 2;

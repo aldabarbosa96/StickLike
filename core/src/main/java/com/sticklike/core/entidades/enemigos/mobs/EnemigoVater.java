@@ -32,11 +32,10 @@ public class EnemigoVater extends EnemigoBase {
         spriteTapaBajada = new Sprite(manager.get(ENEMIGO_VATER, Texture.class));
         spriteTapaLevantada = new Sprite(manager.get(ENEMIGO_VATER2, Texture.class));
         damageTexture = manager.get(DAMAGE_VATER_TEXTURE, Texture.class);
-
         sprite = new Sprite(spriteTapaLevantada);
         sprite.setSize(55, 80);
         sprite.setPosition(x, y);
-
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.vidaEnemigo = VIDA_ENEMIGO_VATER;
         this.damageAmount = DANYO_VATER;
         this.coolDownDanyo = COOLDOWN_VATER;

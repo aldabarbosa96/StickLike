@@ -165,6 +165,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_ALARMA = 75f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
+    public static final float MULT_VELOCIDAD_CONDON = 2.75f;
     public static final float MULT_VELOCIDAD_POLLA = 1.5f;
     public static final float MULT_VELOCIDAD_EXAMEN = 1.75f;
     public static final float TEMPORIZADOR_DANYO = 0f;
@@ -309,7 +310,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] LISTA_ALARMA = {"ALARMA"};
     public static final String[] LISTA_REGLA = {"REGLA"};
     public static final String[] TIPOS_ENEMIGOS = {"CULO"};
-    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "REGLA"};
+    public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "CONDON"};
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA"};
     public static final String[] TIPOS_ENEMIGOS4 = {"REGLA","ALARMA","EXAMEN"};
 

@@ -11,12 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.destructibles.Destructibles;
 import com.sticklike.core.entidades.enemigos.destructibles.Destructibles2;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoAlarma;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoExamen;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoPolla;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoRegla;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoVater;
+import com.sticklike.core.entidades.enemigos.mobs.*;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
@@ -325,11 +320,12 @@ public class ControladorEnemigos {
                 return new EnemigoVater(x, y, jugador);
             case "ALARMA":
                 return new EnemigoAlarma(x, y, jugador);
+            case "CONDON":
+                return new EnemigoCondon(jugador,x,y,velocidad * MULT_VELOCIDAD_CONDON, camera);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
     }
-
 
     public void spawnBossPollaAleatorio() {
         if (bossSpawned) {

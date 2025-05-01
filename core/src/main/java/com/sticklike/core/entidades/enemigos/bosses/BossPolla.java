@@ -51,7 +51,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         spriteBocaCerrada.setSize(92, 128);
         sprite.setRegion(spriteBocaCerrada);
         sprite.setPosition(x, y);
-
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.jugador = jugador;
         this.animaciones = new AnimacionesBaseEnemigos();
         this.movimientoBoss = new MovimientoBossPolla(true);

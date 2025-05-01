@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.sticklike.core.entidades.renderizado.TrailRender;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -21,6 +22,7 @@ import com.sticklike.core.ui.HUD;
 import com.sticklike.core.ui.Mensajes;
 import com.sticklike.core.utilidades.PoissonPoints;
 
+import java.nio.IntBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -94,7 +96,17 @@ public class RenderVentanaJuego1 {
         worldCam.update();
 
         // FBO solo para BORRONES
-        borronesFbo = new FrameBuffer(Pixmap.Format.RGBA8888, mapPixelWidth, mapPixelHeight, true);
+        IntBuffer buffer = BufferUtils.newIntBuffer(1);
+        Gdx.gl.glGetIntegerv(GL20.GL_MAX_RENDERBUFFER_SIZE, buffer);
+        int maxFboSize = buffer.get(0);
+        System.out.println("Máximo tamaño permitido para FrameBuffer: " + maxFboSize);
+
+        // Limita el tamaño real
+        int safeWidth = Math.min(mapPixelWidth, maxFboSize);
+        int safeHeight = Math.min(mapPixelHeight, maxFboSize);
+
+        // Crea el FBO con dimensiones seguras
+        borronesFbo = new FrameBuffer(Pixmap.Format.RGBA8888, safeWidth, safeHeight, true);;
         borronesRegion = new TextureRegion(borronesFbo.getColorBufferTexture());
         Texture borronesTex = borronesFbo.getColorBufferTexture();
         borronesTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

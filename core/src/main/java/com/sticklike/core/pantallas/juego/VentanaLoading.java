@@ -46,7 +46,7 @@ public class VentanaLoading implements Screen {
         camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
 
-        String textoBase = "CAGANDO";
+        String textoBase = "Cagando";
         GlyphLayout layout = new GlyphLayout(font, textoBase);
 
         float sw = camera.viewportWidth;

@@ -62,11 +62,11 @@ public class RenderBaseEnemigos {
                 case BossPolla boss -> drawBoss(boss, r, ex, ey, ew, eh);
                 case Destructibles d1 -> drawDestructible(d1, r, ex, ey, ew, eh);
                 case Destructibles2 d2 -> drawDestructible2(d2, r, ex, ey, ew, eh);
-                case EnemigoCulo culo ->
-                    drawSimple(culo, r, ex, ey, ew, eh, ew * SHADOW_WIDTH_CULO, eh * SHADOW_HEIGHT_CULO, SHADOW_OFFSET);
+                case EnemigoCulo culo -> drawSimple(culo, r, ex, ey, ew, eh, ew * SHADOW_WIDTH_CULO, eh * SHADOW_HEIGHT_CULO, SHADOW_OFFSET);
                 case EnemigoPolla polla -> drawPolla(polla, r, ex, ey, ew, eh);
                 case EnemigoExamen exam -> drawExamen(exam, r, ex, ey, ew, eh);
                 case EnemigoRegla regla -> drawSimple(regla, r, ex, ey, ew, eh, ew * 0.75f, eh * 0.3f, 3.5f);
+                case EnemigoCondon condon -> drawSimple(condon, r, ex, ey, ew, eh, ew , eh * 0.225f, 6f);
                 default -> drawVater(e, r, ex, ey, ew, eh);
             }
         }
