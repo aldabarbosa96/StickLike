@@ -240,8 +240,8 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         SliderStyle style = new SliderStyle();
 
         // Fondo del slider
-        Pixmap sliderBgPixmap = new Pixmap(100, 4, Pixmap.Format.RGBA8888);
-        sliderBgPixmap.setColor(Color.LIGHT_GRAY);
+        Pixmap sliderBgPixmap = new Pixmap(100, 2, Pixmap.Format.RGBA8888);
+        sliderBgPixmap.setColor(0,0,1,0.5f);
         sliderBgPixmap.fill();
         Texture sliderBgTexture = new Texture(sliderBgPixmap);
         sliderBgPixmap.dispose();
@@ -252,7 +252,7 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         knobPixmap.setColor(Color.BLUE);
         knobPixmap.fillCircle(7, 7, 7);
         knobPixmap.setColor(Color.WHITE);
-        knobPixmap.fillCircle(7, 7, 5);
+        knobPixmap.fillCircle(7, 7, 4);
         Texture knobTexture = new Texture(knobPixmap);
         knobPixmap.dispose();
         style.knob = new TextureRegionDrawable(new TextureRegion(knobTexture));

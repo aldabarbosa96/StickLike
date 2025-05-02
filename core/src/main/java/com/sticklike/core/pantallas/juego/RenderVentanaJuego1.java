@@ -225,7 +225,7 @@ public class RenderVentanaJuego1 {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         // 3) Color según vida del jugador
-        if (Jugador.getVidaJugador() <= 15) {
+        if (jugador.getVidaJugador() <= 15) {
             shapeRenderer.setColor(0.9f, 0.64f, 0.7f, 1f);
         } else {
             shapeRenderer.setColor(0.64f, 0.80f, 0.9f, 1f);
@@ -260,7 +260,7 @@ public class RenderVentanaJuego1 {
             flashVidaTimer -= dt;
             if (flashVidaTimer <= 0) flashVidaActivo = false;
         } else {
-            boolean low = Jugador.getVidaJugador() <= 15;
+            boolean low = j.getVidaJugador() <= 15;
             boolean blink = j.getRenderJugador().isEnParpadeo();
             float r = low ? (blink ? 1f : 0.93f) : (blink ? 1f : 0.91f);
             float g = low ? (blink ? 0.55f : 0.80f) : (blink ? 0.75f : 0.91f);

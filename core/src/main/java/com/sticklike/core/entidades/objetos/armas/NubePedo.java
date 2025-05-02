@@ -64,7 +64,7 @@ public final class NubePedo implements Proyectiles {
         }
         this.jugador = jugador;
         this.audio = GestorDeAudio.getInstance();
-        this.powerFactor = 1f + (Jugador.getPoderJugador() / 100f);
+        this.powerFactor = 1f + (jugador.getPoderJugador() / 100f);
 
         // Configuración del sprite
         sprite = new Sprite(TEXTURE);

@@ -27,6 +27,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  */
 public final class ProyectilBoliBic implements Proyectiles {
 
+    private Jugador jugador;
     private static final float SPRITE_SIZE = 25f;
     private static final float SPRITE_ORIGIN = SPRITE_SIZE * .5f;
     private static final float OFFSET_ANGLE = 315f;
@@ -60,8 +61,9 @@ public final class ProyectilBoliBic implements Proyectiles {
     private boolean bounceEnabled = false;
     private int remainingBounces = 0;
 
-    public ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil) {
+    public ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil, Jugador jugador) {
 
+        this.jugador = jugador;
         if (TEXTURE == null) TEXTURE = manager.get(ARMA_BOLIBIC, Texture.class);
 
         sprite = new Sprite(TEXTURE);
@@ -76,7 +78,7 @@ public final class ProyectilBoliBic implements Proyectiles {
         this.velocidad = velocidadProyectil;
 
         // Factor de potenciación de daño
-        powerFactor = 1f + (Jugador.getPoderJugador() / 100f);
+        powerFactor = 1f + (jugador.getPoderJugador() / 100f);
 
         // Configuración de partículas
         float scaleFactor = Gdx.graphics.getWidth() / REAL_WIDTH;
@@ -162,7 +164,7 @@ public final class ProyectilBoliBic implements Proyectiles {
     @Override
     public float getBaseDamage() {
         float base = 5f + MathUtils.random(DANYO_BOLIBIC);
-        return base * powerFactor;
+        return base /* powerFactor*/;
     }
 
     @Override
@@ -210,7 +212,7 @@ public final class ProyectilBoliBic implements Proyectiles {
 
     @Override
     public boolean esCritico() {
-        return MathUtils.random() < Jugador.getCritico();
+        return MathUtils.random() < jugador.getCritico();
     }
 
     public void enableBounce(int bounces) {

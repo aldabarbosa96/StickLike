@@ -45,8 +45,8 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%", () -> jugador.aumentarResistencia(0.2f), 3, manager.get(ICONO_RESISTENCIA, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, manager.get(ICONO_PODER, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
-            jugador.setVidaMax(Jugador.getMaxVidaJugador() + 15);
-            jugador.setVidaJugador(Jugador.getVidaJugador() + 15);
+            jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);
+            jugador.setVidaJugador(jugador.getVidaJugador() + 15);
         }, 5, manager.get(ICONO_VIDA, Texture.class), null));
 
         // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)

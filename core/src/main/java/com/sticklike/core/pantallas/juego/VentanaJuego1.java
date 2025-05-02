@@ -120,7 +120,15 @@ public class VentanaJuego1 implements Screen {
 
         float playerStartX = worldWidth / 2f - CAMERA_JUGADOR_OFFSET_X;
         float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles);
+        StatsJugador baseStats = game.getStatsJugador();
+        if (baseStats == null) {
+            // primer arranque: valores por defecto
+            baseStats = new StatsJugador(VEL_MOV_JUGADOR, VIDA_JUGADOR, VIDAMAX_JUGADOR, RANGO_ATAQUE, DANYO, INTERVALO_DISPARO, VEL_ATAQUE_JUGADOR, NUM_PROYECTILES_INICIALES, RESISTENCIA, CRITICO, REGENERACION_VIDA, PODER_JUGADOR);
+            game.setStatsJugador(baseStats);
+        }
+        // clon de stats para la sesión de juego
+        StatsJugador sessionStats = new StatsJugador(baseStats);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles, sessionStats);
     }
 
     private void inicializarSistemasYControladores() {

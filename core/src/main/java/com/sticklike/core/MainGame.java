@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.sticklike.core.entidades.jugador.StatsJugador;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 import com.sticklike.core.utilidades.DebugStats;
@@ -25,6 +26,7 @@ public class MainGame extends Game {
     public GestorDeAudio gestorDeAudio;
     private SpriteBatch batch;
     private DebugStats debugStats;
+    private StatsJugador statsJugador;
     private ExtendViewport mainViewport;
     private static GLProfiler glProfiler;
 
@@ -81,4 +83,12 @@ public class MainGame extends Game {
     public static GLProfiler getGlProfiler() {
         return glProfiler;
     }
+
+    public StatsJugador getStatsJugador() {
+        return statsJugador;
+    }
+    public void setStatsJugador(StatsJugador statsJugador) {
+        this.statsJugador = statsJugador;
+    }
+
 }

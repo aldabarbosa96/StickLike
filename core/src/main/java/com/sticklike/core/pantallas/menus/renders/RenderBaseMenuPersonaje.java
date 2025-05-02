@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.jugador.StatsJugador;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -25,14 +27,22 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
     private Table rootTable;
-    private static final Color COLOR_AUX_BLACK =  new Color(0, 0, 0, 1f);
-    private static final Color POSTIT_COLOR =  new Color(0.97f, 0.88f, 0.6f, 1f);
-    private static final Color PLUS_COLOR =   new Color(0, 0.75f, 0, 1);
-    private static final Color COLOR_BASE =   new Color(0.89f, 0.89f, 0.89f, 1f);
-    private static final Color COLOR_GRID =   new Color(0.64f, 0.80f, 0.9f, 1f);
+    private static final Color COLOR_AUX_BLACK = new Color(0, 0, 0, 1f);
+    private static final Color POSTIT_COLOR = new Color(0.97f, 0.88f, 0.6f, 1f);
+    private static final Color PLUS_COLOR = new Color(0, 0.75f, 0, 1);
+    private static final Color COLOR_BASE = new Color(0.89f, 0.89f, 0.89f, 1f);
+    private static final Color COLOR_GRID = new Color(0.64f, 0.80f, 0.9f, 1f);
+    private MenuPersonajeListener listener;
+    private TextButton btnVolver;
+    private StatsJugador statsJugador;
 
-    public RenderBaseMenuPersonaje() {
+    public interface MenuPersonajeListener {
+        void onVolver();
+    }
+
+    public RenderBaseMenuPersonaje(StatsJugador statsJugador) {
         super();
+        this.statsJugador = statsJugador;
         crearElementosUI();
     }
 
@@ -105,6 +115,38 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         titleTable.add(titleActor).padTop(75).padBottom(50).center();
         stage.addActor(titleTable);
         titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
+
+
+        btnVolver = new TextButton("Volver", uiSkin, "default-button");
+        btnVolver.getLabel().setColor(Color.BLACK);
+        btnVolver.getLabel().setFontScale(1.5f);
+
+        // ClickListener que dispara el listener
+        btnVolver.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (listener != null) listener.onVolver();
+            }
+        });
+        // Hover: cambia a estilo hover-button al entrar y back al salir
+        btnVolver.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                btnVolver.setStyle(uiSkin.get("hover-button", TextButton.TextButtonStyle.class));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                btnVolver.setStyle(uiSkin.get("default-button", TextButton.TextButtonStyle.class));
+            }
+        });
+
+        // Crea una tabla que ocupe el ancho y lo coloque abajo
+        Table botonTable = new Table();
+        botonTable.setFillParent(true);
+        botonTable.bottom().padBottom(50);
+        botonTable.add(btnVolver);
+        stage.addActor(botonTable);
     }
 
     // Métodos auxiliares para crear los indicadores de oro y powerup
@@ -204,25 +246,25 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
         // Creación de etiquetas para cada estadística
         Label statVidaName = new Label("[BLACK]Vida total:[]", statsLabelStyle);
-        Label statVidaValue = new Label("[BLUE]" + Jugador.getMaxVidaJugador() + "[]", statsLabelStyle);
+        Label statVidaValue = new Label("[BLUE]" + statsJugador.getMaxVida() + "[]", statsLabelStyle);
         Label statRegName = new Label("[BLACK]Regeneración de vida:[]", statsLabelStyle);
-        Label statRegValue = new Label("[BLUE]" + Jugador.getRegVidaJugador() + "[]", statsLabelStyle);
+        Label statRegValue = new Label("[BLUE]" + statsJugador.getRegVida() + "[]", statsLabelStyle);
         Label statDanyoName = new Label("[BLACK]Fuerza física:[]", statsLabelStyle);
-        Label statDanyoValue = new Label("[BLUE]" + Jugador.getDanyoAtaqueJugador() + "[]", statsLabelStyle);
+        Label statDanyoValue = new Label("[BLUE]" + statsJugador.getDanyo() + "[]", statsLabelStyle);
         Label statRangoName = new Label("[BLACK]Rango de alcance:[]", statsLabelStyle);
-        Label statRangoValue = new Label("[BLUE]" + Jugador.getRangoAtaqueJugador() + "[]", statsLabelStyle);
+        Label statRangoValue = new Label("[BLUE]" + statsJugador.getRangoAtaque() + "[]", statsLabelStyle);
         Label statVelAtaqueName = new Label("[BLACK]Velocidad de ataque:[]", statsLabelStyle);
-        Label statVelAtaqueValue = new Label("[BLUE]" + Jugador.getVelocidadAtaque() + "[]", statsLabelStyle);
+        Label statVelAtaqueValue = new Label("[BLUE]" + statsJugador.getVelocidadAtaque() + "[]", statsLabelStyle);
         Label statMunicionName = new Label("[BLACK]Munición por disparo:[]", statsLabelStyle);
-        Label statMunicionValue = new Label("[BLUE]" + Jugador.getProyectilesPorDisparo() + "[]", statsLabelStyle);
+        Label statMunicionValue = new Label("[BLUE]" + statsJugador.getProyectilesPorDisparo() + "[]", statsLabelStyle);
         Label statCriticoName = new Label("[BLACK]Probabilidad de crítico:[]", statsLabelStyle);
-        Label statCriticoValue = new Label("[BLUE]" + Jugador.getCritico() + "[]", statsLabelStyle);
+        Label statCriticoValue = new Label("[BLUE]" + statsJugador.getCritico() + "[]", statsLabelStyle);
         Label statPoderName = new Label("[BLACK]Poder mágico:[]", statsLabelStyle);
-        Label statPoderValue = new Label("[BLUE]" + Jugador.getPoderJugador() + "[]", statsLabelStyle);
+        Label statPoderValue = new Label("[BLUE]" + statsJugador.getPoder() + "[]", statsLabelStyle);
         Label statVelMovimientoName = new Label("[BLACK]Velocidad de movimiento:[]", statsLabelStyle);
-        Label statVelMovimientoValue = new Label("[BLUE]" + Jugador.getVelocidadJugador() + "[]", statsLabelStyle);
+        Label statVelMovimientoValue = new Label("[BLUE]" + statsJugador.getVelocidad() + "[]", statsLabelStyle);
         Label statResistenciaName = new Label("[BLACK]Resistencia:[]", statsLabelStyle);
-        Label statResistenciaValue = new Label("[BLUE]" + Jugador.getResistenciaJugador() + "[]", statsLabelStyle);
+        Label statResistenciaValue = new Label("[BLUE]" + statsJugador.getResistencia() + "[]", statsLabelStyle);
 
         // Ajustamos la escala de fuente para cada etiqueta
         statVidaName.setFontScale(1);
@@ -482,5 +524,11 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
     @Override
     public void animarSalida(Runnable callback) {
+        super.animarSalida(rootTable, callback);
     }
+
+    public void setMenuPersonajeListener(MenuPersonajeListener listener) {
+        this.listener = listener;
+    }
+
 }

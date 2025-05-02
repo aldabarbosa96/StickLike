@@ -120,7 +120,7 @@ public class AtaqueBoliBic {
     }
 
     private void lanzarBoli(float x, float y, float dx, float dy, Jugador jug, GestorDeAudio audio) {
-        ProyectilBoliBic p = new ProyectilBoliBic(x, y, dx, dy, 500);
+        ProyectilBoliBic p = new ProyectilBoliBic(x, y, dx, dy, 500, jug);
         if (ricochet) p.enableBounce(1);
         jug.getControladorProyectiles().anyadirNuevoProyectil(p);
         audio.reproducirEfecto("boli", 0.5f);
