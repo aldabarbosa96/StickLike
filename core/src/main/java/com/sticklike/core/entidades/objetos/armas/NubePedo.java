@@ -262,4 +262,12 @@ public final class NubePedo implements Proyectiles {
     public void setMaxKnockBack(float inc) {
         this.knockback = this.knockback * inc;
     }
+
+    public float getCooldownDuration() {
+        return COOLDOWN_DURATION;
+    }
+
+    public float getTimeUntilNextShot() {
+        return (phase == Phase.COOLDOWN) ? Math.max(0f, COOLDOWN_DURATION - phaseTimer) : 0f;
+    }
 }

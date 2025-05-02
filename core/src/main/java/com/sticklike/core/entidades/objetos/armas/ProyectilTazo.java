@@ -288,4 +288,12 @@ public final class ProyectilTazo implements Proyectiles {
     public void setOffsetAngle(float o) {
         offsetAngle = o;
     }
+
+    public float getCooldownDuration() {
+        return COOLDOWN_DURATION;
+    }
+
+    public float getTimeUntilNextShot() {
+        return (phase == Phase.COOLDOWN) ? Math.max(0f, COOLDOWN_DURATION - phaseTimer) : 0f;
+    }
 }

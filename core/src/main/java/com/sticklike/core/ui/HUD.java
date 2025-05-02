@@ -1,11 +1,11 @@
 package com.sticklike.core.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
@@ -57,6 +57,7 @@ public class HUD {
         renderHUDComponents.renderizarMarcoHUD();
         renderHUDComponents.renderizarLineaVerticalCuadricula(hudHeight);
         renderHUDComponents.renderizarBarraXPFondo();
+        renderHUDComponents.renderizarCooldowns();
         shapeRenderer.end();
 
         // Dibujos con SpriteBatch

@@ -480,6 +480,77 @@ public class RenderHUDComponents {
         fuente.setColor(Color.WHITE);
     }
 
+    public void renderizarCooldowns() {
+        List<Mejora> habilidades = sistemaDeNiveles.getSistemaDeMejoras().getHabilidadesActivas();
+
+        for (int i = 0; i < habilidades.size() && i < slotsList.size(); i++) {
+            Mejora m = habilidades.get(i);
+            String id = m.getIdHabilidad();
+            float remaining = 0, total = 1;
+
+            // Obtener la instancia de la habilidad según su id
+            switch (id) {
+
+                case "CALCETIN":
+                    var atkCalc = jugador.getAtaqueCalcetin();
+                    remaining = atkCalc.getTimeUntilNextShot();
+                    total = atkCalc.getCooldownDuration();
+                    break;
+
+                case "BOLI":
+                    var atkBoli = jugador.getAtaqueBoliBic();
+                    remaining = atkBoli.getTimeUntilNextShot();
+                    total = atkBoli.getCooldownDuration();
+                    break;
+
+                case "DILDO":
+                    var atkDildo = jugador.getAtaqueDildo();
+                    remaining = atkDildo.getTimeUntilNextShot();
+                    total = atkDildo.getCooldownDuration();
+                    break;
+
+                case "PAPEL":
+                    var atkPapel = jugador.getAtaquePapelCulo();
+                    remaining = atkPapel.getTimeUntilNextShot();
+                    total = atkPapel.getCooldownDuration();
+                    break;
+
+                case "PEDO":
+                    var nube = jugador.getAtaqueNubePedo().getNubePedo();
+                    remaining = nube.getTimeUntilNextShot();
+                    total = nube.getCooldownDuration();
+                    break;
+
+                case "TAZO":
+                    var projTazo = jugador.getControladorProyectiles().obtenerUltimoProyectilTazo();
+
+                    if (projTazo != null) {
+                        remaining = projTazo.getTimeUntilNextShot();
+                        total = projTazo.getCooldownDuration();
+                    }
+                    break;
+
+                case "MOCO":
+                    var moco = jugador.getAtaqueMocos();
+                    remaining = moco.getTimeUntilNextShot();
+                    total = moco.getCooldownDuration();
+                    break;
+
+                default:
+
+                    continue;
+            }
+
+            if (remaining > 0) {
+                float pct = remaining / total;
+                Rectangle slot = slotsList.get(i);
+                // dibuja desde la base del slot hacia arriba
+                shapeRenderer.setColor(0,0.4f,1f,1);
+                shapeRenderer.rect(slot.x, slot.y, slot.width, slot.height * pct);
+            }
+        }
+    }
+
     private void dibujarTextoConReborde(SpriteBatch batch, String texto, float x, float y, float offset, Color colorReborde, Color colorTexto) {
         fuente.setColor(colorReborde);
         fuente.draw(batch, texto, x - offset, y);

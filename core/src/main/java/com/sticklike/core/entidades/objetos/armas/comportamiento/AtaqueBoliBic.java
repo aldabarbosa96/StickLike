@@ -125,4 +125,16 @@ public class AtaqueBoliBic {
         jug.getControladorProyectiles().anyadirNuevoProyectil(p);
         audio.reproducirEfecto("boli", 0.5f);
     }
+
+    public float getCooldownDuration() {
+        if (rafagaRestante > 0) {
+            return INTERVALO_RAFAGA;
+        }
+        return intervaloDisparo;
+    }
+
+    public float getTimeUntilNextShot() {
+        // evitamos valores negativos
+        return Math.max(0f, getCooldownDuration() - temporizadorDisparo);
+    }
 }

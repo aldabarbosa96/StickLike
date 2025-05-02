@@ -76,4 +76,12 @@ public class AtaqueCalcetin {
 
     }
 
+    public float getCooldownDuration() {
+        return intervaloDisparo;
+    }
+
+    public float getTimeUntilNextShot() {
+        // si temporizador >= intervalo, ya está lista
+        return Math.max(0, intervaloDisparo - temporizadorDisparo);
+    }
 }

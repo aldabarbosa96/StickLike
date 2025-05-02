@@ -79,4 +79,17 @@ public class AtaqueDildo {
         jugador.getControladorProyectiles().anyadirNuevoProyectil(latigo);
         audio.reproducirEfecto("dildo", 0.6f);
     }
+
+    public float getCooldownDuration() {
+        return intervaloDisparo;
+    }
+
+    public float getTimeUntilNextShot() {
+        if (ataqueEnProgreso) {
+            // Durante la ráfaga de swings, no mostramos overlay de cooldown
+            return 0f;
+        }
+        // Estamos en fase de cooldown: tiempo restante hasta próximo ataque
+        return Math.max(0f, intervaloDisparo - cooldownTimer);
+    }
 }

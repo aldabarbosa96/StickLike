@@ -53,4 +53,12 @@ public class AtaqueMocos {
     public void mocosConSangre() {
         mocosSangre = true;
     }
+
+    public float getCooldownDuration() {
+        return intervaloDisparo;
+    }
+
+    public float getTimeUntilNextShot() {
+        return Math.max(0f, intervaloDisparo - temporizadorDisparo);
+    }
 }

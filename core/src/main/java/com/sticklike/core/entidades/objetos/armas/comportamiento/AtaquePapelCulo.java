@@ -104,4 +104,12 @@ public class AtaquePapelCulo {
     public void setFragmentado(boolean fragmentado) {
         this.fragmentado = fragmentado;
     }
+
+    public float getCooldownDuration() {
+        return intervaloDisparo;
+    }
+
+    public float getTimeUntilNextShot() {
+        return Math.max(0f, intervaloDisparo - temporizadorDisparo);
+    }
 }
