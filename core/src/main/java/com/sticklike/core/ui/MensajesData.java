@@ -195,7 +195,7 @@ public class MensajesData {
         if (alarmaCronoTask != null) alarmaCronoTask.cancel();
     }
 
-    // ---------------------- Mensajes de Cul os ----------------------
+    // culos
 
     private void mensajesCulos() {
         opcionesChatCulos.add(new ChatOption("Ojete1", "¡Todos a dejarle la cara de culo!"));
@@ -221,7 +221,7 @@ public class MensajesData {
         opcionesChatCulos.add(new ChatOption("Ojete 21", "¿Alguna polla quiere entrar?"));
     }
 
-    // ---------------------- Mensajes de Pollas ----------------------
+    // Pollas
 
     private void mensajesPollas() {
         opcionesChatPollas.add(new ChatOption("Polla1", "¡Chúpame!"));
@@ -251,7 +251,7 @@ public class MensajesData {
     // ---------------------- Mensajes de Alarmas ----------------------
 
     private void initMensajesAlarmas() {
-        // Mensajes para la variante Alarma (esCrono == false)
+        // Alarmas
         opcionesAlarmasAlarma.add(new ChatOption("Alarma1", "Chilli dos alarmitas"));
         opcionesAlarmasAlarma.add(new ChatOption("Alarma2", "¡Arriba pedazo de basura!"));
         opcionesAlarmasAlarma.add(new ChatOption("Alarma3", "Cualquier parecido es pura coincidencia"));
@@ -264,7 +264,7 @@ public class MensajesData {
         opcionesAlarmasAlarma.add(new ChatOption("Alarma10", "Hora de que te calles para siempre"));
         opcionesAlarmasAlarma.add(new ChatOption("Alarma11", "10..9..8..7..5digo6...4..mierda..."));
 
-        // Mensajes para la variante Crono (esCrono == true)
+        // Cronos
         opcionesAlarmasCrono.add(new ChatOption("Crono1", "¡TIC-TAC-HIJO-DE-PUTA!"));
         opcionesAlarmasCrono.add(new ChatOption("Crono2", "Según mis cálculos, vas a morir"));
         opcionesAlarmasCrono.add(new ChatOption("Crono3", "1..2..3..4..5..6..7..8..9.. <<algo está mal>>"));

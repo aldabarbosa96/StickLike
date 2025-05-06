@@ -6,13 +6,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
-import com.sticklike.core.entidades.enemigos.destructibles.Destructibles;
-import com.sticklike.core.entidades.enemigos.destructibles.Destructibles2;
+import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
+import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles2;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoRegla;
 import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCondon;
 import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoPolla;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoTeta;
+import com.sticklike.core.entidades.mobiliario.tragaperras.Tragaperras;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -66,11 +68,15 @@ public class RenderBaseEnemigos {
                 case BossPolla boss -> drawBoss(boss, r, ex, ey, ew, eh);
                 case Destructibles d1 -> drawDestructible(d1, r, ex, ey, ew, eh);
                 case Destructibles2 d2 -> drawDestructible2(d2, r, ex, ey, ew, eh);
-                case EnemigoCulo culo -> drawSimple(culo, r, ex, ey, ew, eh, ew * SHADOW_WIDTH_CULO, eh * SHADOW_HEIGHT_CULO, SHADOW_OFFSET);
+                case EnemigoCulo culo ->
+                    drawSimple(culo, r, ex, ey, ew, eh, ew * SHADOW_WIDTH_CULO, eh * SHADOW_HEIGHT_CULO, SHADOW_OFFSET);
                 case EnemigoPolla polla -> drawPolla(polla, r, ex, ey, ew, eh);
                 case EnemigoExamen exam -> drawExamen(exam, r, ex, ey, ew, eh);
                 case EnemigoRegla regla -> drawSimple(regla, r, ex, ey, ew, eh, ew * 0.75f, eh * 0.3f, 3.5f);
-                case EnemigoCondon condon -> drawSimple(condon, r, ex, ey, ew, eh, ew , eh * 0.225f, 10f);
+                case EnemigoCondon condon -> drawSimple(condon, r, ex, ey, ew, eh, ew, eh * 0.225f, 10f);
+                case EnemigoTeta teta -> drawTeta(teta, r, ex, ey, ew, eh);
+                case Tragaperras tragaperras ->
+                    drawSimple(tragaperras, r, ex -3.5f, ey, ew, eh, ew * 0.9f , eh * 0.275f, SHADOW_OFFSET * 4);
                 default -> drawVater(e, r, ex, ey, ew, eh);
             }
         }
@@ -133,6 +139,24 @@ public class RenderBaseEnemigos {
         float x = ex + ew / SHADOW_OFFSET_POLLA - w / 2f;
 
         dibujarParpadeoSombra(p, r, Color.WHITE);
+        r.ellipse(x, baseY, w, h);
+    }
+
+    private void drawTeta(EnemigoTeta teta, ShapeRenderer r, float ex, float ey, float ew, float eh) {
+        float offset = teta.getMovimientoPolla().getCurrentOffset();
+        float maxZig = teta.getMovimientoPolla().getAmplitudZigzag();
+        float norm = Math.min(1f, Math.max(-1f, offset / maxZig));
+        float t = (norm + 1f) / 2f;
+        float factor = 0.6f + (0.2f - 0.6f) * t;
+
+        float baseW = ew * 1.6f;
+        float baseH = eh * 0.5f;
+        float baseY = ey - 5f;
+        float w = baseW * factor;
+        float h = baseH * factor;
+        float x = ex + ew / SHADOW_OFFSET_POLLA - w / 2f;
+
+        dibujarParpadeoSombra(teta, r, Color.WHITE);
         r.ellipse(x, baseY, w, h);
     }
 

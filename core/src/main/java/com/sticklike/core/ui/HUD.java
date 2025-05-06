@@ -89,4 +89,8 @@ public class HUD {
     public RenderHUDComponents getRenderHUDComponents() {
         return renderHUDComponents;
     }
+
+    public StretchViewport getViewport() {
+        return hudViewport;
+    }
 }

@@ -49,7 +49,7 @@ public class SistemaDeEventos {
     private void inicializarEventos() {
         eventos.add(new Evento("Aumenta nº enemigos", this::eventoAumentaEnemigos1, LVL_EVENTO1));
         eventos.add(new Evento("Aumenta nº enemigos 2", this::eventoAumentaEnemigos2, LVL_EVENTO2));
-        eventos.add(new Evento("Efecto Pollas", this::entraEnemigoPolla, LVL_EVENTO3));
+        eventos.add(new Evento("Efecto tetas", this::entraEnemigoTeta, LVL_EVENTO3));
         eventos.add(new Evento("BossPolla Aparece", this::spawnPrimerBoss, LVL_EVENTO4));
         eventos.add(new Evento("Alarma Aparece", this::spawnAlarma, LVL_EVENTO4));
         eventos.add(new Evento("Examen Aparece", this::spawnExamen, LVL_EVENTO5));
@@ -89,13 +89,13 @@ public class SistemaDeEventos {
         ctrlEnemigos.setSpeedMult(nuevaVel);
     }
 
-    private void entraEnemigoPolla() {
+    private void entraEnemigoTeta() {
         if (efectoPollasActivo) return;
 
         efectoPollasActivo = true;
 
-        ctrlEnemigos.setTiposDeEnemigos(LISTA_POLLAS);
-        ctrlEnemigos.setIntervaloDeAparicion(EVENTO_POLLAS_SPAWN_RATE);
+        ctrlEnemigos.setTiposDeEnemigos(LISTA_TETAS);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO_TETAS_SPAWN_RATE);
 
         // Programamos restaurar spawn normal
         if (restauraSpawnTask != null) restauraSpawnTask.cancel();

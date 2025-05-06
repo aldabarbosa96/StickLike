@@ -31,5 +31,4 @@ public interface Enemigo {
     float getDamageAmount();
     AnimacionesBaseEnemigos getAnimaciones();
     boolean isMostrandoDamageSprite();
-
 }

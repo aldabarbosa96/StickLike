@@ -28,8 +28,7 @@ public class EnemigoExamen extends EnemigoBase {
         sprite.setSize(42f, 44f);
         sprite.setPosition(x, y);
         movimientoExamen = new MovimientoExamen();
-        animacionExamen = new AnimacionExamen(animacionesBaseEnemigos, manager.get(ENEMIGO_EXAMEN, Texture.class),
-            manager.get(ENEMIGO_EXAMEN2, Texture.class), 0.25f);
+        animacionExamen = new AnimacionExamen(animacionesBaseEnemigos, manager.get(ENEMIGO_EXAMEN, Texture.class), manager.get(ENEMIGO_EXAMEN2, Texture.class), 0.25f);
 
         setVelocidad(velocidadEnemigo);
 
@@ -48,7 +47,7 @@ public class EnemigoExamen extends EnemigoBase {
             movimientoExamen.actualizarMovimiento(delta, sprite, jugador);
         }
         animacionExamen.actualizarAnimacion(delta, jugador, sprite);
-        animacionesBaseEnemigos.flipearEnemigo(jugador,sprite);
+        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override

@@ -190,6 +190,7 @@ public class RenderVentanaJuego1 {
         Mensajes.getInstance().update();
         Mensajes.getInstance().draw(camara);
         hud.renderizarHUD(delta);
+        ventanaJuego1.getFlechaTragaperras().render(spriteBatch);
     }
 
     private void prerenderBorrones() {

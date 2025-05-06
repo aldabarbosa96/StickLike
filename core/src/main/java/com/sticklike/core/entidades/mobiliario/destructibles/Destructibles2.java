@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.enemigos.destructibles;
+package com.sticklike.core.entidades.mobiliario.destructibles;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;

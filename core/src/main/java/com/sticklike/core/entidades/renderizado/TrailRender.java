@@ -10,14 +10,21 @@ import com.sticklike.core.interfaces.Trail;
 public class TrailRender {
 
     private static final TrailRender INSTANCE = new TrailRender();
-    public static TrailRender get() { return INSTANCE; }
+
+    public static TrailRender get() {
+        return INSTANCE;
+    }
 
     private final ShapeRenderer sr = new ShapeRenderer();
     private final Array<Trail> pending = new Array<>();
 
-    private TrailRender() {}                          // singleton
+    private TrailRender() {
+    }
 
-    public void submit(Trail t) { pending.add(t); }
+
+    public void submit(Trail t) {
+        pending.add(t);
+    }
 
     public void flush(Matrix4 projection) {
         if (pending.size == 0) return;
