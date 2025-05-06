@@ -11,6 +11,7 @@ import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -62,6 +63,7 @@ public class Tragaperras implements Enemigo {
     @Override
     public void reducirSalud(float dmg) {
         vida -= dmg;
+        GestorDeAudio.getInstance().reproducirEfecto("tragaperras",0.5f);
         if (vida <= 0 && !popupMostrado) {
             anim.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
             activarParpadeo(DURACION_PARPADEO_ENEMIGO);
