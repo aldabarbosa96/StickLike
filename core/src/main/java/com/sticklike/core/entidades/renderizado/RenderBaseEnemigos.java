@@ -76,7 +76,7 @@ public class RenderBaseEnemigos {
                 case EnemigoCondon condon -> drawSimple(condon, r, ex, ey, ew, eh, ew, eh * 0.225f, 10f);
                 case EnemigoTeta teta -> drawTeta(teta, r, ex, ey, ew, eh);
                 case Tragaperras tragaperras ->
-                    drawSimple(tragaperras, r, ex -3.5f, ey, ew, eh, ew * 0.9f , eh * 0.275f, SHADOW_OFFSET * 4);
+                    drawSimple(tragaperras, r, ex - 3.5f, ey, ew, eh, ew * 0.9f, eh * 0.275f, SHADOW_OFFSET * 4);
                 default -> drawVater(e, r, ex, ey, ew, eh);
             }
         }
@@ -120,7 +120,7 @@ public class RenderBaseEnemigos {
         float x = cx - w / 2f;
         float y = ey - offsetY;
 
-        dibujarParpadeoSombra(e, r, Color.WHITE);
+        dibujarParpadeoSombra(e, r, e instanceof Tragaperras ? Color.BLACK : Color.WHITE);
         r.ellipse(x, y, w, h);
     }
 
