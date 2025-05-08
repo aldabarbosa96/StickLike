@@ -9,18 +9,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class FondoAnimadoPopUp extends Actor {
-
-    private static final Texture xp1 = manager.get(RECOLECTABLE_XP, Texture.class);
-    private static final Texture xp2 = manager.get(RECOLECTABLE_XP2, Texture.class);
-    private static final Texture xp3 = manager.get(RECOLECTABLE_XP3, Texture.class);
-
+    private final Texture[] particleTextures;
     private static final float SPAWN_INTERVAL = .085f;
     private static final float DAMPING = .98f;
     private static final float HUD_THRESHOLD = 240f;
-
     private final Array<Particle> live = new Array<>(false, 128);
     private final Pool<Particle> pool = new Pool<>(64, 256) {
         @Override
@@ -28,9 +22,16 @@ public class FondoAnimadoPopUp extends Actor {
             return new Particle();
         }
     };
-
     private float spawnTimer = 0f;
     private final Color tmpColor = new Color();
+    private float x, y;
+
+
+    public FondoAnimadoPopUp(float x, float y, Texture... textures) {
+        this.particleTextures = textures;
+        this.x = x;
+        this.y = y;
+    }
 
     @Override
     public void act(float delta) {
@@ -61,20 +62,23 @@ public class FondoAnimadoPopUp extends Actor {
         batch.setColor(tmpColor);
     }
 
-    /* ---------- helpers ---------- */
+    // helpers
 
     private void spawnParticle() {
         Particle p = pool.obtain();
-        float size = MathUtils.random(30, 40);
+        float size = MathUtils.random(x, y);
         float vx = (MathUtils.random() - .5f) * 50f;
         float vy = -(MathUtils.random() * 50f + 50f);
         p.init(MathUtils.random() * VIRTUAL_WIDTH, VIRTUAL_HEIGHT, vx, vy, selectTex(), size);
         live.add(p);
     }
 
-    private static Texture selectTex() {
-        float r = MathUtils.random(10f);
-        return r <= 4.5f ? xp1 : (r <= 9f ? xp2 : xp3);
+    private Texture selectTex() {
+        if (particleTextures == null || particleTextures.length == 0) {
+            throw new IllegalStateException("Amigo te faltan las texturas...");
+        }
+        int idx = MathUtils.random(particleTextures.length - 1);
+        return particleTextures[idx];
     }
 
     public void clearParticles() {
@@ -82,7 +86,7 @@ public class FondoAnimadoPopUp extends Actor {
         live.clear();
     }
 
-    /* ---------- poolable ---------- */
+    // pool partículas
     private static class Particle implements Pool.Poolable {
         float x, y, vx, vy, width, height, rot, angVel, alpha;
         Texture tex;

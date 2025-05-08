@@ -17,7 +17,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class FlechaTragaperras {
 
-    private static final float MARGIN = 30;
+    private static final float MARGIN = 22.5f;
     private static final float HUD_MARGIN = 185f;
     private static final float SIDE_Y_OFFSET = 100f;
     private final Sprite arrow;
@@ -93,7 +93,7 @@ public class FlechaTragaperras {
             arrow.setCenter(cx, cy);
             arrow.draw(batch);
 
-            /* 4) etiqueta con la distancia ---------------------------------- */
+            // 4) etiqueta con la distancia
             float dx = slot.getX() + ANCHO_TRAGAPERRAS * .5f - hudCam.position.x;
             float dy = slot.getY() + ALTO_TRAGAPERRAS * .5f - hudCam.position.y;
             int metros = Math.round(Vector2.len(dx, dy));

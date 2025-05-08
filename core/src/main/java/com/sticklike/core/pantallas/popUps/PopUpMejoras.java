@@ -63,7 +63,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         this.rerollCount = rerollCount;
 
         if (!popUpAbierto) {
-            fondoAnimadoPopUp = new FondoAnimadoPopUp();
+            fondoAnimadoPopUp = new FondoAnimadoPopUp(30, 40, manager.get(RECOLECTABLE_XP, Texture.class), manager.get(RECOLECTABLE_XP2, Texture.class), manager.get(RECOLECTABLE_XP3, Texture.class));
             uiStage.addActor(fondoAnimadoPopUp);
             popupGroup = new Group();
             uiStage.addActor(popupGroup);
@@ -134,8 +134,9 @@ public class PopUpMejoras extends RenderBaseMenus {
         float posY = (VIRTUAL_HEIGHT - h + POPUP_POSITION_CORRECTION) / 2f - EXTRA_BORDE;
         popupGroup.setPosition(posX, posY);
 
-        Image borderImage = new Image(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
+        Image borderImage = new Image(super.crearSombraConBorde(Color.WHITE, 10, Color.WHITE, 2));
         borderImage.setSize(totalWidth, totalHeight);
+        borderImage.addAction(Actions.forever(Actions.sequence(Actions.color(Color.PURPLE, 0.5f), Actions.color(Color.BLUE, 0.5f), Actions.color(Color.MAGENTA, 0.5f))));
         popupGroup.addActor(borderImage);
 
         upgradeWindow.setPosition(EXTRA_BORDE, EXTRA_BORDE);

@@ -83,6 +83,16 @@ public class GestorDeAssets {
     public static final String TEXTURA_MARCO = "hud/marco2.png";
     public static final String DADOS = "hud/dados.png";
     public static final String NEW = "hud/new.png";
+    public static final String SLOT = "hud/slot.png";
+    public static final String SKATE = "drops/SKATE.png";
+    public static final String SKATE2 = "drops/SKATE2.png";
+    public static final String EXAMEN = "drops/examenA.png";
+    public static final String ALARMA = "drops/alarma.png";
+    public static final String IMAN = "drops/iman.png";
+    public static final String DISKETE = "drops/diskete.png";
+    public static final String MECHERO = "drops/mechero.png";
+    public static final String JACKPOT = "drops/jackpot.png";
+    public static final String BORRADOR = "drops/borrador.png";
 
     // Boss y loading
     public static final String BOSS_POLLA = "enemigos/bossPolla.png";
@@ -174,6 +184,16 @@ public class GestorDeAssets {
         manager.load(TEXTURA_MARCO, Texture.class);
         manager.load(DADOS, Texture.class);
         manager.load(NEW, Texture.class);
+        manager.load(SLOT, Texture.class);
+        manager.load(SKATE, Texture.class);
+        manager.load(SKATE2, Texture.class);
+        manager.load(EXAMEN, Texture.class);
+        manager.load(ALARMA, Texture.class);
+        manager.load(IMAN, Texture.class);
+        manager.load(DISKETE, Texture.class);
+        manager.load(MECHERO, Texture.class);
+        manager.load(JACKPOT, Texture.class);
+        manager.load(BORRADOR, Texture.class);
 
         manager.load(BOSS_POLLA, Texture.class);
         manager.load(BOSS_POLLA_BOCACERRADA, Texture.class);

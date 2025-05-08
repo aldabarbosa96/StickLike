@@ -278,7 +278,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
     public static final float VIDA_DESTRUCTIBLE2 = 75f;
-    public static final float VIDA_TRAGAPERRAS = 1000f;
+    public static final float VIDA_TRAGAPERRAS = 500f;
     public static final float ANCHO_DESTRUCT = 42f;
     public static final float ALTO_DESTRUCT = 38f;
     public static final float ANCHO_DESTRUCT1 = 46f;

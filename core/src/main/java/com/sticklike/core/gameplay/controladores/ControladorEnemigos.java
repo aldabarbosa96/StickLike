@@ -240,8 +240,8 @@ public class ControladorEnemigos {
         if (tragaperrasSpawned) return;
         tragaperrasSpawned = true;
 
-        final float MIN_DIST = 1750f;
-        final float MAX_DIST = 7500f;
+        final float MIN_DIST = 500f;
+        final float MAX_DIST = 1000f;
         final float MAX_PERP = 1250f;
 
         // centro actual del jugador

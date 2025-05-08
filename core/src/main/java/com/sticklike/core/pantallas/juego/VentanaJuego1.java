@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.mobiliario.tragaperras.FlechaTragaperras;
-import com.sticklike.core.entidades.mobiliario.tragaperras.PopUpTragaperras;
-import com.sticklike.core.entidades.mobiliario.tragaperras.TragaperrasInputProcessor;
+import com.sticklike.core.pantallas.popUps.PopUpTragaperras;
+import com.sticklike.core.pantallas.popUps.TragaperrasInputProcessor;
 import com.sticklike.core.entidades.mobiliario.tragaperras.TragaperrasLogic;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
@@ -172,20 +172,21 @@ public class VentanaJuego1 implements Screen {
 
     @Override
     public void render(float delta) {
-        //final float dt = Math.min(delta, 0.05f);
-
+        // 1) Si seguimos cargando recursos, dibujamos la pantalla de carga
         if (!renderVentanaJuego1.isLoadingComplete()) {
             gestorDeAudio.pausarMusica();
             renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud);
             return;
         }
 
+        // 2) Gestionar la pausa y la entrada de usuario
         pausa.handleInput();
         if (jugador.estaMuerto()) {
             game.setScreen(new VentanaGameOver(game, controladorProyectiles));
             return;
         }
 
+        // 3) Lógica de actualización del juego solo si no está en pausa
         if (!pausado && !pausa.isPaused()) {
             if (!musicChanged) {
                 gestorDeAudio.cambiarMusica("fondo2");
@@ -196,29 +197,37 @@ public class VentanaJuego1 implements Screen {
             gestorDeAudio.pausarMusica();
         }
 
+        // 4) Renderizar el mundo y el HUD
         renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud);
 
+        // 5) Dibujar overlay de pausa y menú si hace falta
         pausa.render(shapeRenderer);
 
+        // 6) Ajustar el SpriteBatch al HUD (coordenadas de pantalla)
+        OrthographicCamera hudCam = (OrthographicCamera) pausa.getRenderPausa().getHudViewport().getCamera();
+        spriteBatch.setProjectionMatrix(hudCam.combined);
+
+        // 7) Actualizar y dibujar el efecto de boost
         BoostIconEffectManager.getInstance().update(delta, renderHUDComponents);
         spriteBatch.begin();
         BoostIconEffectManager.getInstance().render(spriteBatch);
         spriteBatch.end();
 
-
+        // 8) Dibujar cualquier pop-up de tragaperras
         Stage slotStage = popupTraga.getUiStage();
         if (slotStage.getActors().size > 0) {
             slotStage.act(delta);
             slotStage.draw();
         }
 
+        // 9) Dibujar cualquier pop-up de mejoras
         Stage stage = popUpMejoras.getUiStage();
         if (stage.getActors().size > 0) {
             stage.act(delta);
             stage.draw();
         }
-
     }
+
 
     private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
         jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, gestorDeAudio);
