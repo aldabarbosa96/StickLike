@@ -1,4 +1,3 @@
-// Mensajes.java
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.graphics.Color;

@@ -1,7 +1,7 @@
 package com.sticklike.core.entidades.enemigos.animacion;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoCulo;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCulo;
 
 public class AnimacionCulo {
     private final Sprite spriteOjoAbierto;

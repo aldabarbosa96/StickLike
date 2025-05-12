@@ -6,9 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.*;
+import com.sticklike.core.entidades.objetos.armas.comportamiento.*;
 import com.sticklike.core.entidades.renderizado.RenderJugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasSangre;
+import com.sticklike.core.pantallas.menus.ventanas.MenuPersonaje;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
@@ -40,41 +41,18 @@ public class Jugador {
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
     private RenderParticulasSangre renderParticulasSangre;
+    private StatsJugador statsJugador;
+    private MenuPersonaje menuPersonaje;
     private final Vector2 tmpVector = new Vector2();
 
-
-    // Atributos de stats todo --> mover a clase modelo dedicada
-    private static float velocidadJugador;
-    private static float vidaJugador;
-    private static float maxVidaJugador;
-    private static float rangoAtaqueJugador;
-    private static float danyoAtaqueJugador;
-    private static float velocidadAtaque;
-    private static float intervaloDisparo;
-    private static int proyectilesPorDisparo;
-    private static float resistenciaJugador;
-    private static float criticoJugador;
-    private static float regVidaJugador;
-    private static float poderJugador;
     private boolean estaVivo;
     private static int oroGanado;
     private static int trazosGanados;
     private boolean invulnerable = false;
     private Direction direccionActual = Direction.IDLE;
 
-    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles) {
-        danyoAtaqueJugador = DANYO;
-        velocidadJugador = VEL_MOV_JUGADOR;
-        vidaJugador = VIDA_JUGADOR;
-        maxVidaJugador = VIDAMAX_JUGADOR;
-        rangoAtaqueJugador = RANGO_ATAQUE;
-        intervaloDisparo = INTERVALO_DISPARO;
-        velocidadAtaque = VEL_ATAQUE_JUGADOR;
-        proyectilesPorDisparo = NUM_PROYECTILES_INICIALES;
-        resistenciaJugador = RESISTENCIA;
-        criticoJugador = CRITICO;
-        regVidaJugador = REGENERACION_VIDA;
-        poderJugador = PODER_JUGADOR;
+    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles, StatsJugador statsJugador) {
+        this.statsJugador = statsJugador;
         this.estaVivo = true;
         oroGanado = 0;
         trazosGanados = 0;
@@ -83,7 +61,7 @@ public class Jugador {
         this.sprite = new Sprite(manager.get(STICKMAN, Texture.class));
         this.sprite.setSize(WIDTH_JUGADOR, HEIGHT_JUGADOR);
         this.sprite.setPosition(startX, startY);
-        sprite.getTexture().setFilter(Texture.TextureFilter.Linear,Texture.TextureFilter.Linear);
+        sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         // Inicializar controladores
         this.inputController = inputController;
@@ -130,8 +108,8 @@ public class Jugador {
             if (ataqueBoliBic != null) {
                 ataqueBoliBic.manejarDisparo(delta, this, gestorDeAudio);
             }
-            if (ataqueDildo != null){
-                ataqueDildo.manejarDisparo(delta,this,gestorDeAudio);
+            if (ataqueDildo != null) {
+                ataqueDildo.manejarDisparo(delta, this, gestorDeAudio);
             }
 
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, gestorDeAudio);
@@ -183,78 +161,79 @@ public class Jugador {
     // Getters / Setters y métodos relacionados con los atributos del jugador
     // -------------------------------------------------------------------
     public float obtenerPorcetajeVida() {
-        return vidaJugador / maxVidaJugador;
+        return statsJugador.getVida() / statsJugador.getMaxVida();
     }
 
     public void aumentarVelocidad(float percentage) {
-        velocidadJugador *= (1 + percentage);
+        statsJugador.setVelocidad(statsJugador.getVelocidad() * (1 + percentage));
     }
 
-
     public void aumentarRangoAtaque(float percentage) {
-        rangoAtaqueJugador += rangoAtaqueJugador * percentage;
+        statsJugador.setRangoAtaque(statsJugador.getRangoAtaque() * (1 + percentage));
     }
 
     public void aumentarDanyo(float amount) {
         controladorProyectiles.aumentarDanyoProyectil(amount);
-        danyoAtaqueJugador *= amount;
+        statsJugador.setDanyo(statsJugador.getDanyo() * amount);
     }
 
     public void reducirIntervaloDisparo(float percentage) {
-        intervaloDisparo *= (1 - percentage);
-        if (intervaloDisparo < INTERVALO_MIN_DISPARO) intervaloDisparo = INTERVALO_MIN_DISPARO;
-
-        velocidadAtaque = 1 / intervaloDisparo;
-        pedrada.setIntervaloDisparo(intervaloDisparo);
-
+        float nuevo = statsJugador.getIntervaloDisparo() * (1 - percentage);
+        if (nuevo < INTERVALO_MIN_DISPARO) {
+            nuevo = INTERVALO_MIN_DISPARO;
+        }
+        statsJugador.setIntervaloDisparo(nuevo);
+        statsJugador.setVelocidadAtaque(1f / nuevo);
+        pedrada.setIntervaloDisparo(nuevo);
     }
 
     public void aumentarProyectilesPorDisparo(int amount) {
-        proyectilesPorDisparo += amount;
+        statsJugador.setProyectilesPorDisparo(statsJugador.getProyectilesPorDisparo() + amount);
     }
 
     public void aumentarPoderJugador(float amount) {
-        poderJugador *= amount;
+        statsJugador.setPoder(statsJugador.getPoder() * amount);
     }
 
-    public static float getRangoAtaqueJugador() {
-        return rangoAtaqueJugador;
+    public float getRangoAtaqueJugador() {
+        return statsJugador.getRangoAtaque();
     }
 
-    public static int getProyectilesPorDisparo() {
-        return proyectilesPorDisparo;
+    public int getProyectilesPorDisparo() {
+        return statsJugador.getProyectilesPorDisparo();
     }
 
     public void aumentarRegVida(float percentage) {
-        this.regVidaJugador += (this.maxVidaJugador * percentage / 100);
+        float incremento = statsJugador.getMaxVida() * percentage / 100f;
+        statsJugador.setRegVida(statsJugador.getRegVida() + incremento);
     }
 
-
     public void aumentarCritico(float percentage) {
-        this.criticoJugador += percentage;
+        statsJugador.setCritico(statsJugador.getCritico() + percentage);
     }
 
     public void aumentarResistencia(float percentage) {
-        this.resistenciaJugador += percentage;
+        statsJugador.setResistencia(statsJugador.getResistencia() + percentage);
     }
 
-    public static float getVelocidadJugador() {
-        return velocidadJugador;
+    public float getVelocidadJugador() {
+        return statsJugador.getVelocidad();
     }
 
-    public static float getVidaJugador() {
-        if (vidaJugador < 0) vidaJugador = 0;
-        else if (vidaJugador > maxVidaJugador) vidaJugador = maxVidaJugador;
-        return vidaJugador;
+    public float getVidaJugador() {
+        float v = statsJugador.getVida();
+        if (v < 0) v = 0;
+        else if (v > statsJugador.getMaxVida()) v = statsJugador.getMaxVida();
+        return v;
     }
 
-    public static float getDanyoAtaqueJugador() {
-        return danyoAtaqueJugador;
+    public float getDanyoAtaqueJugador() {
+        return statsJugador.getDanyo();
     }
 
     public void restarVidaJugador(float damage) {
-        this.vidaJugador -= damage;
-        if (this.vidaJugador <= 0) {
+        statsJugador.setVida(statsJugador.getVida() - damage);
+        if (statsJugador.getVida() <= 0) {
             muere();
         } else {
             if (renderParticulasSangre != null) {
@@ -268,11 +247,11 @@ public class Jugador {
     }
 
     public void setVidaJugador(float vidaJugador) {
-        this.vidaJugador = vidaJugador;
+        statsJugador.setVida(vidaJugador);
     }
 
-    public static float getMaxVidaJugador() {
-        return maxVidaJugador;
+    public float getMaxVidaJugador() {
+        return statsJugador.getMaxVida();
     }
 
     public boolean estaMuerto() {
@@ -308,44 +287,44 @@ public class Jugador {
     }
 
     public void setVidaMax(float maxVidaJugador) {
-        this.maxVidaJugador = maxVidaJugador;
+        statsJugador.setMaxVida(maxVidaJugador);
     }
 
     public RenderJugador getAnimacionesJugador() {
         return renderJugador;
     }
 
-    public static float getVelocidadAtaque() {
-        return velocidadAtaque;
+    public float getVelocidadAtaque() {
+        return statsJugador.getVelocidadAtaque();
     }
 
     public AtaquePiedra getPedrada() {
         return pedrada;
     }
 
-    public static float getIntervaloDisparo() {
-        return intervaloDisparo;
+    public float getIntervaloDisparo() {
+        return statsJugador.getIntervaloDisparo();
     }
 
-    public static float getResistenciaJugador() {
-        return resistenciaJugador;
+    public float getResistenciaJugador() {
+        return statsJugador.getResistencia();
     }
 
-    public static float getPoderJugador() {
-        return poderJugador;
+    public float getPoderJugador() {
+        return statsJugador.getPoder();
     }
 
-    public static float getRegVidaJugador() {
-        return regVidaJugador;
+    public float getRegVidaJugador() {
+        return statsJugador.getRegVida();
     }
 
     private void regenerarVida(float delta) {
-        vidaJugador += maxVidaJugador * regVidaJugador * delta;
-        if (vidaJugador > maxVidaJugador) vidaJugador = maxVidaJugador;
+        float nuevaVida = statsJugador.getVida() + statsJugador.getMaxVida() * statsJugador.getRegVida() * delta;
+        statsJugador.setVida(Math.min(nuevaVida, statsJugador.getMaxVida()));
     }
 
-    public static float getCritico() {
-        return criticoJugador;
+    public float getCritico() {
+        return statsJugador.getCritico();
     }
 
     public static int getOroGanado() {
@@ -406,19 +385,19 @@ public class Jugador {
     }
 
     public void setResistenciaJugador(float resistenciaJugador) {
-        this.resistenciaJugador = resistenciaJugador;
+        statsJugador.setResistencia(resistenciaJugador);
     }
 
     public void setVelocidadJugador(float velocidadJugador) {
-        this.velocidadJugador = velocidadJugador;
+        statsJugador.setVelocidad(velocidadJugador);
     }
 
     public void setDanyoAtaqueJugador(float danyoAtaqueJugador) {
-        this.danyoAtaqueJugador = danyoAtaqueJugador;
+        statsJugador.setDanyo(danyoAtaqueJugador);
     }
 
     public void setProyectilesPorDisparo(int proyectilesPorDisparo) {
-        this.proyectilesPorDisparo = proyectilesPorDisparo;
+        statsJugador.setProyectilesPorDisparo(proyectilesPorDisparo);
     }
 
     public AtaquePapelCulo getAtaquePapelCulo() {
@@ -442,10 +421,25 @@ public class Jugador {
     }
 
     public void setIntervaloDisparo(float intervaloDisparo) {
-        this.intervaloDisparo = intervaloDisparo;
+        statsJugador.setIntervaloDisparo(intervaloDisparo);
     }
 
     public InputsJugador getInputController() {
         return inputController;
+    }
+
+    public boolean consumirOro(int oroARestar) {
+        if (oroGanado >= oroARestar) {
+            oroGanado -= oroARestar;
+            return true;
+        } else return false;
+
+    }
+
+    public boolean consumirTrazos(int trazosARestar) {
+        if (trazosGanados >= trazosARestar) {
+            trazosGanados -= trazosARestar;
+            return true;
+        } else return false;
     }
 }

@@ -61,6 +61,7 @@ public class GestorDeAudio {
         efectosSonido.put("recogerVida", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoRecogerCorazon.wav")));
         efectosSonido.put("recogerOro", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoOro.wav")));
         efectosSonido.put("recogerPowerUP", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPowerUp.wav")));
+        efectosSonido.put("tragaperras", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoTragaperras.wav")));
         efectosSonido.put("upgrade", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoUpgrade.wav")));
         efectosSonido.put("pausa", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoPausa.wav")));
         efectosSonido.put("impactoBase", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoImpactoBase3.wav")));
@@ -76,6 +77,7 @@ public class GestorDeAudio {
         efectosSonido.put("boostAmo", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostAmo.wav")));
         efectosSonido.put("boostRes", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostRes.wav")));
         efectosSonido.put("boostVelAttack", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/boostVelAttack.wav")));
+        efectosSonido.put("error", Gdx.audio.newSound(Gdx.files.internal("audio/efectos/sonidoError.wav")));
 
         // Manejar tiempos de duración de los efectos
         duracionSonidos.put("tazo", 0.5f);
@@ -91,7 +93,7 @@ public class GestorDeAudio {
 
     public void pausarMusica() {
         if (musicaActual != null) {
-            musicaActual.setVolume(musicaVolumen * 0.5f);
+            musicaActual.setVolume(musicaVolumen * 0.33f);
         }
     }
 

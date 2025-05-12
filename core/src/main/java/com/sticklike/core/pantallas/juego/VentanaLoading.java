@@ -2,19 +2,19 @@ package com.sticklike.core.pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 
 /**
  * Gestiona la animación y renderizado de la pantalla de carga, implementando la interfaz Screen.
  */
 public class VentanaLoading implements Screen {
-    private BitmapFont font;
+    private BitmapFont font = FontManager.getLoadingFont();
     private float timer;
     private OrthographicCamera camera;
     private Texture dotTexture;
@@ -22,10 +22,6 @@ public class VentanaLoading implements Screen {
 
     public VentanaLoading() {
         spriteBatch = new SpriteBatch();
-        font = new BitmapFont();
-        font.getData().setScale(3f);
-        font.setColor(Color.BLUE);
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
@@ -103,7 +99,6 @@ public class VentanaLoading implements Screen {
 
     @Override
     public void dispose() {
-        font.dispose();
         dotTexture.dispose();
         if (spriteBatch != null) {
             spriteBatch.dispose();

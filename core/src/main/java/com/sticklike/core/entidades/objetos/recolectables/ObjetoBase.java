@@ -9,7 +9,6 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public abstract class ObjetoBase implements ObjetosXP {
-
     private Sprite sprite;
     private boolean recolectado = false;
 

@@ -24,7 +24,7 @@ application {
   applicationDefaultJvmArgs = ['-Xms512m',
                                '-Xmx1G',
                                '-XX:+UseG1GC',
-                               '-XX:MaxGCPauseMillis=5',
+                               '-XX:MaxGCPauseMillis=15',
                                '-XX:+UnlockExperimentalVMOptions',
                                '-XX:ParallelGCThreads=4',
                                '-XX:ConcGCThreads=2',

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.function.IntSupplier;
@@ -29,9 +30,13 @@ public abstract class RenderBaseMenus {
     private static TextureRegionDrawable cachedBotonDrawable;
     private static TextureRegionDrawable cachedHoverDrawable;
     private static NinePatchDrawable cachedSelectedDrawable;
+    private static final Color PAPEL_FONDO = new Color(0.82f, 0.90f, 1f, 1f);
+    private static final Color DEFAULT_COLOR = new Color(0.97f, 0.88f, 0.6f, 1f);
+    private static final Color HOVER_COLOR = new Color(0.1f, 0.2f, 0.6f, 0.2f);
+    private static final Color GLOW_COLOR = new Color(0.4f, 0.6f, 1f, 0.6f);
 
     public RenderBaseMenus() {
-        stage = new Stage(new StretchViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
+        stage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearSkinBasico();
         shapeRenderer = new ShapeRenderer();
         agregarVersionLabel();
@@ -39,14 +44,23 @@ public abstract class RenderBaseMenus {
 
     protected Skin crearSkinBasico() {
         Skin skin = new Skin();
-        BitmapFont font = FontManager.getMenuFont();
-        skin.add("default-font", font);
-        skin.add("default", crearLabelStyle(font, Color.BLACK), LabelStyle.class);
-        skin.add("default-button", crearDefaultButtonStyle(font), TextButtonStyle.class);
-        skin.add("hover-button", crearHoverButtonStyle(font), TextButtonStyle.class);
-        skin.add("selected-button", crearSelectedButtonStyle(font), TextButtonStyle.class);
+        float inv = 1f / FontManager.getScale();
+
+        BitmapFont menuFont = FontManager.getMenuFont();
+        menuFont.getData().setScale(inv);
+        BitmapFont titleFont = FontManager.getMenuTitleFont();
+        titleFont.getData().setScale(inv);
+
+        skin.add("default-font", menuFont);
+        skin.add("default", crearLabelStyle(menuFont, Color.BLACK), LabelStyle.class);
+        skin.add("default-button", crearDefaultButtonStyle(menuFont), TextButtonStyle.class);
+        skin.add("hover-button",   crearHoverButtonStyle(menuFont),   TextButtonStyle.class);
+        skin.add("selected-button", crearSelectedButtonStyle(menuFont), TextButtonStyle.class);
+        skin.add("title", new Label.LabelStyle(titleFont, Color.WHITE), LabelStyle.class);
+
         return skin;
     }
+
 
     private LabelStyle crearLabelStyle(BitmapFont font, Color color) {
         return new LabelStyle(font, color);
@@ -56,7 +70,6 @@ public abstract class RenderBaseMenus {
         TextButtonStyle style = new TextButtonStyle();
         style.font = font;
         style.up = crearBotonDrawable();
-        style.fontColor = Color.BLACK;
         return style;
     }
 
@@ -64,7 +77,7 @@ public abstract class RenderBaseMenus {
     private TextureRegionDrawable crearBotonDrawable() {
         if (cachedBotonDrawable == null) {
             Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            pm.setColor(0.97f, 0.88f, 0.6f, 1f);
+            pm.setColor(DEFAULT_COLOR);
             pm.fill();
             Texture tex = new Texture(pm);
             pm.dispose();
@@ -78,14 +91,13 @@ public abstract class RenderBaseMenus {
         style.font = font;
         if (cachedHoverDrawable == null) {
             Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            hoverPixmap.setColor(1, 1, 1, 0.3f);
+            hoverPixmap.setColor(HOVER_COLOR);
             hoverPixmap.fill();
             Texture hoverTexture = new Texture(hoverPixmap);
             hoverPixmap.dispose();
             cachedHoverDrawable = new TextureRegionDrawable(new TextureRegion(hoverTexture));
         }
         style.up = cachedHoverDrawable;
-        style.fontColor = Color.DARK_GRAY;
         return style;
     }
 
@@ -95,7 +107,7 @@ public abstract class RenderBaseMenus {
         style.font = font;
         if (cachedSelectedDrawable == null) {
             Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-            glowPixmap.setColor(1f, 1f, 1f, 0.8f);
+            glowPixmap.setColor(GLOW_COLOR);
             glowPixmap.fill();
             Texture glowTexture = new Texture(glowPixmap);
             glowPixmap.dispose();
@@ -103,7 +115,7 @@ public abstract class RenderBaseMenus {
             cachedSelectedDrawable = new NinePatchDrawable(glowNinePatch);
         }
         style.up = cachedSelectedDrawable;
-        style.fontColor = Color.BLUE;
+        style.fontColor = Color.WHITE;
         return style;
     }
 
@@ -160,34 +172,9 @@ public abstract class RenderBaseMenus {
         return stage;
     }
 
-    protected Actor tituloConReborde(String text, float fontScale) {
-        Stack stack = new Stack();
-        Label.LabelStyle mainStyle = new Label.LabelStyle(uiSkin.getFont("default-font"), Color.WHITE);
-        Label mainLabel = new Label(text, mainStyle);
-        mainLabel.setFontScale(fontScale);
-
-        Label.LabelStyle outlineStyle = new Label.LabelStyle(uiSkin.getFont("default-font"), Color.BLUE);
-        outlineStyle.font.getData().setScale(fontScale);
-
-        Group outlineGroup = new Group();
-        float offset = 2f;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                if (dx == 0 && dy == 0) continue;
-                Label outlineLabel = new Label(text, outlineStyle);
-                outlineLabel.setFontScale(fontScale);
-                outlineLabel.setPosition(dx * offset, dy * offset);
-                outlineGroup.addActor(outlineLabel);
-            }
-        }
-        stack.add(outlineGroup);
-        stack.add(mainLabel);
-        return stack;
-    }
-
     protected Drawable papelFondo() {
         Pixmap pixmap = new Pixmap(200, 40, Pixmap.Format.RGBA8888);
-        pixmap.setColor(0.985f, 0.91f, 0.7f, 1.0f);
+        pixmap.setColor(PAPEL_FONDO);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
@@ -195,17 +182,20 @@ public abstract class RenderBaseMenus {
     }
 
     private void agregarVersionLabel() {
-        Label versionLabel = new Label("v1.11-dev", uiSkin);
-        versionLabel.setFontScale(0.95f);
-        versionLabel.setColor(Color.BLUE);
+        float inv = 1f / FontManager.getScale();
+        BitmapFont menuFont = FontManager.getMenuFont();
+        menuFont.getData().setScale(inv);
+        Label.LabelStyle versionStyle = new Label.LabelStyle(menuFont, Color.BLACK);
+        Label versionLabel = new Label("v 1.11.6-dev", versionStyle);
 
+        // lo coloco en su tabla
         Table versionTable = new Table();
         versionTable.setFillParent(true);
-        versionTable.bottom().right().padRight(30).padBottom(30);
+        versionTable.bottom().right().padRight(35).padBottom(30);
         versionTable.add(versionLabel);
-
         stage.addActor(versionTable);
     }
+
 
     protected NinePatchDrawable crearSombraConBorde(Color shadowColor, int shadowSize, Color borderColor, int borderThickness) {
         int totalSize = 16 + (shadowSize + borderThickness) * 2;
@@ -252,12 +242,10 @@ public abstract class RenderBaseMenus {
 
         Label numberLabel = new Label(String.format("%2d.", number), uiSkin);
         numberLabel.setAlignment(Align.left);
-        numberLabel.setFontScale(1.2f);
         contentTable.add(numberLabel).width(30);
 
         Label textLabel = new Label(text, uiSkin);
         textLabel.setAlignment(Align.center);
-        textLabel.setFontScale(1.2f);
         contentTable.add(textLabel).expandX().fillX();
 
         contentTable.add(new Label("", uiSkin)).width(30); // dummy
@@ -271,8 +259,7 @@ public abstract class RenderBaseMenus {
         return button;
     }
 
-    protected void efectoHover(final java.util.List<TextButton> buttons,
-                               final IntSupplier selectedIndexSupplier) {
+    protected void efectoHover(final java.util.List<TextButton> buttons, final IntSupplier selectedIndexSupplier) {
         for (final TextButton btn : buttons) {
             btn.addListener(new InputListener() {
                 @Override
@@ -282,6 +269,7 @@ public abstract class RenderBaseMenus {
                         btn.setStyle(uiSkin.get("hover-button", TextButtonStyle.class));
                     }
                 }
+
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     int idx = buttons.indexOf(btn);
@@ -315,26 +303,14 @@ public abstract class RenderBaseMenus {
 
     protected void animarEntrada(Actor container, float heightOffset) {
         container.setPosition((VIRTUAL_WIDTH - container.getWidth()) / 2, -container.getHeight());
-        container.addAction(Actions.sequence(
-            Actions.delay(0.75f),
-            Actions.parallel(
-                Actions.moveTo((VIRTUAL_WIDTH - container.getWidth()) / 2, (VIRTUAL_HEIGHT - container.getHeight()) / heightOffset, 0.25f),
-                Actions.fadeIn(0.5f)
-            )
-        ));
+        container.addAction(Actions.sequence(Actions.delay(0.75f), Actions.parallel(Actions.moveTo((VIRTUAL_WIDTH - container.getWidth()) / 2, (VIRTUAL_HEIGHT - container.getHeight()) / heightOffset, 0.25f), Actions.fadeIn(0.5f))));
         stage.addActor(container);
     }
 
     public void animarSalida(Actor container, Runnable callback) {
         float finalX = container.getX();
         float finalY = -container.getHeight();
-        container.addAction(Actions.sequence(
-            Actions.parallel(
-                Actions.moveTo(finalX, finalY, 0.25f),
-                Actions.fadeOut(0.25f)
-            ),
-            Actions.run(callback)
-        ));
+        container.addAction(Actions.sequence(Actions.parallel(Actions.moveTo(finalX, finalY, 0.25f), Actions.fadeOut(0.25f)), Actions.run(callback)));
     }
 
     public abstract void animarSalida(Runnable callback);

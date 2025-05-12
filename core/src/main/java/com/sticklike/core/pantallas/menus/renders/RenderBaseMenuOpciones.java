@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -33,9 +32,6 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
     private Slider sliderEfectos;
     private CheckBox chkPantallaCompleta;
     private TextButton btnVolver;
-    private static final Color COLOR_PIXMAP = new Color(0.97f, 0.88f, 0.6f, 1f);
-    private static final Color COLOR_PIXMAP_HOVER = new Color(1, 1, 1, 0.3f);
-    private static final Color COLOR_PIXMAP_GLOW = new Color(1f, 1f, 1f, 0.8f);
 
     public interface MenuOpcionesListener {
         void onVolver();
@@ -51,7 +47,7 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
     }
 
     private void crearElementosUI() {
-        Actor titleActor = tituloConReborde("OPCIONES", 2.25f);
+        Label titleActor = new Label("OPCIONES", uiSkin, "title");
         titleActor.getColor().a = 0;
         fadeInActor(titleActor, 0.25f, 0.25f);
         stage.addActor(crearTitulo(titleActor));
@@ -207,41 +203,18 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
 
     @Override
     protected Skin crearSkinBasico() {
-        Skin skin = new Skin();
-        skin.add("default-font", getFont());
-        skin.add("default", new Label.LabelStyle(getFont(), Color.BLACK), Label.LabelStyle.class);
-        skin.add("default-button", crearBotonDefault(), TextButton.TextButtonStyle.class);
+        Skin skin = super.crearSkinBasico();
         skin.add("default-horizontal", crearEstiloSliders(), Slider.SliderStyle.class);
         skin.add("default", crearEstiloCheckbox(), CheckBox.CheckBoxStyle.class);
-        skin.add("hover-button", crearHoverButton(), TextButton.TextButtonStyle.class);
-        skin.add("selected-button", crearSelectedButton(), TextButton.TextButtonStyle.class);
         return skin;
-    }
-
-
-    private TextButtonStyle crearBotonDefault() {
-        TextButtonStyle style = new TextButtonStyle();
-        style.font = getFont();
-        style.up = crearBotonDrawable();
-        style.fontColor = Color.DARK_GRAY;
-        return style;
-    }
-
-    private TextureRegionDrawable crearBotonDrawable() {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(COLOR_PIXMAP);
-        pm.fill();
-        Texture tex = new Texture(pm);
-        pm.dispose();
-        return new TextureRegionDrawable(new TextureRegion(tex));
     }
 
     private SliderStyle crearEstiloSliders() {
         SliderStyle style = new SliderStyle();
 
         // Fondo del slider
-        Pixmap sliderBgPixmap = new Pixmap(100, 4, Pixmap.Format.RGBA8888);
-        sliderBgPixmap.setColor(Color.LIGHT_GRAY);
+        Pixmap sliderBgPixmap = new Pixmap(100, 2, Pixmap.Format.RGBA8888);
+        sliderBgPixmap.setColor(0, 0, 1, 0.5f);
         sliderBgPixmap.fill();
         Texture sliderBgTexture = new Texture(sliderBgPixmap);
         sliderBgPixmap.dispose();
@@ -252,7 +225,7 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         knobPixmap.setColor(Color.BLUE);
         knobPixmap.fillCircle(7, 7, 7);
         knobPixmap.setColor(Color.WHITE);
-        knobPixmap.fillCircle(7, 7, 5);
+        knobPixmap.fillCircle(7, 7, 4);
         Texture knobTexture = new Texture(knobPixmap);
         knobPixmap.dispose();
         style.knob = new TextureRegionDrawable(new TextureRegion(knobTexture));
@@ -283,33 +256,6 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         style.checkboxOn = new TextureRegionDrawable(new TextureRegion(cbTextureOn));
         style.font = getFont();
 
-        return style;
-    }
-
-    private TextButtonStyle crearHoverButton() {
-        TextButtonStyle style = new TextButtonStyle();
-        style.font = getFont();
-        Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        hoverPixmap.setColor(COLOR_PIXMAP_HOVER);
-        hoverPixmap.fill();
-        Texture hoverTexture = new Texture(hoverPixmap);
-        hoverPixmap.dispose();
-        style.up = new TextureRegionDrawable(new TextureRegion(hoverTexture));
-        style.fontColor = Color.DARK_GRAY;
-        return style;
-    }
-
-    private TextButtonStyle crearSelectedButton() {
-        TextButtonStyle style = new TextButtonStyle();
-        style.font = getFont();
-        Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-        glowPixmap.setColor(COLOR_PIXMAP_GLOW);
-        glowPixmap.fill();
-        Texture glowTexture = new Texture(glowPixmap);
-        glowPixmap.dispose();
-        NinePatch glowNinePatch = new NinePatch(glowTexture, 5, 5, 5, 5);
-        style.up = new com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable(glowNinePatch);
-        style.fontColor = Color.BLUE;
         return style;
     }
 

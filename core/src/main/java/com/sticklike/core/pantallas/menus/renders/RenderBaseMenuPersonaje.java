@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -18,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.jugador.StatsJugador;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -25,14 +28,22 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
     private Table rootTable;
-    private static final Color COLOR_AUX_BLACK =  new Color(0, 0, 0, 1f);
-    private static final Color POSTIT_COLOR =  new Color(0.97f, 0.88f, 0.6f, 1f);
-    private static final Color PLUS_COLOR =   new Color(0, 0.75f, 0, 1);
-    private static final Color COLOR_BASE =   new Color(0.89f, 0.89f, 0.89f, 1f);
-    private static final Color COLOR_GRID =   new Color(0.64f, 0.80f, 0.9f, 1f);
+    private static final Color COLOR_AUX_BLACK = new Color(0, 0, 0, 1f);
+    private static final Color POSTIT_COLOR = new Color(0.97f, 0.88f, 0.6f, 1f);
+    private static final Color COLOR_BASE = new Color(0.89f, 0.89f, 0.89f, 1f);
+    private static final Color COLOR_GRID = new Color(0.64f, 0.80f, 0.9f, 1f);
+    float inv = 1f / FontManager.getScale();
+    private MenuPersonajeListener listener;
+    private TextButton btnVolver;
+    private StatsJugador statsJugador;
 
-    public RenderBaseMenuPersonaje() {
+    public interface MenuPersonajeListener {
+        void onVolver();
+    }
+
+    public RenderBaseMenuPersonaje(StatsJugador statsJugador) {
         super();
+        this.statsJugador = statsJugador;
         crearElementosUI();
     }
 
@@ -97,14 +108,49 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         stage.addActor(selectorContainer);
 
         // Título principal
-        Actor titleActor = tituloConReborde("PERSONAJE", 2.25f);
+        BitmapFont titleFont = FontManager.getMenuTitleFont();
+        Label.LabelStyle titleStyle = new Label.LabelStyle(titleFont, Color.WHITE);
+
+        Label titleActor = new Label("PERSONAJE", titleStyle);
         titleActor.getColor().a = 0;
+
         Table titleTable = new Table();
         titleTable.setFillParent(true);
         titleTable.top();
-        titleTable.add(titleActor).padTop(75).padBottom(50).center();
+        titleTable.add(titleActor).padTop(25).padBottom(50).center();
         stage.addActor(titleTable);
         titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
+
+
+        btnVolver = new TextButton("Volver", uiSkin, "default-button");
+        btnVolver.getLabel().setColor(Color.BLACK);
+
+        // ClickListener que dispara el listener
+        btnVolver.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (listener != null) listener.onVolver();
+            }
+        });
+        // Hover: cambia a estilo hover-button al entrar y back al salir
+        btnVolver.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                btnVolver.setStyle(uiSkin.get("hover-button", TextButton.TextButtonStyle.class));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                btnVolver.setStyle(uiSkin.get("default-button", TextButton.TextButtonStyle.class));
+            }
+        });
+
+        // Crea una tabla que ocupe el ancho y lo coloque abajo
+        Table botonTable = new Table();
+        botonTable.setFillParent(true);
+        botonTable.bottom().padBottom(50);
+        botonTable.add(btnVolver);
+        stage.addActor(botonTable);
     }
 
     // Métodos auxiliares para crear los indicadores de oro y powerup
@@ -112,11 +158,11 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         Table container = new Table();
         Texture goldTexture = manager.get(RECOLECTABLE_CACA_DORADA, Texture.class);
         Image goldIcon = new Image(goldTexture);
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getMenuFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-        Label goldLabel = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
-        goldLabel.setFontScale(1.2f);
+        Label goldLabel = new Label("[BLACK]x []" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
+        goldLabel.setFontScale(1.2f * inv);
         container.add(goldIcon).width(40).height(40).padRight(5).padLeft(15);
         container.add(goldLabel).left();
         container.padTop(25);
@@ -129,11 +175,11 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         Image powerupIcon = new Image(powerupTexture);
         powerupIcon.setScaleX(0.6f);
         powerupIcon.setScaleY(0.85f);
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getMenuFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-        Label powerupLabel = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
-        powerupLabel.setFontScale(1.2f);
+        Label powerupLabel = new Label("[BLACK]x []" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
+        powerupLabel.setFontScale(1.2f * inv);
         container.add(powerupIcon).padRight(5).padLeft(5);
         container.add(powerupLabel).left();
         container.padTop(20);
@@ -198,53 +244,32 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         Table statsTable = new Table();
 
         // Fuente y estilo para las etiquetas
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getMenuPJFont();
+        font.getData().setScale(inv);
         font.getData().markupEnabled = true;
         Label.LabelStyle statsLabelStyle = new Label.LabelStyle(font, Color.WHITE);
 
         // Creación de etiquetas para cada estadística
         Label statVidaName = new Label("[BLACK]Vida total:[]", statsLabelStyle);
-        Label statVidaValue = new Label("[BLUE]" + Jugador.getMaxVidaJugador() + "[]", statsLabelStyle);
+        Label statVidaValue = new Label("[BLUE]" + statsJugador.getMaxVida() + "[]", statsLabelStyle);
         Label statRegName = new Label("[BLACK]Regeneración de vida:[]", statsLabelStyle);
-        Label statRegValue = new Label("[BLUE]" + Jugador.getRegVidaJugador() + "[]", statsLabelStyle);
+        Label statRegValue = new Label("[BLUE]" + statsJugador.getRegVida() + "[]", statsLabelStyle);
         Label statDanyoName = new Label("[BLACK]Fuerza física:[]", statsLabelStyle);
-        Label statDanyoValue = new Label("[BLUE]" + Jugador.getDanyoAtaqueJugador() + "[]", statsLabelStyle);
+        Label statDanyoValue = new Label("[BLUE]" + statsJugador.getDanyo() + "[]", statsLabelStyle);
         Label statRangoName = new Label("[BLACK]Rango de alcance:[]", statsLabelStyle);
-        Label statRangoValue = new Label("[BLUE]" + Jugador.getRangoAtaqueJugador() + "[]", statsLabelStyle);
+        Label statRangoValue = new Label("[BLUE]" + statsJugador.getRangoAtaque() + "[]", statsLabelStyle);
         Label statVelAtaqueName = new Label("[BLACK]Velocidad de ataque:[]", statsLabelStyle);
-        Label statVelAtaqueValue = new Label("[BLUE]" + Jugador.getVelocidadAtaque() + "[]", statsLabelStyle);
+        Label statVelAtaqueValue = new Label("[BLUE]" + statsJugador.getVelocidadAtaque() + "[]", statsLabelStyle);
         Label statMunicionName = new Label("[BLACK]Munición por disparo:[]", statsLabelStyle);
-        Label statMunicionValue = new Label("[BLUE]" + Jugador.getProyectilesPorDisparo() + "[]", statsLabelStyle);
+        Label statMunicionValue = new Label("[BLUE]" + statsJugador.getProyectilesPorDisparo() + "[]", statsLabelStyle);
         Label statCriticoName = new Label("[BLACK]Probabilidad de crítico:[]", statsLabelStyle);
-        Label statCriticoValue = new Label("[BLUE]" + Jugador.getCritico() + "[]", statsLabelStyle);
+        Label statCriticoValue = new Label("[BLUE]" + statsJugador.getCritico() + "[]", statsLabelStyle);
         Label statPoderName = new Label("[BLACK]Poder mágico:[]", statsLabelStyle);
-        Label statPoderValue = new Label("[BLUE]" + Jugador.getPoderJugador() + "[]", statsLabelStyle);
+        Label statPoderValue = new Label("[BLUE]" + statsJugador.getPoder() + "[]", statsLabelStyle);
         Label statVelMovimientoName = new Label("[BLACK]Velocidad de movimiento:[]", statsLabelStyle);
-        Label statVelMovimientoValue = new Label("[BLUE]" + Jugador.getVelocidadJugador() + "[]", statsLabelStyle);
+        Label statVelMovimientoValue = new Label("[BLUE]" + statsJugador.getVelocidad() + "[]", statsLabelStyle);
         Label statResistenciaName = new Label("[BLACK]Resistencia:[]", statsLabelStyle);
-        Label statResistenciaValue = new Label("[BLUE]" + Jugador.getResistenciaJugador() + "[]", statsLabelStyle);
-
-        // Ajustamos la escala de fuente para cada etiqueta
-        statVidaName.setFontScale(1);
-        statVidaValue.setFontScale(1);
-        statRegName.setFontScale(1);
-        statRegValue.setFontScale(1);
-        statDanyoName.setFontScale(1);
-        statDanyoValue.setFontScale(1);
-        statRangoName.setFontScale(1);
-        statRangoValue.setFontScale(1);
-        statVelAtaqueName.setFontScale(1);
-        statVelAtaqueValue.setFontScale(1);
-        statMunicionName.setFontScale(1);
-        statMunicionValue.setFontScale(1);
-        statCriticoName.setFontScale(1);
-        statCriticoValue.setFontScale(1);
-        statPoderName.setFontScale(1);
-        statPoderValue.setFontScale(1);
-        statVelMovimientoName.setFontScale(1);
-        statVelMovimientoValue.setFontScale(1);
-        statResistenciaName.setFontScale(1);
-        statResistenciaValue.setFontScale(1);
+        Label statResistenciaValue = new Label("[BLUE]" + statsJugador.getResistencia() + "[]", statsLabelStyle);
 
         agregarFilaEstadisticaConUpgrade(statsTable, ICONO_VIDA, statVidaName, statVidaValue, 3);
         agregarFilaEstadisticaConUpgrade(statsTable, ICONO_REGENERACION, statRegName, statRegValue, 3);
@@ -268,7 +293,6 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         // Título "ESTADÍSTICAS"
         Label estadisticasLabel = new Label("ESTADÍSTICAS", uiSkin);
         estadisticasLabel.setAlignment(Align.center);
-        estadisticasLabel.setFontScale(1.25f);
 
         Table estadisticasContainer = new Table();
         estadisticasContainer.add(estadisticasLabel).padBottom(10).row();
@@ -291,21 +315,16 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         Table upgradeContainer = new Table();
 
         // 3a) Creamos el botón "+"
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getPlusFont();
 
         TextButton.TextButtonStyle plusStyle = new TextButton.TextButtonStyle();
         plusStyle.font = font;
-        plusStyle.fontColor = PLUS_COLOR;
+        plusStyle.fontColor = Color.GREEN;
+        plusStyle.font.getData().setScale(inv);
 
         TextButton plusButton = new TextButton("+", plusStyle);
-        Label.LabelStyle shadowStyle = new Label.LabelStyle(font, Color.BLACK);
-        Label plusShadow = new Label("+", shadowStyle);
-        plusShadow.setFontScale(1.33f);
-
-        plusShadow.setPosition(2, -2);
 
         Stack plusStack = new Stack();
-        plusStack.add(plusShadow);
         plusStack.add(plusButton);
 
         upgradeContainer.add(plusStack).padRight(5);
@@ -391,7 +410,6 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         // 4) Título "EQUIPO"
         Label equipoLabel = new Label("EQUIPO", uiSkin);
         equipoLabel.setAlignment(Align.center);
-        equipoLabel.setFontScale(1.25f);
 
         Table equipoContainer = new Table();
         equipoContainer.add(equipoLabel).padBottom(10).row();
@@ -420,11 +438,11 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
         // Usamos un Table para incluir el slot y una etiqueta debajo
         Table slotContainer = new Table();
         slotContainer.add(slotImage).size(slotSize, slotSize);
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getMenuPJFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle style = new Label.LabelStyle(font, Color.BLACK);
         Label slotLabel = new Label(tipo, style);
-        slotLabel.setFontScale(0.8f);
+        slotLabel.setFontScale(0.8f * inv);
         slotContainer.row();
         slotContainer.add(slotLabel).padTop(2);
 
@@ -440,7 +458,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
         Texture powerupTexture = manager.get(RECOLECTABLE_POWER_UP, Texture.class);
 
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getMenuPJFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 
@@ -453,9 +471,9 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
             iconClone.setScaleY(0.75f);
 
             Label itemLabel = new Label("[BLACK]" + items[i] + "[]", labelStyle);
-            itemLabel.setFontScale(1);
+            itemLabel.setFontScale(inv);
             Label cantidadLabel = new Label("[BLACK]x[]" + "[BLUE]" + cantidades[i] + "[]", labelStyle);
-            cantidadLabel.setFontScale(1);
+            cantidadLabel.setFontScale(inv);
 
             row.add(itemLabel).minWidth(75).padRight(10);
             row.add(iconClone).width(15).height(30).padLeft(5).padRight(5);
@@ -482,5 +500,11 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
 
     @Override
     public void animarSalida(Runnable callback) {
+        super.animarSalida(rootTable, callback);
     }
+
+    public void setMenuPersonajeListener(MenuPersonajeListener listener) {
+        this.listener = listener;
+    }
+
 }

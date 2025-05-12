@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.enemigos.animacion;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.sticklike.core.entidades.enemigos.mobs.EnemigoVater;
+import com.sticklike.core.entidades.enemigos.mobs.generico.EnemigoVater;
 
 public class AnimacionVater { // se implementa una enum para mejorar legibilidad, pero no se necesita como demuestra animacionesBossPolla (todo --> valorar como se deja en un futuro)
 

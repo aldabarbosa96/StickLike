@@ -9,13 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.entidades.mobiliario.tragaperras.FlechaTragaperras;
+import com.sticklike.core.pantallas.popUps.PopUpTragaperras;
+import com.sticklike.core.pantallas.popUps.TragaperrasInputProcessor;
+import com.sticklike.core.entidades.mobiliario.tragaperras.TragaperrasLogic;
 import com.sticklike.core.entidades.objetos.recolectables.*;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.pantallas.popUps.PopUpMejorasInputProcessor;
 import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.AtaquePiedra;
+import com.sticklike.core.entidades.objetos.armas.comportamiento.AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -68,8 +72,11 @@ public class VentanaJuego1 implements Screen {
     private GestorDeAudio gestorDeAudio;
     private PopUpMejoras popUpMejoras;
     private PopUpMejorasInputProcessor popUpMejorasInputProcessor;
+    private PopUpTragaperras popupTraga;
+    private TragaperrasInputProcessor popupTragaInput;
     private Pausa pausa;
     private Boost boostActivo;
+    private FlechaTragaperras flechaTragaperras;
 
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
@@ -98,7 +105,6 @@ public class VentanaJuego1 implements Screen {
         // Ajustar la posición de la cámara
         actualizarPosCamara();
         Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX(), jugador.getSprite().getY() - 20);
-
     }
 
     private void inicializarRenderYCamara() {
@@ -120,7 +126,15 @@ public class VentanaJuego1 implements Screen {
 
         float playerStartX = worldWidth / 2f - CAMERA_JUGADOR_OFFSET_X;
         float playerStartY = worldHeight / 2f + CAMERA_JUGADOR_OFFSET_Y;
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles);
+        StatsJugador baseStats = game.getStatsJugador();
+        if (baseStats == null) {
+            // primer arranque: valores por defecto
+            baseStats = new StatsJugador(VEL_MOV_JUGADOR, VIDA_JUGADOR, VIDAMAX_JUGADOR, RANGO_ATAQUE, DANYO, INTERVALO_DISPARO, VEL_ATAQUE_JUGADOR, NUM_PROYECTILES_INICIALES, RESISTENCIA, CRITICO, REGENERACION_VIDA, PODER_JUGADOR);
+            game.setStatsJugador(baseStats);
+        }
+        // clon de stats para la sesión de juego
+        StatsJugador sessionStats = new StatsJugador(baseStats);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles, sessionStats);
     }
 
     private void inicializarSistemasYControladores() {
@@ -130,6 +144,8 @@ public class VentanaJuego1 implements Screen {
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras, popUpMejoras);
         controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
+        popupTraga = new PopUpTragaperras(jugador);
+        popupTragaInput = new TragaperrasInputProcessor(this, popupTraga);
 
     }
 
@@ -139,8 +155,8 @@ public class VentanaJuego1 implements Screen {
         this.renderHUDComponents = hud.getRenderHUDComponents();
         sistemaDeEventos = new SistemaDeEventos(renderHUDComponents, controladorEnemigos, sistemaDeNiveles);
         pausa = new Pausa(this);
+        flechaTragaperras = new FlechaTragaperras(camara, viewport, controladorEnemigos.getTragaperras(), HUD_HEIGHT - HUD_BAR_Y_OFFSET);
     }
-
 
     private void inicializarListas() {
         textosDanyo = new Array<>();
@@ -156,20 +172,21 @@ public class VentanaJuego1 implements Screen {
 
     @Override
     public void render(float delta) {
-        //final float dt = Math.min(delta, 0.05f);
-
+        // 1) Si seguimos cargando recursos, dibujamos la pantalla de carga
         if (!renderVentanaJuego1.isLoadingComplete()) {
             gestorDeAudio.pausarMusica();
             renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud);
             return;
         }
 
+        // 2) Gestionar la pausa y la entrada de usuario
         pausa.handleInput();
         if (jugador.estaMuerto()) {
-            game.setScreen(new VentanaGameOver(game, controladorProyectiles));
+            game.setScreen(new VentanaGameOver(game, controladorProyectiles, jugador));
             return;
         }
 
+        // 3) Lógica de actualización del juego solo si no está en pausa
         if (!pausado && !pausa.isPaused()) {
             if (!musicChanged) {
                 gestorDeAudio.cambiarMusica("fondo2");
@@ -180,22 +197,37 @@ public class VentanaJuego1 implements Screen {
             gestorDeAudio.pausarMusica();
         }
 
+        // 4) Renderizar el mundo y el HUD
         renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud);
 
+        // 5) Dibujar overlay de pausa y menú si hace falta
         pausa.render(shapeRenderer);
 
+        // 6) Ajustar el SpriteBatch al HUD (coordenadas de pantalla)
+        OrthographicCamera hudCam = (OrthographicCamera) pausa.getRenderPausa().getHudViewport().getCamera();
+        spriteBatch.setProjectionMatrix(hudCam.combined);
+
+        // 7) Actualizar y dibujar el efecto de boost
         BoostIconEffectManager.getInstance().update(delta, renderHUDComponents);
         spriteBatch.begin();
         BoostIconEffectManager.getInstance().render(spriteBatch);
         spriteBatch.end();
 
+        // 8) Dibujar cualquier pop-up de tragaperras
+        Stage slotStage = popupTraga.getUiStage();
+        if (slotStage.getActors().size > 0) {
+            slotStage.act(delta);
+            slotStage.draw();
+        }
+
+        // 9) Dibujar cualquier pop-up de mejoras
         Stage stage = popUpMejoras.getUiStage();
         if (stage.getActors().size > 0) {
             stage.act(delta);
             stage.draw();
         }
-
     }
+
 
     private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
         jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, gestorDeAudio);
@@ -287,8 +319,16 @@ public class VentanaJuego1 implements Screen {
     }
 
     public void actualizarPosCamara() {
-        camara.position.set(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f, jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + cameraOffsetY, 0);
+        float halfW = camara.viewportWidth / 2f;
+        float halfH = camara.viewportHeight / 2f;
+
+        float camX = MathUtils.clamp(jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2f, MAP_MIN_X + halfW, MAP_MAX_X - halfW);
+
+        float camY = MathUtils.clamp(jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y, MAP_MIN_Y + halfH, MAP_MAX_Y - halfH);
+
+        camara.position.set(camX, camY, 0);
         camara.update();
+
     }
 
     public void mostrarPopUpDeMejoras(final List<Mejora> mejoras) {
@@ -310,6 +350,10 @@ public class VentanaJuego1 implements Screen {
         }
     }
 
+    public void mostrarPopUpTragaperras(TragaperrasLogic logic) {
+        popupTragaInput.show(logic);
+        reproducirSonidoUpgrade();         // todo --> cambiar el sonido
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -321,6 +365,7 @@ public class VentanaJuego1 implements Screen {
         pausa.getRenderPausa().getHudViewport().update(width, height, true);
         controladorEnemigos.setVentanaRedimensionada(true);
         BoostIconEffectManager.getInstance().getEffect().updateDimensions(camara);
+        popupTraga.getUiStage().getViewport().update(width, height, true);
     }
 
     @Override
@@ -347,6 +392,7 @@ public class VentanaJuego1 implements Screen {
         }
         renderVentanaJuego1.dispose();
         popUpMejoras.dispose();
+        popupTraga.dispose();
 
         if (pausa != null) {
             pausa.dispose();
@@ -430,5 +476,9 @@ public class VentanaJuego1 implements Screen {
 
     public static OrthographicCamera getCamara() {
         return camara;
+    }
+
+    public FlechaTragaperras getFlechaTragaperras() {
+        return flechaTragaperras;
     }
 }

@@ -9,9 +9,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
-import com.sticklike.core.entidades.enemigos.destructibles.Destructibles;
-import com.sticklike.core.entidades.enemigos.destructibles.Destructibles2;
-import com.sticklike.core.entidades.enemigos.mobs.*;
+import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
+import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles2;
+import com.sticklike.core.entidades.enemigos.mobs.escuela.*;
+import com.sticklike.core.entidades.enemigos.mobs.generico.*;
+import com.sticklike.core.entidades.enemigos.mobs.sexo.*;
+import com.sticklike.core.entidades.mobiliario.tragaperras.Tragaperras;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.Boost;
@@ -20,7 +23,10 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.PoissonPoints;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -30,6 +36,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 public class ControladorEnemigos {
     private final VentanaJuego1 ventanaJuego1;
     private final Array<Enemigo> enemigos = new Array<>();
+    private final Array<Tragaperras> tragaperras = new Array<>();
     private final Jugador jugador;
     private float intervaloDeAparicion;
     private float temporizadorDeAparicion;
@@ -59,6 +66,7 @@ public class ControladorEnemigos {
     private static final int SORT_INTERVAL = 10;
     private int sortCounter = 0;
     private float speedMult = 1;
+    private boolean tragaperrasSpawned = false;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;
@@ -69,6 +77,7 @@ public class ControladorEnemigos {
 
         spawnDestructibles();
         spawnDestructibles2();
+        spawnTragaperrasInicial();
     }
 
     public void actualizarSpawnEnemigos(float delta) {
@@ -116,14 +125,17 @@ public class ControladorEnemigos {
                         if (xp != null) ventanaJuego1.addXPObject(xp);
                     }
                     e.setProcesado(true);
+                    if (e instanceof Tragaperras t) {
+                        tragaperras.removeValue(t, true);
+                    }
                 }
-                enemigos.removeIndex(i);     // compactamos el Array
+                enemigos.removeIndex(i);
                 killCounter++;
-                continue;                    // siguiente elemento
+                continue;
             }
 
             /* 3B. Reposición si sale del viewport y NO es destructible */
-            if (!esDestructible(e)) reposiciona(e, left, right, bottom, top);
+            if (!esEntidadEstatica(e)) reposiciona(e, left, right, bottom, top);
         }
 
         //Gdx.app.log("ControladorEnemigos", "Enemigos vivos: " + enemigos.size);
@@ -223,6 +235,64 @@ public class ControladorEnemigos {
         }
     }
 
+    void spawnTragaperrasInicial() {
+
+        if (tragaperrasSpawned) return;
+        tragaperrasSpawned = true;
+
+        final float MIN_DIST = 1750f;
+        final float MAX_DIST = 4750f;
+        final float MAX_PERP = 1250f;
+
+        // centro actual del jugador
+        float cx = jugador.getSprite().getX() + jugador.getSprite().getWidth() * 0.5f;
+        float cy = jugador.getSprite().getY() + jugador.getSprite().getHeight() * 0.5f;
+
+        /* 1- Escogemos tres direcciones distintas al azar. */
+        List<Integer> dirs = new ArrayList<>(List.of(0, 1, 2, 3));  // 0=N,1=S,2=E,3=O
+        Collections.shuffle(dirs);
+        dirs = dirs.subList(0, 3);
+
+        int idx = 0;
+        /* 2- Spawneamos una tragaperras por dirección. */
+        for (int d : dirs) {
+
+            float dist = MathUtils.random(MIN_DIST, MAX_DIST);
+            float offset = MathUtils.random(-MAX_PERP, MAX_PERP);
+
+            float x = cx, y = cy;
+            switch (d) {
+                case 0 -> {
+                    y += dist;
+                    x += offset;
+                }      // Norte
+                case 1 -> {
+                    y -= dist;
+                    x += offset;
+                }      // Sur
+                case 2 -> {
+                    x += dist;
+                    y += offset;
+                }      // Este
+                case 3 -> {
+                    x -= dist;
+                    y += offset;
+                }      // Oeste
+            }
+
+            Tragaperras.Direccion dirEnum = switch (d) {
+                case 0 -> Tragaperras.Direccion.NORTE;
+                case 1 -> Tragaperras.Direccion.SUR;
+                case 2 -> Tragaperras.Direccion.ESTE;
+                default -> Tragaperras.Direccion.OESTE;
+            };
+
+            Tragaperras slot = new Tragaperras(x, y, renderBaseEnemigos, ventanaJuego1, dirEnum);
+            enemigos.add(slot);
+            tragaperras.add(slot);
+        }
+    }
+
 
     private void spawnVaterEnemigo() {
         if (enemigos.size >= MAX_ENEMIGOS) return;
@@ -310,22 +380,29 @@ public class ControladorEnemigos {
         switch (tipoEnemigo) {
             case "CULO":
                 return new EnemigoCulo(x, y, jugador);
-            case "REGLA":
-                return new EnemigoRegla(x, y, jugador, velocidad * MULT_VELOCIDAD_REGLA, camera);
             case "POLLA":
                 return new EnemigoPolla(x, y, jugador, velocidad * MULT_VELOCIDAD_POLLA);
+            case "CONDON":
+                return new EnemigoCondon(jugador, x, y, velocidad * MULT_VELOCIDAD_CONDON, camera);
+            case "TETA":
+                return new EnemigoTeta(jugador, x, y, velocidad * MULT_VELOCIDAD_TETA);
+            case "REGLA":
+                return new EnemigoRegla(x, y, jugador, velocidad * MULT_VELOCIDAD_REGLA, camera);
             case "EXAMEN":
                 return new EnemigoExamen(x, y, jugador, velocidad * MULT_VELOCIDAD_EXAMEN);
             case "VATER":
                 return new EnemigoVater(x, y, jugador);
             case "ALARMA":
                 return new EnemigoAlarma(x, y, jugador);
-            case "CONDON":
-                return new EnemigoCondon(jugador,x,y,velocidad * MULT_VELOCIDAD_CONDON, camera);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
     }
+
+    private static boolean esEntidadEstatica(Enemigo e) {
+        return e instanceof Destructibles || e instanceof Destructibles2 || e instanceof Tragaperras;   // ← añadido
+    }
+
 
     public void spawnBossPollaAleatorio() {
         if (bossSpawned) {
@@ -337,9 +414,6 @@ public class ControladorEnemigos {
         bossSpawned = true;
     }
 
-    private static boolean esDestructible(Enemigo e) {
-        return (e instanceof Destructibles) || (e instanceof Destructibles2);
-    }
 
     private void reposiciona(Enemigo e, float left, float right, float bottom, float top) {
 
@@ -414,5 +488,9 @@ public class ControladorEnemigos {
 
     public void setSpeedMult(float speedMult) {
         this.speedMult = speedMult;
+    }
+
+    public Array<Tragaperras> getTragaperras() {
+        return tragaperras;
     }
 }

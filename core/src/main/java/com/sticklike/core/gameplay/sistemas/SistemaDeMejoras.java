@@ -2,7 +2,7 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.proyectiles.comportamiento.*;
+import com.sticklike.core.entidades.objetos.armas.comportamiento.*;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
 
@@ -45,8 +45,8 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%", () -> jugador.aumentarResistencia(0.2f), 3, manager.get(ICONO_RESISTENCIA, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, manager.get(ICONO_PODER, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
-            jugador.setVidaMax(Jugador.getMaxVidaJugador() + 15);
-            jugador.setVidaJugador(Jugador.getVidaJugador() + 15);
+            jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);
+            jugador.setVidaJugador(jugador.getVidaJugador() + 15);
         }, 5, manager.get(ICONO_VIDA, Texture.class), null));
 
         // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)
@@ -55,9 +55,9 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
         todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
-        todasLasMejoras.add(new Mejora("LLUVIA DE MOCOS", "Llueven mocardones con impacto mucoso", () -> jugador.setAtaqueMocos(new AtaqueMocos()), 1, manager.get(ARMA_MOCO, Texture.class), "MOCO"));
-        todasLasMejoras.add(new Mejora("BOLI BICAZO", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
-        todasLasMejoras.add(new Mejora("SABLE DILDO", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
+        todasLasMejoras.add(new Mejora("¡LLUVIA DE MOCOS!", "Llueven mocardones con impacto mucoso", () -> jugador.setAtaqueMocos(new AtaqueMocos()), 1, manager.get(ARMA_MOCO, Texture.class), "MOCO"));
+        todasLasMejoras.add(new Mejora("¡BOLI BICAZO!", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
+        todasLasMejoras.add(new Mejora("¡SABLE DILDO!", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
 
         // Upgrades específicos para las habilidades
         // Calcetín
@@ -121,9 +121,9 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡BOLI: ABANICO!", "Añade +1 boli y dispara en abanico", () -> jugador.getAtaqueBoliBic().activarSplitShot(), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_split"));
 
         // LátigoDildo
-        todasLasMejoras.add(new Mejora("DILDO: HALO", "Proyecta una onda de energía perforante", () -> jugador.getAtaqueDildo().activarHaloEnergia(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_halo"));
-        todasLasMejoras.add(new Mejora("DILDO: DOBLE", "Repite el golpe una vez más", () -> jugador.getAtaqueDildo().activarGolpeDoble(), 2, manager.get(ARMA_DILDO, Texture.class), "DILDO_doble"));
-        todasLasMejoras.add(new Mejora("DILDO: VELOZ", "Multiplica x2 la velocidad de golpeo", () -> jugador.getAtaqueDildo().mejorarVelocidadSwing(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_veloz"));
+        todasLasMejoras.add(new Mejora("¡DILDO: HALO!", "Proyecta una onda de energía perforante", () -> jugador.getAtaqueDildo().activarHaloEnergia(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_halo"));
+        todasLasMejoras.add(new Mejora("¡DILDO: DOBLE!", "Repite el golpe una vez más", () -> jugador.getAtaqueDildo().activarGolpeDoble(), 2, manager.get(ARMA_DILDO, Texture.class), "DILDO_doble"));
+        todasLasMejoras.add(new Mejora("¡DILDO: VELOZ!", "Multiplica x2 la velocidad de golpeo", () -> jugador.getAtaqueDildo().mejorarVelocidadSwing(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_veloz"));
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {

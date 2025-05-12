@@ -4,15 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -26,17 +21,10 @@ import com.sticklike.core.entidades.objetos.texto.FontManager;
 import java.util.ArrayList;
 
 public class RenderBaseMenuPrincipal extends RenderBaseMenus {
-    private Actor titleActor;
     private Container<Stack> buttonContainer;
     private ArrayList<TextButton> menuButtons;
     private int selectedIndex = 0;
     private Container<Table> washersContainer;
-    private static TextureRegionDrawable cachedBotonDrawable;
-    private static TextureRegionDrawable cachedHoverDrawable;
-    private static NinePatchDrawable cachedSelectedDrawable;
-    private static final Color COLOR_PIXMAP = new Color(0.97f, 0.88f, 0.6f, 1f);
-    private static final Color COLOR_PIXMAP_HOVER = new Color(1, 1, 1, 0.3f);
-    private static final Color COLOR_PIXMAP_GLOW = new Color(1f, 1f, 1f, 0.8f);
     private static final Color COLOR_PIXMAP_SOMBRA_CHINCHETA = new Color(0.65f, 0, 0, 1);
     private static final Color COLOR_PIXMAP_CHINCHETA = new Color(0, 0, 1, 0.85f);
     private static final Color COLOR_PIXMAP_CHINCHETA_BRILLO = new Color(1, 1, 1, 0.85f);
@@ -58,7 +46,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
     }
 
     private void crearElementosUI() {
-        titleActor = tituloConReborde("STICK-LIKE", 2.25f);
+        Label titleActor = new Label("STICK-LIKE", uiSkin, "title");
         titleActor.getColor().a = 0;
         Table titleTable = new Table();
         titleTable.setFillParent(true);
@@ -217,64 +205,6 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         }
     }
 
-    @Override
-    protected Skin crearSkinBasico() {
-        Skin skin = new Skin();
-        // Utilizamos la fuente compartida
-        BitmapFont font = FontManager.getMenuFont();
-        skin.add("default-font", font);
-        Label.LabelStyle defaultLabelStyle = new Label.LabelStyle(font, Color.BLACK);
-        skin.add("default", defaultLabelStyle, Label.LabelStyle.class);
-        // Usamos recursos cacheados para el botón por defecto
-        if (cachedBotonDrawable == null) {
-            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            pixmap.setColor(COLOR_PIXMAP);
-            pixmap.fill();
-            Texture pixmapTexture = new Texture(pixmap);
-            pixmap.dispose();
-            cachedBotonDrawable = new TextureRegionDrawable(new TextureRegion(pixmapTexture));
-        }
-        skin.add("buttonBackground", cachedBotonDrawable.getRegion(), Texture.class);
-        TextButtonStyle defaultButtonStyle = new TextButtonStyle();
-        defaultButtonStyle.font = font;
-        defaultButtonStyle.up = cachedBotonDrawable;
-        defaultButtonStyle.fontColor = Color.BLACK;
-        skin.add("default-button", defaultButtonStyle, TextButton.TextButtonStyle.class);
-
-        if (cachedHoverDrawable == null) {
-            Pixmap hoverPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-            hoverPixmap.setColor(COLOR_PIXMAP_HOVER);
-            hoverPixmap.fill();
-            Texture hoverTexture = new Texture(hoverPixmap);
-            hoverPixmap.dispose();
-            cachedHoverDrawable = new TextureRegionDrawable(new TextureRegion(hoverTexture));
-        }
-        skin.add("hoverBackground", cachedHoverDrawable.getRegion(), Texture.class);
-        TextButtonStyle hoverButtonStyle = new TextButtonStyle();
-        hoverButtonStyle.font = font;
-        hoverButtonStyle.up = cachedHoverDrawable;
-        hoverButtonStyle.fontColor = Color.DARK_GRAY;
-        skin.add("hover-button", hoverButtonStyle, TextButton.TextButtonStyle.class);
-
-        if (cachedSelectedDrawable == null) {
-            Pixmap glowPixmap = new Pixmap(12, 12, Pixmap.Format.RGBA8888);
-            glowPixmap.setColor(COLOR_PIXMAP_GLOW);
-            glowPixmap.fill();
-            Texture glowTexture = new Texture(glowPixmap);
-            glowPixmap.dispose();
-            NinePatch glowNinePatch = new NinePatch(glowTexture, 5, 5, 5, 5);
-            cachedSelectedDrawable = new NinePatchDrawable(glowNinePatch);
-        }
-        skin.add("glowTexture", cachedSelectedDrawable.getPatch().getTexture(), Texture.class);
-        TextButtonStyle selectedButtonStyle = new TextButtonStyle();
-        selectedButtonStyle.font = font;
-        selectedButtonStyle.up = cachedSelectedDrawable;
-        selectedButtonStyle.fontColor = Color.BLUE;
-        skin.add("selected-button", selectedButtonStyle, TextButton.TextButtonStyle.class);
-
-        return skin;
-    }
-
     private Actor crearChincheta() {
         int size = 15;
         int shadowOffset = 2;
@@ -370,12 +300,9 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         BitmapFont font = FontManager.getMenuFont();
         font.getData().markupEnabled = true;
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-        Label labelCacadorada = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
-        Label labelPowerup = new Label("[BLACK]x[]" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
-        Label labelTrofeo = new Label("[BLUE]?[][BLACK]/?[]", labelStyle);
-        labelCacadorada.setFontScale(1.2f);
-        labelPowerup.setFontScale(1.2f);
-        labelTrofeo.setFontScale(1.1f);
+        Label labelCacadorada = new Label("[BLACK]x []" + "[BLUE]" + Jugador.getOroGanado() + "[]", labelStyle);
+        Label labelPowerup = new Label("[BLACK]x []" + "[BLUE]" + Jugador.getTrazosGanados() + "[]", labelStyle);
+        Label labelTrofeo = new Label("[BLUE]? [][BLACK]/ ?[]", labelStyle);
         float fixedLabelX = 77.5f;
         float offsetLabel = 2.5f;
         labelCacadorada.setPosition(fixedLabelX, iconCacadorada.getY() + (iconCacadorada.getHeight() - labelCacadorada.getHeight()) / 2);

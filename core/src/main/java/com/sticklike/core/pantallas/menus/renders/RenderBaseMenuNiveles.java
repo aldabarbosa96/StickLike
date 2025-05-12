@@ -45,13 +45,16 @@ public class RenderBaseMenuNiveles extends RenderBaseMenus {
     }
 
     private void crearElementosUI() {
-        titleActor = tituloConReborde("NIVELES", 2.25f);
+        Label titleActor = new Label("NIVELES", uiSkin, "title");
         titleActor.getColor().a = 0;
+
         Table titleTable = new Table();
         titleTable.setFillParent(true);
         titleTable.top();
         titleTable.add(titleActor).padTop(75).padBottom(50).center();
         stage.addActor(titleTable);
+
+        // animación de fade-in igual que antes
         titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
 
         // Crear botones para cada nivel y "Volver"

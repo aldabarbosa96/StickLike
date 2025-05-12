@@ -5,15 +5,19 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.controllers.Controllers;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.entidades.jugador.StatsJugador;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.pantallas.menus.InputsMenu;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.pantallas.menus.renders.RenderBaseMenuPrincipal;
 
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
+
 public class MenuPrincipal extends ScreenAdapter {
     private MainGame game;
     private RenderBaseMenuPrincipal renderMenu;
     private InputsMenu inputsMenu;
+
 
     public MenuPrincipal(MainGame game) {
         this.game = game;
@@ -78,7 +82,7 @@ public class MenuPrincipal extends ScreenAdapter {
     }
 
     private void ejecutarAccion(int index) {
-        switch(index) {
+        switch (index) {
             case 0: // Jugar
                 if (game.ventanaJuego1 != null) {
                     game.ventanaJuego1.dispose();
@@ -87,6 +91,12 @@ public class MenuPrincipal extends ScreenAdapter {
                 GestorDeAudio.getInstance().detenerMusica();
                 Controllers.removeListener(inputsMenu);
                 Gdx.input.setInputProcessor(null);
+                StatsJugador stats = game.getStatsJugador();
+                if (stats == null) {
+                    // Si no vinieron del menú (primer arranque), creamos defaults
+                    stats = new StatsJugador(VEL_MOV_JUGADOR, VIDA_JUGADOR, VIDAMAX_JUGADOR, RANGO_ATAQUE, DANYO, INTERVALO_DISPARO, VEL_ATAQUE_JUGADOR, NUM_PROYECTILES_INICIALES, RESISTENCIA, CRITICO, REGENERACION_VIDA, PODER_JUGADOR);
+                    game.setStatsJugador(stats);
+                }
                 game.ventanaJuego1 = new VentanaJuego1(game, VentanaJuego1.worldWidth, VentanaJuego1.worldHeight);
                 game.setScreen(game.ventanaJuego1);
                 break;
