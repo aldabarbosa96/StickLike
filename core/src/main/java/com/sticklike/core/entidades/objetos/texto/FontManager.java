@@ -29,7 +29,7 @@ public class FontManager {
     public static BitmapFont slotFont;
 
     private static float scale;
-    private static final Color DARKER_WHITE = new Color(0.95f,0.95f,0.95f,1);
+    private static final Color DARKER_WHITE = new Color(0.95f, 0.95f, 0.95f, 1);
 
     public static void initFonts() {
 
@@ -40,7 +40,7 @@ public class FontManager {
 
         // texto daño
         FreeTypeFontGenerator.FreeTypeFontParameter damageParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        damageParam.size = 18;
+        damageParam.size = Math.round(8 * scale);
         damageParam.color = Color.WHITE;
         damageParam.borderWidth = 3;
         damageParam.borderColor = Color.BLACK;
@@ -48,12 +48,12 @@ public class FontManager {
 
         // texto menús
         FreeTypeFontGenerator.FreeTypeFontParameter menuParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        menuParam.size = 28;
+        menuParam.size = Math.round(16 * scale);
         menuParam.color = Color.BLUE;
         menuFont = mainFont.generateFont(menuParam);
 
         FreeTypeFontGenerator.FreeTypeFontParameter menuPJParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        menuPJParam.size = 25;
+        menuPJParam.size = Math.round(13 * scale);
         menuPJParam.color = Color.WHITE;
         menuPJFont = mainFont.generateFont(menuPJParam);
 
@@ -63,21 +63,21 @@ public class FontManager {
         titleParam.color = DARKER_WHITE;
         titleParam.borderWidth = 7.5f;
         titleParam.borderColor = Color.BLUE;
-        titleParam.padTop    = 8;
+        titleParam.padTop = 8;
         titleParam.padBottom = 8;
-        titleParam.padLeft   = 8;
-        titleParam.padRight  = 8;
+        titleParam.padLeft = 8;
+        titleParam.padRight = 8;
         menuTitleFont = mainFont.generateFont(titleParam);
 
         // texto hud
         FreeTypeFontGenerator.FreeTypeFontParameter hudParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        hudParam.size = 22;
+        hudParam.size = Math.round(12 * scale);
         hudParam.color = Color.WHITE;
         hudFont = mainFont.generateFont(hudParam);
 
         // texto hudAzul
         FreeTypeFontGenerator.FreeTypeFontParameter hudBlueParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        hudBlueParam.size = 38;
+        hudBlueParam.size = Math.round(25 * scale);
         hudBlueParam.color = Color.WHITE;
         hudBlueParam.borderColor = Color.BLUE;
         hudBlueParam.borderWidth = 2.5f;
@@ -85,7 +85,7 @@ public class FontManager {
 
         // texto hud negro
         FreeTypeFontGenerator.FreeTypeFontParameter hudBlackParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        hudBlackParam.size = 27;
+        hudBlackParam.size = Math.round(15 * scale);
         hudBlackParam.color = Color.WHITE;
         hudBlackParam.borderColor = Color.BLACK;
         hudBlackParam.borderWidth = 2.5f;
@@ -93,20 +93,20 @@ public class FontManager {
 
         // texto poup
         FreeTypeFontGenerator.FreeTypeFontParameter popUpParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        popUpParam.size = 25;
+        popUpParam.size = Math.round(14 * scale);
         popUpParam.color = Color.WHITE;
         popUpFont = mainFont.generateFont(popUpParam);
 
         // texto "+"
         FreeTypeFontGenerator.FreeTypeFontParameter plusParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        plusParam.size = 30;
+        plusParam.size = Math.round(18 * scale);
         plusParam.color = Color.GREEN;
         plusParam.borderColor = Color.BLACK;
         plusParam.borderWidth = 2.5f;
         plusFont = mainFont.generateFont(plusParam);
 
         FreeTypeFontGenerator.FreeTypeFontParameter slotParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        slotParam.size = 22;
+        slotParam.size = Math.round(12 * scale);
         slotParam.color = Color.YELLOW;
         slotParam.borderColor = Color.RED;
         slotParam.borderWidth = 2f;
@@ -114,7 +114,7 @@ public class FontManager {
 
         // texto loading
         FreeTypeFontGenerator.FreeTypeFontParameter loadingParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        loadingParam.size = 42;
+        loadingParam.size = Math.round(28 * scale);
         loadingParam.color = Color.BLUE;
         loadingFont = mainFont.generateFont(loadingParam);
 

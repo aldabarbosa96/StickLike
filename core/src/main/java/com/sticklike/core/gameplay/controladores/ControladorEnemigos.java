@@ -253,7 +253,6 @@ public class ControladorEnemigos {
         Collections.shuffle(dirs);
         dirs = dirs.subList(0, 3);
 
-        int idx = 0;
         /* 2- Spawneamos una tragaperras por dirección. */
         for (int d : dirs) {
 
