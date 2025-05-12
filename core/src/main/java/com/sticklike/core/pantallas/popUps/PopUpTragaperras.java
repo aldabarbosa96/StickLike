@@ -20,11 +20,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.mobiliario.tragaperras.TragaperrasLogic;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.pantallas.menus.renders.RenderBaseMenus;
@@ -42,13 +44,15 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  * Pop-up que simula una ruleta vertical en cada carrete.
  */
 public class PopUpTragaperras extends RenderBaseMenus {
+    private Jugador jugador;
+
     private static final float EXTRA_BORDE = 12.5f;
     private static final float REEL_WIDTH = 120f;
-    private static final float REEL_HEIGHT = 225f;
+    private static final float REEL_HEIGHT = 235f;
     private static final float SYMBOL_SCALE = 0.5f;
     private static final float SPIN_BASE_DURATION = 2.5f;
     private static final int SPIN_LOOPS = 6;
-    private static final float REEL_MARGIN = 23f;
+    private static final float REEL_MARGIN = 30f;
 
     private static final String[] SYMBOL_KEYS = {RECOLECTABLE_CACA_DORADA, SKATE2, EXAMEN, ALARMA, IMAN, DISKETE, MECHERO, JACKPOT, BORRADOR};
     private final Stage uiStage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
@@ -57,6 +61,8 @@ public class PopUpTragaperras extends RenderBaseMenus {
     private Table reelsTable;
     private Table buttonsTable;
     private Group popupGroup;
+
+    private float invScale = (1 / FontManager.getScale());
 
     // Fondo animado
     private FondoAnimadoPopUp fondoAnimadoPopUp;
@@ -73,8 +79,8 @@ public class PopUpTragaperras extends RenderBaseMenus {
     private Runnable onExit = () -> {
     };
 
-    public PopUpTragaperras() {
-        // Lazy init en build()
+    public PopUpTragaperras(Jugador jugador) {
+        this.jugador = jugador;
     }
 
     public void setOnExitListener(Runnable listener) {
@@ -100,7 +106,7 @@ public class PopUpTragaperras extends RenderBaseMenus {
         float titleH = ventana.getTitleLabel().getPrefHeight() * ventana.getTitleLabel().getFontScaleX();
         ventana.getTitleTable().padTop(titleH + 50);
         ventana.getTitleLabel().setAlignment(Align.center);
-        ventana.getTitleLabel().setFontScale(1.25f);
+        ventana.getTitleLabel().setFontScale(1.25f * invScale);
         ventana.setModal(true);
         ventana.setMovable(false);
         ventana.defaults().pad(10);
@@ -111,32 +117,49 @@ public class PopUpTragaperras extends RenderBaseMenus {
 
         // Tabla de botones
         buttonsTable = new Table();
-        buttonsTable.defaults().uniformX().fillX();
+        buttonsTable.defaults().uniform().fill();
 
         // Botón “Jugar 2× caca”
         TextureRegionDrawable cacaDrawable = new TextureRegionDrawable(new TextureRegion(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class)));
-        TextButton play2x = new TextButton("Jugar 2x", uiSkin.get("play-button", TextButton.TextButtonStyle.class));
-        play2x.add(new Image(cacaDrawable)).size(25, 25).padLeft(10f).padRight(5f);
-        play2x.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
+
+        TextButton play2x = new TextButton("Jugar", uiSkin.get("play-button", TextButton.TextButtonStyle.class));
+        play2x.getLabel().setAlignment(Align.center);
+        play2x.getLabelCell().colspan(2).pad(8).center();
+        play2x.row();
+        play2x.add(new Label("x2", uiSkin)).padLeft(10);
+        play2x.add(new Image(cacaDrawable)).size(20, 20).padRight(10);
+        play2x.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                logic.spin();
-                animateReels(logic.getCurrentResult());
-                GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                if (jugador.consumirOro(2)) {
+                    logic.spin();
+                    animateReels(logic.getCurrentResult());
+                    GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                } else {
+                    GestorDeAudio.getInstance().reproducirEfecto("error", 1);
+                }
             }
         });
         play2x.pad(8);
 
         // Botón “Jugar 1× power-up”
         TextureRegionDrawable powerUpDrawable = new TextureRegionDrawable(new TextureRegion(manager.get(RECOLECTABLE_POWER_UP, Texture.class)));
-        TextButton play1x = new TextButton("Jugar 1x", uiSkin.get("play-button", TextButton.TextButtonStyle.class));
-        play1x.add(new Image(powerUpDrawable)).size(10, 25).padLeft(10f).padRight(5f);
+        TextButton play1x = new TextButton("Jugar", uiSkin.get("play-button", TextButton.TextButtonStyle.class));
+        play1x.getLabel().setAlignment(Align.center);
+        play1x.getLabelCell().colspan(2).pad(8).center();
+        play1x.row();
+        play1x.add(new Label("x1", uiSkin)).padLeft(15);
+        play1x.add(new Image(powerUpDrawable)).size(8, 20).padRight(15);
         play1x.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                logic.spin();
-                animateReels(logic.getCurrentResult());
-                GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                if (jugador.consumirTrazos(1)) {
+                    logic.spin();
+                    animateReels(logic.getCurrentResult());
+                    GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                } else {
+                    GestorDeAudio.getInstance().reproducirEfecto("error", 1);
+                }
             }
         });
         play1x.pad(8);
@@ -152,8 +175,8 @@ public class PopUpTragaperras extends RenderBaseMenus {
         exitBtn.pad(8);
 
         buttonsTable.add(play2x).padRight(8);
-        buttonsTable.add(play1x).padRight(8);
-        buttonsTable.add(exitBtn).padLeft(8);
+        buttonsTable.add(play1x).padRight(16);
+        buttonsTable.add(exitBtn).padLeft(16);
 
         // Grupo con borde animado y ventana
         popupGroup = new Group();
@@ -280,7 +303,6 @@ public class PopUpTragaperras extends RenderBaseMenus {
         // Fuentes
         BitmapFont font = FontManager.getHudFont();
         BitmapFont bigFont = FontManager.getMenuFont();
-        bigFont.getData().setScale(1.5f);
         skin.add("default-font", font);
         skin.add("big-font", bigFont);
 
@@ -302,16 +324,16 @@ public class PopUpTragaperras extends RenderBaseMenus {
         Texture greenUp = crearTexturaUnicolor(0.2f, 0.8f, 0.2f, 1f);
         Texture greenDown = crearTexturaUnicolor(0.1f, 0.4f, 0.1f, 1f);
         TextButton.TextButtonStyle playStyle = new TextButton.TextButtonStyle();
-        playStyle.font = bigFont;
+        playStyle.font = FontManager.getSlotFont();
+        playStyle.font.getData().setScale(invScale);
         playStyle.up = new TextureRegionDrawable(new TextureRegion(greenUp));
         playStyle.down = new TextureRegionDrawable(new TextureRegion(greenDown));
-        playStyle.fontColor = Color.WHITE;
         skin.add("play-button", playStyle, TextButton.TextButtonStyle.class);
 
         Texture redUp = crearTexturaUnicolor(0.8f, 0.2f, 0.2f, 1f);
         Texture redDown = crearTexturaUnicolor(0.5f, 0.1f, 0.1f, 1f);
         TextButton.TextButtonStyle exitStyle = new TextButton.TextButtonStyle();
-        exitStyle.font = bigFont;
+        exitStyle.font = FontManager.getSlotFont();
         exitStyle.up = new TextureRegionDrawable(new TextureRegion(redUp));
         exitStyle.down = new TextureRegionDrawable(new TextureRegion(redDown));
         exitStyle.fontColor = Color.WHITE;
@@ -332,6 +354,19 @@ public class PopUpTragaperras extends RenderBaseMenus {
         p.dispose();
         return tex;
     }
+
+    public void dispose() {
+        if (fondoAnimadoPopUp != null) {
+            fondoAnimadoPopUp.clearParticles();
+            fondoAnimadoPopUp.remove();
+        }
+
+        uiStage.clear();
+        uiStage.dispose();
+        abierto = false;
+        initialized = false;
+    }
+
 
     /**
      * Acción que interpola scrollY de un ScrollPane.

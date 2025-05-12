@@ -144,7 +144,7 @@ public class VentanaJuego1 implements Screen {
         sistemaDeNiveles = new SistemaDeNiveles(jugador, sistemaDeMejoras, popUpMejoras);
         controladorEnemigos = new ControladorEnemigos(jugador, INTERVALO_SPAWN, this);
         jugador.estableceControladorEnemigos(controladorEnemigos);
-        popupTraga = new PopUpTragaperras();
+        popupTraga = new PopUpTragaperras(jugador);
         popupTragaInput = new TragaperrasInputProcessor(this, popupTraga);
 
     }
@@ -182,7 +182,7 @@ public class VentanaJuego1 implements Screen {
         // 2) Gestionar la pausa y la entrada de usuario
         pausa.handleInput();
         if (jugador.estaMuerto()) {
-            game.setScreen(new VentanaGameOver(game, controladorProyectiles));
+            game.setScreen(new VentanaGameOver(game, controladorProyectiles, jugador));
             return;
         }
 
@@ -392,6 +392,7 @@ public class VentanaJuego1 implements Screen {
         }
         renderVentanaJuego1.dispose();
         popUpMejoras.dispose();
+        popupTraga.dispose();
 
         if (pausa != null) {
             pausa.dispose();

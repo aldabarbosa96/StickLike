@@ -1,6 +1,13 @@
 package com.sticklike.core.entidades.objetos.texto;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.MathUtils;
+
+import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_WIDTH;
 
 /**
  * Gestiona las fuentes utilizadas en el juego. Inicializa y libera la fuente principal para los textos de daño.
@@ -9,23 +16,176 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 public class FontManager {
     public static BitmapFont damageFont;
     public static BitmapFont menuFont;
+    public static BitmapFont menuPJFont;
+    public static BitmapFont menuTitleFont;
     public static BitmapFont hudFont;
+    public static BitmapFont hudBLUEFont;
+    public static BitmapFont hudBLACKFont;
     public static BitmapFont pauseFont;
     public static BitmapFont debugFont;
+    public static BitmapFont popUpFont;
+    public static BitmapFont plusFont;
+    public static BitmapFont loadingFont;
+    public static BitmapFont slotFont;
+
+    private static float scale;
+    private static final Color DARKER_WHITE = new Color(0.95f,0.95f,0.95f,1);
 
     public static void initFonts() {
-        damageFont = new BitmapFont();
-        damageFont.getData().setScale(1f);
-        menuFont = new BitmapFont();
-        menuFont.getData().setScale(1.2f);
-        hudFont = new BitmapFont();
-        pauseFont = new BitmapFont();
+
+        scale = Gdx.graphics.getWidth() / VIRTUAL_WIDTH;
+        FreeTypeFontGenerator dmgFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/font1.ttf"));
+        FreeTypeFontGenerator mainFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/font_pmaker.ttf"));
+        FreeTypeFontGenerator slotsFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/fontPresStart2.ttf"));
+
+        // texto daño
+        FreeTypeFontGenerator.FreeTypeFontParameter damageParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        damageParam.size = 18;
+        damageParam.color = Color.WHITE;
+        damageParam.borderWidth = 3;
+        damageParam.borderColor = Color.BLACK;
+        damageFont = dmgFont.generateFont(damageParam);
+
+        // texto menús
+        FreeTypeFontGenerator.FreeTypeFontParameter menuParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        menuParam.size = 28;
+        menuParam.color = Color.BLUE;
+        menuFont = mainFont.generateFont(menuParam);
+
+        FreeTypeFontGenerator.FreeTypeFontParameter menuPJParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        menuPJParam.size = 25;
+        menuPJParam.color = Color.WHITE;
+        menuPJFont = mainFont.generateFont(menuPJParam);
+
+        // texto títulos menús
+        FreeTypeFontGenerator.FreeTypeFontParameter titleParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        titleParam.size = Math.round(75 * scale);
+        titleParam.color = DARKER_WHITE;
+        titleParam.borderWidth = 7.5f;
+        titleParam.borderColor = Color.BLUE;
+        titleParam.padTop    = 8;
+        titleParam.padBottom = 8;
+        titleParam.padLeft   = 8;
+        titleParam.padRight  = 8;
+        menuTitleFont = mainFont.generateFont(titleParam);
+
+        // texto hud
+        FreeTypeFontGenerator.FreeTypeFontParameter hudParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        hudParam.size = 22;
+        hudParam.color = Color.WHITE;
+        hudFont = mainFont.generateFont(hudParam);
+
+        // texto hudAzul
+        FreeTypeFontGenerator.FreeTypeFontParameter hudBlueParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        hudBlueParam.size = 38;
+        hudBlueParam.color = Color.WHITE;
+        hudBlueParam.borderColor = Color.BLUE;
+        hudBlueParam.borderWidth = 2.5f;
+        hudBLUEFont = mainFont.generateFont(hudBlueParam);
+
+        // texto hud negro
+        FreeTypeFontGenerator.FreeTypeFontParameter hudBlackParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        hudBlackParam.size = 27;
+        hudBlackParam.color = Color.WHITE;
+        hudBlackParam.borderColor = Color.BLACK;
+        hudBlackParam.borderWidth = 2.5f;
+        hudBLACKFont = mainFont.generateFont(hudBlackParam);
+
+        // texto poup
+        FreeTypeFontGenerator.FreeTypeFontParameter popUpParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        popUpParam.size = 25;
+        popUpParam.color = Color.WHITE;
+        popUpFont = mainFont.generateFont(popUpParam);
+
+        // texto "+"
+        FreeTypeFontGenerator.FreeTypeFontParameter plusParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        plusParam.size = 30;
+        plusParam.color = Color.GREEN;
+        plusParam.borderColor = Color.BLACK;
+        plusParam.borderWidth = 2.5f;
+        plusFont = mainFont.generateFont(plusParam);
+
+        FreeTypeFontGenerator.FreeTypeFontParameter slotParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        slotParam.size = 22;
+        slotParam.color = Color.YELLOW;
+        slotParam.borderColor = Color.RED;
+        slotParam.borderWidth = 2f;
+        slotFont = slotsFont.generateFont(slotParam);
+
+        // texto loading
+        FreeTypeFontGenerator.FreeTypeFontParameter loadingParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        loadingParam.size = 42;
+        loadingParam.color = Color.BLUE;
+        loadingFont = mainFont.generateFont(loadingParam);
+
+        /* texto pausa (sin uso real)
+        FreeTypeFontGenerator.FreeTypeFontParameter pauseParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        pauseParam.size = 28;
+        pauseParam.color = Color.WHITE;
+        pauseParam.borderWidth = 2;
+        pauseFont = dmgFont.generateFont(pauseParam);*/
+
+        // texto debug
         debugFont = new BitmapFont();
+
+        dmgFont.dispose();
+        mainFont.dispose();
+        slotsFont.dispose();
     }
 
     public static void disposeFonts() {
+
         if (damageFont != null) {
             damageFont.dispose();
+            damageFont = null;
+        }
+        if (menuFont != null) {
+            menuFont.dispose();
+            menuFont = null;
+        }
+        if (menuPJFont != null) {
+            menuPJFont.dispose();
+            menuPJFont = null;
+        }
+        if (menuTitleFont != null) {
+            menuTitleFont.dispose();
+            menuTitleFont = null;
+        }
+        if (hudFont != null) {
+            hudFont.dispose();
+            hudFont = null;
+        }
+        if (hudBLUEFont != null) {
+            hudBLUEFont.dispose();
+            hudBLUEFont = null;
+        }
+        if (hudBLACKFont != null) {
+            hudBLACKFont.dispose();
+            hudBLACKFont = null;
+        }
+        if (popUpFont != null) {
+            popUpFont.dispose();
+            popUpFont = null;
+        }
+        if (plusFont != null) {
+            plusFont.dispose();
+            plusFont = null;
+        }
+        if (loadingFont != null) {
+            loadingFont.dispose();
+            loadingFont = null;
+        }
+        if (slotFont != null) {
+            slotFont.dispose();
+            slotFont = null;
+        }
+        if (pauseFont != null) {
+            pauseFont.dispose();
+            pauseFont = null;
+        }
+        if (debugFont != null) {
+            debugFont.dispose();
+            debugFont = null;
         }
     }
 
@@ -35,6 +195,10 @@ public class FontManager {
 
     public static BitmapFont getMenuFont() {
         return menuFont;
+    }
+
+    public static BitmapFont getMenuTitleFont() {
+        return menuTitleFont;
     }
 
     public static BitmapFont getHudFont() {
@@ -47,5 +211,37 @@ public class FontManager {
 
     public static BitmapFont getDebugFont() {
         return debugFont;
+    }
+
+    public static BitmapFont getHudBLUEFont() {
+        return hudBLUEFont;
+    }
+
+    public static BitmapFont getHudBLACKFont() {
+        return hudBLACKFont;
+    }
+
+    public static BitmapFont getPopUpFont() {
+        return popUpFont;
+    }
+
+    public static BitmapFont getLoadingFont() {
+        return loadingFont;
+    }
+
+    public static float getScale() {
+        return scale;
+    }
+
+    public static BitmapFont getMenuPJFont() {
+        return menuPJFont;
+    }
+
+    public static BitmapFont getPlusFont() {
+        return plusFont;
+    }
+
+    public static BitmapFont getSlotFont() {
+        return slotFont;
     }
 }

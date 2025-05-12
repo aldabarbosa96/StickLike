@@ -125,30 +125,11 @@ public class TextoFlotante {
      * @param batch SpriteBatch para dibujar.
      */
     public void renderizarTextoFlotante(SpriteBatch batch) {
-        dibujarReborde(batch);
         if (esCritico) {
-            fuente.setColor(1f, 0.3f, 0.3f, 1f);
+            fuente.setColor(1f, 0f, 0f, 1f);
         } else {
             fuente.setColor(1f, 1f, 1f, 1f);
         }
         fuente.draw(batch, texto, x, y);
-    }
-
-    /**
-     * Dibuja un reborde para que el texto sea más legible.
-     *
-     * @param batch SpriteBatch para dibujar.
-     */
-    private void dibujarReborde(SpriteBatch batch) {
-        float offset = 1;
-        fuente.setColor(0f, 0f, 0f, 1f);
-        fuente.draw(batch, texto, x - offset, y);
-        fuente.draw(batch, texto, x + offset, y);
-        fuente.draw(batch, texto, x, y - offset);
-        fuente.draw(batch, texto, x, y + offset);
-        fuente.draw(batch, texto, x - offset, y - offset);
-        fuente.draw(batch, texto, x + offset, y - offset);
-        fuente.draw(batch, texto, x - offset, y + offset);
-        fuente.draw(batch, texto, x + offset, y + offset);
     }
 }

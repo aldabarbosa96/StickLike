@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.pantallas.menus.renders.RenderBaseMenus;
 
@@ -44,6 +45,9 @@ public class PopUpMejoras extends RenderBaseMenus {
     private static final Color COLOR_PIXMAP = new Color(0.97f, 0.88f, 0.6f, 1);
     private static final Color COLOR_PIXMAP_GLOW = new Color(0.9f, 0.9f, 0.9f, 0.5f);
     private static final Color COLOR_GREEN_SELECTED = new Color(0f, 0.5f, 0.25f, 1);
+    private BitmapFont font;
+    private BitmapFont titleFont;
+    private float invScale = 1f / FontManager.getScale();
 
     // Datos mostrados actualmente
     private List<Mejora> currentMejoras = List.of();
@@ -53,6 +57,9 @@ public class PopUpMejoras extends RenderBaseMenus {
     private IntConsumer onSelectListener;
 
     public PopUpMejoras() {
+        this.font = FontManager.getPopUpFont();
+        this.titleFont = FontManager.getMenuTitleFont();
+        font.getData().setScale(invScale);
         uiStage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
         uiSkin = crearAspectoUI();
     }
@@ -67,7 +74,6 @@ public class PopUpMejoras extends RenderBaseMenus {
             uiStage.addActor(fondoAnimadoPopUp);
             popupGroup = new Group();
             uiStage.addActor(popupGroup);
-
             popUpAbierto = true;
         } else {
             popupGroup.clearChildren();
@@ -111,9 +117,9 @@ public class PopUpMejoras extends RenderBaseMenus {
         uiStage.setKeyboardFocus(null);
 
         Window.WindowStyle wStyle = uiSkin.get("default-window", Window.WindowStyle.class);
-        upgradeWindow = new Window(POPUP_HEADER, wStyle);
+        upgradeWindow = new Window(TITULO_POPUP, wStyle);
         upgradeWindow.getTitleLabel().setAlignment(Align.center);
-        upgradeWindow.getTitleLabel().setFontScale(1.25f);
+        upgradeWindow.getTitleLabel().setFontScale(1.25f * invScale);
         upgradeWindow.getTitleTable().padTop(50);
 
         float w = POPUP_WIDTH;
@@ -193,36 +199,22 @@ public class PopUpMejoras extends RenderBaseMenus {
                 if (mejora.getIdHabilidad() != null) {
                     String idHab = mejora.getIdHabilidad();
                     if (idHab.contains("_")) {
-                        float scale = 1.65f;
-                        float offset = 0.5f;
+                        float scale = 1.25f;
                         float extra = 2f;
+                        float extra2 = 5f;
 
-                        // calculamos posición base centrada + desplazamiento extra
-                        Label tmp = new Label("+", uiSkin, "default");
-                        tmp.setFontScale(scale);
-                        float px = iconSize - tmp.getPrefWidth() / 2f + extra;
-                        float py = iconSize - tmp.getPrefHeight() / 2f + extra;
+                        BitmapFont plusFont = FontManager.getPlusFont();
+                        Label.LabelStyle plusStyle = new Label.LabelStyle(plusFont, Color.GREEN);
 
-                        // dibujamos las 8 sombras negras
-                        for (float dx : new float[]{-offset, 0, offset}) {
-                            for (float dy : new float[]{-offset, 0, offset}) {
-                                if (dx == 0 && dy == 0) continue;
-                                Label border = new Label("+", uiSkin, "default");
-                                border.setFontScale(scale);
-                                border.setColor(Color.DARK_GRAY);
-                                border.setPosition(px + dx, py + dy);
-                                iconGroup.addActor(border);
-                            }
-                        }
+                        Label plus = new Label("+", plusStyle);
+                        plus.setFontScale(invScale * scale);
 
-                        // y finalmente el “+” verde encima
-                        Label plus = new Label("+", uiSkin, "default");
-                        plus.setFontScale(scale);
-                        plus.setColor(0, 1, 0, 1);
+                        float px = iconSize - plus.getPrefWidth() / 2f + extra;
+                        float py = iconSize - plus.getPrefHeight() / 2f - extra2;
                         plus.setPosition(px, py);
+
                         iconGroup.addActor(plus);
                     } else {
-                        // etiqueta “new” sin cambios
                         Texture newTex = manager.get(NEW, Texture.class);
                         Image newTag = new Image(newTex);
                         newTag.setSize(tagWidth, tagHeight);
@@ -230,7 +222,6 @@ public class PopUpMejoras extends RenderBaseMenus {
                         iconGroup.addActor(newTag);
                     }
                 }
-
             }
             Container<Group> iconContainer = new Container<>(iconGroup);
 
@@ -308,8 +299,8 @@ public class PopUpMejoras extends RenderBaseMenus {
 
     private Skin crearAspectoUI() {
         Skin skin = new Skin();
-        BitmapFont font = new BitmapFont();
-        skin.add("default-font", font);
+        BitmapFont copy = new BitmapFont(font.getData(), font.getRegion(), false);
+        skin.add("default-font", copy);
 
         Label.LabelStyle defaultLabel = new Label.LabelStyle(font, Color.WHITE);
         skin.add("default", defaultLabel);
@@ -327,10 +318,10 @@ public class PopUpMejoras extends RenderBaseMenus {
         p.dispose();
         skin.add("windowBg", bg, Texture.class);
         TextureRegionDrawable bgDraw = new TextureRegionDrawable(new TextureRegion(bg));
-        skin.add("default-window", new Window.WindowStyle(font, Color.BLUE, bgDraw));
+        skin.add("default-window", new Window.WindowStyle(copy, Color.BLUE, bgDraw));
 
         TextButton.TextButtonStyle defBtn = new TextButton.TextButtonStyle();
-        defBtn.font = font;
+        defBtn.font = copy;
         defBtn.fontColor = Color.BLACK;
         skin.add("default-button", defBtn);
 
@@ -343,13 +334,13 @@ public class PopUpMejoras extends RenderBaseMenus {
         hiD.setMinHeight(50);
 
         TextButton.TextButtonStyle selBlue = new TextButton.TextButtonStyle();
-        selBlue.font = font;
+        selBlue.font = copy;
         selBlue.up = hiD;
         selBlue.fontColor = Color.BLUE;
         skin.add("selected-button", selBlue);
 
         TextButton.TextButtonStyle selGreen = new TextButton.TextButtonStyle();
-        selGreen.font = font;
+        selGreen.font = copy;
         selGreen.up = hiD;
         selGreen.fontColor = COLOR_GREEN_SELECTED;
         skin.add("selected-button-green", selGreen);

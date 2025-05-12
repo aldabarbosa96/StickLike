@@ -41,14 +41,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float NUMBER_Y_CORRECTION = 9.75f * 1.09375f;
     public static final float XPBAR_Y_CORRECTION = 25f * 1.09375f;
     public static final float BASIC_OFFSET = 1f;
-    public static final float BASIC_OFFSET2 = 2f;
+    public static final float BASIC_OFFSET2 = 5f;
     public static final float UNDER_OFFSET = 0.8f;
     public static final float GROSOR_MARCO = 0.9f * 1.09375f;
     public static final float GROSOR_SOMBRA = 0.7f * 1.09375f;
     public static final float BORDER_NEGATIVE = 1.5f * 1.09375f;
     public static final float BORDER_POSITIVE = 3f * 1.09375f;
     public static final float BORDER_CORRECTION = 2f * 1.09375f;
-    public static final float XPTEXT_Y_CORRECTION = 2f * 1.09375f;
     public static final float STATS_X_CORRECTION = 835f * 1.4814814815f;
     public static final float STATS_X_CORRECTION2 = 680f * 1.4814814815f;
     public static final float STATS_Y_CORRECTION = 38f * 1.09375f;
@@ -65,7 +64,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Pop_up
     // -------------------------------------------------
     public static final float POPUP_WIDTH = 330f * 1.4814814815f;
-    public static final float POPUP_HEIGHT = 375f * 1.09375f;
+    public static final float POPUP_HEIGHT = 400f * 1.09375f;
     public static final float POPUP_HEADER_PADDING = 75f;
     public static final float POPUP_ROW_PADDING = 13f;
     public static final float LABEL_WIDTH = 6f * 1.4814814815f;
@@ -78,14 +77,13 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // Timer
     // -------------------------------------------------
     public static final float TIMER_Y_POS = 290f * 1.09375f;
-    public static final float TIMER_SCALE = 0.85f;
     public static final float TIMER_SECONDS = 60f;
 
     // -------------------------------------------------
     // Texto HUD
     // -------------------------------------------------
-    public static final String TEXTO_LVL = "LVL:  ";
-    public static final String POPUP_HEADER = "<<< M E J O R A S >>> ";
+    public static final String TEXTO_LVL = "LVL:";
+    public static final String TITULO_POPUP = "<<< M E J O R A S >>> ";
     public static final String POPUP_FOOTER = "  \n";
     public static final String POPUP_FOOTER2 = "   ";
     public static final String VEL_MOV = "Velocidad";
@@ -122,7 +120,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración del jugador
     // -------------------------------------------------
-    public static final float VEL_MOV_JUGADOR = 125;
+    public static final float VEL_MOV_JUGADOR = 135f;
     public static final float DANYO = 25f;
     public static final float VEL_ATAQUE_JUGADOR = 0.74f;
     public static final int VIDA_JUGADOR = 50;
@@ -278,7 +276,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
     public static final float VIDA_DESTRUCTIBLE2 = 75f;
-    public static final float VIDA_TRAGAPERRAS = 500f;
+    public static final float VIDA_TRAGAPERRAS = 50;
     public static final float ANCHO_DESTRUCT = 42f;
     public static final float ALTO_DESTRUCT = 38f;
     public static final float ANCHO_DESTRUCT1 = 46f;

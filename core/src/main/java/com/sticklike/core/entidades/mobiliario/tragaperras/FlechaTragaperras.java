@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
+import com.sticklike.core.ui.RenderHUDComponents;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -29,6 +30,7 @@ public class FlechaTragaperras {
     private final float hudHeight;
     private final float W2, H2;
     private final BitmapFont font = FontManager.getHudFont();
+    private float invScale = 1f / FontManager.getScale();
     private final GlyphLayout lay = new GlyphLayout();
 
     public FlechaTragaperras(OrthographicCamera hudCam, ExtendViewport vp, Array<Tragaperras> slots, float hudHeight) {
@@ -46,7 +48,20 @@ public class FlechaTragaperras {
         H2 = arrow.getHeight() * .5f;
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, RenderHUDComponents renderHUDComponents) {
+        float tiempo = renderHUDComponents.getTiempoTranscurrido();
+
+        int flechasAMostrar;
+        if (tiempo >= 120f) {
+            flechasAMostrar = Math.min(slots.size, 3);
+        } else if (tiempo >= 30f) {
+            flechasAMostrar = Math.min(slots.size, 2);
+        } else if (tiempo >= 0f) {
+            flechasAMostrar = Math.min(slots.size, 1);
+        } else {
+            flechasAMostrar = 0;
+        }
+        if (flechasAMostrar == 0) return;
 
         vp.apply();
         hudCam.update();
@@ -60,9 +75,13 @@ public class FlechaTragaperras {
         float bottom = hudCam.position.y - halfH;
 
         font.setColor(0, 0, 1, 1);
-        font.getData().setScale(0.625f);
+        font.getData().setScale(0.9f * invScale);
+
         batch.begin();
-        for (Tragaperras slot : slots) {
+        // Solo iteramos los primeros N slots
+        for (int i = 0; i < flechasAMostrar; i++) {
+            Tragaperras slot = slots.get(i);
+
             // culling
             tmp.set(slot.getX() + ANCHO_TRAGAPERRAS * .5f, slot.getY() + ALTO_TRAGAPERRAS * .5f, 0);
             if (hudCam.frustum.pointInFrustum(tmp)) continue;
@@ -93,11 +112,10 @@ public class FlechaTragaperras {
             arrow.setCenter(cx, cy);
             arrow.draw(batch);
 
-            // 4) etiqueta con la distancia
-            float dx = slot.getX() + ANCHO_TRAGAPERRAS * .5f - hudCam.position.x;
-            float dy = slot.getY() + ALTO_TRAGAPERRAS * .5f - hudCam.position.y;
+            // Etiqueta con la distancia
+            float dx = tmp.x - hudCam.position.x;
+            float dy = tmp.y - hudCam.position.y;
             int metros = Math.round(Vector2.len(dx, dy));
-
             String txt = metros + "m";
             lay.setText(font, txt);
 
@@ -122,7 +140,6 @@ public class FlechaTragaperras {
             }
             font.draw(batch, txt, tx, ty);
         }
-
         batch.end();
     }
 }

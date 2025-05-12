@@ -97,7 +97,6 @@ public class GestorDeAssets {
     // Boss y loading
     public static final String BOSS_POLLA = "enemigos/bossPolla.png";
     public static final String BOSS_POLLA_BOCACERRADA = "enemigos/bossPollaCerrada.png";
-    public static final String LOADING_TEXTURE = "fondo/fondoLoading.png";
 
     // Damage sprites
     public static final String DAMAGE_CULO_TEXTURE = "enemigos/damageSprites/01culoD.png";
@@ -197,7 +196,6 @@ public class GestorDeAssets {
 
         manager.load(BOSS_POLLA, Texture.class);
         manager.load(BOSS_POLLA_BOCACERRADA, Texture.class);
-        manager.load(LOADING_TEXTURE, Texture.class);
 
         manager.load(DAMAGE_CULO_TEXTURE, Texture.class);
         manager.load(DAMAGE_POLLA_TEXTURE, Texture.class);

@@ -10,6 +10,7 @@ import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoExamen;
 import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoPolla;
+import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
@@ -25,6 +26,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  */
 
 public class VentanaGameOver implements Screen {
+    private Jugador jugador; // todo --> será necesario en un futuro
     private final MainGame game;
     private SpriteBatch spriteBatch;
     private BitmapFont font;
@@ -34,9 +36,10 @@ public class VentanaGameOver implements Screen {
     private FitViewport viewport;
     private ControladorProyectiles controladorProyectiles;
 
-    public VentanaGameOver(MainGame game, ControladorProyectiles controladorProyectiles) {
+    public VentanaGameOver(MainGame game, ControladorProyectiles controladorProyectiles, Jugador jugador) {
         this.game = game;
         this.controladorProyectiles = controladorProyectiles;
+        this.jugador = jugador;
     }
 
     @Override

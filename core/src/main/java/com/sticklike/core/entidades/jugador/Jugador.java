@@ -427,4 +427,19 @@ public class Jugador {
     public InputsJugador getInputController() {
         return inputController;
     }
+
+    public boolean consumirOro(int oroARestar) {
+        if (oroGanado >= oroARestar) {
+            oroGanado -= oroARestar;
+            return true;
+        } else return false;
+
+    }
+
+    public boolean consumirTrazos(int trazosARestar) {
+        if (trazosGanados >= trazosARestar) {
+            trazosGanados -= trazosARestar;
+            return true;
+        } else return false;
+    }
 }

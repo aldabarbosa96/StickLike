@@ -240,8 +240,8 @@ public class ControladorEnemigos {
         if (tragaperrasSpawned) return;
         tragaperrasSpawned = true;
 
-        final float MIN_DIST = 500f;
-        final float MAX_DIST = 1000f;
+        final float MIN_DIST = 1750f;
+        final float MAX_DIST = 4750f;
         final float MAX_PERP = 1250f;
 
         // centro actual del jugador
@@ -286,10 +286,6 @@ public class ControladorEnemigos {
                 case 2 -> Tragaperras.Direccion.ESTE;
                 default -> Tragaperras.Direccion.OESTE;
             };
-
-            Gdx.app.log("TRAGAPERRAS", String.format(
-                "[%d] Dir=%s  Pos=(%.1f, %.1f)  Dist=%.0f  Offset=%.0f",
-                idx++, dirEnum, x, y, dist, offset));
 
             Tragaperras slot = new Tragaperras(x, y, renderBaseEnemigos, ventanaJuego1, dirEnum);
             enemigos.add(slot);
