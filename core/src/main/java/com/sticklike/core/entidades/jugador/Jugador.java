@@ -37,6 +37,7 @@ public class Jugador {
     private AtaqueMocos ataqueMocos;
     private AtaqueBoliBic ataqueBoliBic;
     private AtaqueDildo ataqueDildo;
+    private AtaquePelota ataquePelota;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
@@ -75,6 +76,7 @@ public class Jugador {
         this.ataqueMocos = null;
         this.ataqueBoliBic = null;
         this.ataqueDildo = null;
+        this.ataquePelota = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
         this.renderParticulasSangre = new RenderParticulasSangre();
@@ -110,6 +112,10 @@ public class Jugador {
             }
             if (ataqueDildo != null) {
                 ataqueDildo.manejarDisparo(delta, this, gestorDeAudio);
+            }
+
+            if (ataquePelota != null) {
+                ataquePelota.manejarDisparo(delta, this, gestorDeAudio);
             }
 
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, gestorDeAudio);
@@ -410,6 +416,14 @@ public class Jugador {
 
     public void setAtaqueDildo(AtaqueDildo ataqueDildo) {
         this.ataqueDildo = ataqueDildo;
+    }
+
+    public AtaquePelota getAtaquePelota() {
+        return ataquePelota;
+    }
+
+    public void setAtaquePelota(AtaquePelota ataquePelota) {
+        this.ataquePelota = ataquePelota;
     }
 
     public boolean isInvulnerable() {

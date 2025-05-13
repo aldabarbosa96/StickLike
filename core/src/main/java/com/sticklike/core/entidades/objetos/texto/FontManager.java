@@ -2,10 +2,8 @@ package com.sticklike.core.entidades.objetos.texto;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.MathUtils;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_WIDTH;
 
@@ -105,11 +103,12 @@ public class FontManager {
         plusParam.borderWidth = 2.5f;
         plusFont = mainFont.generateFont(plusParam);
 
+        // texto tragaperras
         FreeTypeFontGenerator.FreeTypeFontParameter slotParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
         slotParam.size = Math.round(12 * scale);
-        slotParam.color = Color.YELLOW;
+        slotParam.color = Color.WHITE;
         slotParam.borderColor = Color.RED;
-        slotParam.borderWidth = 2f;
+        slotParam.borderWidth = 3f;
         slotFont = slotsFont.generateFont(slotParam);
 
         // texto loading

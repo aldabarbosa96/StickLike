@@ -536,6 +536,12 @@ public class RenderHUDComponents {
                     total = moco.getCooldownDuration();
                     break;
 
+                case "PELOTA":
+                    var pelota = jugador.getAtaquePelota();
+                    remaining = pelota.getTimeUntilNextShot();
+                    total = pelota.getCooldownDuration();
+                    break;
+
                 default:
 
                     continue;

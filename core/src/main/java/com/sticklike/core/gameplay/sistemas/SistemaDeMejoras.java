@@ -58,6 +58,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡LLUVIA DE MOCOS!", "Llueven mocardones con impacto mucoso", () -> jugador.setAtaqueMocos(new AtaqueMocos()), 1, manager.get(ARMA_MOCO, Texture.class), "MOCO"));
         todasLasMejoras.add(new Mejora("¡BOLI BICAZO!", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
         todasLasMejoras.add(new Mejora("¡SABLE DILDO!", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
+        todasLasMejoras.add(new Mejora("¡TEZENNIS!", "Lanzas pelotas de tennis que rebotan", () -> jugador.setAtaquePelota(new AtaquePelota(1.5f)), 1, manager.get(ARMA_PELOTA, Texture.class), "PELOTA"));
 
         // Upgrades específicos para las habilidades
         // Calcetín
@@ -111,7 +112,7 @@ public class SistemaDeMejoras {
         todasLasMejoras.add(new Mejora("¡MOCOS: REBOTE!", "Los mocos rebotan al impactar en el suelo", () -> {
             jugador.getAtaqueMocos().activarReboteMucoso();
         }, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_rebote")); // todo --> permite gestionar internamente más rebotes
-        todasLasMejoras.add(new Mejora("¡MOCOS: SANGRIENTOS!", "Mocos de sangre que aplican un 250% de daño", () -> {
+        todasLasMejoras.add(new Mejora("¡MOCOS: SANGRIENTOS!", "Ahora con sangre... aplican un 250% de daño", () -> {
             jugador.getAtaqueMocos().mocosConSangre();
         }, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_sangre"));
 
@@ -222,6 +223,7 @@ public class SistemaDeMejoras {
     public int getUpgradeCount(String baseId) {
         return upgradeCounts.getOrDefault(baseId, 0);
     }
+
     public List<Mejora> getMejorasMostradas() {
         return mejorasMostradas;
     }
