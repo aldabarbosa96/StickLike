@@ -2,14 +2,13 @@ package com.sticklike.core.entidades.enemigos.ia;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sticklike.core.entidades.jugador.Jugador;
-import  static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-public class MovimientoVater extends MovimientoBaseEnemigos {
+public class MovimientoLineal extends MovimientoBaseEnemigos {
     private float velocidad;
 
-    public MovimientoVater(boolean canKnockback) {
+    public MovimientoLineal(boolean canKnockback, float velocidad) {
         super(canKnockback);
-        this.velocidad = VEL_BASE_VATER;
+        this.velocidad = velocidad;
     }
 
     @Override

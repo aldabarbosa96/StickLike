@@ -135,6 +135,7 @@ public class PopUpTragaperras extends RenderBaseMenus {
                     logic.spin();
                     animateReels(logic.getCurrentResult());
                     GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                    GestorDeAudio.getInstance().reproducirEfecto("slots", 0.5f);
                 } else {
                     GestorDeAudio.getInstance().reproducirEfecto("error", 1);
                 }
@@ -153,10 +154,11 @@ public class PopUpTragaperras extends RenderBaseMenus {
         play1x.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                if (jugador.consumirTrazos(1)) {
+                if (jugador.consumirTrazos(0)) {
                     logic.spin();
                     animateReels(logic.getCurrentResult());
                     GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                    GestorDeAudio.getInstance().reproducirEfecto("slots", 0.5f);
                 } else {
                     GestorDeAudio.getInstance().reproducirEfecto("error", 1);
                 }

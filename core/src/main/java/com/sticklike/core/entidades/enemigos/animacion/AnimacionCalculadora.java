@@ -4,18 +4,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-/**
- * Abre y cierra la tapa del váter.
- */
-public class AnimacionVater {
+public class AnimacionCalculadora {
 
     private final AnimacionesBaseEnemigos base;
     private final AnimacionDosFrames anim;
 
-    public AnimacionVater(AnimacionesBaseEnemigos base, Texture texturaTapaLevantada, Texture texturaTapaBajada, float tiempoAbierta, float tiempoCerrada) {
+    public AnimacionCalculadora(AnimacionesBaseEnemigos base, Texture frameApagada, Texture frameEncendida, float duracionApagada, float duracionEncendida) {
 
         this.base = base;
-        this.anim = new AnimacionDosFrames(new TextureRegion(texturaTapaBajada), new TextureRegion(texturaTapaLevantada), tiempoCerrada, tiempoAbierta, null, null);
+        this.anim = new AnimacionDosFrames(new TextureRegion(frameApagada), new TextureRegion(frameEncendida), duracionApagada, duracionEncendida, null, null);
     }
 
     public void actualizarAnimacion(float delta, Sprite sprite) {
@@ -24,3 +21,4 @@ public class AnimacionVater {
         }
     }
 }
+

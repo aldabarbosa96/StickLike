@@ -34,7 +34,7 @@ public class Jugador {
     private AtaqueTazo ataqueTazo;
     private AtaqueNubePedo ataqueNubePedo;
     private AtaquePapelCulo ataquePapelCulo;
-    private AtaqueMocos ataqueMocos;
+    private AtaquePipi ataquePipi;
     private AtaqueBoliBic ataqueBoliBic;
     private AtaqueDildo ataqueDildo;
     private AtaquePelota ataquePelota;
@@ -43,7 +43,6 @@ public class Jugador {
     private RenderJugador renderJugador;
     private RenderParticulasSangre renderParticulasSangre;
     private StatsJugador statsJugador;
-    private MenuPersonaje menuPersonaje;
     private final Vector2 tmpVector = new Vector2();
 
     private boolean estaVivo;
@@ -73,7 +72,7 @@ public class Jugador {
         this.ataqueTazo = null;
         this.ataqueNubePedo = null;
         this.ataquePapelCulo = null;
-        this.ataqueMocos = null;
+        this.ataquePipi = null;
         this.ataqueBoliBic = null;
         this.ataqueDildo = null;
         this.ataquePelota = null;
@@ -103,8 +102,8 @@ public class Jugador {
             if (ataquePapelCulo != null) {
                 ataquePapelCulo.manejarDisparo(delta, this, gestorDeAudio);
             }
-            if (ataqueMocos != null) {
-                ataqueMocos.manejarDisparo(delta, this, gestorDeAudio);
+            if (ataquePipi != null) {
+                ataquePipi.manejarDisparo(delta, this, gestorDeAudio);
             }
 
             if (ataqueBoliBic != null) {
@@ -357,12 +356,12 @@ public class Jugador {
         return ataqueNubePedo;
     }
 
-    public AtaqueMocos getAtaqueMocos() {
-        return ataqueMocos;
+    public AtaquePipi getAtaquePipi() {
+        return ataquePipi;
     }
 
-    public void setAtaqueMocos(AtaqueMocos ataqueMocos) {
-        this.ataqueMocos = ataqueMocos;
+    public void setAtaquePipi(AtaquePipi ataquePipi) {
+        this.ataquePipi = ataquePipi;
     }
 
     public AtaqueBoliBic getAtaqueBoliBic() {

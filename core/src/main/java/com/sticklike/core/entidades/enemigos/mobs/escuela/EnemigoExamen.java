@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionExamen;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoExamen;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoParabola;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -19,7 +19,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 public class EnemigoExamen extends EnemigoBase {
 
     private AnimacionExamen animacionExamen;
-    private MovimientoExamen movimientoExamen;
+    private MovimientoParabola movimientoParabola;
     private static float velocidadBase = VEL_BASE_EXAMEN;
 
     public EnemigoExamen(float x, float y, Jugador jugador, float velocidadEnemigo) {
@@ -27,7 +27,7 @@ public class EnemigoExamen extends EnemigoBase {
         sprite = new Sprite(manager.get(ENEMIGO_EXAMEN, Texture.class));
         sprite.setSize(42f, 44f);
         sprite.setPosition(x, y);
-        movimientoExamen = new MovimientoExamen();
+        movimientoParabola = new MovimientoParabola();
         animacionExamen = new AnimacionExamen(animacionesBaseEnemigos, manager.get(ENEMIGO_EXAMEN, Texture.class), manager.get(ENEMIGO_EXAMEN2, Texture.class), 0.25f);
 
         setVelocidad(velocidadEnemigo);
@@ -38,22 +38,21 @@ public class EnemigoExamen extends EnemigoBase {
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
 
         this.damageTexture = manager.get(DAMAGE_EXAMEN_TEXTURE, Texture.class);
-        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        if (movimientoExamen != null) {
-            movimientoExamen.actualizarMovimiento(delta, sprite, jugador);
+        if (movimientoParabola != null) {
+            movimientoParabola.actualizarMovimiento(delta, sprite, jugador);
         }
-        animacionExamen.actualizarAnimacion(delta, jugador, sprite);
+        animacionExamen.actualizarAnimacion(delta, sprite);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
     protected void actualizarKnockback(float delta) {
-        if (movimientoExamen != null) {
-            movimientoExamen.actualizarSoloKnockback(delta, sprite, true);
+        if (movimientoParabola != null) {
+            movimientoParabola.actualizarSoloKnockback(delta, sprite, true);
         }
     }
 
@@ -67,8 +66,8 @@ public class EnemigoExamen extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        if (movimientoExamen != null) {
-            movimientoExamen.aplicarKnockback(fuerza, dirX, dirY);
+        if (movimientoParabola != null) {
+            movimientoParabola.aplicarKnockback(fuerza, dirX, dirY);
         }
     }
 
@@ -87,13 +86,13 @@ public class EnemigoExamen extends EnemigoBase {
     }
 
     public void setVelocidad(float nuevaVelocidad) {
-        if (movimientoExamen != null) {
-            movimientoExamen.setVelocidadEnemigo(nuevaVelocidad);
+        if (movimientoParabola != null) {
+            movimientoParabola.setVelocidadEnemigo(nuevaVelocidad);
         }
     }
 
-    public MovimientoExamen getMovimientoExamen() {
-        return movimientoExamen;
+    public MovimientoParabola getMovimientoExamen() {
+        return movimientoParabola;
     }
 
     public float getFadeAlpha() {

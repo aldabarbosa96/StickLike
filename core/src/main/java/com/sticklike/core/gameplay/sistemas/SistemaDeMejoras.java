@@ -52,10 +52,10 @@ public class SistemaDeMejoras {
         // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)
 
         todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
-        todasLasMejoras.add(new Mejora("¡GIROTAZOS!", "Invoca un tazo giratorio rotativo", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS, Texture.class), "TAZO"));
+        todasLasMejoras.add(new Mejora("¡GIROTETAZOS!", "Invoca unos tetazos giratorios rotativos", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS2, Texture.class), "TAZO"));
         todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
         todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
-        todasLasMejoras.add(new Mejora("¡LLUVIA DE MOCOS!", "Llueven mocardones con impacto mucoso", () -> jugador.setAtaqueMocos(new AtaqueMocos()), 1, manager.get(ARMA_MOCO, Texture.class), "MOCO"));
+        todasLasMejoras.add(new Mejora("¡LLUVIA DORADA!", "Llueve pipi y lo mancha todo", () -> jugador.setAtaquePipi(new AtaquePipi()), 1, manager.get(ARMA_PIPI, Texture.class), "PIPI"));
         todasLasMejoras.add(new Mejora("¡BOLI BICAZO!", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
         todasLasMejoras.add(new Mejora("¡SABLE DILDO!", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
         todasLasMejoras.add(new Mejora("¡TEZENNIS!", "Lanzas pelotas de tennis que rebotan", () -> jugador.setAtaquePelota(new AtaquePelota(1.5f)), 1, manager.get(ARMA_PELOTA, Texture.class), "PELOTA"));
@@ -73,15 +73,15 @@ public class SistemaDeMejoras {
         }, 3, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN_speed"));
 
         // Tazo
-        todasLasMejoras.add(new Mejora("¡TAZO: ROTATAZO!", "Aumenta la velocidad de rotación del tazo", () -> {
+        todasLasMejoras.add(new Mejora("¡TETAZO: ROTATAZO!", "Aumenta la velocidad de rotación del tazo", () -> {
             jugador.getAtaqueTazo().aumentarVelocidadTazos(1.5f);
-        }, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_rotacion"));
-        todasLasMejoras.add(new Mejora("¡TAZO: MULTITETAZO!", "Aumenta el número de tazos +1", () -> {
+        }, 3, manager.get(ARMA_TAZOS2, Texture.class), "TAZO_rotacion"));
+        todasLasMejoras.add(new Mejora("¡TETAZO: MULTI!", "Aumenta el número de tazos +1", () -> {
             jugador.getAtaqueTazo().aumentarNumTazos(1);
-        }, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_proyectil"));
-        todasLasMejoras.add(new Mejora("¡TAZO: TEMPOTAZO!", "Aumenta el tiempo que dura la habilidad un 50%", () -> {
+        }, 3, manager.get(ARMA_TAZOS2, Texture.class), "TAZO_proyectil"));
+        todasLasMejoras.add(new Mejora("¡TETAZO: TEMPOTAZO!", "Aumenta el tiempo que dura la habilidad un 50%", () -> {
             jugador.getAtaqueTazo().aumentarDuracionActivaTazos(4.25f);
-        }, 3, manager.get(ARMA_TAZOS, Texture.class), "TAZO_duracion"));
+        }, 3, manager.get(ARMA_TAZOS2, Texture.class), "TAZO_duracion"));
 
         // NubePedo
         todasLasMejoras.add(new Mejora("¡PEDO: ÁREA PESTOSA!", "Aumenta el area de efecto del pedo un 100%", () -> {
@@ -105,16 +105,16 @@ public class SistemaDeMejoras {
             jugador.getAtaquePapelCulo().setFragmentado(true);
         }, 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL_frag"));
 
-        // LluviaMocos
-        todasLasMejoras.add(new Mejora("¡MOCOS: TORMENTA!", "Aumenta la cadencia de la lluvia", () -> {
-            jugador.getAtaqueMocos().tormentaMucosa(0.5f);
-        }, 3, manager.get(ARMA_MOCO, Texture.class), "MOCO_tormenta"));
-        todasLasMejoras.add(new Mejora("¡MOCOS: REBOTE!", "Los mocos rebotan al impactar en el suelo", () -> {
-            jugador.getAtaqueMocos().activarReboteMucoso();
-        }, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_rebote")); // todo --> permite gestionar internamente más rebotes
-        todasLasMejoras.add(new Mejora("¡MOCOS: SANGRIENTOS!", "Ahora con sangre... aplican un 250% de daño", () -> {
-            jugador.getAtaqueMocos().mocosConSangre();
-        }, 1, manager.get(ARMA_MOCO, Texture.class), "MOCO_sangre"));
+        // LluviaDorada
+        todasLasMejoras.add(new Mejora("¡LLUVIA: TORMENTA!", "Aumenta la cadencia de la lluvia", () -> {
+            jugador.getAtaquePipi().tormentaDorada(0.5f);
+        }, 3, manager.get(ARMA_PIPI, Texture.class), "PIPI_tormenta"));
+        todasLasMejoras.add(new Mejora("¡LLUVIA: REBOTE!", "Las gotas rebotan al impactar en el suelo", () -> {
+            jugador.getAtaquePipi().activarRebote();
+        }, 1, manager.get(ARMA_PIPI, Texture.class), "PIPI_rebote")); // todo --> permite gestionar internamente más rebotes
+        todasLasMejoras.add(new Mejora("¡LLUVIA: SANGRIENTA!", "Ahora con sangre... aplica un 250% de daño", () -> {
+            jugador.getAtaquePipi().lluviaConSangre();
+        }, 1, manager.get(ARMA_PIPI, Texture.class), "PIPI_sangre"));
 
         // BoliBic
         todasLasMejoras.add(new Mejora("¡BOLI: RICOCHET!", "Los bolis rebotan una vez al impactar", () -> jugador.getAtaqueBoliBic().activarRicochet(), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI_ricochet"));

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoPolla;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBotes;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -19,7 +19,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  */
 public class EnemigoPolla extends EnemigoBase {
 
-    private MovimientoPolla movimientoPolla;
+    private MovimientoBotes movimientoBotes;
     private static float velocidadBase = VEL_BASE_POLLA;
 
     public EnemigoPolla(float x, float y, Jugador jugador, float velocidadEnemigo) {
@@ -28,24 +28,23 @@ public class EnemigoPolla extends EnemigoBase {
         sprite.setSize(34, 34);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
+        movimientoBotes = new MovimientoBotes(velocidadBase, 0.75f, 25f, true);
         this.damageTexture = manager.get(DAMAGE_POLLA_TEXTURE, Texture.class);
         this.vidaEnemigo = VIDA_ENEMIGO_POLLA;
         this.coolDownDanyo = COOLDOWN_POLLA;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         this.damageAmount = DANYO_POLLA;
-        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
+        movimientoBotes.actualizarMovimiento(delta, sprite, jugador);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimientoPolla.actualizarSoloKnockback(delta, sprite, true);
+        movimientoBotes.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class EnemigoPolla extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimientoPolla.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoBotes.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -76,11 +75,11 @@ public class EnemigoPolla extends EnemigoBase {
     }
 
     public void setVelocidad(float nuevaVelocidad) {
-        movimientoPolla.setVelocidadEnemigo(nuevaVelocidad);
+        movimientoBotes.setVelocidadEnemigo(nuevaVelocidad);
     }
 
-    public MovimientoPolla getMovimientoPolla() {
-        return movimientoPolla;
+    public MovimientoBotes getMovimientoPolla() {
+        return movimientoBotes;
     }
 
     public float getFadeAlpha() {

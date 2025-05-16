@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionVater;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoVater;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoLineal;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
@@ -22,16 +22,15 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  * Enemigo Vater; gestiona su comportamiento y daño.
  */
 public class EnemigoVater extends EnemigoBase {
-
-    private Sprite spriteTapaLevantada;
-    private Sprite spriteTapaBajada;
-    private MovimientoVater movimientoVater;
+    private Texture spriteTapaLevantada;
+    private Texture spriteTapaBajada;
+    private MovimientoLineal movimientoLineal;
     private AnimacionVater animacionVater;
 
     public EnemigoVater(float x, float y, Jugador jugador) {
         super(jugador);
-        spriteTapaBajada = new Sprite(manager.get(ENEMIGO_VATER, Texture.class));
-        spriteTapaLevantada = new Sprite(manager.get(ENEMIGO_VATER2, Texture.class));
+        spriteTapaBajada = manager.get(ENEMIGO_VATER, Texture.class);
+        spriteTapaLevantada = manager.get(ENEMIGO_VATER2, Texture.class);
         damageTexture = manager.get(DAMAGE_VATER_TEXTURE, Texture.class);
         sprite = new Sprite(spriteTapaLevantada);
         sprite.setSize(55, 80);
@@ -42,16 +41,16 @@ public class EnemigoVater extends EnemigoBase {
         this.coolDownDanyo = COOLDOWN_VATER;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
 
-        movimientoVater = new MovimientoVater(true);
+        movimientoLineal = new MovimientoLineal(true, VEL_BASE_VATER);
         animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
-        animacionVater = new AnimacionVater(this, animacionesBaseEnemigos, spriteTapaLevantada, spriteTapaBajada);
+        animacionVater = new AnimacionVater(animacionesBaseEnemigos, spriteTapaLevantada, spriteTapaBajada,0.25f,1f);
 
         renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        movimientoVater.actualizarMovimiento(delta, sprite, jugador);
+        movimientoLineal.actualizarMovimiento(delta, sprite, jugador);
         animacionVater.actualizarAnimacion(delta, sprite);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
 
@@ -59,7 +58,7 @@ public class EnemigoVater extends EnemigoBase {
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimientoVater.actualizarSoloKnockback(delta, sprite, true);
+        movimientoLineal.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class EnemigoVater extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimientoVater.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoLineal.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override

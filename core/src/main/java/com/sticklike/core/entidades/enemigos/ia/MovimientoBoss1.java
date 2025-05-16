@@ -8,7 +8,7 @@ import com.sticklike.core.entidades.jugador.Jugador;
  * Movimiento del jefe BossPolla; gestiona su aproximación, órbita y embestidas contra el jugador.
  */
 
-public class MovimientoBossPolla extends MovimientoBaseEnemigos {
+public class MovimientoBoss1 extends MovimientoBaseEnemigos {
     private float velocidadAproximacion;
     private float distanciaOrbita;
     private float velocidadOrbital;
@@ -28,7 +28,7 @@ public class MovimientoBossPolla extends MovimientoBaseEnemigos {
     private float startX, startY;
     private float targetX, targetY;
 
-    public MovimientoBossPolla(boolean puedeEmpujar) {
+    public MovimientoBoss1(boolean puedeEmpujar) {
         super(puedeEmpujar);
         this.velocidadAproximacion = 150f;
         this.distanciaOrbita = 150f;

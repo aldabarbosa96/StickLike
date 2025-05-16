@@ -7,14 +7,14 @@ import com.sticklike.core.entidades.jugador.Jugador;
  * Movimiento del enemigo Polla; se desplaza hacia el jugador con un patrón en zigzag.
  */
 
-public class MovimientoPolla extends MovimientoBaseEnemigos {
+public class MovimientoBotes extends MovimientoBaseEnemigos {
     private float velocidadEnemigo;
     private float tiempo; // Tiempo acumulado para el zigzag
     private float amplitudZigzag;
     private float frecuenciaZigzag;
     private float currentOffset;
 
-    public MovimientoPolla(float velocidadEnemigo, float amplitudZigzag, float frecuenciaZigzag, boolean puedeEmpujar) {
+    public MovimientoBotes(float velocidadEnemigo, float amplitudZigzag, float frecuenciaZigzag, boolean puedeEmpujar) {
         super(puedeEmpujar);
         this.velocidadEnemigo = velocidadEnemigo;
         this.tiempo = 0;

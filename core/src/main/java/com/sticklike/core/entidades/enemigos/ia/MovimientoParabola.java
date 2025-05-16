@@ -10,7 +10,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Movimiento del enemigo Examen; alterna entre carga, disparo lineal y trayectoria en parábola.
  */
 
-public class MovimientoExamen extends MovimientoBaseEnemigos {
+public class MovimientoParabola extends MovimientoBaseEnemigos {
     private boolean enFaseCarga = true;
     private boolean enFaseDisparo = false;
     private boolean enFaseParabola = false;
@@ -38,7 +38,7 @@ public class MovimientoExamen extends MovimientoBaseEnemigos {
     private float offsetX;
     private float offsetY;
 
-    public MovimientoExamen() {
+    public MovimientoParabola() {
         super(true);
         this.tiempoFaseCarga = tiempoFaseCargaBase + (float) ((Math.random() - 0.5f) * 2.0f * CARGA_RANDOM_OFFSET);
         this.tiempoFaseDisparo = tiempoFaseDisparoBase + (float) ((Math.random() - 0.5f) * 2.0f * DISPARO_RANDOM_OFFSET);

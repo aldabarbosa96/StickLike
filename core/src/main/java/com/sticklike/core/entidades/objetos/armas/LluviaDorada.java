@@ -20,15 +20,15 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_MOCO;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_PIPI;
 
 /**
  * Proyectil «Lluvia de mocos».
  * Ahora el rastro se pinta a través de {@link TrailRender}.
  */
-public final class LluviaMocos implements Proyectiles {
+public final class LluviaDorada implements Proyectiles {
 
-    public enum EstadoMoco {FALLING, EXPLODED}
+    public enum EstadoLluvia {FALLING, EXPLODED}
 
     private static final float GRAVITY = 150f;
     private static final float EXPLOSION_DURATION = 3.5f;
@@ -45,15 +45,13 @@ public final class LluviaMocos implements Proyectiles {
     private final Sprite sprite;
     private final Rectangle collisionRect = new Rectangle();
     private final Vector2 centroSprite = new Vector2();
-    private static final Color COLOR_VERDE_MOCO = new Color(0.15f, 0.75f, 0.15f, 1f);
+    private static final Color COLOR_PIPI = new Color(0.75f, 0.65f, 0.05f, 1f);
 
     private float damage;
-    private EstadoMoco estadoMoco;
+    private EstadoLluvia estadoLluvia;
     private float x, y;
     private float targetY;
     private float velocity;
-    private float rotation;
-    private float rotationSpeed;
     private boolean proyectilActivo;
     private float explosionTimer;
     private float width, height;
@@ -71,27 +69,25 @@ public final class LluviaMocos implements Proyectiles {
     private Texture dropTexture;
     private final Set<Enemigo> enemigosImpactados = new HashSet<>();
 
-    public LluviaMocos(float x, float y, float fallSpeed, GestorDeAudio gestorDeAudio) {
+    public LluviaDorada(float x, float y, float fallSpeed, GestorDeAudio gestorDeAudio) {
         this.damage = MathUtils.random(8, 15);
         this.x = x;
         this.y = y;
         this.velocity = fallSpeed;
         this.targetY = y - (Gdx.graphics.getHeight() / 3f) + MathUtils.random(-100, 100);
-        this.estadoMoco = EstadoMoco.FALLING;
+        this.estadoLluvia = EstadoLluvia.FALLING;
         this.explosionTimer = 0f;
         float size = MathUtils.random(12.5f, 17.5f);
         this.width = size;
-        this.height = size;
+        this.height = size * 1.33f;
         this.proyectilActivo = true;
-        this.rotation = 0f;
-        this.rotationSpeed = MathUtils.random(150, 350);
         this.stainsGenerated = false;
         if (texture == null) {
-            texture = GestorDeAssets.manager.get(ARMA_MOCO, Texture.class);
+            texture = GestorDeAssets.manager.get(ARMA_PIPI, Texture.class);
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(38, 4.5f, COLOR_VERDE_MOCO);
+        this.renderParticulasProyectil = new RenderParticulasProyectil(38, 2.5f, COLOR_PIPI);
         this.collisionRect.set(x, y, width, height);
     }
 
@@ -99,10 +95,9 @@ public final class LluviaMocos implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!proyectilActivo) return;
 
-        if (estadoMoco == EstadoMoco.FALLING) {
+        if (estadoLluvia == EstadoLluvia.FALLING) {
             velocity += GRAVITY * delta;
             y -= velocity * delta;
-            rotation += rotationSpeed * delta;
 
             centroSprite.set(x + width * 0.5f, y + height * 0.5f);
             renderParticulasProyectil.update(centroSprite);
@@ -135,11 +130,11 @@ public final class LluviaMocos implements Proyectiles {
     }
 
     private void explotar() {
-        if (estadoMoco == EstadoMoco.FALLING) {
-            estadoMoco = EstadoMoco.EXPLODED;
+        if (estadoLluvia == EstadoLluvia.FALLING) {
+            estadoLluvia = EstadoLluvia.EXPLODED;
             explosionTimer = 0f;
             gestorDeAudio.reproducirEfecto("moco", 0.33f);
-            dropTexture = getDropTexture(COLOR_VERDE_MOCO);
+            dropTexture = getDropTexture(COLOR_PIPI);
         }
     }
 
@@ -149,12 +144,11 @@ public final class LluviaMocos implements Proyectiles {
 
         batch.begin();
 
-        renderParticulasProyectil.setAlphaMult(0.5f);
+        renderParticulasProyectil.setAlphaMult(0.8f);
 
-        if (estadoMoco == EstadoMoco.FALLING) {
+        if (estadoLluvia == EstadoLluvia.FALLING) {
             sprite.setBounds(x, y, width, height);
             sprite.setOrigin(width * 0.5f, height * 0.5f);
-            sprite.setRotation(rotation);
             sprite.draw(batch);
 
         } else if (stainsGenerated) {
@@ -296,7 +290,7 @@ public final class LluviaMocos implements Proyectiles {
     public void setDamage(float damage) {
         this.damage = damage;
         sprite.setColor(0.9f, 0.1f, 0.1f, 1f);
-        COLOR_VERDE_MOCO.set(1, 0, 0, 1f);
+        COLOR_PIPI.set(1, 0, 0, 1f);
     }
 
     @Override
@@ -304,8 +298,8 @@ public final class LluviaMocos implements Proyectiles {
         renderParticulasProyectil.dispose();
     }
 
-    public EstadoMoco getEstadoMoco() {
-        return estadoMoco;
+    public EstadoLluvia getEstadoMoco() {
+        return estadoLluvia;
     }
 
     public float getExplosionTimer() {

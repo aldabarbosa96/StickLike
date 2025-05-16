@@ -54,6 +54,7 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Alarma Aparece", this::spawnAlarma, LVL_EVENTO4));
         eventos.add(new Evento("Examen Aparece", this::spawnExamen, LVL_EVENTO5));
         eventos.add(new Evento("Regla Aparece", this::spawnReglas, LVL_EVENTO6));
+        eventos.add(new Evento("Calculadora Aparece", this::spawnCalculadoras, LVL_EVENTO7));
     }
 
     public void actualizar() {
@@ -142,6 +143,10 @@ public class SistemaDeEventos {
         ctrlEnemigos.setTiposDeEnemigos(LISTA_REGLA);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
         ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.35f);
+    }
+    private void spawnCalculadoras(){
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS4);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO4_SPAWN_RATE);
     }
 
     public void dispose() {

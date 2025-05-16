@@ -34,10 +34,10 @@ public final class ProyectilPelota implements Proyectiles {
     private static final float SPEED = 350f;
     private static final float MAX_DISTANCE = 2500f;
     private static final int MAX_REBOTES = 5;
-    private static final float IMPACT_DURATION = IMPACTO_DURACION;
+    private static final float SPIN_SPEED = 666f;
     private static final float PARTICLE_LEN_FACTOR = 25;
     private static final float PARTICLE_WID_FACTOR = 5f;
-    private static final Color PARTICLE_COLOR = new Color(.5f, .8f, .2f, 0.9f);
+    private static final Color PARTICLE_COLOR = new Color(.55f, .85f, .25f, 0.9f);
     private static Texture TEXTURE;
     private final Sprite sprite;
     private final Rectangle collisionRect = new Rectangle();
@@ -86,6 +86,7 @@ public final class ProyectilPelota implements Proyectiles {
 
         float move = SPEED * delta;
         sprite.translate(dirX * move, dirY * move);
+        sprite.rotate(SPIN_SPEED * delta);
         comprobarReboteVentana();
         distanciaRecorrida += move;
         if (distanciaRecorrida >= MAX_DISTANCE) desactivarProyectil();
@@ -94,9 +95,9 @@ public final class ProyectilPelota implements Proyectiles {
         trail.update(center);
         TrailRender.get().submit(trail);
 
-        if (impactoTimer < IMPACT_DURATION) {
+        if (impactoTimer < IMPACTO_DURACION) {
             impactoTimer += delta;
-            if (impactoTimer >= IMPACT_DURATION) {
+            if (impactoTimer >= IMPACTO_DURACION) {
                 sprite.setColor(Color.WHITE);
                 trail.setColor(PARTICLE_COLOR);
                 impactados.clear();
@@ -202,9 +203,28 @@ public final class ProyectilPelota implements Proyectiles {
         sprite.setRotation(vectorToDegrees(dirX, dirY));
     }
 
+    private boolean comprobarReboteJugador() { // todo --> corregir el overlaps del sprite con el jugador (hay que darle un margen)
+        Rectangle jugRect = jugador.getSprite().getBoundingRectangle();
+        if (collisionRect.overlaps(jugRect)) {
+            dirX = -dirX;
+            dirY = -dirY;
+            sprite.setRotation(vectorToDegrees(dirX, dirY));
+
+            // descontamos un rebote
+            rebotesRestantes--;
+
+            // si no quedan rebotes, desactivamos
+            if (rebotesRestantes <= 0) {
+                desactivarProyectil();
+            }
+
+            return true;
+        }
+        return false;
+    }
     private void comprobarReboteVentana() {
-        OrthographicCamera cam = VentanaJuego1.getCamara();     // cámara actual de juego
-        if (cam == null) return;                                // por si se llama en tests
+        OrthographicCamera cam = VentanaJuego1.getCamara();
+        if (cam == null) return;
 
         float halfW = cam.viewportWidth * 0.5f;
         float halfH = cam.viewportHeight * 0.5f;

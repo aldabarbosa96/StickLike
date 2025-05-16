@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.objetos.armas.LatigoDildo;
-import com.sticklike.core.entidades.objetos.armas.LluviaMocos;
+import com.sticklike.core.entidades.objetos.armas.LluviaDorada;
 import com.sticklike.core.entidades.objetos.armas.ProyectilPapelCulo;
 import com.sticklike.core.entidades.objetos.armas.ProyectilTazo;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
@@ -160,7 +160,7 @@ public class ControladorProyectiles {
 
     public void renderizarProyectiles(SpriteBatch batch) { // Render sobre enemigos
         for (Proyectiles p : proyectiles) {
-            if (!(p instanceof LluviaMocos && p.isPersistente())) {
+            if (!(p instanceof LluviaDorada && p.isPersistente())) {
                 p.renderizarProyectil(batch);
             }
         }
@@ -168,7 +168,7 @@ public class ControladorProyectiles {
 
     public void renderizarProyectilesFondo(SpriteBatch batch) { // Render por debajo de los enemigos
         for (Proyectiles p : proyectiles) {
-            if (p instanceof LluviaMocos && p.isPersistente()) {
+            if (p instanceof LluviaDorada && p.isPersistente()) {
                 p.renderizarProyectil(batch);
             }
         }

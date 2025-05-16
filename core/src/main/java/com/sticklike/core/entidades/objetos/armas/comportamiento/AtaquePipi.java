@@ -3,10 +3,10 @@ package com.sticklike.core.entidades.objetos.armas.comportamiento;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.LluviaMocos;
+import com.sticklike.core.entidades.objetos.armas.LluviaDorada;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-public class AtaqueMocos {
+public class AtaquePipi {
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo = 0.8f;
     private boolean reboteMocoActivado = false;
@@ -22,7 +22,7 @@ public class AtaqueMocos {
         float randomX = MathUtils.random(left, right - 20);
         float fallSpeed = MathUtils.random(250, 300);
 
-        LluviaMocos mocos = new LluviaMocos(randomX, top, fallSpeed, gestorDeAudio);
+        LluviaDorada mocos = new LluviaDorada(randomX, top, fallSpeed, gestorDeAudio);
         if (reboteMocoActivado) {
             mocos.setReboteActivado(true);
             mocos.setMaxBounces(maxBouncesAcumulado);
@@ -41,16 +41,16 @@ public class AtaqueMocos {
         }
     }
 
-    public void tormentaMucosa(float factorIntervalo) {
+    public void tormentaDorada(float factorIntervalo) {
         this.intervaloDisparo *= factorIntervalo;
     }
 
-    public void activarReboteMucoso() {
+    public void activarRebote() {
         this.reboteMocoActivado = true;
         maxBouncesAcumulado++;
     }
 
-    public void mocosConSangre() {
+    public void lluviaConSangre() {
         mocosSangre = true;
     }
 

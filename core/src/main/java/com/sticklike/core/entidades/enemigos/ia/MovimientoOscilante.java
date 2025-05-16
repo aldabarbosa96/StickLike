@@ -8,7 +8,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Movimiento del enemigo Culo; alterna entre pausas y desplazamientos hacia el jugador con oscilación rotacional.
  */
 
-public class MovimientoCulo extends MovimientoBaseEnemigos {
+public class MovimientoOscilante extends MovimientoBaseEnemigos {
     private float velocidadEnemigo;
     private float tempMovimiento;
     private float duracionPausa;
@@ -21,7 +21,7 @@ public class MovimientoCulo extends MovimientoBaseEnemigos {
     private final float rotationMaxPositive = 25f;
     private final float rotationMaxNegative = -5f;
 
-    public MovimientoCulo(float velocidadEnemigo, boolean puedeEmpujar) {
+    public MovimientoOscilante(float velocidadEnemigo, boolean puedeEmpujar) {
         super(puedeEmpujar);
         this.velocidadEnemigo = velocidadEnemigo;
         this.tempMovimiento = 0;

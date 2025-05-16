@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionCulo;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoOscilante;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
@@ -24,7 +24,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 public class EnemigoCulo extends EnemigoBase {
     private Sprite spriteOjoAbierto;
     private Sprite spriteOjoCerrado;
-    private MovimientoCulo movimientoCulo;
+    private MovimientoOscilante movimientoOscilante;
     private AnimacionCulo animacionCulo;
     private boolean tieneOjo = false;
     private boolean esConOjo;
@@ -39,7 +39,7 @@ public class EnemigoCulo extends EnemigoBase {
         esConOjo();
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.movimientoCulo = new MovimientoCulo(velocidadBase, true);
+        this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);
         this.animacionCulo = new AnimacionCulo(this, animacionesBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
         this.damageTexture = manager.get(DAMAGE_CULO_TEXTURE, Texture.class);
 
@@ -66,7 +66,7 @@ public class EnemigoCulo extends EnemigoBase {
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        movimientoCulo.actualizarMovimiento(delta, sprite, jugador);
+        movimientoOscilante.actualizarMovimiento(delta, sprite, jugador);
         animacionCulo.actualizarAnimacion(delta, sprite);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
@@ -74,7 +74,7 @@ public class EnemigoCulo extends EnemigoBase {
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimientoCulo.actualizarSoloKnockback(delta, sprite, true);
+        movimientoOscilante.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class EnemigoCulo extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimientoCulo.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoOscilante.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -110,11 +110,11 @@ public class EnemigoCulo extends EnemigoBase {
     }
 
     public float getVelocidad() {
-        return movimientoCulo.getVelocidadEnemigo();
+        return movimientoOscilante.getVelocidadEnemigo();
     }
 
     public void setVelocidad(float nuevaVelocidad) {
-        movimientoCulo.setVelocidadEnemigo(nuevaVelocidad);
+        movimientoOscilante.setVelocidadEnemigo(nuevaVelocidad);
     }
 
     public static void resetStats() {

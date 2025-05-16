@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoCulo;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionAlarma;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoOscilante;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -20,40 +21,53 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  * Enemigo Alarma; puede aparecer Crono (Cosmo) o Alarma (Wanda), alterando su vida y animación. Gestiona su comportamiento y daño.
  */
 public class EnemigoAlarma extends EnemigoBase {
-
-    private MovimientoCulo movimientoAlarma;
+    private Sprite alarma, alarmaOjo, crono, cronoCerrado;
+    private AnimacionAlarma animacionAlarma, animacionCrono;
+    private MovimientoOscilante movimientoAlarma;
     private float cooldownDanyo = COOLDOWN_ENEMIGOCULO;
     private static float velocidadBase = VEL_BASE_ALARMA;
-    private boolean esCrono;   // Determina si es la versión verde (true) o rosa (false)
+    private boolean esCrono;
 
     public EnemigoAlarma(float x, float y, Jugador jugador) {
         super(jugador);
+        this.alarma = new Sprite(manager.get(ENEMIGO_ALARMA, Texture.class));
+        this.alarmaOjo = new Sprite(manager.get(ENEMIGO_ALARMA_OJO, Texture.class));
+        this.crono = new Sprite(manager.get(ENEMIGO_ALARMA2, Texture.class));
+        this.cronoCerrado = new Sprite(manager.get(ENEMIGO_ALARMA2_CERRADA, Texture.class));
         sprite = new Sprite(escogerTextura());
+        animacionCrono = new AnimacionAlarma(animacionesBaseEnemigos, crono, cronoCerrado, 1, 0.25f);
+        animacionAlarma = new AnimacionAlarma(animacionesBaseEnemigos, alarma, alarmaOjo, 0.33f, 0.25f);
         sprite.setPosition(x, y);
-        sprite.setSize(40, 40);
+        if (esCrono) sprite.setSize(48, 48);
+        else sprite.setSize(42, 48);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.movimientoAlarma = new MovimientoCulo(velocidadBase, true);
-        this.damageTexture = manager.get(DAMAGE_ALARMA_TEXTURE, Texture.class);
+        this.movimientoAlarma = new MovimientoOscilante(velocidadBase, true);
+        this.damageTexture = manager.get(esCrono ? DAMAGE_ALARMA2_TEXTURE : DAMAGE_ALARMA_TEXTURE, Texture.class);
         this.vidaEnemigo = VIDA_ENEMIGO_ALARMA;
         this.damageAmount = DANYO_CULO;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         this.coolDownDanyo = COOLDOWN_ENEMIGOCULO;
     }
 
-    private Texture escogerTextura() {
+    private Sprite escogerTextura() {
         float texturaAleatoria = MathUtils.random(10);
         if (texturaAleatoria <= 5) {
             esCrono = false; // Rosa
-            return manager.get(ENEMIGO_ALARMA, Texture.class);
+            return alarma;
         } else {
             esCrono = true;  // Verde
-            return manager.get(ENEMIGO_ALARMA2, Texture.class);
+            return crono;
         }
     }
 
     @Override
     protected void actualizarMovimiento(float delta) {
         movimientoAlarma.actualizarMovimiento(delta, sprite, jugador);
+        if (esCrono) {
+            animacionCrono.actualizar(delta, sprite);
+        } else {
+            animacionAlarma.actualizar(delta, sprite);
+        }
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 

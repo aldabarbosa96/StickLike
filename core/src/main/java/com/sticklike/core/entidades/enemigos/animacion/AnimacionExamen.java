@@ -1,40 +1,24 @@
 package com.sticklike.core.entidades.enemigos.animacion;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sticklike.core.entidades.jugador.Jugador;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
+/**
+ * Levanta y baja los puños del enemigo Examen.
+ */
 public class AnimacionExamen {
-    private final AnimacionesBaseEnemigos animacionesBaseEnemigos;
-    private final Texture frame1;
-    private final Texture frame2;
-    private float tiempoAcumulado;
-    private final float tiempoCambio;
-    private boolean usandoFrame2;
+    private final AnimacionesBaseEnemigos base;
+    private final AnimacionDosFrames anim;
 
-    public AnimacionExamen(AnimacionesBaseEnemigos animacionesBaseEnemigos, Texture frame1, Texture frame2, float tiempoCambio) {
-        this.animacionesBaseEnemigos = animacionesBaseEnemigos;
-        this.frame1 = frame1;
-        this.frame2 = frame2;
-        this.tiempoCambio = tiempoCambio;
-        this.tiempoAcumulado = 0;
-        this.usandoFrame2 = false;
+    public AnimacionExamen(AnimacionesBaseEnemigos base, Texture frame1, Texture frame2, float tiempoCambio) {
+        this.base = base;
+        this.anim = new AnimacionDosFrames(new TextureRegion(frame1), new TextureRegion(frame2), tiempoCambio, tiempoCambio, null, null);
     }
 
-    public void actualizarAnimacion(float delta, Jugador jugador, Sprite sprite) { // levanta o baja los puños
-        if (!animacionesBaseEnemigos.estaEnParpadeo()) {
-            tiempoAcumulado += delta;
-            if (tiempoAcumulado >= tiempoCambio) {
-                if (usandoFrame2) {
-                    sprite.setRegion(frame1);
-                    usandoFrame2 = false;
-                } else {
-                    sprite.setRegion(frame2);
-                    usandoFrame2 = true;
-                }
-                tiempoAcumulado = 0;
-            }
+    public void actualizarAnimacion(float delta, Sprite sprite) {
+        if (!base.estaEnParpadeo()) {
+            anim.update(delta, sprite);
         }
     }
 }

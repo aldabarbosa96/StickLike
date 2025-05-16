@@ -9,7 +9,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Movimiento del enemigo Regla; rota constantemente y se lanza en línea recta hacia el jugador tras una fase de carga.
  */
 
-public class MovimientoRegla extends MovimientoBaseEnemigos {
+public class MovimientoProyeccion extends MovimientoBaseEnemigos {
     private final float velocidadEnFaseDisparo;
     private final float velocidadRotacion;
     private float tiempoCarga;
@@ -21,7 +21,7 @@ public class MovimientoRegla extends MovimientoBaseEnemigos {
     private boolean direccionCalculada;
     private OrthographicCamera camara;
 
-    public MovimientoRegla(float velocidadEnFaseDisparo, float velocidadRotacion, OrthographicCamera camara, boolean canKnockback) {
+    public MovimientoProyeccion(float velocidadEnFaseDisparo, float velocidadRotacion, OrthographicCamera camara, boolean canKnockback) {
         super(canKnockback);
         this.velocidadEnFaseDisparo = velocidadEnFaseDisparo;
         this.velocidadRotacion = velocidadRotacion;

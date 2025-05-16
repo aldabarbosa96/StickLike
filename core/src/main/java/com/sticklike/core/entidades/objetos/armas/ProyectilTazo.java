@@ -31,11 +31,12 @@ public final class ProyectilTazo implements Proyectiles {
     private static final float MIN_SCALE = 0.1f;
     private static final float MAX_SCALE = 0.9f;
     private static final float GROW_DURATION = 0.5f;
-    private static final float ROT_GROW = 720f;
-    private static final float ROT_ACTIVE = 1000f;
+    private static final float ROT_GROW = 1250f;
+    private static final float ROT_ACTIVE = 2500f;
     private static final float COOLDOWN_DURATION = 3.5f;
-    private static final float PARTICLE_LEN = 15f;
+    private static final float PARTICLE_LEN = 18f;
     private static final float PARTICLE_WID = 6f;
+    private static final Color PARTICLE_COLOR = new Color(1f, 0.615f, 0f, 1f);
 
     /* ---------- recursos ---------- */
     private final Sprite sprite;
@@ -69,7 +70,7 @@ public final class ProyectilTazo implements Proyectiles {
 
     public ProyectilTazo(Jugador jugador, AtaqueTazo ataqueTazo, float offsetAngle, float radio, GestorDeAudio gestor) {
 
-        if (TEXTURE == null) TEXTURE = manager.get(ARMA_TAZOS, Texture.class);
+        if (TEXTURE == null) TEXTURE = manager.get(ARMA_TAZOS2, Texture.class);
 
         this.jugador = jugador;
         this.ataqueTazo = ataqueTazo;
@@ -84,7 +85,7 @@ public final class ProyectilTazo implements Proyectiles {
         sprite.setScale(MIN_SCALE);
 
         float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
-        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, Color.RED);
+        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, PARTICLE_COLOR);
     }
 
     /* ----------------------------------------------------------- */
@@ -127,7 +128,8 @@ public final class ProyectilTazo implements Proyectiles {
                 if (damageTimer >= INTERVALO_TAZOS) {
                     damageTimer = 0f;
                     impactados.clear();
-                    sprite.setColor(1f, 1f, 1f, 1f);
+                    sprite.setColor(Color.WHITE);
+                    particles.setColor(PARTICLE_COLOR);
                 }
                 if (phaseTimer >= ataqueTazo.getDuracionActivaTazo()) {
                     phase = Phase.COOLDOWN;
@@ -246,6 +248,7 @@ public final class ProyectilTazo implements Proyectiles {
         if (impactados.add(e)) {
             audio.reproducirEfecto("tazo", 1f);
             sprite.setColor(Color.RED);
+            particles.setColor(Color.RED);
         }
     }
 
