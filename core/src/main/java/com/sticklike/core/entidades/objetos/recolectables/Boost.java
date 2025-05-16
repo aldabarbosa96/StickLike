@@ -276,6 +276,11 @@ public class Boost extends ObjetoBase {
     }
 
     @Override
+    public void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game) {
+
+    }
+
+    @Override
     public void dispose() {
         // no hace falta hacer dispose de las texturas aquí porque se encarga el assetManager todo --> testear a fondo
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionAlarma;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoOscilante;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -106,6 +107,16 @@ public class EnemigoAlarma extends EnemigoBase {
             return new ObjetoXp(posXMuerte, posYMuerte);
         }
         return null;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoAlarma.getKnockbackTimer() > 0;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoAlarma;
     }
 
     public boolean isEsCrono() {

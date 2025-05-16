@@ -2,12 +2,14 @@ package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
+import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class ObjetoXp extends ObjetoBase {
-    // Usamos un entero para representar el tipo: 0 = normal, 1 = XP morada, 2 = XP dorada
     private int tipo;
     private static final Texture TEXTURE = manager.get(RECOLECTABLE_XP, Texture.class);
     private static final Texture TEXTURE2 = manager.get(RECOLECTABLE_XP2, Texture.class);
@@ -45,9 +47,6 @@ public class ObjetoXp extends ObjetoBase {
         };
     }
 
-    public int getTipo() {
-        return tipo;
-    }
     public void setTipo(int nuevoTipo) {
         this.tipo = nuevoTipo;
         switch(nuevoTipo) {
@@ -57,6 +56,18 @@ public class ObjetoXp extends ObjetoBase {
             default -> setSpriteTexture(TEXTURE);
         }
     }
+
+    @Override
+    public void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game) {
+        float xpOtorgada = switch (tipo) {
+            case 0 -> 10f + MathUtils.random(15f);
+            case 1 -> 50f + MathUtils.random(50f);
+            case 2 -> 2 * (50f + MathUtils.random(50f));
+            default -> 0f;
+        };
+        game.getSistemaDeNiveles().agregarXP(xpOtorgada);
+    }
+
 
     @Override
     protected float getWidth() {

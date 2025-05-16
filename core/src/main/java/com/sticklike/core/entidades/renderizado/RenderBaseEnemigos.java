@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
+import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoLibro;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles2;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoExamen;
@@ -70,11 +72,16 @@ public class RenderBaseEnemigos {
                 case Destructibles2 d2 -> drawDestructible2(d2, r, ex, ey, ew, eh);
                 case EnemigoCulo culo ->
                     drawSimple(culo, r, ex, ey, ew, eh, ew * SHADOW_WIDTH_CULO, eh * SHADOW_HEIGHT_CULO, SHADOW_OFFSET);
-                case EnemigoPolla polla -> drawPolla(polla, r, ex, ey, ew, eh);
+                case EnemigoPolla polla ->
+                    drawSombraBotes(polla, r, ex, ey, ew, eh, polla.getMovimientoPolla().getCurrentOffset(), polla.getMovimientoPolla().getAmplitudZigzag(), -1f);
                 case EnemigoExamen exam -> drawExamen(exam, r, ex, ey, ew, eh);
                 case EnemigoRegla regla -> drawSimple(regla, r, ex, ey, ew, eh, ew * 0.75f, eh * 0.3f, 3.5f);
                 case EnemigoCondon condon -> drawSimple(condon, r, ex, ey, ew, eh, ew, eh * 0.225f, 10f);
-                case EnemigoTeta teta -> drawTeta(teta, r, ex, ey, ew, eh);
+                case EnemigoTeta teta ->
+                    drawSombraBotes(teta, r, ex, ey, ew, eh, teta.getMovimientoBotes().getCurrentOffset(), teta.getMovimientoBotes().getAmplitudZigzag(), -5f);
+                case EnemigoLibro libro ->
+                    drawSombraBotes(libro, r, ex, ey, ew, eh, libro.getMovimientoBotes().getCurrentOffset(), libro.getMovimientoBotes().getAmplitudZigzag(), -3f);
+
                 case Tragaperras tragaperras ->
                     drawSimple(tragaperras, r, ex - 3.5f, ey, ew, eh, ew * 0.9f, eh * 0.275f, SHADOW_OFFSET * 4);
                 default -> drawVater(e, r, ex, ey, ew, eh);
@@ -124,41 +131,22 @@ public class RenderBaseEnemigos {
         r.ellipse(x, y, w, h);
     }
 
-    private void drawPolla(EnemigoPolla p, ShapeRenderer r, float ex, float ey, float ew, float eh) {
-        float offset = p.getMovimientoPolla().getCurrentOffset();
-        float maxZig = p.getMovimientoPolla().getAmplitudZigzag();
-        float norm = Math.min(1f, Math.max(-1f, offset / maxZig));
+    private void drawSombraBotes(Enemigo e, ShapeRenderer r, float ex, float ey, float ew, float eh, float offset, float maxZigzag, float baseYOffset) {
+        float norm = MathUtils.clamp(offset / maxZigzag, -1f, 1f);
         float t = (norm + 1f) / 2f;
         float factor = 0.6f + (0.2f - 0.6f) * t;
 
         float baseW = ew * 1.6f;
         float baseH = eh * 0.5f;
-        float baseY = ey - 1f;
         float w = baseW * factor;
         float h = baseH * factor;
         float x = ex + ew / SHADOW_OFFSET_POLLA - w / 2f;
+        float y = ey + baseYOffset;
 
-        dibujarParpadeoSombra(p, r, Color.WHITE);
-        r.ellipse(x, baseY, w, h);
+        dibujarParpadeoSombra(e, r, Color.WHITE);
+        r.ellipse(x, y, w, h);
     }
 
-    private void drawTeta(EnemigoTeta teta, ShapeRenderer r, float ex, float ey, float ew, float eh) {
-        float offset = teta.getMovimientoPolla().getCurrentOffset();
-        float maxZig = teta.getMovimientoPolla().getAmplitudZigzag();
-        float norm = Math.min(1f, Math.max(-1f, offset / maxZig));
-        float t = (norm + 1f) / 2f;
-        float factor = 0.6f + (0.2f - 0.6f) * t;
-
-        float baseW = ew * 1.6f;
-        float baseH = eh * 0.5f;
-        float baseY = ey - 5f;
-        float w = baseW * factor;
-        float h = baseH * factor;
-        float x = ex + ew / SHADOW_OFFSET_POLLA - w / 2f;
-
-        dibujarParpadeoSombra(teta, r, Color.WHITE);
-        r.ellipse(x, baseY, w, h);
-    }
 
     private void drawExamen(EnemigoExamen ex, ShapeRenderer r, float ex0, float ey0, float ew, float eh) {
         float size = (ew + eh) / 2f * 0.55f;

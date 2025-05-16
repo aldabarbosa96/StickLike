@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionVater;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoLineal;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -43,7 +44,7 @@ public class EnemigoVater extends EnemigoBase {
 
         movimientoLineal = new MovimientoLineal(true, VEL_BASE_VATER);
         animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
-        animacionVater = new AnimacionVater(animacionesBaseEnemigos, spriteTapaLevantada, spriteTapaBajada,0.25f,1f);
+        animacionVater = new AnimacionVater(animacionesBaseEnemigos, spriteTapaLevantada, spriteTapaBajada, 0.25f, 1f);
 
         renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
@@ -89,5 +90,15 @@ public class EnemigoVater extends EnemigoBase {
             haSoltadoXP = true;
             return new ObjetoPowerUp(posXMuerte, posYMuerte);
         }
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoLineal.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoLineal;
     }
 }

@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoIman;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoPowerUp;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -83,14 +85,16 @@ public class Destructibles2 implements Enemigo {
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        int dropChance = MathUtils.random(99);
+        int dropChance = MathUtils.random(99); // 0 - 99
 
-        if (dropChance < 45) {
-            return new ObjetoOro(getX(), getY());
+        if (dropChance < 60) {
+            return new ObjetoOro(getX(), getY());  // 60%
         } else if (dropChance < 90) {
-            return new ObjetoVida(getX(), getY());
+            return new ObjetoVida(getX(), getY());  // 30%
+        } else if (dropChance < 95){
+            return new ObjetoIman(getX(), getY());   // 5%
         } else {
-            return new ObjetoPowerUp(getX(), getY());
+            return new ObjetoPowerUp(getX(),getY());  // 5%
         }
     }
 
@@ -155,5 +159,15 @@ public class Destructibles2 implements Enemigo {
     @Override
     public boolean isMostrandoDamageSprite() {
         return false;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return false;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return null;
     }
 }

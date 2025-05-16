@@ -3,9 +3,9 @@ package com.sticklike.core.entidades.mobiliario.tragaperras;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.interfaces.Enemigo;
@@ -118,6 +118,16 @@ public class Tragaperras implements Enemigo {
     @Override
     public boolean isMostrandoDamageSprite() {
         return false;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return false;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return null;
     }
 
     @Override

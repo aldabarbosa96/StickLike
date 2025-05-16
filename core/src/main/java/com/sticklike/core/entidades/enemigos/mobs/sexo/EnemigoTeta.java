@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBotes;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -73,7 +74,17 @@ public class EnemigoTeta extends EnemigoBase {
         return null;
     }
 
-    public MovimientoBotes getMovimientoPolla() {
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoBotes.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoBotes;
+    }
+
+    public MovimientoBotes getMovimientoBotes() {
         return movimientoBotes;
     }
 }

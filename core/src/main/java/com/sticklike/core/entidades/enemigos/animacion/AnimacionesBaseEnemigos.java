@@ -178,4 +178,5 @@ public class AnimacionesBaseEnemigos {
     public boolean isEstaFlipped() {
         return estaFlipped;
     }
+
 }

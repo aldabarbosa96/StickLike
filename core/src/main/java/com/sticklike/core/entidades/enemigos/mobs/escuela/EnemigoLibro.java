@@ -4,9 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionCalculadora;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoLineal;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBotes;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -17,54 +16,46 @@ import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
-public class EnemigoCalculadora extends EnemigoBase {
-    private Texture encendida;
-    private Texture apagada;
-    private MovimientoLineal movimiento;
-    private AnimacionCalculadora animacion;
-    private static float velocidadBase = VEL_BASE_CALCULADORA;
+public class EnemigoLibro extends EnemigoBase {
+    private MovimientoBotes movimientoBotes;
+    private static float velocidadLibro = VEL_BASE_LIBRO;
 
-    public EnemigoCalculadora(float x, float y, Jugador jugador) {
+    public EnemigoLibro(Jugador jugador, float x, float y) {
         super(jugador);
-        this.vidaEnemigo = VIDA_ENEMIGO_CALCULADORA;
-        this.damageAmount = DANYO_CALCULADORA;
-        this.coolDownDanyo = COOLDOWN_ENEMIGOCULO;
-        this.temporizadorDanyo = TEMPORIZADOR_DANYO;
-        this.encendida = manager.get(ENEMIGO_CALCULADORA, Texture.class);
-        this.apagada = manager.get(ENEMIGO_CALCULADORA_APAGADA, Texture.class);
-        sprite = new Sprite(encendida);
-        sprite.setSize(38, 56);
+        sprite = new Sprite(manager.get(ENEMIGO_LIBRO, Texture.class));
+        sprite.setSize(38, 34);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.movimiento = new MovimientoLineal(true, velocidadBase);
-        this.animacion = new AnimacionCalculadora(animacionesBaseEnemigos, apagada, encendida, 0.2f, 1f);
-        this.damageTexture = manager.get(DAMAGE_CALCULADORA, Texture.class);
+        movimientoBotes = new MovimientoBotes(velocidadLibro, 0.75f, 25f, true);
+        this.damageTexture = manager.get(DAMAGE_LIBRO, Texture.class);
+        this.vidaEnemigo = VIDA_ENEMIGO_LIBRO;
+        this.coolDownDanyo = COOLDOWN_POLLA;
+        this.temporizadorDanyo = TEMPORIZADOR_DANYO;
+        this.damageAmount = DANYO_LIBRO;
     }
-
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        movimiento.actualizarMovimiento(delta, sprite, jugador);
-        animacion.actualizarAnimacion(delta, sprite);
+        movimientoBotes.actualizarMovimiento(delta, sprite, jugador);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimiento.actualizarSoloKnockback(delta, sprite, true);
+        movimientoBotes.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
     protected void iniciarAnimacionMuerte() {
-        Animation<TextureRegion> animMuertePolla = GestorDeAssets.animations.get("calculadoraMuerte");
+        Animation<TextureRegion> animMuerteLibro = GestorDeAssets.animations.get("muerteLibro");
         animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
+        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteLibro);
         animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimiento.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoBotes.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -83,11 +74,15 @@ public class EnemigoCalculadora extends EnemigoBase {
 
     @Override
     public boolean estaEnKnockback() {
-        return movimiento.getKnockbackTimer() > 0f;
+        return movimientoBotes.getKnockbackTimer() > 0f;
     }
 
     @Override
     public MovimientoBaseEnemigos getMovimiento() {
-        return movimiento;
+        return movimientoBotes;
+    }
+
+    public MovimientoBotes getMovimientoBotes() {
+        return movimientoBotes;
     }
 }

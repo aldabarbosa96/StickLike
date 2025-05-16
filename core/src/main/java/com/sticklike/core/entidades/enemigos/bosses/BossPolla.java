@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBoss1;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -46,9 +47,9 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         sprite = new Sprite(manager.get(BOSS_POLLA, Texture.class));
         sprite.setSize(92, 128);
         spriteBocaAbierta = new Sprite(manager.get(BOSS_POLLA, Texture.class));
-        spriteBocaAbierta.setSize(92, 128);
+        spriteBocaAbierta.setSize(92, 132);
         spriteBocaCerrada = new Sprite(manager.get(BOSS_POLLA_BOCACERRADA, Texture.class));
-        spriteBocaCerrada.setSize(92, 128);
+        spriteBocaCerrada.setSize(92, 132);
         sprite.setRegion(spriteBocaCerrada);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -198,6 +199,16 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
     @Override
     public boolean isMostrandoDamageSprite() {
         return false;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoBoss.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoBoss;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoProyeccion;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -22,7 +23,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 public class EnemigoCondon extends EnemigoBase {
     private MovimientoProyeccion movimientoProyeccion;
 
-    public EnemigoCondon(Jugador jugador,float x, float y, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
+    public EnemigoCondon(Jugador jugador, float x, float y, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_CONDON, Texture.class));
         sprite.setSize(16, 42);
@@ -75,5 +76,15 @@ public class EnemigoCondon extends EnemigoBase {
             return objetoXp;
         }
         return null;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoProyeccion.getKnockbackTimer() > 0;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoProyeccion;
     }
 }

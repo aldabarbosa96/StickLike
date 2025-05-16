@@ -3,23 +3,23 @@ package com.sticklike.core.entidades.objetos.recolectables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public abstract class ObjetoBase implements ObjetosXP {
-    private Sprite sprite;
-    private boolean recolectado = false;
-
     private enum EstadoRecolectable {
         INACTIVO,
         REBOTE,
         ATRACCION,
         RECOLECTADO
     }
-    private EstadoRecolectable estado = EstadoRecolectable.INACTIVO;
 
+    private Sprite sprite;
+    private boolean recolectado = false;
+    private EstadoRecolectable estado = EstadoRecolectable.INACTIVO;
     private final float distanciaActivacion = DISTANCIA_ACTIVACION;
     private final float velocidadAtraccion = VEL_ATRACCION;
     private float tiempoRebote = 0f;
@@ -27,7 +27,7 @@ public abstract class ObjetoBase implements ObjetosXP {
     private float velocidadRebote = 200;
     protected float x, y;
     private float reboteDirX, reboteDirY;
-
+    private boolean atraccionForzada = false;
 
     public ObjetoBase(float x, float y, Texture texturaInicial) {
         this.sprite = new Sprite(texturaInicial);
@@ -81,8 +81,9 @@ public abstract class ObjetoBase implements ObjetosXP {
                     direccionX /= longitud;
                     direccionY /= longitud;
                 }
-                x += direccionX * velocidadAtraccion * delta;
-                y += direccionY * velocidadAtraccion * delta;
+                float velocidad = atraccionForzada ? velocidadAtraccion * 2f : velocidadAtraccion;
+                x += direccionX * velocidad * delta;
+                y += direccionY * velocidad * delta;
                 sprite.setPosition(x, y);
                 if (distancia < 10) {
                     recolectar(gestorDeAudio);
@@ -90,6 +91,13 @@ public abstract class ObjetoBase implements ObjetosXP {
                 break;
             case RECOLECTADO:
                 break;
+        }
+    }
+
+    public void forzarAtraccion() { // se usa en el objetoIman
+        if (!recolectado && estado != EstadoRecolectable.RECOLECTADO) {
+            estado = EstadoRecolectable.ATRACCION;
+            atraccionForzada = true;
         }
     }
 
@@ -112,6 +120,10 @@ public abstract class ObjetoBase implements ObjetosXP {
     public boolean colisionaConOtroSprite(Sprite otherSprite) {
         return sprite != null && sprite.getBoundingRectangle().overlaps(otherSprite.getBoundingRectangle());
     }
+
+    @Override
+    public abstract void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game);
+
 
     @Override
     public void dispose() {

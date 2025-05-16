@@ -1,6 +1,5 @@
 package com.sticklike.core.gameplay.controladores;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -138,6 +137,7 @@ public class ControladorEnemigos {
             if (!esEntidadEstatica(e)) reposiciona(e, left, right, bottom, top);
         }
 
+        aplicarSeparacionEntreIguales(delta);
         //Gdx.app.log("ControladorEnemigos", "Enemigos vivos: " + enemigos.size);
     }
 
@@ -394,7 +394,9 @@ public class ControladorEnemigos {
             case "ALARMA":
                 return new EnemigoAlarma(x, y, jugador);
             case "CALCULADORA":
-                return new EnemigoCalculadora(x,y,jugador);
+                return new EnemigoCalculadora(x, y, jugador);
+            case "LIBRO":
+                return new EnemigoLibro(jugador, x, y);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
@@ -441,6 +443,46 @@ public class ControladorEnemigos {
         }
         enemigos.clear();
     }
+
+    private void aplicarSeparacionEntreIguales(float delta) {
+        final float radio = 40f;
+        final float STIFFNESS = 3f;
+
+        for (int i = 0; i < enemigos.size; i++) {
+            Enemigo a = enemigos.get(i);
+            Sprite sa = a.getSprite();
+            float ax = sa.getX(), ay = sa.getY();
+
+            for (int j = i + 1; j < enemigos.size; j++) {
+                Enemigo b = enemigos.get(j);
+                if (!a.getClass().equals(b.getClass())) continue;
+                if (a.estaEnKnockback() || b.estaEnKnockback()) {
+                    continue;
+                }
+
+                Sprite sb = b.getSprite();
+                float bx = sb.getX(), by = sb.getY();
+                float dx = ax - bx, dy = ay - by;
+                float dist2 = dx * dx + dy * dy;
+                if (dist2 < 1f || dist2 > radio * radio) continue;
+
+                float dist = (float) Math.sqrt(dist2);
+                float overlap = radio - dist;    // cuánto se están pisando
+                float nx = dx / dist;
+                float ny = dy / dist;
+
+                // velocity = k * error
+                float separationVel = overlap * STIFFNESS;
+                // step = velocidad por frame
+                float step = separationVel * delta;
+
+                // repelen mitad cada uno
+                sa.translate(nx * step * 0.5f, ny * step * 0.5f);
+                sb.translate(-nx * step * 0.5f, -ny * step * 0.5f);
+            }
+        }
+    }
+
 
     public Array<Enemigo> getEnemigos() {
         return enemigos;

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionCulo;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoOscilante;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -97,7 +98,7 @@ public class EnemigoCulo extends EnemigoBase {
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        float randomXP = (float)(Math.random() * 100);
+        float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 0.25f) {
             haSoltadoXP = true;
             return new ObjetoVida(posXMuerte, posYMuerte);
@@ -107,6 +108,16 @@ public class EnemigoCulo extends EnemigoBase {
             return new ObjetoXp(posXMuerte, posYMuerte);
         }
         return null;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoOscilante.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoOscilante;
     }
 
     public float getVelocidad() {

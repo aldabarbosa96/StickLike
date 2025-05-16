@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionExamen;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoParabola;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
@@ -85,6 +86,16 @@ public class EnemigoExamen extends EnemigoBase {
         return null;
     }
 
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoParabola.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoParabola;
+    }
+
     public void setVelocidad(float nuevaVelocidad) {
         if (movimientoParabola != null) {
             movimientoParabola.setVelocidadEnemigo(nuevaVelocidad);
@@ -110,4 +121,5 @@ public class EnemigoExamen extends EnemigoBase {
     public static float getVelocidadBase() {
         return velocidadBase;
     }
+
 }

@@ -148,10 +148,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VIDA_ENEMIGO_EXAMEN = 27f;
     public static final float VIDA_ENEMIGO_VATER = 300f;
     public static final float VIDA_ENEMIGO_ALARMA = 88f;
-    public static final float VIDA_ENEMIGO_CALCULADORA = 10f;
+    public static final float VIDA_ENEMIGO_CALCULADORA = 26f;
+    public static final float VIDA_ENEMIGO_LIBRO = 13f;
     public static final float VIDA_ENEMIGO_TETA = 1f;
     public static final float DANYO_CULO = 2f;
     public static final float DANYO_CALCULADORA = 5f;
+    public static final float DANYO_LIBRO = 12.5f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float DANYO_POLLA = 1.25f;
     public static final float DANYO_TETA = 1.33f;
@@ -168,6 +170,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_VATER = 30f;
     public static final float VEL_BASE_ALARMA = 75f;
     public static final float VEL_BASE_CALCULADORA = 85f;
+    public static final float VEL_BASE_LIBRO = 85f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
     public static final float MULT_VELOCIDAD_CONDON = 3.25f;
@@ -275,6 +278,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 14f;
     public static final float OBJETO_ORO_WIDTH = 14f;
     public static final float OBJETO_ORO_HEIGHT = 14f;
+    public static final float OBJETO_IMAN_HEIGHT = 24f;
+    public static final float OBJETO_IMAN_WIDTH = 24f;
     public static final float OBJETO_PWUP_WIDTH = 8f;
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
@@ -321,7 +326,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] TIPOS_ENEMIGOS = {"CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "CONDON"};
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "TETA"};
-    public static final String[] TIPOS_ENEMIGOS4 = {"CALCULADORA"};
+    public static final String[] TIPOS_ENEMIGOS4 = {"CALCULADORA", "LIBRO"};
 
     // -------------------------------------------------
     // Configuración borrones

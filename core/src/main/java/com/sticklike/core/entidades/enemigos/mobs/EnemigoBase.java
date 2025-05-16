@@ -203,4 +203,5 @@ public abstract class EnemigoBase implements Enemigo {
 
     @Override
     public abstract ObjetosXP sueltaObjetoXP();
+
 }

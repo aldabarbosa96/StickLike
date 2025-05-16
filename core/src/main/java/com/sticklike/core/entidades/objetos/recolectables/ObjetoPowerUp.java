@@ -3,6 +3,8 @@ package com.sticklike.core.entidades.objetos.recolectables;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -29,6 +31,12 @@ public class ObjetoPowerUp extends ObjetoBase {
         super.recolectar(gestorDeAudio);
 
     }
+
+    @Override
+    public void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game) {
+        jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
+    }
+
     @Override
     protected Texture getTexture() {
         return TEXTURA;
