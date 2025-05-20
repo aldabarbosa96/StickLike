@@ -38,7 +38,7 @@ public class FontManager {
 
         // texto daño
         FreeTypeFontGenerator.FreeTypeFontParameter damageParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        damageParam.size = Math.round(8 * scale);
+        damageParam.size = Math.round(10 * scale);
         damageParam.color = Color.WHITE;
         damageParam.borderWidth = 3;
         damageParam.borderColor = Color.BLACK;

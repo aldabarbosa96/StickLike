@@ -1,17 +1,20 @@
 package com.sticklike.core.entidades.objetos.armas;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.DANYO_PEDO;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_NUBE_PEDO;
@@ -20,7 +23,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.manager;
 /**
  * Proyectil NubePedo optimizado: sigue al jugador y daña enemigos en pulsos vibratorios.
  */
-public final class NubePedo implements Proyectiles {
+public final class _02NubePedo implements Proyectiles {
     public enum Phase {GROWING, VIBRATE1, PAUSE, VIBRATE2, VIBRATE3, COOLDOWN}
 
     // Constantes de configuración
@@ -36,9 +39,13 @@ public final class NubePedo implements Proyectiles {
     private static final float MIN_ALPHA = 0.1f;
     private static final float MAX_ALPHA = 0.65f;
     private static final float VIBRATE_RANGE = 8f;
-    private static final float ROTATION_SPEED = 2500f;
+    private static final float ROTATION_SPEED = 360f;
+    private static final float ROTATION_SPEED2 = 2500f;
     private static final float DEFAULT_SIZE = 50f;
     private static final float KNOCKBACK_BASE = 200f;
+    private static final float PULSE_FREQUENCY = 4f;
+
+    private final ParticleEffectPool.PooledEffect efectoParticula;
 
     // Recursos estáticos
     private static Texture TEXTURE;
@@ -46,7 +53,8 @@ public final class NubePedo implements Proyectiles {
     // Estado de instancia
     private final Sprite sprite;
     private final Rectangle collisionRect = new Rectangle();
-    private final Set<Enemigo> impactados = new HashSet<>(8);
+    private final Map<Enemigo, Float> enemigosImpactados = new HashMap<>(8);
+    private static final float INTERVALO_IMPACTO = 0.33f;
     private final GestorDeAudio audio;
     private final float powerFactor;
     private final Jugador jugador;
@@ -57,7 +65,7 @@ public final class NubePedo implements Proyectiles {
     private boolean critico = false;
     private float knockback = KNOCKBACK_BASE;
 
-    public NubePedo(Jugador jugador) {
+    public _02NubePedo(Jugador jugador) {
         // Carga única de textura
         if (TEXTURE == null) {
             TEXTURE = manager.get(ARMA_NUBE_PEDO, Texture.class);
@@ -73,6 +81,11 @@ public final class NubePedo implements Proyectiles {
         sprite.setScale(MIN_SCALE);
         sprite.setColor(0.75f, 0.75f, 0.75f, MIN_ALPHA);
 
+        Vector2 posJugador = jugador.getPosicionTmp();
+        float cx = posJugador.x + sprite.getWidth() * 0.5f;
+        float cy = posJugador.y + sprite.getHeight() * 0.5f;
+        efectoParticula = ParticleManager.get().obtainEffect("pedo", cx, cy);
+
         // Inicializar rectángulo para colisión
         collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
@@ -81,37 +94,54 @@ public final class NubePedo implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!activo) return;
 
+        float px = sprite.getX() + sprite.getWidth() * 0.5f;
+        float py = sprite.getY() + sprite.getHeight() * 0.5f;
+        efectoParticula.setPosition(px, py);
+
+        sprite.rotate(-1 * ROTATION_SPEED * delta);
+
         // Calcular progreso y alpha antes de incrementar timer
         float progress = Math.min(phaseTimer * INV_GROW_DURATION, 1f);
         float currentAlpha = MIN_ALPHA + progress * (MAX_ALPHA - MIN_ALPHA);
         phaseTimer += delta;
 
+        float pulse = 0.5f + 0.5f * MathUtils.sin(phaseTimer * PULSE_FREQUENCY * MathUtils.PI2);
+
         // Posición base centrada en jugador
-        float px = jugador.getSprite().getX();
-        float py = jugador.getSprite().getY();
+        float px1 = jugador.getSprite().getX();
+        float py1 = jugador.getSprite().getY();
         float pw = jugador.getSprite().getWidth();
         float ph = jugador.getSprite().getHeight();
         float sw = sprite.getWidth();
         float sh = sprite.getHeight();
 
-        float baseX = px + pw * 0.5f - sw * 0.5f;
-        float baseY = py + ph * 0.5f - sh * 0.5f;
+        /* todo --> estos colores quedan guays para un futura ultimate
+        float r = MathUtils.lerp(0.5f, 0.7f, pulse);
+        float g = MathUtils.lerp(0.2f, 0.1f, pulse);
+        float b = MathUtils.lerp(0.1f, 0f, pulse);*/
+
+        float r = MathUtils.lerp(0.65f, 0.85f, pulse); // todo --> revisar colores del pulso
+        float g = MathUtils.lerp(0.5f, 0.75f, pulse);
+        float b = MathUtils.lerp(0.15f, 0.1f, pulse);
+
+        float alphaActual = sprite.getColor().a;
+
+        float baseX = px1 + pw * 0.5f - sw * 0.5f;
+        float baseY = py1 + ph * 0.5f - sh * 0.5f;
 
         switch (phase) {
             case GROWING:
-                sprite.rotate(ROTATION_SPEED * delta);
+                sprite.rotate(ROTATION_SPEED2 * delta);
                 sprite.setScale(MIN_SCALE + progress * (MAX_SCALE - MIN_SCALE));
                 sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
                 sprite.setPosition(baseX, baseY);
                 if (phaseTimer >= GROW_DURATION) {
                     phase = Phase.VIBRATE1;
                     phaseTimer = 0f;
-                    impactados.clear();
                 }
                 break;
             case VIBRATE1:
-                audio.reproducirEfecto("pedo", 0.45f);
-                if (phaseTimer < delta) impactados.clear();
+                audio.reproducirEfecto("pedo", 0.5f);
                 sprite.setScale(MAX_SCALE);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(baseX + MathUtils.random(-1f, 1f) * VIBRATE_RANGE, baseY + MathUtils.random(-1f, 1f) * VIBRATE_RANGE);
@@ -122,17 +152,16 @@ public final class NubePedo implements Proyectiles {
                 break;
             case PAUSE:
                 sprite.setScale(MAX_SCALE);
-                sprite.setColor(1f, 0.82f, 0.5f, currentAlpha);
+                sprite.setColor(1f, 0, 0f, currentAlpha);
                 sprite.setPosition(baseX, baseY);
+                sprite.setColor(r, g, b, alphaActual);
                 if (phaseTimer >= PAUSE_DURATION) {
                     phase = Phase.VIBRATE2;
                     phaseTimer = 0f;
-                    impactados.clear();
                 }
                 break;
             case VIBRATE2:
-                audio.reproducirEfecto("pedo", 0.45f);
-                if (phaseTimer < delta) impactados.clear();
+                audio.reproducirEfecto("pedo", 0.5f);
                 sprite.setScale(MAX_SCALE);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(baseX + MathUtils.random(-1f, 1f) * VIBRATE_RANGE, baseY + MathUtils.random(-1f, 1f) * VIBRATE_RANGE);
@@ -140,12 +169,10 @@ public final class NubePedo implements Proyectiles {
                     phase = jugador.getAtaqueNubePedo().isEsTriple() ? Phase.VIBRATE3 : Phase.COOLDOWN;
                     phaseTimer = 0f;
                     sprite.setScale(MIN_SCALE);
-                    impactados.clear();
                 }
                 break;
             case VIBRATE3:
-                audio.reproducirEfecto("pedo", 0.45f);
-                if (phaseTimer < delta) impactados.clear();
+                audio.reproducirEfecto("pedo", 0.5f);
                 sprite.setScale(MAX_SCALE);
                 sprite.setColor(1f, 0.65f, 0.1f, MAX_ALPHA);
                 sprite.setPosition(baseX + MathUtils.random(-1f, 1f) * VIBRATE_RANGE + 2f, baseY + MathUtils.random(-1f, 1f) * VIBRATE_RANGE + 2f);
@@ -153,27 +180,38 @@ public final class NubePedo implements Proyectiles {
                     phase = Phase.COOLDOWN;
                     phaseTimer = 0f;
                     sprite.setScale(MIN_SCALE);
-                    impactados.clear();
+
                 }
                 break;
             case COOLDOWN:
-                sprite.setPosition(-1000f, -1000f);
-                sprite.setColor(0.75f, 0.75f, 0.75f, 0f);
+                // Ahora dejamos la nube visible y con daño base
+                sprite.setScale(MAX_SCALE);
+                sprite.setColor(1f, 0.82f, 0.5f, MAX_ALPHA);
+                sprite.setPosition(baseX, baseY);
+                sprite.setColor(r, g, b, alphaActual);
+
+                // Tras el cooldown, volvemos a empezar el ciclo
                 if (phaseTimer >= COOLDOWN_DURATION) {
                     phase = Phase.GROWING;
                     phaseTimer = 0f;
-                    sprite.setColor(0.75f, 0.75f, 0.75f, MIN_ALPHA);
                 }
                 break;
         }
-
         // Actualizar colisión
         collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+
+        // Actualizar tiempos de impacto por enemigo
+        enemigosImpactados.entrySet().removeIf(entry -> entry.getKey() == null);
+
+        for (Map.Entry<Enemigo, Float> entry : enemigosImpactados.entrySet()) {
+            entry.setValue(entry.getValue() + delta);
+        }
+
     }
 
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
-        if (activo && phase != Phase.COOLDOWN) {
+        if (activo) {
             sprite.draw(batch);
         }
     }
@@ -181,6 +219,7 @@ public final class NubePedo implements Proyectiles {
     @Override
     public void dispose() {
         TEXTURE = null;
+        efectoParticula.free();
     }
 
     @Override
@@ -205,15 +244,15 @@ public final class NubePedo implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
+        efectoParticula.allowCompletion();
         activo = false;
     }
 
     @Override
     public float getBaseDamage() {
-        if (phase == Phase.COOLDOWN) return 0f;
-        float base = DANYO_PEDO;
+        float rnd = MathUtils.random(3.35f);
+        float base;
         if (phase == Phase.VIBRATE1 || phase == Phase.VIBRATE2 || phase == Phase.VIBRATE3) {
-            float rnd = MathUtils.random(3.35f);
             if (MathUtils.random() < jugador.getCritico()) {
                 critico = true;
                 base = (DANYO_PEDO + rnd) * 1.5f;
@@ -223,10 +262,13 @@ public final class NubePedo implements Proyectiles {
             }
         } else {
             critico = false;
+            base = DANYO_PEDO + rnd;
         }
+
         float dmg = base * powerFactor;
         return dmg > 0f ? dmg : 1f;
     }
+
 
     @Override
     public float getKnockbackForce() {
@@ -240,13 +282,15 @@ public final class NubePedo implements Proyectiles {
 
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        impactados.add(enemigo);
+        enemigosImpactados.put(enemigo, 0f);
     }
 
     @Override
     public boolean yaImpacto(Enemigo enemigo) {
-        return impactados.contains(enemigo);
+        Float tiempo = enemigosImpactados.get(enemigo);
+        return tiempo != null && tiempo < INTERVALO_IMPACTO;
     }
+
 
     @Override
     public boolean esCritico() {
@@ -257,6 +301,7 @@ public final class NubePedo implements Proyectiles {
     public void setEscalaMax(float incremento) {
         sprite.setSize(sprite.getWidth() * incremento, sprite.getHeight() * incremento);
         sprite.setOriginCenter();
+        efectoParticula.scaleEffect(incremento);
     }
 
     public void setMaxKnockBack(float inc) {

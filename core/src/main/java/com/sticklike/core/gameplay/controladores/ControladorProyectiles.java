@@ -7,10 +7,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.LatigoDildo;
-import com.sticklike.core.entidades.objetos.armas.LluviaDorada;
-import com.sticklike.core.entidades.objetos.armas.ProyectilPapelCulo;
-import com.sticklike.core.entidades.objetos.armas.ProyectilTazo;
+import com.sticklike.core.entidades.objetos.armas.*;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Enemigo;
@@ -58,18 +55,18 @@ public class ControladorProyectiles {
                 boolean colision = false;
 
                 /* ======================= 1) Colisión por tipo ======================= */
-                if (proyectil instanceof ProyectilTazo proyectilTazo) {
+                if (proyectil instanceof _03ProyectilTazo a03ProyectilTazo) {
                     colision = estaEnRadioTazo(enemigo, proyectil);
-                } else if (proyectil instanceof ProyectilPapelCulo proyectilPapelCulo) {
-                    if (proyectilPapelCulo.isImpactoAnimacionActiva()) {
-                        Circle explosionArea = proyectilPapelCulo.getCirculoColision();
+                } else if (proyectil instanceof _04ProyectilPapelCulo a04ProyectilPapelCulo) {
+                    if (a04ProyectilPapelCulo.isImpactoAnimacionActiva()) {
+                        Circle explosionArea = a04ProyectilPapelCulo.getCirculoColision();
                         float enemyCX = enemigo.getX() + enemigo.getSprite().getWidth() * 0.5f;
                         float enemyCY = enemigo.getY() + enemigo.getSprite().getHeight() * 0.5f;
                         colision = explosionArea.contains(enemyCX, enemyCY);
                     } else {
                         colision = enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height);
                     }
-                } else if (proyectil instanceof LatigoDildo dildo) {
+                } else if (proyectil instanceof _06LatigoDildo dildo) {
                     // 1) comprobación melee
                     if (enemigo.esGolpeadoPorProyectil(projX, projY, projRect.width, projRect.height)) {
                         colision = true;
@@ -99,11 +96,14 @@ public class ControladorProyectiles {
                     enemigo.activarParpadeo(DURACION_PARPADEO_ENEMIGO);
 
                     /* 2.2) KNOCKBACK */
-                    if (proyectil instanceof LatigoDildo dildo && dildo.isHaloActivo()) {
+                    if (proyectil instanceof _06LatigoDildo dildo && dildo.isHaloActivo()) {
                         // Empuje sólo horizontal en la dirección del halo
                         enemigo.aplicarKnockback(proyectil.getKnockbackForce(), dildo.getLado(), 0f);
-                    } else if (!(proyectil instanceof ProyectilPapelCulo)) {
-                        aplicarKnockback(enemigo, proyectil);
+                    } else if (!(proyectil instanceof _04ProyectilPapelCulo)) {
+                        float fuerza = proyectil.getKnockbackForce();
+                        if (fuerza > 0f) {
+                            aplicarKnockback(enemigo, proyectil);
+                        }
                     }
 
                     /* 2.3) TEXTO DE DAÑO */
@@ -130,7 +130,7 @@ public class ControladorProyectiles {
             /* ======================= 3) Limpiar inactivos ========================= */
             if (!proyectil.isProyectilActivo()) {
                 iterator.remove();
-                if (proyectil instanceof ProyectilTazo tazo) {
+                if (proyectil instanceof _03ProyectilTazo tazo) {
                     tazo.getAtaqueTazo().reducirTazosActivos();
                 }
             }
@@ -158,9 +158,11 @@ public class ControladorProyectiles {
         enemigo.aplicarKnockback(fuerza, difX, difY);
     }
 
+    // todo --> debería gestionar una bandera en la interfaz de los proyectiles para marcar si se renderizan por encima o por debajo
+
     public void renderizarProyectiles(SpriteBatch batch) { // Render sobre enemigos
         for (Proyectiles p : proyectiles) {
-            if (!(p instanceof LluviaDorada && p.isPersistente())) {
+            if (!(p instanceof _07LluviaDorada && p.isPersistente()) && !(p instanceof _02NubePedo)) {
                 p.renderizarProyectil(batch);
             }
         }
@@ -168,7 +170,7 @@ public class ControladorProyectiles {
 
     public void renderizarProyectilesFondo(SpriteBatch batch) { // Render por debajo de los enemigos
         for (Proyectiles p : proyectiles) {
-            if (p instanceof LluviaDorada && p.isPersistente()) {
+            if (p instanceof _07LluviaDorada && p.isPersistente() || p instanceof _02NubePedo) {
                 p.renderizarProyectil(batch);
             }
         }
@@ -180,7 +182,7 @@ public class ControladorProyectiles {
     }
 
     private boolean estaEnRadioTazo(Enemigo enemigo, Proyectiles proyectil) {
-        if (!(proyectil instanceof ProyectilTazo)) return false;
+        if (!(proyectil instanceof _03ProyectilTazo)) return false;
 
         Rectangle areaTazos = proyectil.getRectanguloColision();
         float centroTazoX = areaTazos.x + areaTazos.width / 2;
@@ -193,21 +195,21 @@ public class ControladorProyectiles {
         return Intersector.overlaps(tazoCircle, enemyRect);
     }
 
-    public ProyectilTazo obtenerUltimoProyectilTazo() {
+    public _03ProyectilTazo obtenerUltimoProyectilTazo() {
         for (int i = proyectiles.size - 1; i >= 0; i--) {
-            if (proyectiles.get(i) instanceof ProyectilTazo) {
-                return (ProyectilTazo) proyectiles.get(i);
+            if (proyectiles.get(i) instanceof _03ProyectilTazo) {
+                return (_03ProyectilTazo) proyectiles.get(i);
             }
         }
         return null;
     }
 
-    public ProyectilTazo obtenerProyectilPorIndice(int indice) {
+    public _03ProyectilTazo obtenerProyectilPorIndice(int indice) {
         int contador = 0;
         for (Proyectiles p : proyectiles) {
-            if (p instanceof ProyectilTazo) {
+            if (p instanceof _03ProyectilTazo) {
                 if (contador == indice) {
-                    return (ProyectilTazo) p;
+                    return (_03ProyectilTazo) p;
                 }
                 contador++;
             }

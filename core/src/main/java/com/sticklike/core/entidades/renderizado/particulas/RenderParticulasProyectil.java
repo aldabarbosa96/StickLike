@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.renderizado;
+package com.sticklike.core.entidades.renderizado.particulas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -57,6 +57,7 @@ public class RenderParticulasProyectil implements Trail {
         head = 0;
         size = 0;
     }
+
     /**
      * Guarda la posición de la punta del proyectil (llámalo en update).
      */

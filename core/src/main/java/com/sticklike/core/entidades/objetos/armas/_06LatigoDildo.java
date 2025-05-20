@@ -2,14 +2,16 @@ package com.sticklike.core.entidades.objetos.armas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.entidades.renderizado.particulas.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -23,7 +25,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 /**
  * Proyectil «Látigo-dildo» con rastro curvo de luz y proyección horizontal.
  */
-public final class LatigoDildo implements Proyectiles {
+public final class _06LatigoDildo implements Proyectiles {
     private static final float BASE_DURATION = 0.33f;
     private static final float SWING_DIST = 62.5f;
     private static final float KNOCKBACK = EMPUJE_BASE_DILDO;
@@ -50,6 +52,7 @@ public final class LatigoDildo implements Proyectiles {
     private final Rectangle rect;
     private final RenderParticulasProyectil particles;
     private final RenderParticulasProyectil particlesHalo;
+    private final ParticleEffectPool.PooledEffect efecto;
 
     // buffer circular para arco
     private final Vector2[] arcPoints;
@@ -80,7 +83,7 @@ public final class LatigoDildo implements Proyectiles {
     private static final Color COL_HALO = new Color(1f, 0.2f, 0.8f, 1f);
     private static final Color COL_HALO_HIT = new Color(0f, 0.8f, 1f, 1f);
 
-    public LatigoDildo(Jugador jugador, int lado, float poderJugador, float extraDamage, boolean haloUpgrade, boolean rapidoUpgrade) {
+    public _06LatigoDildo(Jugador jugador, int lado, float poderJugador, float extraDamage, boolean haloUpgrade, boolean rapidoUpgrade) {
         if (TEXTURE == null) TEXTURE = manager.get(ARMA_DILDO, Texture.class);
         this.jugador = jugador;
         this.lado = lado;
@@ -107,6 +110,10 @@ public final class LatigoDildo implements Proyectiles {
         particles.setAlphaMult(0.8f);
         particlesHalo = new RenderParticulasProyectil(20, 10, COL_HALO);
         particlesHalo.setAlphaMult(1f);
+
+        float cX = sprite.getX() + SW_W * 0.5f;
+        float cY = sprite.getY() + SW_H * 0.5f;
+        efecto = ParticleManager.get().obtainEffect("dildo", cX, cY);
 
         // inicializar buffer de arco
         arcPoints = new Vector2[ARC_SAMPLES + 1];
@@ -136,8 +143,14 @@ public final class LatigoDildo implements Proyectiles {
         float vy = R * MathUtils.cos(theta);
         sprite.setRotation(MathUtils.atan2(vy, vx) * MathUtils.radiansToDegrees);
 
-        /* -------- 2. Trail principal (parche) -------- */
-        tmpVec1.set(nx + SW_W * .5f, ny + SW_H * .5f);
+        /* ===== NUEVO: obtenemos la punta ya transformada ===== */
+        Vector2 tip = calcPunta();
+
+        /* Sincronizamos el emitter en la punta */
+        efecto.setPosition(tip.x, tip.y);
+
+        /* -------- 2. Trail principal (punta) -------- */
+        tmpVec1.set(tip);           // reutilizamos el vector temporal
         particles.update(tmpVec1);
 
         // SOLO mientras el látigo está en pantalla → evita el destello final
@@ -192,14 +205,31 @@ public final class LatigoDildo implements Proyectiles {
             TrailRender.get().submit(particlesHalo);
 
             if (haloTravel >= HALO_RANGE) {
+                detenerParticulas();
                 activo = false;
             }
         }
 
         /* -------- 7. Fin del swing cuando no hay halo -------- */
         if (!haloUpgrade && tSwing >= duration) {
+            detenerParticulas();
             activo = false;
         }
+    }
+
+    private Vector2 calcPunta() {
+        float localX = SW_W * 0.5f - sprite.getOriginX();
+
+        float localY = (lado == -1) ? -sprite.getOriginY() : SW_H - sprite.getOriginY();
+
+        float rad = sprite.getRotation() * MathUtils.degreesToRadians;
+        float cos = MathUtils.cos(rad);
+        float sin = MathUtils.sin(rad);
+
+        float worldX = sprite.getX() + sprite.getOriginX() + localX * cos - localY * sin;
+        float worldY = sprite.getY() + sprite.getOriginY() + localX * sin + localY * cos;
+
+        return tmpVec1.set(worldX, worldY);
     }
 
 
@@ -215,8 +245,10 @@ public final class LatigoDildo implements Proyectiles {
 
     @Override
     public void dispose() {
+        TEXTURE = null;
         particles.dispose();
         particlesHalo.dispose();
+        efecto.free();
     }
 
     @Override
@@ -241,8 +273,8 @@ public final class LatigoDildo implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
+        detenerParticulas();
         activo = false;
-        particles.reset();
     }
 
     @Override
@@ -277,6 +309,12 @@ public final class LatigoDildo implements Proyectiles {
             impactT = IMPACT_COLOR_TIME;
             GestorDeAudio.getInstance().reproducirEfecto("dildo", 0.8f);
         }
+    }
+
+    private void detenerParticulas() {
+        particles.reset();
+        particlesHalo.reset();
+        efecto.allowCompletion();
     }
 
     @Override

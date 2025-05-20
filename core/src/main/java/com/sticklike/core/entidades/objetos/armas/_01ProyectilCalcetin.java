@@ -3,14 +3,16 @@ package com.sticklike.core.entidades.objetos.armas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.entidades.renderizado.particulas.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -24,7 +26,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 /**
  * Proyectil «Calcetín».
  */
-public final class ProyectilCalcetin implements Proyectiles {
+public final class _01ProyectilCalcetin implements Proyectiles {
     private static final float SPRITE_WIDTH = CALCETIN_W_SIZE;
     private static final float SPRITE_HEIGHT = CALCETIN_H_SIZE;
     private static final float SPRITE_ORIGIN_X = SPRITE_WIDTH * 0.5f;
@@ -35,7 +37,7 @@ public final class ProyectilCalcetin implements Proyectiles {
     private static final float PARTICLE_LEN_FACTOR = 17f;
     private static final float PARTICLE_WID_FACTOR = 6f;
     private static final Color DEFAULT_PARTICLE_COLOR = new Color(1f, 1f, 1f, 0.1f);
-
+    private final ParticleEffectPool.PooledEffect efecto;
     private static Texture TEXTURE;
     private final Sprite sprite;
     private final Rectangle collisionRect;
@@ -54,7 +56,7 @@ public final class ProyectilCalcetin implements Proyectiles {
     private boolean esCritico;
     private float impactoTimer;
 
-    public ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador, float extraDamage, Jugador jugador) {
+    public _01ProyectilCalcetin(float x, float y, float direccionX, float direccionY, float velocidadProyectil, float multiplicadorVelocidad, float poderJugador, float extraDamage, Jugador jugador) {
 
         if (TEXTURE == null) TEXTURE = manager.get(ARMA_CALCETIN, Texture.class);
 
@@ -82,6 +84,8 @@ public final class ProyectilCalcetin implements Proyectiles {
         center = new Vector2();
         collisionRect = new Rectangle(x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
         impactados = new HashSet<>(4);
+        Vector2 initialCenter = new Vector2(x + SPRITE_ORIGIN_X, y + SPRITE_ORIGIN_Y);
+        efecto = ParticleManager.get().obtainEffect("calcetin", initialCenter.x, initialCenter.y);
 
         float baseDamage = DANYO_CALCETIN + extraDamage + MathUtils.random(8f);
         this.damageEscalado = baseDamage * (1f + (poderJugador / 100f));
@@ -95,6 +99,7 @@ public final class ProyectilCalcetin implements Proyectiles {
         center.set(sprite.getX() + SPRITE_ORIGIN_X, sprite.getY() + SPRITE_ORIGIN_Y);
         particles.update(center);
         TrailRender.get().submit(particles);
+        efecto.setPosition(center.x, center.y);
 
         /* ---------- movimiento y giro ---------- */
         float despl = velocidadProyectil * multiplicadorVelocidad * delta;
@@ -130,6 +135,7 @@ public final class ProyectilCalcetin implements Proyectiles {
     public void dispose() {
         TEXTURE = null;
         particles.dispose();
+        efecto.free();
     }
 
     @Override
@@ -154,8 +160,9 @@ public final class ProyectilCalcetin implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
-        activo = false;
         particles.reset();
+        efecto.allowCompletion();
+        activo = false;
     }
 
     @Override

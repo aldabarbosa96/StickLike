@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
@@ -28,8 +28,8 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  * Rebota en un ángulo aleatorio distinto a la dirección de entrada cada vez que impacta,
  * hasta agotar el número máximo de rebotes o superar la distancia máxima.
  */
-public final class ProyectilPelota implements Proyectiles {
-    private static final float SIZE = 16;
+public final class _08ProyectilPelota implements Proyectiles {
+    private static final float SIZE = 17.5f;
     private static final float ORIGIN = SIZE * 0.5f;
     private static final float SPEED = 350f;
     private static final float MAX_DISTANCE = 2500f;
@@ -42,7 +42,8 @@ public final class ProyectilPelota implements Proyectiles {
     private final Sprite sprite;
     private final Rectangle collisionRect = new Rectangle();
     private final Vector2 center = new Vector2();
-    private final RenderParticulasProyectil trail;
+    //private final RenderParticulasProyectil trail;
+    private final ParticleEffectPool.PooledEffect efecto;
     private final Set<Enemigo> impactados = new HashSet<>(4);
     private float dirX, dirY;
     private float distanciaRecorrida = 0f;
@@ -53,7 +54,7 @@ public final class ProyectilPelota implements Proyectiles {
     private final Jugador jugador;
     private final GestorDeAudio audio = GestorDeAudio.getInstance();
 
-    public ProyectilPelota(float x, float y, float dirX, float dirY, Jugador jugador) {
+    public _08ProyectilPelota(float x, float y, float dirX, float dirY, Jugador jugador) {
         this.jugador = jugador;
 
         if (TEXTURE == null) TEXTURE = manager.get(ARMA_PELOTA, Texture.class);
@@ -74,8 +75,12 @@ public final class ProyectilPelota implements Proyectiles {
         float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
         int maxLen = (int) (PARTICLE_LEN_FACTOR * scale);
         float partWid = PARTICLE_WID_FACTOR * scale;
-        trail = new RenderParticulasProyectil(maxLen, partWid, PARTICLE_COLOR);
-        trail.setAlphaMult(.65f);
+        //trail = new RenderParticulasProyectil(maxLen, partWid, PARTICLE_COLOR);
+        //trail.setAlphaMult(.65f);
+
+        float originPos = SIZE * 0.5f;
+        Vector2 initialCenter = new Vector2(x + originPos, y + originPos);
+        efecto = ParticleManager.get().obtainEffect("pelota", initialCenter.x, initialCenter.y);
 
         collisionRect.set(sprite.getX(), sprite.getY(), SIZE, SIZE);
     }
@@ -92,14 +97,15 @@ public final class ProyectilPelota implements Proyectiles {
         if (distanciaRecorrida >= MAX_DISTANCE) desactivarProyectil();
 
         center.set(sprite.getX() + ORIGIN, sprite.getY() + ORIGIN);
-        trail.update(center);
-        TrailRender.get().submit(trail);
+        //trail.update(center);
+        //TrailRender.get().submit(trail);
+        efecto.setPosition(center.x, center.y);
 
         if (impactoTimer < IMPACTO_DURACION) {
             impactoTimer += delta;
             if (impactoTimer >= IMPACTO_DURACION) {
                 sprite.setColor(Color.WHITE);
-                trail.setColor(PARTICLE_COLOR);
+                //trail.setColor(PARTICLE_COLOR);
                 impactados.clear();
             }
         }
@@ -134,8 +140,9 @@ public final class ProyectilPelota implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
+        //trail.reset();
+        efecto.allowCompletion();
         activo = false;
-        trail.reset();
     }
 
     @Override
@@ -170,7 +177,7 @@ public final class ProyectilPelota implements Proyectiles {
         if (!impactados.add(enemigo)) return;
 
         sprite.setColor(Color.RED);
-        trail.setColor(Color.RED);
+        //trail.setColor(Color.RED);
         audio.reproducirEfecto("impactoBase", 1f);
         impactoTimer = 0f;
 
@@ -272,6 +279,7 @@ public final class ProyectilPelota implements Proyectiles {
     @Override
     public void dispose() {
         TEXTURE = null;
-        trail.dispose();
+        //trail.dispose();
+        efecto.free();
     }
 }

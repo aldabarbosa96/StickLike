@@ -2,10 +2,10 @@ package com.sticklike.core.entidades.objetos.armas.comportamiento;
 
 import com.sticklike.core.entidades.jugador.InputsJugador;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.ProyectilBoliBic;
+import com.sticklike.core.entidades.objetos.armas._05ProyectilBoliBic;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-public class AtaqueBoliBic {
+public class _05AtaqueBoliBic {
 
     // ――― AJUSTES DE DISPARO ―――
     private float temporizadorDisparo = 0f;
@@ -120,7 +120,7 @@ public class AtaqueBoliBic {
     }
 
     private void lanzarBoli(float x, float y, float dx, float dy, Jugador jug, GestorDeAudio audio) {
-        ProyectilBoliBic p = new ProyectilBoliBic(x, y, dx, dy, 500, jug);
+        _05ProyectilBoliBic p = new _05ProyectilBoliBic(x, y, dx, dy, 500, jug);
         if (ricochet) p.enableBounce(1);
         jug.getControladorProyectiles().anyadirNuevoProyectil(p);
         audio.reproducirEfecto("boli", 0.5f);

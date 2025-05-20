@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.objetos.armas.comportamiento;
 
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.ProyectilTazo;
+import com.sticklike.core.entidades.objetos.armas._03ProyectilTazo;
 import com.sticklike.core.gameplay.controladores.ControladorProyectiles;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -11,7 +11,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Gestiona ataque Tazo; genera tazos orbitando alrededor del jugador, dañando enemigos y aumentando en número, velocidad y duración con mejoras.
  */
 
-public class AtaqueTazo {
+public class _03AtaqueTazo {
     private float temporizador;
     private int tazosActivos;
     private float radio = RADIO_TAZOS_JUGADOR;
@@ -49,13 +49,13 @@ public class AtaqueTazo {
         float separation = 360f / (NUM_TAZOS + incrementoNumTazos);
 
         // Obtenemos el último tazo activo para copiar su fase y temporizador
-        ProyectilTazo referenciaTazo = cp.obtenerUltimoProyectilTazo();
-        ProyectilTazo.Phase faseInicial = referenciaTazo != null ? referenciaTazo.getPhase() : ProyectilTazo.Phase.GROWING;
+        _03ProyectilTazo referenciaTazo = cp.obtenerUltimoProyectilTazo();
+        _03ProyectilTazo.Phase faseInicial = referenciaTazo != null ? referenciaTazo.getPhase() : _03ProyectilTazo.Phase.GROWING;
         float phaseTimerInicial = referenciaTazo != null ? referenciaTazo.getPhaseTimer() : 0;
 
         // Reajustamos los ángulos de todos los tazos activos antes de generar el nuevo
         for (int i = 0; i < tazosActivos; i++) {
-            ProyectilTazo tazo = cp.obtenerProyectilPorIndice(i);
+            _03ProyectilTazo tazo = cp.obtenerProyectilPorIndice(i);
             if (tazo != null) {
                 tazo.setOffsetAngle(separation * i);
             }
@@ -64,7 +64,7 @@ public class AtaqueTazo {
         float offsetAngle = separation * tazosActivos;
 
         // Creamos el nuevo tazo y le asignamos la fase y tiempo del tazo de referencia
-        ProyectilTazo nuevoTazo = new ProyectilTazo(jugador, this, offsetAngle, radio, gestorDeAudio);
+        _03ProyectilTazo nuevoTazo = new _03ProyectilTazo(jugador, this, offsetAngle, radio, gestorDeAudio);
         nuevoTazo.setPhase(faseInicial, phaseTimerInicial);
         nuevoTazo.setActiveDuration(duracionActivaTazo);
         cp.anyadirNuevoProyectil(nuevoTazo);

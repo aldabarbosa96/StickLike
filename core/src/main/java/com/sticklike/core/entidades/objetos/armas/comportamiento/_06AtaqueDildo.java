@@ -1,7 +1,7 @@
 package com.sticklike.core.entidades.objetos.armas.comportamiento;
 
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.LatigoDildo;
+import com.sticklike.core.entidades.objetos.armas._06LatigoDildo;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -9,7 +9,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 /**
  * Lógica de disparo del Látigo‑dildo con gestión de sus upgrades.
  */
-public class AtaqueDildo {
+public class _06AtaqueDildo {
     private float cooldownTimer = 0f;
     private final float intervaloDisparo = 3f;
 
@@ -75,7 +75,7 @@ public class AtaqueDildo {
         int lado = (group % 2 == 0) ? 1 : -1;
 
         float poder = jugador.getPoderJugador();
-        LatigoDildo latigo = new LatigoDildo(jugador, lado, poder, extraDamage, haloActivo, rapidoActivo);
+        _06LatigoDildo latigo = new _06LatigoDildo(jugador, lado, poder, extraDamage, haloActivo, rapidoActivo);
         jugador.getControladorProyectiles().anyadirNuevoProyectil(latigo);
         audio.reproducirEfecto("dildo", 0.6f);
     }

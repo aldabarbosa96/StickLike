@@ -3,10 +3,10 @@ package com.sticklike.core.entidades.objetos.armas.comportamiento;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.LluviaDorada;
+import com.sticklike.core.entidades.objetos.armas._07LluviaDorada;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-public class AtaquePipi {
+public class _07AtaquePipi {
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo = 0.8f;
     private boolean reboteMocoActivado = false;
@@ -22,7 +22,7 @@ public class AtaquePipi {
         float randomX = MathUtils.random(left, right - 20);
         float fallSpeed = MathUtils.random(250, 300);
 
-        LluviaDorada mocos = new LluviaDorada(randomX, top, fallSpeed, gestorDeAudio);
+        _07LluviaDorada mocos = new _07LluviaDorada(randomX, top, fallSpeed, gestorDeAudio);
         if (reboteMocoActivado) {
             mocos.setReboteActivado(true);
             mocos.setMaxBounces(maxBouncesAcumulado);

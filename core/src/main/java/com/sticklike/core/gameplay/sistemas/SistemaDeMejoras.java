@@ -51,14 +51,14 @@ public class SistemaDeMejoras {
 
         // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)
 
-        todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
-        todasLasMejoras.add(new Mejora("¡GIROTETAZOS!", "Invoca unos tetazos giratorios rotativos", () -> jugador.setTazo(new AtaqueTazo()), 1, manager.get(ARMA_TAZOS2, Texture.class), "TAZO"));
-        todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
-        todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
-        todasLasMejoras.add(new Mejora("¡LLUVIA DORADA!", "Llueve pipi y lo mancha todo", () -> jugador.setAtaquePipi(new AtaquePipi()), 1, manager.get(ARMA_PIPI, Texture.class), "PIPI"));
-        todasLasMejoras.add(new Mejora("¡BOLI BICAZO!", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
-        todasLasMejoras.add(new Mejora("¡SABLE DILDO!", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
-        todasLasMejoras.add(new Mejora("¡TEZENNIS!", "Lanzas pelotas de tennis que rebotan", () -> jugador.setAtaquePelota(new AtaquePelota(1.5f)), 1, manager.get(ARMA_PELOTA, Texture.class), "PELOTA"));
+        todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new _01AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
+        todasLasMejoras.add(new Mejora("¡GIROTETAZOS!", "Invoca unos tetazos giratorios rotativos", () -> jugador.setTazo(new _03AtaqueTazo()), 1, manager.get(ARMA_TAZOS2, Texture.class), "TAZO"));
+        todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new _02AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
+        todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new _04AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
+        todasLasMejoras.add(new Mejora("¡LLUVIA DORADA!", "Llueve pipi y lo mancha todo", () -> jugador.setAtaquePipi(new _07AtaquePipi()), 1, manager.get(ARMA_PIPI, Texture.class), "PIPI"));
+        todasLasMejoras.add(new Mejora("¡BOLI BICAZO!", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new _05AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
+        todasLasMejoras.add(new Mejora("¡SABLE DILDO!", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new _06AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
+        todasLasMejoras.add(new Mejora("¡TEZENNIS!", "Lanzas pelotas de tennis que rebotan", () -> jugador.setAtaquePelota(new _08AtaquePelota(2.5f)), 1, manager.get(ARMA_PELOTA, Texture.class), "PELOTA"));
 
         // Upgrades específicos para las habilidades
         // Calcetín

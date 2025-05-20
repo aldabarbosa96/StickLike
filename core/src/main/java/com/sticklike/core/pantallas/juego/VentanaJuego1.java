@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.mobiliario.tragaperras.FlechaTragaperras;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.pantallas.popUps.PopUpTragaperras;
 import com.sticklike.core.pantallas.popUps.TragaperrasInputProcessor;
 import com.sticklike.core.entidades.mobiliario.tragaperras.TragaperrasLogic;
@@ -19,7 +20,7 @@ import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.pantallas.popUps.PopUpMejorasInputProcessor;
 import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
-import com.sticklike.core.entidades.objetos.armas.comportamiento.AtaquePiedra;
+import com.sticklike.core.entidades.objetos.armas.comportamiento._00AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -67,7 +68,7 @@ public class VentanaJuego1 implements Screen {
     private HUD hud;
     private ColisionesJugador colisionesJugador;
     private MovimientoJugador movimientoJugador;
-    private AtaquePiedra ataquePiedra;
+    private _00AtaquePiedra a00AtaquePiedra;
     private ControladorProyectiles controladorProyectiles;
     private GestorDeAudio gestorDeAudio;
     private PopUpMejoras popUpMejoras;
@@ -105,6 +106,8 @@ public class VentanaJuego1 implements Screen {
         // Ajustar la posición de la cámara
         actualizarPosCamara();
         Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX(), jugador.getSprite().getY() - 20);
+
+        ParticleManager.get().clear();
     }
 
     private void inicializarRenderYCamara() {
@@ -121,7 +124,7 @@ public class VentanaJuego1 implements Screen {
         colisionesJugador = new ColisionesJugador();
         gestorDeAudio = game.gestorDeAudio;
         movimientoJugador = new MovimientoJugador();
-        ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
+        a00AtaquePiedra = new _00AtaquePiedra(INTERVALO_DISPARO);
         controladorProyectiles = new ControladorProyectiles();
 
         float playerStartX = worldWidth / 2f - CAMERA_JUGADOR_OFFSET_X;
@@ -134,7 +137,7 @@ public class VentanaJuego1 implements Screen {
         }
         // clon de stats para la sesión de juego
         StatsJugador sessionStats = new StatsJugador(baseStats);
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles, sessionStats);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, a00AtaquePiedra, controladorProyectiles, sessionStats);
     }
 
     private void inicializarSistemasYControladores() {
@@ -234,6 +237,7 @@ public class VentanaJuego1 implements Screen {
         sistemaDeEventos.actualizar();
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
+        ParticleManager.get().update(delta);
         actualizarRecogidaObjetos(delta);
         actualizarTextoFlotante(delta);
     }
@@ -348,6 +352,7 @@ public class VentanaJuego1 implements Screen {
 
     @Override
     public void hide() {
+        ParticleManager.get().clear();
     }
 
     @Override

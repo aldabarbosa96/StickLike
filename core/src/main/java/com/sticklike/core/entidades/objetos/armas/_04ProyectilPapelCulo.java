@@ -3,17 +3,15 @@ package com.sticklike.core.entidades.objetos.armas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.entidades.renderizado.particulas.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -24,7 +22,7 @@ import java.util.Set;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
-public final class ProyectilPapelCulo implements Proyectiles {
+public final class _04ProyectilPapelCulo implements Proyectiles {
 
     /* ---------- Constantes ---------- */
     private static Texture TEXTURE;
@@ -38,6 +36,10 @@ public final class ProyectilPapelCulo implements Proyectiles {
     private static final float IMPACT_CIRCLE = 7.5f;
     private static final float FRAG_FACTOR_HOR = 0.25f;
     private static final Color PARTICLES_COLOR = new Color(0.65f, 0.5f, 0.7f, 1f);
+    private final ParticleEffectPool.PooledEffect efecto;
+    private ParticleEffectPool.PooledEffect efectoExplosion;
+    private final float particleScale;
+
 
     /* ---------- Atributos ---------- */
     private final Sprite sprite;
@@ -63,10 +65,10 @@ public final class ProyectilPapelCulo implements Proyectiles {
     private float impactX, impactY, impactRotation;
     private final GestorDeAudio audio = GestorDeAudio.getInstance();
 
-    /* ---------- Constructor ---------- */
-    public ProyectilPapelCulo(float x, float y, float anguloLanzamiento, float velocidadProyectil, float poderJugador, float extraDamage, Jugador jugador, float direccionHorizontal, boolean esFragmento) {
 
-        // Carga única de recursos
+    public _04ProyectilPapelCulo(float x, float y, float anguloLanzamiento, float velocidadProyectil, float poderJugador, float extraDamage, Jugador jugador, float direccionHorizontal, boolean esFragmento) {
+
+        // ---------- Carga única de recursos ----------
         if (TEXTURE == null) TEXTURE = manager.get(ARMA_PAPELCULO, Texture.class);
         if (IMPACT_ANIMATION == null) IMPACT_ANIMATION = animations.get("papelCuloImpacto");
 
@@ -74,34 +76,45 @@ public final class ProyectilPapelCulo implements Proyectiles {
         this.anguloLanzamiento = anguloLanzamiento;
         this.isFragment = esFragmento;
 
+        /* === Escala SOLO si es fragmento === */
+        float sizeScale = esFragmento ? 0.55f : 1f;   // normal = 1, fragmento = 0.55
+        this.particleScale = sizeScale;               // ← para trail / explosión
+
+        /* === Velocidades === */
         velV = velocidadProyectil * MathUtils.sinDeg(anguloLanzamiento);
         velH = direccionHorizontal * velocidadProyectil * MathUtils.cosDeg(anguloLanzamiento) * FRAG_FACTOR_HOR;
 
-        // Sprite
+        /* === Sprite === */
         sprite = new Sprite(TEXTURE);
-        sprite.setSize(PAPELCULO_W_SIZE, PAPELCULO_H_SIZE);
+        sprite.setSize(PAPELCULO_W_SIZE * sizeScale, PAPELCULO_H_SIZE * sizeScale);
         sprite.setOriginCenter();
         sprite.setPosition(x, y);
 
-        // Partículas (trail)
-        float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
-        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, PARTICLES_COLOR);
-        particles.setAlphaMult(0.9f);                     // mismo alpha que usabas
+        /* === Trail (partículas) === */
+        float screenScale = Gdx.graphics.getWidth() / REAL_WIDTH;
+        particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * screenScale * particleScale), PARTICLE_WID * screenScale * particleScale, PARTICLES_COLOR);
+        particles.setAlphaMult(0.9f);
 
-        // Altitud final aleatoria
+        /* === Partícula inicial === */
+        Vector2 initialCenter = new Vector2(x + sprite.getWidth() * 0.5f, y + sprite.getHeight() * 0.5f);
+        efecto = ParticleManager.get().obtainEffect("papel", initialCenter.x, initialCenter.y);
+        efecto.scaleEffect(particleScale);
+
+        /* === Altitud final aleatoria === */
         float camHalfH = jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().viewportHeight / 2f;
         float minY = jugador.getControladorEnemigos().getVentanaJuego1().getOrtographicCamera().position.y - camHalfH;
         float maxY = jugador.getSprite().getY() + jugador.getSprite().getHeight() - 10f;
         altitudeFinal = MathUtils.random(minY, maxY);
 
-        // Daño escalado
+        /* === Daño escalado (esto se queda como estaba) === */
         float baseDamage = DANYO_PAPELCULO + extraDamage + MathUtils.random(15f);
         damageEscalado = baseDamage * (1f + poderJugador / 100f);
 
-        // Hit-boxes iniciales
+        /* === Hit-boxes iniciales === */
         collisionRect.set(x, y, sprite.getWidth(), sprite.getHeight());
         collisionCircle.set(x + sprite.getWidth() / 2f, y + sprite.getHeight() / 2f, sprite.getWidth() / 2f);
     }
+
 
     /* ---------- Lógica ---------- */
     @Override
@@ -110,14 +123,21 @@ public final class ProyectilPapelCulo implements Proyectiles {
 
         /* 1) Trail */
         center.set(sprite.getX() + sprite.getWidth() * 0.5f, sprite.getY() + sprite.getHeight() * 0.5f);
-        particles.update(center);
-        TrailRender.get().submit(particles);    // <-- nuevo sistema de rastro
+
+        /* Solo mientras está volando y no hay animación de impacto */
+        if (!landed && !impactoAnimacionActiva) {
+            particles.update(center);
+            TrailRender.get().submit(particles);
+            efecto.setPosition(center.x, center.y);
+        }
+
 
         /* 2) Animación de impacto */
         if (impactoAnimacionActiva) {
             animationStateTime += delta;
             if (IMPACT_ANIMATION.isAnimationFinished(animationStateTime)) {
                 impactoAnimacionActiva = false;
+                efecto.allowCompletion();
                 desactivarProyectil();
             }
             return;
@@ -135,12 +155,16 @@ public final class ProyectilPapelCulo implements Proyectiles {
                 landed = true;
                 velH = velV = 0f;
                 sprite.setRotation(-5f);        // pequeño giro al aterrizar
+
+                particles.reset();
+                efecto.allowCompletion();
             }
 
             sprite.setPosition(nx, ny);
             sprite.rotate(ROTATION_SPEED * delta);
 
-        } else if (isFragment) {                // los fragmentos se destruyen al aterrizar
+        } else if (isFragment) {
+            // los fragmentos se destruyen al aterrizar
             desactivarProyectil();
         }
 
@@ -169,6 +193,8 @@ public final class ProyectilPapelCulo implements Proyectiles {
     public void dispose() {
         TEXTURE = null;
         particles.dispose();
+        efecto.free();
+        if (efectoExplosion != null) efectoExplosion.free();
     }
 
     /* ---------- Getters simples ---------- */
@@ -183,7 +209,7 @@ public final class ProyectilPapelCulo implements Proyectiles {
     }
 
     @Override
-    public Rectangle getRectanguloColision() {                      // ajustado si hay impacto
+    public Rectangle getRectanguloColision() {
         if (impactoAnimacionActiva) {
             float w = sprite.getWidth() * IMPACT_SCALE;
             float h = sprite.getHeight() * IMPACT_SCALE;
@@ -207,8 +233,10 @@ public final class ProyectilPapelCulo implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
-        activo = false;
         particles.reset();
+        efecto.allowCompletion();
+        if (efectoExplosion != null) efectoExplosion.allowCompletion();
+        activo = false;
     }
 
     /* ---------- Daño / knockback ---------- */
@@ -236,42 +264,54 @@ public final class ProyectilPapelCulo implements Proyectiles {
     @Override
     public void registrarImpacto(Enemigo enemigo) {
 
-        /* --- Fragmentación si procede --- */
+        /* ---------- 1) Fragmentación ---------- */
         if (jugador.getAtaquePapelCulo().isFragmentado() && canFragment) {
             canFragment = false;
 
+            /* 1-A. Explosión principal (escala = particleScale) */
+            efectoExplosion = ParticleManager.get().obtainEffect("papelExplosion", sprite.getX() + sprite.getOriginX(), sprite.getY() + sprite.getOriginY());
+            efectoExplosion.scaleEffect(particleScale);   // 0.55 si es frag, 1 si no
+
+            /* 1-B. Generamos los fragmentos */
             int cnt = MathUtils.random(3, 6);
-            float origSpeed = (float) Math.sqrt(velH * velH + velV * velV);
+            float origVel = (float) Math.sqrt(velH * velH + velV * velV);
 
             for (int i = 0; i < cnt; i++) {
                 float ang = MathUtils.random(0f, 360f);
-                float speedFactor = MathUtils.random(0.3f, 0.7f);
-                float spd = origSpeed * speedFactor;
+                float spdFactor = MathUtils.random(0.3f, 0.7f);
+                float spd = origVel * spdFactor;
                 float offsetX = MathUtils.random(-15f, 15f);
                 float offsetY = MathUtils.random(0f, 10f);
 
-                ProyectilPapelCulo frag = new ProyectilPapelCulo(sprite.getX() + offsetX, sprite.getY() + offsetY, ang, spd, jugador.getPoderJugador(), 0f, jugador, MathUtils.randomBoolean() ? 1f : -1f, true);
+                _04ProyectilPapelCulo frag = new _04ProyectilPapelCulo(sprite.getX() + offsetX, sprite.getY() + offsetY, ang, spd, jugador.getPoderJugador(), 0f, jugador, MathUtils.randomBoolean() ? 1f : -1f, true);         // esFragmento = true
 
-                frag.setCanFragment(false);
-                frag.getSprite().setSize(frag.getSprite().getWidth() * 0.55f, frag.getSprite().getHeight() * 0.55f);
-                frag.getSprite().setOriginCenter();
+                frag.setCanFragment(false);               // sin fragmentación recursiva
                 jugador.getControladorProyectiles().anyadirNuevoProyectil(frag);
             }
 
-            desactivarProyectil();                       // se va el original
-            if (impactados.add(enemigo)) applyKnockback(enemigo, impactX, impactY);
+            desactivarProyectil();
+            if (impactados.add(enemigo)) applyKnockback(enemigo, sprite.getX(), sprite.getY());
             return;
         }
 
-        /* --- Impacto normal + animación --- */
+        /* ---------- 2) Impacto normal sin fragmentar ---------- */
         if (!impactoAnimacionActiva) {
             audio.reproducirEfecto(canFragment ? "explosion" : "explosionFragmentada", canFragment ? 1f : 0.75f);
+
             impactoAnimacionActiva = true;
             animationStateTime = 0f;
             impactX = sprite.getX();
             impactY = sprite.getY();
             impactRotation = sprite.getRotation();
+
+            /* 2-A. Explosión visual (escala = particleScale) */
+            efectoExplosion = ParticleManager.get().obtainEffect("papelExplosion", impactX + sprite.getOriginX(), impactY + sprite.getOriginY());
+            efectoExplosion.scaleEffect(particleScale * 0.75f);
+
+            particles.reset();
+            efecto.allowCompletion();
         }
+
         if (impactados.add(enemigo)) applyKnockback(enemigo, impactX, impactY);
     }
 

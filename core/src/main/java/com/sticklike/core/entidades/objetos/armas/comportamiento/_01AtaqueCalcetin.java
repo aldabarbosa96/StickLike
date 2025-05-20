@@ -2,7 +2,7 @@ package com.sticklike.core.entidades.objetos.armas.comportamiento;
 
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.ProyectilCalcetin;
+import com.sticklike.core.entidades.objetos.armas._01ProyectilCalcetin;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -10,7 +10,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Gestiona ataque Calcetín; genera proyectiles en múltiples direcciones y permite mejoras en el número de proyectiles, daño e intervalo de disparo.
  */
 
-public class AtaqueCalcetin {
+public class _01AtaqueCalcetin {
     private float temporizadorDisparo = TEMPORIZADOR_DISPARO;
     private float intervaloDisparo = 2.5f;
     private final float MIN_INTERVALO_DISPARO = 0.25f;
@@ -35,7 +35,7 @@ public class AtaqueCalcetin {
             float direccionY = (float) Math.sin(radianes);
 
             float poderHabilidad = jug.getPoderJugador();
-            ProyectilCalcetin calcetin = new ProyectilCalcetin(startX, startY, direccionX, direccionY,
+            _01ProyectilCalcetin calcetin = new _01ProyectilCalcetin(startX, startY, direccionX, direccionY,
                 PROJECTILE_CALCETIN_SPEED, SPEED_MULT, poderHabilidad, extraDamage, jug);
 
             jug.getControladorProyectiles().anyadirNuevoProyectil(calcetin);

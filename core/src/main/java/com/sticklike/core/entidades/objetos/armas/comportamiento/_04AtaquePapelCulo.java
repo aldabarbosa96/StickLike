@@ -1,12 +1,12 @@
 package com.sticklike.core.entidades.objetos.armas.comportamiento;
 
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.ProyectilPapelCulo;
+import com.sticklike.core.entidades.objetos.armas._04ProyectilPapelCulo;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-public class AtaquePapelCulo {
+public class _04AtaquePapelCulo {
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo = 3f;
     private final float MIN_INTERVALO_DISPARO = 0.5f;
@@ -39,7 +39,7 @@ public class AtaquePapelCulo {
         ladoDisparoDerecho = !ladoDisparoDerecho;
 
 
-        ProyectilPapelCulo papelCulo = new ProyectilPapelCulo(startX, startY, anguloLanzamiento, PAPELCULO_SPEED, poderHabilidad, extraDamage, jug, direccionHorizontal, false);
+        _04ProyectilPapelCulo papelCulo = new _04ProyectilPapelCulo(startX, startY, anguloLanzamiento, PAPELCULO_SPEED, poderHabilidad, extraDamage, jug, direccionHorizontal, false);
         jug.getControladorProyectiles().anyadirNuevoProyectil(papelCulo);
 
         gestorDeAudio.reproducirEfecto("lanzarCalcetin", AUDIO_PAPEL);
@@ -55,14 +55,14 @@ public class AtaquePapelCulo {
         float offsetXDerecha = 5f;
         float direccionDerecha = 1f;
         float startXDerecha = startX + offsetXDerecha;
-        ProyectilPapelCulo proyectilDerecha = new ProyectilPapelCulo(startXDerecha, startY, anguloLanzamiento, PAPELCULO_SPEED, poderHabilidad, extraDamage, jug, direccionDerecha, false);
+        _04ProyectilPapelCulo proyectilDerecha = new _04ProyectilPapelCulo(startXDerecha, startY, anguloLanzamiento, PAPELCULO_SPEED, poderHabilidad, extraDamage, jug, direccionDerecha, false);
         jug.getControladorProyectiles().anyadirNuevoProyectil(proyectilDerecha);
 
         // Disparo hacia la izquierda
         float offsetXIzquierda = -5f;
         float direccionIzquierda = -1f;
         float startXIzquierda = startX + offsetXIzquierda;
-        ProyectilPapelCulo proyectilIzquierda = new ProyectilPapelCulo(startXIzquierda, startY, anguloLanzamiento, PAPELCULO_SPEED, poderHabilidad, extraDamage, jug, direccionIzquierda, false);
+        _04ProyectilPapelCulo proyectilIzquierda = new _04ProyectilPapelCulo(startXIzquierda, startY, anguloLanzamiento, PAPELCULO_SPEED, poderHabilidad, extraDamage, jug, direccionIzquierda, false);
         jug.getControladorProyectiles().anyadirNuevoProyectil(proyectilIzquierda);
 
         gestorDeAudio.reproducirEfecto("lanzarCalcetin", AUDIO_PAPEL);

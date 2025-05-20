@@ -13,7 +13,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
-import com.sticklike.core.entidades.renderizado.TrailRender;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
@@ -171,7 +172,10 @@ public class RenderVentanaJuego1 {
         // 5) Dinámico: proyectiles fondo, trails, sombras, entidades, HUD…
         spriteBatch.setProjectionMatrix(camara.combined);
         // todo --> si en un futuro hay más proyectiles que usen el renderizado en el fondo se debería gestionar desde aquí el begin/end (actualmente se gestiona solamente para LluviaMocos)
+        spriteBatch.begin();
         jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
+        //ParticleManager.get().render(spriteBatch);
+        spriteBatch.end();
         TrailRender.get().flush(camara.combined);
 
         shapeRenderer.setProjectionMatrix(camara.combined);
@@ -183,6 +187,7 @@ public class RenderVentanaJuego1 {
         for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
         jugador.aplicarRenderizadoAlJugador(spriteBatch, shapeRenderer);
         ctrlEnemigos.renderizarEnemigos(spriteBatch);
+        ParticleManager.get().render(spriteBatch);
         jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         for (TextoFlotante t : textos) t.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();

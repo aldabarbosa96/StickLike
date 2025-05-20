@@ -1,17 +1,15 @@
 package com.sticklike.core.entidades.objetos.armas.comportamiento;
 
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.ProyectilPelota;
+import com.sticklike.core.entidades.objetos.armas._08ProyectilPelota;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
-
-public class AtaquePelota {
+public class _08AtaquePelota {
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo;
 
-    public AtaquePelota(float cooldownInicialSegundos) {
+    public _08AtaquePelota(float cooldownInicialSegundos) {
         this.intervaloDisparo = cooldownInicialSegundos;
     }
 
@@ -33,7 +31,7 @@ public class AtaquePelota {
         if (len == 0) len = 1f;
         dirX /= len; dirY /= len;
 
-        ProyectilPelota pelota = new ProyectilPelota(spawnX, spawnY, dirX, dirY, jug);
+        _08ProyectilPelota pelota = new _08ProyectilPelota(spawnX, spawnY, dirX, dirY, jug);
         jug.getControladorProyectiles().anyadirNuevoProyectil(pelota);
 
         audio.reproducirEfecto("pelota", 0.75f);

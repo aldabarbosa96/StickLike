@@ -1,4 +1,4 @@
-package com.sticklike.core.entidades.renderizado;
+package com.sticklike.core.entidades.renderizado.particulas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;

@@ -4,14 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntMap;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;   // ← nuevo helper global
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.entidades.renderizado.particulas.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;   // ← nuevo helper global
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
@@ -26,7 +28,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_PIPI;
  * Proyectil «Lluvia de mocos».
  * Ahora el rastro se pinta a través de {@link TrailRender}.
  */
-public final class LluviaDorada implements Proyectiles {
+public final class _07LluviaDorada implements Proyectiles {
 
     public enum EstadoLluvia {FALLING, EXPLODED}
 
@@ -68,8 +70,9 @@ public final class LluviaDorada implements Proyectiles {
     private final float dampingFactor = 0.45f;
     private Texture dropTexture;
     private final Set<Enemigo> enemigosImpactados = new HashSet<>();
+    private final ParticleEffectPool.PooledEffect efecto;
 
-    public LluviaDorada(float x, float y, float fallSpeed, GestorDeAudio gestorDeAudio) {
+    public _07LluviaDorada(float x, float y, float fallSpeed, GestorDeAudio gestorDeAudio) {
         this.damage = MathUtils.random(8, 15);
         this.x = x;
         this.y = y;
@@ -87,7 +90,10 @@ public final class LluviaDorada implements Proyectiles {
         }
         this.sprite = new Sprite(texture);
         this.gestorDeAudio = gestorDeAudio;
-        this.renderParticulasProyectil = new RenderParticulasProyectil(38, 2.5f, COLOR_PIPI);
+        this.renderParticulasProyectil = new RenderParticulasProyectil(12, 2.5f, COLOR_PIPI);
+        float centerX = x + width * 0.5f;
+        float centerY = y + height * 0.5f;
+        this.efecto = ParticleManager.get().obtainEffect("pipi", centerX, centerY);
         this.collisionRect.set(x, y, width, height);
     }
 
@@ -101,6 +107,7 @@ public final class LluviaDorada implements Proyectiles {
 
             centroSprite.set(x + width * 0.5f, y + height * 0.5f);
             renderParticulasProyectil.update(centroSprite);
+            efecto.setPosition(centroSprite.x, centroSprite.y);
             TrailRender.get().submit(renderParticulasProyectil);
 
             collisionRect.set(x, y, width, height);
@@ -134,6 +141,7 @@ public final class LluviaDorada implements Proyectiles {
             estadoLluvia = EstadoLluvia.EXPLODED;
             explosionTimer = 0f;
             gestorDeAudio.reproducirEfecto("moco", 0.33f);
+            efecto.allowCompletion();
             dropTexture = getDropTexture(COLOR_PIPI);
         }
     }
@@ -141,8 +149,6 @@ public final class LluviaDorada implements Proyectiles {
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (!proyectilActivo) return;
-
-        batch.begin();
 
         renderParticulasProyectil.setAlphaMult(0.8f);
 
@@ -176,7 +182,6 @@ public final class LluviaDorada implements Proyectiles {
 
             batch.setColor(r, g, b, a);
         }
-        batch.end();
     }
 
 
@@ -235,8 +240,8 @@ public final class LluviaDorada implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
-        proyectilActivo = false;
         renderParticulasProyectil.reset();
+        proyectilActivo = false;
     }
 
     @Override
@@ -296,6 +301,7 @@ public final class LluviaDorada implements Proyectiles {
     @Override
     public void dispose() {
         renderParticulasProyectil.dispose();
+        efecto.free();
     }
 
     public EstadoLluvia getEstadoMoco() {

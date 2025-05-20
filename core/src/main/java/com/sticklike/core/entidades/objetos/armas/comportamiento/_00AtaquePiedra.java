@@ -3,12 +3,12 @@ package com.sticklike.core.entidades.objetos.armas.comportamiento;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.ProyectilPiedra;
+import com.sticklike.core.entidades.objetos.armas._00ProyectilPiedra;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
-public class AtaquePiedra {
+public class _00AtaquePiedra {
     private float temporizadorDisparo = 0f;
     private float intervaloDisparo;
     private int proyectilesPendientes = 0;
@@ -18,7 +18,7 @@ public class AtaquePiedra {
     private float[] storedDirection;
     private boolean volleyFinished = true;
 
-    public AtaquePiedra(float intervaloDisparoInicial) {
+    public _00AtaquePiedra(float intervaloDisparoInicial) {
         this.intervaloDisparo = intervaloDisparoInicial;
         storedDirection = null;
     }
@@ -98,7 +98,7 @@ public class AtaquePiedra {
             storedDirection = dir;
         }
         float velocidadAleatoria = MathUtils.random(1.5f, 1.75f);
-        ProyectilPiedra piedra = new ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria, jugador);
+        _00ProyectilPiedra piedra = new _00ProyectilPiedra(spawnX, spawnY, dir[0], dir[1], velocidadAleatoria, jugador);
         jugador.getControladorProyectiles().anyadirNuevoProyectil(piedra);
     }
 

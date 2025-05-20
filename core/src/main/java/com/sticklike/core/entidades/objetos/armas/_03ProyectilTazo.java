@@ -9,9 +9,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.comportamiento.AtaqueTazo;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;          // ← nuevo
+import com.sticklike.core.entidades.objetos.armas.comportamiento._03AtaqueTazo;
+import com.sticklike.core.entidades.renderizado.particulas.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;          // ← nuevo
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -22,12 +22,11 @@ import java.util.Set;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
-public final class ProyectilTazo implements Proyectiles {
+public final class _03ProyectilTazo implements Proyectiles {
     private static Texture TEXTURE;
 
     public enum Phase {GROWING, ACTIVE, COOLDOWN}
 
-    /* ---------- constantes ---------- */
     private static final float MIN_SCALE = 0.1f;
     private static final float MAX_SCALE = 0.9f;
     private static final float GROW_DURATION = 0.5f;
@@ -38,42 +37,38 @@ public final class ProyectilTazo implements Proyectiles {
     private static final float PARTICLE_WID = 6f;
     private static final Color PARTICLE_COLOR = new Color(1f, 0.615f, 0f, 1f);
 
-    /* ---------- recursos ---------- */
     private final Sprite sprite;
     private final RenderParticulasProyectil particles;
     private final GestorDeAudio audio = GestorDeAudio.getInstance();
 
-    /* ---------- estado externo ---------- */
     private final Jugador jugador;
-    private AtaqueTazo ataqueTazo;
+    private _03AtaqueTazo a03AtaqueTazo;
     private float offsetAngle;
     private float radio;
     private float radioColision;
     private float powerFactor;
 
-    /* ---------- reutilización------------- */
     private final Rectangle collisionRect = new Rectangle();
     private final Vector2 center = new Vector2();
     private final Set<Enemigo> impactados = new HashSet<>(8);
 
-    /* ---------- ciclo ---------- */
     private boolean activo = true;
     private Phase phase = Phase.GROWING;
     private float phaseTimer = 0f;
     private float growthTimer = 0f;
     private float damageTimer = 0f;
     private float rotationAccum = 0f;
-
-    /* ---------- config pública ---------- */
     private float activeDuration = 8.5f;
     private boolean esCritico;
 
-    public ProyectilTazo(Jugador jugador, AtaqueTazo ataqueTazo, float offsetAngle, float radio, GestorDeAudio gestor) {
+    //private ParticleEffectPool.PooledEffect efectoParticulas; todo --> revisar en un futuro, por ahora no se implementará para esta habilidad
+
+    public _03ProyectilTazo(Jugador jugador, _03AtaqueTazo a03AtaqueTazo, float offsetAngle, float radio, GestorDeAudio gestor) {
 
         if (TEXTURE == null) TEXTURE = manager.get(ARMA_TAZOS2, Texture.class);
 
         this.jugador = jugador;
-        this.ataqueTazo = ataqueTazo;
+        this.a03AtaqueTazo = a03AtaqueTazo;
         this.offsetAngle = offsetAngle;
         this.radio = radio;
         this.radioColision = RADIO_TAZOS;
@@ -98,7 +93,7 @@ public final class ProyectilTazo implements Proyectiles {
         phaseTimer += delta;
 
         /* posición orbital */
-        float ang = MathUtils.degreesToRadians * (ataqueTazo.getGlobalAngle() + offsetAngle);
+        float ang = MathUtils.degreesToRadians * (a03AtaqueTazo.getGlobalAngle() + offsetAngle);
         float px = jugador.getSprite().getX() + jugador.getSprite().getWidth() * .5f;
         float py = jugador.getSprite().getY() + jugador.getSprite().getHeight() * .5f - 5f;
         float x = px + MathUtils.cos(ang) * radio - sprite.getWidth() * .5f;
@@ -118,12 +113,16 @@ public final class ProyectilTazo implements Proyectiles {
                     phaseTimer = damageTimer = growthTimer = 0f;
                     impactados.clear();
                     sprite.setColor(1f, 1f, 1f, 1f);
+                    //iniciarParticulas();
                 }
             }
             case ACTIVE -> {
                 sprite.setScale(MAX_SCALE);
                 rotationAccum += ROT_ACTIVE * delta;
                 sprite.setRotation(rotationAccum);
+                /*if (efectoParticulas != null) {
+                    efectoParticulas.setPosition(sprite.getX() + sprite.getWidth() / 2f, sprite.getY() + sprite.getHeight() / 2f);
+                }*/
                 damageTimer += delta;
                 if (damageTimer >= INTERVALO_TAZOS) {
                     damageTimer = 0f;
@@ -131,7 +130,10 @@ public final class ProyectilTazo implements Proyectiles {
                     sprite.setColor(Color.WHITE);
                     particles.setColor(PARTICLE_COLOR);
                 }
-                if (phaseTimer >= ataqueTazo.getDuracionActivaTazo()) {
+                if (phaseTimer >= a03AtaqueTazo.getDuracionActivaTazo()) {
+                    /*if (efectoParticulas != null) {
+                        efectoParticulas.allowCompletion();
+                    }*/
                     phase = Phase.COOLDOWN;
                     phaseTimer = 0f;
                 }
@@ -150,6 +152,11 @@ public final class ProyectilTazo implements Proyectiles {
                     phaseTimer = growthTimer = damageTimer = 0f;
                     sprite.setScale(MIN_SCALE);
                     sprite.setColor(1f, 1f, 1f, 1f);
+
+                    /*if (efectoParticulas != null) {
+                        efectoParticulas.free();
+                        efectoParticulas = null;
+                    }*/
                 }
             }
         }
@@ -177,6 +184,13 @@ public final class ProyectilTazo implements Proyectiles {
     /*                       RENDER                                */
     /* ----------------------------------------------------------- */
 
+
+    /*private void iniciarParticulas() {
+        if (efectoParticulas == null) {
+            efectoParticulas = ParticleManager.get().obtainEffect("tazo", sprite.getX() + sprite.getWidth() / 2f, sprite.getY() + sprite.getHeight() / 2f);
+        }
+    }*/
+
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (!activo) return;
@@ -197,6 +211,7 @@ public final class ProyectilTazo implements Proyectiles {
     public void dispose() {
         TEXTURE = null;
         particles.dispose();
+        //efectoParticulas.free();
     }
 
     @Override
@@ -216,8 +231,9 @@ public final class ProyectilTazo implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
-        activo = false;
         particles.reset();
+        //efectoParticulas.allowCompletion();
+        activo = false;
     }
 
     @Override
@@ -263,8 +279,8 @@ public final class ProyectilTazo implements Proyectiles {
     }
 
     /* ---------- getters / setters auxiliares ---------- */
-    public AtaqueTazo getAtaqueTazo() {
-        return ataqueTazo;
+    public _03AtaqueTazo getAtaqueTazo() {
+        return a03AtaqueTazo;
     }
 
     public Phase getPhase() {
@@ -278,6 +294,9 @@ public final class ProyectilTazo implements Proyectiles {
     public void setPhase(Phase ph, float t) {
         phase = ph;
         phaseTimer = t;
+        /*if (phase == Phase.ACTIVE && efectoParticulas == null) {
+            iniciarParticulas();
+        }*/
     }
 
     public float getActiveDuration() {

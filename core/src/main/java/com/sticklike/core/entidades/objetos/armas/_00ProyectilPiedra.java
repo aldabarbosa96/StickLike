@@ -3,14 +3,16 @@ package com.sticklike.core.entidades.objetos.armas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.entidades.renderizado.particulas.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -18,7 +20,7 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
-public final class ProyectilPiedra implements Proyectiles {
+public final class _00ProyectilPiedra implements Proyectiles {
 
     private static Texture TEXTURE;
     private static final float BASE_SPEED = PROJECTILE_PIEDRA_SPEED;
@@ -32,6 +34,7 @@ public final class ProyectilPiedra implements Proyectiles {
     private final Vector2 center = new Vector2();
     private final Rectangle collisionRect = new Rectangle();
     private final Jugador jugador;
+    private final ParticleEffectPool.PooledEffect efecto;
 
     private final float speedMultiplier;
     private float dirX, dirY;
@@ -39,7 +42,7 @@ public final class ProyectilPiedra implements Proyectiles {
     private boolean esCritico;
     private final GestorDeAudio audio = GestorDeAudio.getInstance();
 
-    public ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad, Jugador jugador) {
+    public _00ProyectilPiedra(float x, float y, float direccionX, float direccionY, float multiplicadorVelocidad, Jugador jugador) {
 
         // Carga única de textura
         if (TEXTURE == null) {
@@ -60,6 +63,10 @@ public final class ProyectilPiedra implements Proyectiles {
         float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
         particles = new RenderParticulasProyectil((int) (PARTICLE_LEN * scale), PARTICLE_WID * scale, PARTICLE_COLOR);
         particles.setAlphaMult(0.5f);   // mismo alpha que antes
+
+        Vector2 initialCenter = new Vector2(x + PIEDRA_SIZE * 0.5f, y + PIEDRA_SIZE * 0.25f);
+        efecto = ParticleManager.get().obtainEffect("piedra", initialCenter.x, initialCenter.y);
+
 
         // Hit-box inicial
         collisionRect.set(x, y, PIEDRA_SIZE, PIEDRA_SIZE);
@@ -82,7 +89,9 @@ public final class ProyectilPiedra implements Proyectiles {
         // Trail
         center.set(sprite.getX() + sprite.getWidth() * 0.5f, sprite.getY() + sprite.getHeight() * 0.5f);
         particles.update(center);
-        TrailRender.get().submit(particles);   // << nuevo sistema de rastro
+        TrailRender.get().submit(particles);
+        efecto.setPosition(center.x, center.y);
+
 
         // Hit-box
         collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
@@ -92,7 +101,7 @@ public final class ProyectilPiedra implements Proyectiles {
     @Override
     public void renderizarProyectil(SpriteBatch batch) {
         if (!activo) return;
-        sprite.draw(batch);                    // el trail lo pinta TrailRender
+        sprite.draw(batch);
     }
 
     /* -------------------------- Limpieza ------------------------ */
@@ -100,6 +109,7 @@ public final class ProyectilPiedra implements Proyectiles {
     public void dispose() {
         TEXTURE = null;
         particles.dispose();
+        efecto.free();
     }
 
     /* -------------------------- Getters / lógica de daño -------- */
@@ -125,8 +135,9 @@ public final class ProyectilPiedra implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
-        activo = false;
         particles.reset();
+        efecto.allowCompletion();
+        activo = false;
     }
 
     @Override

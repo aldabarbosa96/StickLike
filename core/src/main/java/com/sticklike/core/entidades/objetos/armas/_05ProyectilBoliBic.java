@@ -3,14 +3,16 @@ package com.sticklike.core.entidades.objetos.armas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.renderizado.RenderParticulasProyectil;
-import com.sticklike.core.entidades.renderizado.TrailRender;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.entidades.renderizado.particulas.RenderParticulasProyectil;
+import com.sticklike.core.entidades.renderizado.particulas.TrailRender;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -25,7 +27,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
  * Proyectil “Boli Bic”.
  * La estela se gestiona ahora a través de {@link TrailRender}.
  */
-public final class ProyectilBoliBic implements Proyectiles {
+public final class _05ProyectilBoliBic implements Proyectiles {
 
     private Jugador jugador;
     private static final float SPRITE_SIZE = 25f;
@@ -53,6 +55,8 @@ public final class ProyectilBoliBic implements Proyectiles {
     private final Set<Enemigo> impactados = new HashSet<>(4);
     private final float powerFactor;
 
+    private final ParticleEffectPool.PooledEffect efecto;
+
     private float dirX, dirY, velocidad;
     private float distanciaRecorrida = 0f;
     private boolean activo = true;
@@ -61,7 +65,7 @@ public final class ProyectilBoliBic implements Proyectiles {
     private boolean bounceEnabled = false;
     private int remainingBounces = 0;
 
-    public ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil, Jugador jugador) {
+    public _05ProyectilBoliBic(float x, float y, float dirX, float dirY, float velocidadProyectil, Jugador jugador) {
 
         this.jugador = jugador;
         if (TEXTURE == null) TEXTURE = manager.get(ARMA_BOLIBIC, Texture.class);
@@ -85,6 +89,9 @@ public final class ProyectilBoliBic implements Proyectiles {
         int maxLen = (int) (PARTICLE_LEN_FACTOR * scaleFactor);
         float partWid = PARTICLE_WID_FACTOR * scaleFactor;
         trail = new RenderParticulasProyectil(maxLen, partWid, DEFAULT_PARTICLE_COLOR);
+
+        Vector2 initialCenter = new Vector2(x + SPRITE_ORIGIN, y + SPRITE_ORIGIN);
+        efecto = ParticleManager.get().obtainEffect("boli", initialCenter.x, initialCenter.y);
     }
 
     @Override
@@ -98,6 +105,8 @@ public final class ProyectilBoliBic implements Proyectiles {
 
         trail.update(tip);
         TrailRender.get().submit(trail);
+
+        efecto.setPosition(center.x, center.y);
 
         // Mover proyectil
         float despl = velocidad * delta;
@@ -133,6 +142,7 @@ public final class ProyectilBoliBic implements Proyectiles {
     public void dispose() {
         TEXTURE = null;
         trail.dispose();
+        efecto.free();
     }
 
     @Override
@@ -157,8 +167,9 @@ public final class ProyectilBoliBic implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
-        activo = false;
         trail.reset();
+        efecto.allowCompletion();
+        activo = false;
     }
 
     @Override
