@@ -84,7 +84,7 @@ public final class _02NubePedo implements Proyectiles {
         Vector2 posJugador = jugador.getPosicionTmp();
         float cx = posJugador.x + sprite.getWidth() * 0.5f;
         float cy = posJugador.y + sprite.getHeight() * 0.5f;
-        efectoParticula = ParticleManager.get().obtainEffect("pedo", cx, cy);
+        efectoParticula = ParticleManager.get().obtainEffect("pedo", cx, cy, true);
 
         // Inicializar rectángulo para colisión
         collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());

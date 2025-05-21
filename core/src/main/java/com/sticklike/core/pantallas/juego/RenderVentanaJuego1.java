@@ -174,7 +174,7 @@ public class RenderVentanaJuego1 {
         // todo --> si en un futuro hay más proyectiles que usen el renderizado en el fondo se debería gestionar desde aquí el begin/end (actualmente se gestiona solamente para LluviaMocos)
         spriteBatch.begin();
         jugador.getControladorProyectiles().renderizarProyectilesFondo(spriteBatch);
-        //ParticleManager.get().render(spriteBatch);
+        ParticleManager.get().renderBackground(spriteBatch);
         spriteBatch.end();
         TrailRender.get().flush(camara.combined);
 
@@ -187,7 +187,7 @@ public class RenderVentanaJuego1 {
         for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
         jugador.aplicarRenderizadoAlJugador(spriteBatch, shapeRenderer);
         ctrlEnemigos.renderizarEnemigos(spriteBatch);
-        ParticleManager.get().render(spriteBatch);
+        ParticleManager.get().renderForeground(spriteBatch);
         jugador.getControladorProyectiles().renderizarProyectiles(spriteBatch);
         for (TextoFlotante t : textos) t.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();

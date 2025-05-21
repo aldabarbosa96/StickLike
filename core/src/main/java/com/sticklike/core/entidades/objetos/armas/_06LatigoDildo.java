@@ -143,19 +143,14 @@ public final class _06LatigoDildo implements Proyectiles {
         float vy = R * MathUtils.cos(theta);
         sprite.setRotation(MathUtils.atan2(vy, vx) * MathUtils.radiansToDegrees);
 
-        /* ===== NUEVO: obtenemos la punta ya transformada ===== */
+        /* -------- 2. Trail principal y emitter (solo antes del halo) -------- */
         Vector2 tip = calcPunta();
-
-        /* Sincronizamos el emitter en la punta */
-        efecto.setPosition(tip.x, tip.y);
-
-        /* -------- 2. Trail principal (punta) -------- */
-        tmpVec1.set(tip);           // reutilizamos el vector temporal
-        particles.update(tmpVec1);
-
-        // SOLO mientras el látigo está en pantalla → evita el destello final
-        if (tSwing < duration) {
-            TrailRender.get().submit(particles);
+        if (!projectionStarted) {
+            efecto.setPosition(tip.x, tip.y);
+            particles.update(tip);
+            if (tSwing < duration) {
+                TrailRender.get().submit(particles);
+            }
         }
 
         /* -------- 3. Restaurar colores tras impacto -------- */
@@ -189,12 +184,15 @@ public final class _06LatigoDildo implements Proyectiles {
             projectedPoints = new Vector2[projectedCount];
             System.arraycopy(arcPoints, 0, projectedPoints, 0, projectedCount);
             haloTravel = 0f;
+
+            // Detenemos inmediatamente el emitter del ParticleManager
+            efecto.allowCompletion();
+            // Para liberar de forma instantánea, podrías usar efecto.free();
         }
 
         /* -------- 6. Avance del halo proyectado -------- */
         if (projectionStarted && haloUpgrade) {
             haloTravel += HALO_V * delta;
-
             for (int i = 0; i < projectedCount; i++) {
                 Vector2 base = projectedPoints[i];
                 float x = base.x + lado * haloTravel;

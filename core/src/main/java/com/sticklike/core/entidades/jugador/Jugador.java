@@ -81,7 +81,6 @@ public class Jugador {
         this.renderParticulasSangre = new RenderParticulasSangre();
     }
 
-
     public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText, GestorDeAudio gestorDeAudio) {
         if (!estaVivo) return;
 

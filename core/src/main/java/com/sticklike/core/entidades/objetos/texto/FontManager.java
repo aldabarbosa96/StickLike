@@ -25,6 +25,7 @@ public class FontManager {
     public static BitmapFont plusFont;
     public static BitmapFont loadingFont;
     public static BitmapFont slotFont;
+    public static BitmapFont messageFont;
 
     private static float scale;
     private static final Color DARKER_WHITE = new Color(0.95f, 0.95f, 0.95f, 1);
@@ -33,8 +34,16 @@ public class FontManager {
 
         scale = Gdx.graphics.getWidth() / VIRTUAL_WIDTH;
         FreeTypeFontGenerator dmgFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/font1.ttf"));
-        FreeTypeFontGenerator mainFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/font_pmaker.ttf"));
+        FreeTypeFontGenerator mainFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/fontPmaker.ttf"));
         FreeTypeFontGenerator slotsFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/fontPresStart2.ttf"));
+        FreeTypeFontGenerator messagesFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/fontIndieFlower.ttf"));
+
+        // Texto mensajes
+        FreeTypeFontGenerator.FreeTypeFontParameter messagesParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        messagesParam.size = Math.round(10 * scale);
+        messagesParam.color = Color.WHITE;
+        messageFont = mainFont.generateFont(messagesParam);
+
 
         // texto daño
         FreeTypeFontGenerator.FreeTypeFontParameter damageParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -130,6 +139,7 @@ public class FontManager {
         dmgFont.dispose();
         mainFont.dispose();
         slotsFont.dispose();
+        messagesFont.dispose();
     }
 
     public static void disposeFonts() {
@@ -185,6 +195,10 @@ public class FontManager {
         if (debugFont != null) {
             debugFont.dispose();
             debugFont = null;
+        }
+        if (messageFont != null) {
+            messageFont.dispose();
+            messageFont = null;
         }
     }
 
@@ -242,5 +256,9 @@ public class FontManager {
 
     public static BitmapFont getSlotFont() {
         return slotFont;
+    }
+
+    public static BitmapFont getMessageFont() {
+        return messageFont;
     }
 }

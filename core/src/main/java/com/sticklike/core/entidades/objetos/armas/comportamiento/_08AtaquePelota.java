@@ -48,7 +48,7 @@ public class _08AtaquePelota {
             float dx = e.getX() - jug.getSprite().getX();
             float dy = e.getY() - jug.getSprite().getY();
             float dist = dx * dx + dy * dy;
-            if (dist < minDist && dist <= jug.getRangoAtaqueJugador() * jug.getRangoAtaqueJugador()) {
+            if (dist < minDist && dist <= jug.getRangoAtaqueJugador() * jug.getRangoAtaqueJugador() * 2) {
                 minDist = dist;
                 mejor = e;
             }

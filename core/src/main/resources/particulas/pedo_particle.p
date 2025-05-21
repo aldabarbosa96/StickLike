@@ -60,10 +60,10 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - X Scale - 
-lowMin: 1.0
-lowMax: 1.0
-highMin: 3.0
-highMax: 3.0
+lowMin: 0.5
+lowMax: 0.5
+highMin: 1.5
+highMax: 1.5
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -75,8 +75,8 @@ active: false
 active: true
 lowMin: 10.0
 lowMax: 10.0
-highMin: 15.0
-highMax: 15.0
+highMin: 20.0
+highMax: 20.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -104,12 +104,12 @@ colorsCount: 9
 colors0: 0.8745098
 colors1: 1.0
 colors2: 0.8392157
-colors3: 0.6156863
-colors4: 0.627451
-colors5: 0.28235295
-colors6: 0.5372549
-colors7: 1.0
-colors8: 0.5372549
+colors3: 0.72156864
+colors4: 0.7294118
+colors5: 0.23137255
+colors6: 0.40784314
+colors7: 0.7921569
+colors8: 0.19607843
 timelineCount: 3
 timeline0: 0.0
 timeline1: 0.5892473

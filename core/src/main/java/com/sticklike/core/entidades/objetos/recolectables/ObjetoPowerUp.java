@@ -34,7 +34,7 @@ public class ObjetoPowerUp extends ObjetoBase {
 
     @Override
     public void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game) {
-        jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
+        jugador.setTrazosGanados(Jugador.getTrazosGanados() + 1);
     }
 
     @Override

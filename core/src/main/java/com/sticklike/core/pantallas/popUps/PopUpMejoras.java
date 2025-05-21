@@ -172,7 +172,7 @@ public class PopUpMejoras extends RenderBaseMenus {
 
             float iconsizePlus = 35;
             float iconSize = 32;
-            if (mejora.getNombreMejora().contains("DILDO")) {
+            if (mejora.getNombreMejora().contains("DILDO") || mejora.getNombreMejora().contains("LLUVIA")) {
                 iconSize = iconsizePlus;
             }
             float horizontalPadding = 12f;

@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_PIPI;
+import static com.sticklike.core.utilidades.gestores.GestorDeAssets.ARMA_PIPI_GOTA;
 
 /**
  * Proyectil «Lluvia de mocos».
@@ -93,7 +94,7 @@ public final class _07LluviaDorada implements Proyectiles {
         this.renderParticulasProyectil = new RenderParticulasProyectil(12, 2.5f, COLOR_PIPI);
         float centerX = x + width * 0.5f;
         float centerY = y + height * 0.5f;
-        this.efecto = ParticleManager.get().obtainEffect("pipi", centerX, centerY);
+        this.efecto = ParticleManager.get().obtainEffect("pipi", centerX, centerY, true);
         this.collisionRect.set(x, y, width, height);
     }
 
@@ -117,6 +118,14 @@ public final class _07LluviaDorada implements Proyectiles {
                 if (reboteActivado && bounceCount < maxBounces) {
                     bounceCount++;
                     velocity = -velocity * dampingFactor;
+                    Texture gotaTex = GestorDeAssets.manager.get(ARMA_PIPI_GOTA, Texture.class);
+                    sprite.setTexture(gotaTex);
+
+                    width = 10f;
+                    height = 10f;
+
+                    sprite.setSize(width, height);
+                    sprite.setOriginCenter();
                 } else {
                     explotar();
                 }
@@ -142,7 +151,7 @@ public final class _07LluviaDorada implements Proyectiles {
             explosionTimer = 0f;
             gestorDeAudio.reproducirEfecto("moco", 0.33f);
             efecto.allowCompletion();
-            dropTexture = getDropTexture(COLOR_PIPI);
+            dropTexture = getDropTexture();
         }
     }
 
@@ -185,12 +194,12 @@ public final class _07LluviaDorada implements Proyectiles {
     }
 
 
-    private static Texture getDropTexture(Color color) {
-        int key = Color.rgba8888(color);
+    private static Texture getDropTexture() {
+        int key = Color.rgba8888(_07LluviaDorada.COLOR_PIPI);
         Texture drop = dropTextureCache.get(key);
         if (drop == null) {
             Pixmap pixmap = new Pixmap(DROP_SIZE, DROP_SIZE, Pixmap.Format.RGBA8888);
-            pixmap.setColor(color);
+            pixmap.setColor(_07LluviaDorada.COLOR_PIPI);
             pixmap.fillCircle(DROP_SIZE / 2, DROP_SIZE / 2, DROP_SIZE / 2);
             drop = new Texture(pixmap);
             pixmap.dispose();
@@ -294,14 +303,16 @@ public final class _07LluviaDorada implements Proyectiles {
 
     public void setDamage(float damage) {
         this.damage = damage;
-        sprite.setColor(0.9f, 0.1f, 0.1f, 1f);
-        COLOR_PIPI.set(1, 0, 0, 1f);
+        sprite.setColor(Color.RED);
+        COLOR_PIPI.set(Color.RED);
     }
 
     @Override
     public void dispose() {
         renderParticulasProyectil.dispose();
         efecto.free();
+        texture = null;
+        COLOR_PIPI.set(0.75f, 0.65f, 0.05f, 1f);
     }
 
     public EstadoLluvia getEstadoMoco() {

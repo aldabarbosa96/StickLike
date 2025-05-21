@@ -127,9 +127,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int VIDAMAX_JUGADOR = 50;
     public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
-    public static final float INTERVALO_MIN_DISPARO = 0.05f;
+    public static final float INTERVALO_MIN_DISPARO = 0.005f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
-    public static final int NUM_PROYECTILES_INICIALES = 2;
+    public static final int NUM_PROYECTILES_INICIALES = 1;
     public static final float RESISTENCIA = 0.05f;
     public static final float CRITICO = 0.07f;
     public static final float REGENERACION_VIDA = 0.001f;
@@ -142,14 +142,14 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración de los enemigos
     // -------------------------------------------------
-    public static final float VIDA_ENEMIGOCULO = 35f;
+    public static final float VIDA_ENEMIGOCULO = 15f;
     public static final float VIDA_ENEMIGO_POLLA = 23f;
     public static final float VIDA_ENEMIGOREGLA = 5f;
     public static final float VIDA_ENEMIGO_EXAMEN = 27f;
     public static final float VIDA_ENEMIGO_VATER = 300f;
     public static final float VIDA_ENEMIGO_ALARMA = 88f;
-    public static final float VIDA_ENEMIGO_CALCULADORA = 26f;
-    public static final float VIDA_ENEMIGO_LIBRO = 13f;
+    public static final float VIDA_ENEMIGO_CALCULADORA = 56f;
+    public static final float VIDA_ENEMIGO_LIBRO = 23f;
     public static final float VIDA_ENEMIGO_TETA = 1f;
     public static final float DANYO_CULO = 2f;
     public static final float DANYO_CALCULADORA = 5f;
@@ -183,7 +183,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ENEMY_MIN_MOVE_DURATION = 1.0f;
     public static final float ENEMY_MAX_MOVE_DURATION = 10.0f;
     public static final float BORDER_SPAWN_MARGIN = 200f;
-    public static final float INTERVALO_SPAWN = 0.8f;
+    public static final float INTERVALO_SPAWN = 0.75f;
     public static final float MAX_OFFSET = 100f;
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
@@ -248,7 +248,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 25f;
     public static final float RADIO_TAZOS_JUGADOR = 75f;
-    public static final float VEL_ROTACION = 180f;
+    public static final float VEL_ROTACION = 165f;
     public static final float INTERVALO_TAZOS = 0.1f;
     public static final float DANYO_TAZOS = 3.5f;
     public static final int NUM_TAZOS = 2;
@@ -310,9 +310,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO5 = 12;
     public static final int LVL_EVENTO6 = 13;
     public static final int LVL_EVENTO7 = 14;
-    public static final float EVENTO1_SPAWN_RATE = 0.4f;
+    public static final float EVENTO1_SPAWN_RATE = 0.33f;
     public static final float EVENTO1_SPEED_MULT = 1.1f;
-    public static final float EVENTO2_SPAWN_RATE = 0.25f;
+    public static final float EVENTO2_SPAWN_RATE = 0.2f;
     public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
     public static final float EVENTO2_SPEED_MULT = 1.3f;
     public static final float EVENTO3_SPEED_MULT = 1.5f;
