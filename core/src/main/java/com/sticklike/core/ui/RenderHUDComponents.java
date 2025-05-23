@@ -392,7 +392,7 @@ public class RenderHUDComponents {
             // Ajustamos tamaño y posición idéntico para todas las habilidades, excepto “DILDO” que necesita un pequeño tweak
             float margin = slot.width * 0.175f;
             float margin2 = slot.width * 0.0375f;
-            if ("DILDO".equals(mejora.getIdHabilidad())) {
+            if (mejora.getIdHabilidad().equals("DILDO") || mejora.getIdHabilidad().equals("PIPI")){
                 boton.setSize(slot.width - 2, slot.height - 7.5f * margin2);
                 boton.setPosition(slot.x + margin2, slot.y + margin * 1.35f);
             } else {
@@ -530,10 +530,16 @@ public class RenderHUDComponents {
                     }
                     break;
 
-                case "MOCO":
-                    var moco = jugador.getAtaqueMocos();
-                    remaining = moco.getTimeUntilNextShot();
-                    total = moco.getCooldownDuration();
+                case "PIPI":
+                    var pipi = jugador.getAtaquePipi();
+                    remaining = pipi.getTimeUntilNextShot();
+                    total = pipi.getCooldownDuration();
+                    break;
+
+                case "PELOTA":
+                    var pelota = jugador.getAtaquePelota();
+                    remaining = pelota.getTimeUntilNextShot();
+                    total = pelota.getCooldownDuration();
                     break;
 
                 default:

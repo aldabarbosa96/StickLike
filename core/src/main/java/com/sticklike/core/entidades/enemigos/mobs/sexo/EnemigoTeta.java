@@ -4,7 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoPolla;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBotes;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -16,7 +17,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class EnemigoTeta extends EnemigoBase {
-    private MovimientoPolla movimientoPolla;
+    private MovimientoBotes movimientoBotes;
     private static final float ROTATION_SPEED = 333f;
 
     public EnemigoTeta(Jugador jugador, float x, float y, float velocidadBase) {
@@ -26,25 +27,24 @@ public class EnemigoTeta extends EnemigoBase {
         sprite.setOriginCenter();
         sprite.setPosition(x,y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        movimientoPolla = new MovimientoPolla(velocidadBase, 0.75f, 25f, true);
+        movimientoBotes = new MovimientoBotes(velocidadBase, 0.75f, 25f, true);
         this.damageTexture = manager.get(DAMAGE_TETA, Texture.class);
         this.vidaEnemigo = VIDA_ENEMIGO_TETA;
         this.coolDownDanyo = COOLDOWN_POLLA;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         this.damageAmount = DANYO_TETA;
-        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        movimientoPolla.actualizarMovimiento(delta, sprite, jugador);
+        movimientoBotes.actualizarMovimiento(delta, sprite, jugador);
         animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
         sprite.rotate(ROTATION_SPEED * delta);
     }
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimientoPolla.actualizarSoloKnockback(delta, sprite, true);
+        movimientoBotes.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class EnemigoTeta extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimientoPolla.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoBotes.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -74,7 +74,17 @@ public class EnemigoTeta extends EnemigoBase {
         return null;
     }
 
-    public MovimientoPolla getMovimientoPolla() {
-        return movimientoPolla;
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoBotes.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoBotes;
+    }
+
+    public MovimientoBotes getMovimientoBotes() {
+        return movimientoBotes;
     }
 }

@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoProyeccion;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -20,18 +21,17 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.DANYO_REGL
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class EnemigoCondon extends EnemigoBase {
-    private MovimientoRegla movimientoRegla;
+    private MovimientoProyeccion movimientoProyeccion;
 
-    public EnemigoCondon(Jugador jugador,float x, float y, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
+    public EnemigoCondon(Jugador jugador, float x, float y, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_CONDON, Texture.class));
         sprite.setSize(16, 42);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 500, orthographicCamera, true);
+        this.movimientoProyeccion = new MovimientoProyeccion(velocidadEnemigo, 500, orthographicCamera, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_CONDON, Texture.class);
-        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
         this.vidaEnemigo = VIDA_ENEMIGOREGLA;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         this.coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
@@ -40,13 +40,12 @@ public class EnemigoCondon extends EnemigoBase {
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
-        movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
+        movimientoProyeccion.actualizarMovimiento(delta, sprite, jugador);
     }
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimientoRegla.actualizarSoloKnockback(delta, sprite, true);
+        movimientoProyeccion.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class EnemigoCondon extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoProyeccion.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -77,5 +76,15 @@ public class EnemigoCondon extends EnemigoBase {
             return objetoXp;
         }
         return null;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoProyeccion.getKnockbackTimer() > 0;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoProyeccion;
     }
 }

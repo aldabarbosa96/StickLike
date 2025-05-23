@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.entidades.jugador.StatsJugador;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.pantallas.menus.ventanas.MenuPrincipal;
 import com.sticklike.core.utilidades.DebugStats;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -38,6 +39,7 @@ public class MainGame extends Game {
         // Cargamos todos los recursos al iniciar
         GestorDeAssets.cargarRecursos();
         FontManager.initFonts();
+        ParticleManager.get().loadAllParticles();
         gestorDeAudio = GestorDeAudio.getInstance();
         batch = new SpriteBatch();
         debugStats = new DebugStats();

@@ -127,9 +127,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int VIDAMAX_JUGADOR = 50;
     public static final float RANGO_ATAQUE = 175f;
     public static final float INTERVALO_DISPARO = 1.35f;
-    public static final float INTERVALO_MIN_DISPARO = 0.05f;
+    public static final float INTERVALO_MIN_DISPARO = 0.005f;
     public static final float ATAQUE_CALCETIN_INTERVALO = 2.25f;
-    public static final int NUM_PROYECTILES_INICIALES = 2;
+    public static final int NUM_PROYECTILES_INICIALES = 1;
     public static final float RESISTENCIA = 0.05f;
     public static final float CRITICO = 0.07f;
     public static final float REGENERACION_VIDA = 0.001f;
@@ -142,14 +142,18 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración de los enemigos
     // -------------------------------------------------
-    public static final float VIDA_ENEMIGOCULO = 35f;
+    public static final float VIDA_ENEMIGOCULO = 15f;
     public static final float VIDA_ENEMIGO_POLLA = 23f;
-    public static final float VIDA_ENEMIGOREGLA = 80f;
+    public static final float VIDA_ENEMIGOREGLA = 5f;
     public static final float VIDA_ENEMIGO_EXAMEN = 27f;
     public static final float VIDA_ENEMIGO_VATER = 300f;
     public static final float VIDA_ENEMIGO_ALARMA = 88f;
+    public static final float VIDA_ENEMIGO_CALCULADORA = 56f;
+    public static final float VIDA_ENEMIGO_LIBRO = 23f;
     public static final float VIDA_ENEMIGO_TETA = 1f;
     public static final float DANYO_CULO = 2f;
+    public static final float DANYO_CALCULADORA = 5f;
+    public static final float DANYO_LIBRO = 12.5f;
     public static final float DANYO_REGLA = 3.5f;
     public static final float DANYO_POLLA = 1.25f;
     public static final float DANYO_TETA = 1.33f;
@@ -165,6 +169,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_EXAMEN = 90f;
     public static final float VEL_BASE_VATER = 30f;
     public static final float VEL_BASE_ALARMA = 75f;
+    public static final float VEL_BASE_CALCULADORA = 85f;
+    public static final float VEL_BASE_LIBRO = 85f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
     public static final float MULT_VELOCIDAD_CONDON = 3.25f;
@@ -177,7 +183,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float ENEMY_MIN_MOVE_DURATION = 1.0f;
     public static final float ENEMY_MAX_MOVE_DURATION = 10.0f;
     public static final float BORDER_SPAWN_MARGIN = 200f;
-    public static final float INTERVALO_SPAWN = 0.8f;
+    public static final float INTERVALO_SPAWN = 0.75f;
     public static final float MAX_OFFSET = 100f;
     public static final float AJUSTE_OFFSET_X = 65f;
     public static final float AJUSTE_OFFSET_Y = 50f;
@@ -238,11 +244,11 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EMPUJE_BASE_BOLI = 150f;
     public static final float EMPUJE_BASE_DILDO = 135f;
     public static final float MULT_DANYO = 1f;
-    public static final float TAZO_SIZE = 16f;
+    public static final float TAZO_SIZE = 18f;
     public static final float DURACION_NUBE_PEDO = 8f;
     public static final float RADIO_TAZOS = 25f;
     public static final float RADIO_TAZOS_JUGADOR = 75f;
-    public static final float VEL_ROTACION = 180f;
+    public static final float VEL_ROTACION = 165f;
     public static final float INTERVALO_TAZOS = 0.1f;
     public static final float DANYO_TAZOS = 3.5f;
     public static final int NUM_TAZOS = 2;
@@ -272,6 +278,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float OBJETO1_XP_HEIGHT = 14f;
     public static final float OBJETO_ORO_WIDTH = 14f;
     public static final float OBJETO_ORO_HEIGHT = 14f;
+    public static final float OBJETO_IMAN_HEIGHT = 24f;
+    public static final float OBJETO_IMAN_WIDTH = 24f;
     public static final float OBJETO_PWUP_WIDTH = 8f;
     public static final float OBJETO_PWUP_HEIGHT = 25f;
     public static final float VIDA_DESTRUCTIBLE = 150f;
@@ -301,24 +309,24 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO4 = 10;
     public static final int LVL_EVENTO5 = 12;
     public static final int LVL_EVENTO6 = 13;
-    public static final float EVENTO1_SPAWN_RATE = 0.4f;
-    public static final float EVENTO1_SPEED_MULT = 1.25f;
-    public static final float EVENTO2_SPAWN_RATE = 0.25f;
+    public static final int LVL_EVENTO7 = 14;
+    public static final float EVENTO1_SPAWN_RATE = 0.33f;
+    public static final float EVENTO1_SPEED_MULT = 1.1f;
+    public static final float EVENTO2_SPAWN_RATE = 0.2f;
     public static final float EVENTO2YMEDIO_SPAWN_RATE = 0.275f;
-    public static final float EVENTO2_SPEED_MULT = 1.45f;
-    public static final float EVENTO3_SPEED_MULT = 2f;
+    public static final float EVENTO2_SPEED_MULT = 1.3f;
+    public static final float EVENTO3_SPEED_MULT = 1.5f;
     public static final float EVENTO3_SPAWN_RATE = 0.1f;
-    public static final float EVENTO4_SPAWN_RATE = 0.075f;
+    public static final float EVENTO4_SPAWN_RATE = 0.05f;
     public static final float EVENTO_TETAS_SPAWN_RATE = 0.000001f;
     public static final String[] LISTA_TETAS = {"TETA", "TETA", "CULO"};
-    public static final String[] LISTA_BOSSPOLLA = {"BOSSPOLLA", "POLLA"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN"};
-    public static final String[] LISTA_ALARMA = {"ALARMA"};
+    public static final String[] LISTA_ALARMA = {"ALARMA", "ALARMA", "ALARMA", "ALARMA", "ALARMA", "ALARMA", "ALARMA", "REGLA"};
     public static final String[] LISTA_REGLA = {"REGLA"};
     public static final String[] TIPOS_ENEMIGOS = {"CULO"};
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "CONDON"};
-    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA","TETA"};
-    public static final String[] TIPOS_ENEMIGOS4 = {"REGLA","ALARMA","EXAMEN"};
+    public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "TETA"};
+    public static final String[] TIPOS_ENEMIGOS4 = {"CALCULADORA", "LIBRO"};
 
     // -------------------------------------------------
     // Configuración borrones

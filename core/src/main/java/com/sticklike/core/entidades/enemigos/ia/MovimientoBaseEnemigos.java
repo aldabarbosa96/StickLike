@@ -60,5 +60,7 @@ public abstract class MovimientoBaseEnemigos {
             }
         }
     }
-
+    public float getKnockbackTimer() {
+        return knockbackTimer;
+    }
 }

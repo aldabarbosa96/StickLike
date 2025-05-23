@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.objetos.armas.comportamiento.*;
 import com.sticklike.core.entidades.renderizado.RenderJugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasSangre;
-import com.sticklike.core.pantallas.menus.ventanas.MenuPersonaje;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
@@ -29,21 +28,22 @@ public class Jugador {
     private ControladorEnemigos controladorEnemigos;
     private ControladorProyectiles controladorProyectiles;
     private InputsJugador inputController;
-    private AtaquePiedra pedrada;
-    private AtaqueCalcetin calcetinazo;
-    private AtaqueTazo ataqueTazo;
-    private AtaqueNubePedo ataqueNubePedo;
-    private AtaquePapelCulo ataquePapelCulo;
-    private AtaqueMocos ataqueMocos;
-    private AtaqueBoliBic ataqueBoliBic;
-    private AtaqueDildo ataqueDildo;
+    private _00AtaquePiedra pedrada;
+    private _01AtaqueCalcetin calcetinazo;
+    private _03AtaqueTazo a03AtaqueTazo;
+    private _02AtaqueNubePedo a02AtaqueNubePedo;
+    private _04AtaquePapelCulo a04AtaquePapelCulo;
+    private _07AtaquePipi a07AtaquePipi;
+    private _05AtaqueBoliBic a05AtaqueBoliBic;
+    private _06AtaqueDildo a06AtaqueDildo;
+    private _08AtaquePelota a08AtaquePelota;
     private MovimientoJugador movimientoJugador;
     private ColisionesJugador colisionesJugador;
     private RenderJugador renderJugador;
     private RenderParticulasSangre renderParticulasSangre;
     private StatsJugador statsJugador;
-    private MenuPersonaje menuPersonaje;
     private final Vector2 tmpVector = new Vector2();
+    private final Vector2 tmpPos = new Vector2();
 
     private boolean estaVivo;
     private static int oroGanado;
@@ -51,7 +51,7 @@ public class Jugador {
     private boolean invulnerable = false;
     private Direction direccionActual = Direction.IDLE;
 
-    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, MovimientoJugador movimientoJugador, AtaquePiedra ataquePiedra, ControladorProyectiles controladorProyectiles, StatsJugador statsJugador) {
+    public Jugador(float startX, float startY, InputsJugador inputController, ColisionesJugador colisionesJugador, MovimientoJugador movimientoJugador, _00AtaquePiedra a00AtaquePiedra, ControladorProyectiles controladorProyectiles, StatsJugador statsJugador) {
         this.statsJugador = statsJugador;
         this.estaVivo = true;
         oroGanado = 0;
@@ -67,19 +67,19 @@ public class Jugador {
         this.inputController = inputController;
         this.colisionesJugador = colisionesJugador;
         this.movimientoJugador = movimientoJugador;
-        this.pedrada = ataquePiedra;
+        this.pedrada = a00AtaquePiedra;
         this.calcetinazo = null;
-        this.ataqueTazo = null;
-        this.ataqueNubePedo = null;
-        this.ataquePapelCulo = null;
-        this.ataqueMocos = null;
-        this.ataqueBoliBic = null;
-        this.ataqueDildo = null;
+        this.a03AtaqueTazo = null;
+        this.a02AtaqueNubePedo = null;
+        this.a04AtaquePapelCulo = null;
+        this.a07AtaquePipi = null;
+        this.a05AtaqueBoliBic = null;
+        this.a06AtaqueDildo = null;
+        this.a08AtaquePelota = null;
         this.controladorProyectiles = controladorProyectiles;
         this.renderJugador = new RenderJugador();
         this.renderParticulasSangre = new RenderParticulasSangre();
     }
-
 
     public void actualizarLogicaDelJugador(float delta, boolean paused, Array<TextoFlotante> dmgText, GestorDeAudio gestorDeAudio) {
         if (!estaVivo) return;
@@ -92,24 +92,28 @@ public class Jugador {
             if (calcetinazo != null) {
                 calcetinazo.manejarDisparo(delta, this, gestorDeAudio);
             }
-            if (ataqueTazo != null) {
-                ataqueTazo.actualizar(delta, this, gestorDeAudio);
+            if (a03AtaqueTazo != null) {
+                a03AtaqueTazo.actualizar(delta, this, gestorDeAudio);
             }
-            if (ataqueNubePedo != null) {
-                ataqueNubePedo.procesarAtaque(delta);
+            if (a02AtaqueNubePedo != null) {
+                a02AtaqueNubePedo.procesarAtaque(delta);
             }
-            if (ataquePapelCulo != null) {
-                ataquePapelCulo.manejarDisparo(delta, this, gestorDeAudio);
+            if (a04AtaquePapelCulo != null) {
+                a04AtaquePapelCulo.manejarDisparo(delta, this, gestorDeAudio);
             }
-            if (ataqueMocos != null) {
-                ataqueMocos.manejarDisparo(delta, this, gestorDeAudio);
+            if (a07AtaquePipi != null) {
+                a07AtaquePipi.manejarDisparo(delta, this, gestorDeAudio);
             }
 
-            if (ataqueBoliBic != null) {
-                ataqueBoliBic.manejarDisparo(delta, this, gestorDeAudio);
+            if (a05AtaqueBoliBic != null) {
+                a05AtaqueBoliBic.manejarDisparo(delta, this, gestorDeAudio);
             }
-            if (ataqueDildo != null) {
-                ataqueDildo.manejarDisparo(delta, this, gestorDeAudio);
+            if (a06AtaqueDildo != null) {
+                a06AtaqueDildo.manejarDisparo(delta, this, gestorDeAudio);
+            }
+
+            if (a08AtaquePelota != null) {
+                a08AtaquePelota.manejarDisparo(delta, this, gestorDeAudio);
             }
 
             colisionesJugador.verificarColisionesConEnemigos(controladorEnemigos, this, gestorDeAudio);
@@ -274,12 +278,12 @@ public class Jugador {
         this.controladorEnemigos = controladorEnemigos;
     }
 
-    public void setCalcetinazo(AtaqueCalcetin calcetinazo) {
+    public void setCalcetinazo(_01AtaqueCalcetin calcetinazo) {
         this.calcetinazo = calcetinazo;
     }
 
-    public void setTazo(AtaqueTazo tazo) {
-        this.ataqueTazo = tazo;
+    public void setTazo(_03AtaqueTazo tazo) {
+        this.a03AtaqueTazo = tazo;
     }
 
     public void setDireccionActual(Direction direccionActual) {
@@ -298,7 +302,7 @@ public class Jugador {
         return statsJugador.getVelocidadAtaque();
     }
 
-    public AtaquePiedra getPedrada() {
+    public _00AtaquePiedra getPedrada() {
         return pedrada;
     }
 
@@ -335,36 +339,36 @@ public class Jugador {
         this.oroGanado = oroGanado;
     }
 
-    public void setAtaqueNubePedo(AtaqueNubePedo ataqueNubePedo) {
-        this.ataqueNubePedo = ataqueNubePedo;
+    public void setAtaqueNubePedo(_02AtaqueNubePedo a02AtaqueNubePedo) {
+        this.a02AtaqueNubePedo = a02AtaqueNubePedo;
     }
 
-    public AtaqueCalcetin getAtaqueCalcetin() {
+    public _01AtaqueCalcetin getAtaqueCalcetin() {
         return calcetinazo;
     }
 
-    public AtaqueTazo getAtaqueTazo() {
-        return ataqueTazo;
+    public _03AtaqueTazo getAtaqueTazo() {
+        return a03AtaqueTazo;
     }
 
-    public AtaqueNubePedo getAtaqueNubePedo() {
-        return ataqueNubePedo;
+    public _02AtaqueNubePedo getAtaqueNubePedo() {
+        return a02AtaqueNubePedo;
     }
 
-    public AtaqueMocos getAtaqueMocos() {
-        return ataqueMocos;
+    public _07AtaquePipi getAtaquePipi() {
+        return a07AtaquePipi;
     }
 
-    public void setAtaqueMocos(AtaqueMocos ataqueMocos) {
-        this.ataqueMocos = ataqueMocos;
+    public void setAtaquePipi(_07AtaquePipi a07AtaquePipi) {
+        this.a07AtaquePipi = a07AtaquePipi;
     }
 
-    public AtaqueBoliBic getAtaqueBoliBic() {
-        return ataqueBoliBic;
+    public _05AtaqueBoliBic getAtaqueBoliBic() {
+        return a05AtaqueBoliBic;
     }
 
-    public void setAtaqueBoliBic(AtaqueBoliBic ataqueBoliBic) {
-        this.ataqueBoliBic = ataqueBoliBic;
+    public void setAtaqueBoliBic(_05AtaqueBoliBic a05AtaqueBoliBic) {
+        this.a05AtaqueBoliBic = a05AtaqueBoliBic;
     }
 
     public RenderJugador getRenderJugador() {
@@ -380,8 +384,8 @@ public class Jugador {
         this.trazosGanados = trazosGanados;
     }
 
-    public void setPapelCulo(AtaquePapelCulo ataquePapelCulo) {
-        this.ataquePapelCulo = ataquePapelCulo;
+    public void setPapelCulo(_04AtaquePapelCulo a04AtaquePapelCulo) {
+        this.a04AtaquePapelCulo = a04AtaquePapelCulo;
     }
 
     public void setResistenciaJugador(float resistenciaJugador) {
@@ -400,16 +404,24 @@ public class Jugador {
         statsJugador.setProyectilesPorDisparo(proyectilesPorDisparo);
     }
 
-    public AtaquePapelCulo getAtaquePapelCulo() {
-        return ataquePapelCulo;
+    public _04AtaquePapelCulo getAtaquePapelCulo() {
+        return a04AtaquePapelCulo;
     }
 
-    public AtaqueDildo getAtaqueDildo() {
-        return ataqueDildo;
+    public _06AtaqueDildo getAtaqueDildo() {
+        return a06AtaqueDildo;
     }
 
-    public void setAtaqueDildo(AtaqueDildo ataqueDildo) {
-        this.ataqueDildo = ataqueDildo;
+    public void setAtaqueDildo(_06AtaqueDildo a06AtaqueDildo) {
+        this.a06AtaqueDildo = a06AtaqueDildo;
+    }
+
+    public _08AtaquePelota getAtaquePelota() {
+        return a08AtaquePelota;
+    }
+
+    public void setAtaquePelota(_08AtaquePelota a08AtaquePelota) {
+        this.a08AtaquePelota = a08AtaquePelota;
     }
 
     public boolean isInvulnerable() {
@@ -441,5 +453,10 @@ public class Jugador {
             trazosGanados -= trazosARestar;
             return true;
         } else return false;
+    }
+
+    public Vector2 getPosicionTmp() {
+        tmpPos.set(sprite.getX(), sprite.getY());
+        return tmpPos;
     }
 }

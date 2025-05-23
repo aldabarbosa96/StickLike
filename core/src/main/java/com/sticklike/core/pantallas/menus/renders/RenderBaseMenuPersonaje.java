@@ -32,7 +32,7 @@ public class RenderBaseMenuPersonaje extends RenderBaseMenus {
     private static final Color POSTIT_COLOR = new Color(0.97f, 0.88f, 0.6f, 1f);
     private static final Color COLOR_BASE = new Color(0.89f, 0.89f, 0.89f, 1f);
     private static final Color COLOR_GRID = new Color(0.64f, 0.80f, 0.9f, 1f);
-    float inv = 1f / FontManager.getScale();
+    private final float inv = 1f / FontManager.getScale();
     private MenuPersonajeListener listener;
     private TextButton btnVolver;
     private StatsJugador statsJugador;

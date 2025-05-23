@@ -135,6 +135,7 @@ public class PopUpTragaperras extends RenderBaseMenus {
                     logic.spin();
                     animateReels(logic.getCurrentResult());
                     GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                    GestorDeAudio.getInstance().reproducirEfecto("slots", 0.5f);
                 } else {
                     GestorDeAudio.getInstance().reproducirEfecto("error", 1);
                 }
@@ -157,6 +158,7 @@ public class PopUpTragaperras extends RenderBaseMenus {
                     logic.spin();
                     animateReels(logic.getCurrentResult());
                     GestorDeAudio.getInstance().reproducirEfecto("tragaperras", 0.5f);
+                    GestorDeAudio.getInstance().reproducirEfecto("slots", 0.5f);
                 } else {
                     GestorDeAudio.getInstance().reproducirEfecto("error", 1);
                 }
@@ -301,10 +303,8 @@ public class PopUpTragaperras extends RenderBaseMenus {
         Skin skin = new Skin();
 
         // Fuentes
-        BitmapFont font = FontManager.getHudFont();
-        BitmapFont bigFont = FontManager.getMenuFont();
+        BitmapFont font = FontManager.getSlotFont();
         skin.add("default-font", font);
-        skin.add("big-font", bigFont);
 
         // LabelStyle por defecto
         Label.LabelStyle lblStyle = new Label.LabelStyle(font, Color.WHITE);
@@ -313,7 +313,7 @@ public class PopUpTragaperras extends RenderBaseMenus {
         // WindowStyle
         Texture windowBg = crearTexturaUnicolor(0.97f, 0.88f, 0.6f, 1f);
         skin.add("windowBg", windowBg, Texture.class);
-        Window.WindowStyle winStyle = new Window.WindowStyle(font, Color.BLUE, new TextureRegionDrawable(new TextureRegion(windowBg)));
+        Window.WindowStyle winStyle = new Window.WindowStyle(font, Color.WHITE, new TextureRegionDrawable(new TextureRegion(windowBg)));
         skin.add("default-window", winStyle, Window.WindowStyle.class);
 
         // ScrollPaneStyle sin scrollbars visibles
@@ -326,6 +326,7 @@ public class PopUpTragaperras extends RenderBaseMenus {
         TextButton.TextButtonStyle playStyle = new TextButton.TextButtonStyle();
         playStyle.font = FontManager.getSlotFont();
         playStyle.font.getData().setScale(invScale);
+        playStyle.fontColor = Color.YELLOW;
         playStyle.up = new TextureRegionDrawable(new TextureRegion(greenUp));
         playStyle.down = new TextureRegionDrawable(new TextureRegion(greenDown));
         skin.add("play-button", playStyle, TextButton.TextButtonStyle.class);

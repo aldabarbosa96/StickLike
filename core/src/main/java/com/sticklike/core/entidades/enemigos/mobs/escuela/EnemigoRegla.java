@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoRegla;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoProyeccion;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoBase;
@@ -22,17 +23,16 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Enemigo Regla; gestiona su comportamiento y daño.
  */
 public class EnemigoRegla extends EnemigoBase {
-    private MovimientoRegla movimientoRegla;
+    private MovimientoProyeccion movimientoProyeccion;
 
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_REGLA_CRUZADA, Texture.class));
         sprite.setSize(26, 26);
         sprite.setPosition(x, y);
-        this.movimientoRegla = new MovimientoRegla(velocidadEnemigo, 666, orthographicCamera, true);
+        this.movimientoProyeccion = new MovimientoProyeccion(velocidadEnemigo, 666, orthographicCamera, true);
         this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_REGLA_TEXTURE, Texture.class);
-        this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
         this.vidaEnemigo = VIDA_ENEMIGOREGLA;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         this.coolDownDanyo = COOLDOWN_ENEMIGOREGLA;
@@ -41,13 +41,12 @@ public class EnemigoRegla extends EnemigoBase {
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
-        movimientoRegla.actualizarMovimiento(delta, sprite, jugador);
+        movimientoProyeccion.actualizarMovimiento(delta, sprite, jugador);
     }
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimientoRegla.actualizarSoloKnockback(delta, sprite, true);
+        movimientoProyeccion.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class EnemigoRegla extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimientoRegla.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoProyeccion.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -78,5 +77,15 @@ public class EnemigoRegla extends EnemigoBase {
             return objetoXp;
         }
         return null;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoProyeccion.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoProyeccion;
     }
 }

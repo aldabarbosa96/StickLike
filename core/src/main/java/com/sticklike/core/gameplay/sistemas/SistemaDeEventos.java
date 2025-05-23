@@ -47,13 +47,14 @@ public class SistemaDeEventos {
     }
 
     private void inicializarEventos() {
-        eventos.add(new Evento("Aumenta nº enemigos", this::eventoAumentaEnemigos1, LVL_EVENTO1));
-        eventos.add(new Evento("Aumenta nº enemigos 2", this::eventoAumentaEnemigos2, LVL_EVENTO2));
-        eventos.add(new Evento("Efecto tetas", this::entraEnemigoTeta, LVL_EVENTO3));
-        eventos.add(new Evento("BossPolla Aparece", this::spawnPrimerBoss, LVL_EVENTO4));
-        eventos.add(new Evento("Alarma Aparece", this::spawnAlarma, LVL_EVENTO4));
-        eventos.add(new Evento("Examen Aparece", this::spawnExamen, LVL_EVENTO5));
-        eventos.add(new Evento("Regla Aparece", this::spawnReglas, LVL_EVENTO6));
+        eventos.add(new Evento("Polla y condón", this::eventoAumentaEnemigos1, LVL_EVENTO1, 1));
+        eventos.add(new Evento("+Vel +spawn", this::eventoAumentaEnemigos2, LVL_EVENTO2, 2));
+        eventos.add(new Evento("Tetas", this::entraEnemigoTeta, LVL_EVENTO3, 3));
+        eventos.add(new Evento("BossPolla", this::spawnPrimerBoss, LVL_EVENTO4, 4));
+        eventos.add(new Evento("Alarma y regla", this::spawnAlarma, LVL_EVENTO4, 5));
+        eventos.add(new Evento("Examen", this::spawnExamen, LVL_EVENTO5, 6));
+        eventos.add(new Evento("Regla", this::spawnReglas, LVL_EVENTO6, 7));
+        eventos.add(new Evento("Calculadora y libro", this::spawnCalculadoras, LVL_EVENTO7, 8));
     }
 
     public void actualizar() {
@@ -65,7 +66,7 @@ public class SistemaDeEventos {
             if (nivel < e.getNivelRequerido()) break;
 
             // Si es el evento de alarma y el boss no ha muerto, lo aplazamos
-            if ("Alarma Aparece".equals(e.getNombreEvento()) && (bossRef == null || !bossRef.estaMuerto())) {
+            if (e.getId() == 5 && (bossRef == null || !bossRef.estaMuerto())) {
                 break;
             }
 
@@ -142,6 +143,11 @@ public class SistemaDeEventos {
         ctrlEnemigos.setTiposDeEnemigos(LISTA_REGLA);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
         ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.35f);
+    }
+
+    private void spawnCalculadoras() {
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS4);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO4_SPAWN_RATE);
     }
 
     public void dispose() {

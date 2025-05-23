@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.mobiliario.tragaperras.FlechaTragaperras;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.pantallas.popUps.PopUpTragaperras;
 import com.sticklike.core.pantallas.popUps.TragaperrasInputProcessor;
 import com.sticklike.core.entidades.mobiliario.tragaperras.TragaperrasLogic;
@@ -19,7 +20,7 @@ import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.pantallas.popUps.PopUpMejorasInputProcessor;
 import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
-import com.sticklike.core.entidades.objetos.armas.comportamiento.AtaquePiedra;
+import com.sticklike.core.entidades.objetos.armas.comportamiento._00AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -67,7 +68,7 @@ public class VentanaJuego1 implements Screen {
     private HUD hud;
     private ColisionesJugador colisionesJugador;
     private MovimientoJugador movimientoJugador;
-    private AtaquePiedra ataquePiedra;
+    private _00AtaquePiedra a00AtaquePiedra;
     private ControladorProyectiles controladorProyectiles;
     private GestorDeAudio gestorDeAudio;
     private PopUpMejoras popUpMejoras;
@@ -105,6 +106,8 @@ public class VentanaJuego1 implements Screen {
         // Ajustar la posición de la cámara
         actualizarPosCamara();
         Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX(), jugador.getSprite().getY() - 20);
+
+        ParticleManager.get().clear();
     }
 
     private void inicializarRenderYCamara() {
@@ -121,7 +124,7 @@ public class VentanaJuego1 implements Screen {
         colisionesJugador = new ColisionesJugador();
         gestorDeAudio = game.gestorDeAudio;
         movimientoJugador = new MovimientoJugador();
-        ataquePiedra = new AtaquePiedra(INTERVALO_DISPARO);
+        a00AtaquePiedra = new _00AtaquePiedra(INTERVALO_DISPARO);
         controladorProyectiles = new ControladorProyectiles();
 
         float playerStartX = worldWidth / 2f - CAMERA_JUGADOR_OFFSET_X;
@@ -134,7 +137,7 @@ public class VentanaJuego1 implements Screen {
         }
         // clon de stats para la sesión de juego
         StatsJugador sessionStats = new StatsJugador(baseStats);
-        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, ataquePiedra, controladorProyectiles, sessionStats);
+        jugador = new Jugador(playerStartX, playerStartY, inputJugador, colisionesJugador, movimientoJugador, a00AtaquePiedra, controladorProyectiles, sessionStats);
     }
 
     private void inicializarSistemasYControladores() {
@@ -234,6 +237,7 @@ public class VentanaJuego1 implements Screen {
         sistemaDeEventos.actualizar();
         controladorEnemigos.actualizarSpawnEnemigos(delta);
 
+        ParticleManager.get().update(delta);
         actualizarRecogidaObjetos(delta);
         actualizarTextoFlotante(delta);
     }
@@ -246,49 +250,19 @@ public class VentanaJuego1 implements Screen {
 
             // 2) Si colisionamos con cualquier objeto:
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {
-
-                // 2a) Si es un Boost
                 if (xp instanceof Boost nuevoBoost) {
                     if (!nuevoBoost.isCollected() && !nuevoBoost.isActivo()) {
-                        // Desactivamos / revertimos el boost anterior si sigue activo
                         if (boostActivo != null && boostActivo.isActivo()) {
                             boostActivo.revertirBoost(jugador);
                             objetosXP.removeValue(boostActivo, true);
                         }
-
-                        // Asignamos y aplicamos el nuevo boost
                         boostActivo = nuevoBoost;
                         nuevoBoost.aplicarBoost(jugador, gestorDeAudio);
                         xp.recolectar(gestorDeAudio);
                     }
-
-                    // 2b) Si es algún otro tipo de objeto XP (XP, vida, oro, trazo, etc.)
                 } else {
+                    xp.aplicarEfecto(jugador, gestorDeAudio, this);
                     xp.recolectar(gestorDeAudio);
-                    switch (xp) {
-                        case ObjetoXp objetoXp -> {
-                            float xpOtorgada = switch (objetoXp.getTipo()) {
-                                case 0 -> 10f + MathUtils.random(15f);
-                                case 1 -> 50f + MathUtils.random(50f);
-                                case 2 -> 2 * (50f + MathUtils.random(50f));
-                                default -> 0f;
-                            };
-                            sistemaDeNiveles.agregarXP(xpOtorgada);
-                        }
-                        case ObjetoVida objetoVida -> {
-                            float vidaExtra = 6f + MathUtils.random(10f);
-                            float nuevaVida = jugador.getVidaJugador() + vidaExtra;
-                            if (nuevaVida > jugador.getMaxVidaJugador()) {
-                                nuevaVida = jugador.getMaxVidaJugador();
-                            }
-                            jugador.setVidaJugador(nuevaVida);
-                            renderVentanaJuego1.triggerLifeFlash();
-                        }
-                        case ObjetoOro objetoOro -> jugador.setOroGanado(jugador.getOroGanado() + 1);
-                        case ObjetoPowerUp objetoPowerUp -> jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
-                        default -> {
-                        }
-                    }
                     objetosXP.removeIndex(i);
                 }
             }
@@ -378,6 +352,7 @@ public class VentanaJuego1 implements Screen {
 
     @Override
     public void hide() {
+        ParticleManager.get().clear();
     }
 
     @Override
@@ -480,5 +455,12 @@ public class VentanaJuego1 implements Screen {
 
     public FlechaTragaperras getFlechaTragaperras() {
         return flechaTragaperras;
+    }
+
+    public RenderVentanaJuego1 getRenderVentanaJuego1() {
+        return renderVentanaJuego1;
+    }
+    public Array<ObjetosXP> getObjetosXP() {
+        return objetosXP;
     }
 }

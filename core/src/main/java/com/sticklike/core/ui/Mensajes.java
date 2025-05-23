@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.interfaces.Enemigo;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.VIRTUAL_WIDTH;
@@ -38,6 +39,7 @@ public class Mensajes {
     private static final float FADE_IN_DURATION = 0.25f;
     private static final float FADE_OUT_DURATION = 0.25f;
     private static final float FOLLOW_OFFSET_Y = 5f;
+    private final float inv = 1f / FontManager.getScale();
 
     // Constructor privado
     private Mensajes(Stage chatStage, RenderHUDComponents renderHUDComponents, Stage enemyStage) {
@@ -47,9 +49,9 @@ public class Mensajes {
         this.messages = new ArrayList<>();
         this.displayDuration = MathUtils.random(4, 6);
 
-        this.font = new BitmapFont();
+        this.font = FontManager.getMessageFont();
         this.font.getData().markupEnabled = true;
-        this.font.getData().setScale(0.7f);
+        this.font.getData().setScale(inv);
         this.labelStyle = new Label.LabelStyle();
         this.labelStyle.font = font;
         this.labelStyle.fontColor = Color.WHITE;
@@ -179,9 +181,7 @@ public class Mensajes {
             instance.messages.clear();
             instance.chatStage.clear();
             instance.enemyStage.clear();
-            if (instance.font != null) {
-                instance.font.dispose();
-            }
+
             if (instance.roundedBackgroundTexture != null) {
                 instance.roundedBackgroundTexture.dispose();
             }

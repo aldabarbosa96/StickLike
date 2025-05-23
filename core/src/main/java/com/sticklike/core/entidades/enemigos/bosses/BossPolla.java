@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoBossPolla;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBoss1;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
@@ -31,7 +32,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
     private Jugador jugador;
     private AnimacionesBaseEnemigos animaciones;
     private AnimacionBossPolla animacionBossPolla;
-    private MovimientoBossPolla movimientoBoss;
+    private MovimientoBoss1 movimientoBoss;
     private float vida = 1350;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
@@ -46,15 +47,15 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         sprite = new Sprite(manager.get(BOSS_POLLA, Texture.class));
         sprite.setSize(92, 128);
         spriteBocaAbierta = new Sprite(manager.get(BOSS_POLLA, Texture.class));
-        spriteBocaAbierta.setSize(92, 128);
+        spriteBocaAbierta.setSize(92, 132);
         spriteBocaCerrada = new Sprite(manager.get(BOSS_POLLA_BOCACERRADA, Texture.class));
-        spriteBocaCerrada.setSize(92, 128);
+        spriteBocaCerrada.setSize(92, 132);
         sprite.setRegion(spriteBocaCerrada);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.jugador = jugador;
         this.animaciones = new AnimacionesBaseEnemigos();
-        this.movimientoBoss = new MovimientoBossPolla(true);
+        this.movimientoBoss = new MovimientoBoss1(true);
         this.animacionBossPolla = new AnimacionBossPolla(spriteBocaAbierta, spriteBocaCerrada, 0.5f, 2.5f);
         this.damageTexture = manager.get(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
@@ -198,6 +199,16 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
     @Override
     public boolean isMostrandoDamageSprite() {
         return false;
+    }
+
+    @Override
+    public boolean estaEnKnockback() {
+        return movimientoBoss.getKnockbackTimer() > 0f;
+    }
+
+    @Override
+    public MovimientoBaseEnemigos getMovimiento() {
+        return movimientoBoss;
     }
 
     @Override

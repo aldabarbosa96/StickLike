@@ -43,7 +43,7 @@ public class AnimacionesBaseEnemigos {
             tiempoParpadeoRestante -= delta;
             if (tiempoParpadeoRestante <= 0) {
                 enParpadeo = false;
-                // Si el fade está activo, mantenemos la textura de damage
+                //  mantenemos la textura de damage
                 if (!enFade) {
                     sprite.setTexture(texturaOriginal);
                 }
@@ -178,4 +178,5 @@ public class AnimacionesBaseEnemigos {
     public boolean isEstaFlipped() {
         return estaFlipped;
     }
+
 }

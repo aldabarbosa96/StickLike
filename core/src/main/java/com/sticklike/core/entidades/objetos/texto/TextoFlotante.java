@@ -2,6 +2,7 @@ package com.sticklike.core.entidades.objetos.texto;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
@@ -18,7 +19,7 @@ public class TextoFlotante {
     private float duracion;
     private BitmapFont fuente;
     private float tiempoTranscurrido;
-    private final float animDuration = 0.25f; // duración de la animación "pop"
+    private final float animDuration = 1f; // duración de la animación "pop"
 
     private final float initialScaleX;
     private final float initialScaleY;
@@ -69,7 +70,6 @@ public class TextoFlotante {
         fuente.getData().setScale(initialScaleX, initialScaleY);
 
         // Inicializamos el buffer circular para almacenar posiciones.
-        // El tamaño lo fijamos (por ejemplo, 20 posiciones); este valor se puede ajustar.
         maxLengthPositions = 20;
         positions = new Vector2[maxLengthPositions];
         for (int i = 0; i < maxLengthPositions; i++) {
@@ -106,14 +106,22 @@ public class TextoFlotante {
     public void actualizarTextoFlotante(float delta) {
         duracion -= delta;
         tiempoTranscurrido += delta;
+
+        // t = progreso de la animación pop [0,1]
         float t = Math.min(tiempoTranscurrido / animDuration, 1f);
-        float currentScaleX = initialScaleX + t * (finalScaleX - initialScaleX);
-        float currentScaleY = initialScaleY + t * (finalScaleY - initialScaleY);
+
+        // aplicamos elasticOut para el rebote
+        float easedT = Interpolation.elasticOut.apply(t);
+
+        // calculamos escala usando easedT en lugar de t
+        float currentScaleX = initialScaleX + easedT * (finalScaleX - initialScaleX);
+        float currentScaleY = initialScaleY + easedT * (finalScaleY - initialScaleY);
         fuente.getData().setScale(currentScaleX, currentScaleY);
-        // Desplazamiento vertical
+
+        // desplazamiento vertical habitual
         y += delta * DESPLAZAMIENTOY_TEXTO;
 
-        // Actualizamos el buffer circular con la nueva posición.
+        // actualizamos buffer de posiciones
         positions[nextIndex].set(x, y);
         nextIndex = (nextIndex + 1) % maxLengthPositions;
         if (posCount < maxLengthPositions) posCount++;

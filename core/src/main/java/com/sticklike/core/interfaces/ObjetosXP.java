@@ -2,6 +2,7 @@ package com.sticklike.core.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.jugador.Jugador;
 
@@ -16,5 +17,5 @@ public interface ObjetosXP {
     void recolectar(GestorDeAudio gestorDeAudio);
     boolean colisionaConOtroSprite(Sprite sprite);
     void dispose();
-
+    void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game);
 }
