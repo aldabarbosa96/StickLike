@@ -40,7 +40,7 @@ public class FontManager {
 
         // Texto mensajes
         FreeTypeFontGenerator.FreeTypeFontParameter messagesParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        messagesParam.size = Math.round(10 * scale);
+        messagesParam.size = Math.round(9 * scale);
         messagesParam.color = Color.WHITE;
         messageFont = mainFont.generateFont(messagesParam);
 

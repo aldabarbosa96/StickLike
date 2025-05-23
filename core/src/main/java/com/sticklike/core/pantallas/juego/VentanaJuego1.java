@@ -88,6 +88,8 @@ public class VentanaJuego1 implements Screen {
     private boolean pausado = false;
     private boolean musicChanged = false;
 
+    private float zoomLevel = 0.92f;
+
     public VentanaJuego1(MainGame game, int screenWidth, int screenHeight) {
         this.game = game;
         this.currentScreenWidth = screenWidth;
@@ -105,7 +107,7 @@ public class VentanaJuego1 implements Screen {
 
         // Ajustar la posición de la cámara
         actualizarPosCamara();
-        Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX(), jugador.getSprite().getY() - 20);
+        Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX(), jugador.getSprite().getY() - 10);
 
         ParticleManager.get().clear();
     }
@@ -199,6 +201,11 @@ public class VentanaJuego1 implements Screen {
         } else {
             gestorDeAudio.pausarMusica();
         }
+
+        actualizarPosCamara();
+        camara.zoom = zoomLevel;
+        camara.update();
+        spriteBatch.setProjectionMatrix(camara.combined);
 
         // 4) Renderizar el mundo y el HUD
         renderVentanaJuego1.renderizarVentana(delta, this, jugador, objetosXP, controladorEnemigos, textosDanyo, hud);
@@ -301,8 +308,6 @@ public class VentanaJuego1 implements Screen {
         float camY = MathUtils.clamp(jugador.getSprite().getY() + jugador.getSprite().getHeight() / 2f + CAMERA_OFFSET_Y, MAP_MIN_Y + halfH, MAP_MAX_Y - halfH);
 
         camara.position.set(camX, camY, 0);
-        camara.update();
-
     }
 
     public void mostrarPopUpDeMejoras(final List<Mejora> mejoras) {

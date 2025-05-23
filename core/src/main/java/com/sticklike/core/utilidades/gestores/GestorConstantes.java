@@ -272,12 +272,12 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float DISTANCIA_ACTIVACION = 60f;
     public static final float VEL_ATRACCION = 300f;
-    public static final float OBJETO_VIDA_WIDTH = 12f * 1.09375f;
-    public static final float OBJETO_VIDA_HEIGHT = 12f * 1.09375f;
-    public static final float OBJETO1_XP_WIDTH = 12.5f;
-    public static final float OBJETO1_XP_HEIGHT = 14f;
-    public static final float OBJETO_ORO_WIDTH = 14f;
-    public static final float OBJETO_ORO_HEIGHT = 14f;
+    public static final float OBJETO_VIDA_WIDTH = 13f * 1.09375f;
+    public static final float OBJETO_VIDA_HEIGHT = 14f * 1.09375f;
+    public static final float OBJETO1_XP_WIDTH = 15f;
+    public static final float OBJETO1_XP_HEIGHT = 15.5f;
+    public static final float OBJETO_ORO_WIDTH = 16f;
+    public static final float OBJETO_ORO_HEIGHT = 16f;
     public static final float OBJETO_IMAN_HEIGHT = 24f;
     public static final float OBJETO_IMAN_WIDTH = 24f;
     public static final float OBJETO_PWUP_WIDTH = 8f;

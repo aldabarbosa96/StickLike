@@ -67,8 +67,8 @@ public class FlechaTragaperras {
         hudCam.update();
         batch.setProjectionMatrix(hudCam.combined);
 
-        float halfW = hudCam.viewportWidth * .5f;
-        float halfH = hudCam.viewportHeight * .5f;
+        float halfW = hudCam.viewportWidth * hudCam.zoom * .5f;
+        float halfH = hudCam.viewportHeight * hudCam.zoom * .5f;
         float left = hudCam.position.x - halfW;
         float right = hudCam.position.x + halfW;
         float top = hudCam.position.y + halfH;

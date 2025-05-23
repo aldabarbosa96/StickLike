@@ -73,10 +73,10 @@ public final class _08ProyectilPelota implements Proyectiles {
 
         /* partículas */
         float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
-        int maxLen = (int) (PARTICLE_LEN_FACTOR * scale);
+        /*int maxLen = (int) (PARTICLE_LEN_FACTOR * scale);
         float partWid = PARTICLE_WID_FACTOR * scale;
-        //trail = new RenderParticulasProyectil(maxLen, partWid, PARTICLE_COLOR);
-        //trail.setAlphaMult(.65f);
+        trail = new RenderParticulasProyectil(maxLen, partWid, PARTICLE_COLOR);
+        trail.setAlphaMult(.65f);*/
 
         float originPos = SIZE * 0.5f;
         Vector2 initialCenter = new Vector2(x + originPos, y + originPos);
@@ -229,17 +229,20 @@ public final class _08ProyectilPelota implements Proyectiles {
         }
         return false;
     }
+
     private void comprobarReboteVentana() {
         OrthographicCamera cam = VentanaJuego1.getCamara();
         if (cam == null) return;
 
-        float halfW = cam.viewportWidth * 0.5f;
-        float halfH = cam.viewportHeight * 0.5f;
+        float z = cam.zoom;
+        float halfW = cam.viewportWidth * z * 0.5f;
+        float halfH = cam.viewportHeight * z * 0.5f;
+        float halfH2 = cam.viewportHeight * 0.5f;
 
         // límites visibles en coordenadas del mundo
         float left = cam.position.x - halfW;
         float right = cam.position.x + halfW - SIZE;
-        float bottom = cam.position.y - (halfH - HUD_HEIGHT);
+        float bottom = cam.position.y - (halfH2 - HUD_HEIGHT);
         float top = cam.position.y + halfH - SIZE;
 
         boolean rebota = false;
