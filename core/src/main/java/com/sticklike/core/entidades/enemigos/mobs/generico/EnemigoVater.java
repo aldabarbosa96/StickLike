@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionVater;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoLineal;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
@@ -43,8 +43,8 @@ public class EnemigoVater extends EnemigoBase {
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
 
         movimientoLineal = new MovimientoLineal(true, VEL_BASE_VATER);
-        animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
-        animacionVater = new AnimacionVater(animacionesBaseEnemigos, spriteTapaLevantada, spriteTapaBajada, 0.25f, 1f);
+        animacionBaseEnemigos = new AnimacionBaseEnemigos();
+        animacionVater = new AnimacionVater(animacionBaseEnemigos, spriteTapaLevantada, spriteTapaBajada, 0.25f, 1f);
 
         renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
@@ -53,7 +53,7 @@ public class EnemigoVater extends EnemigoBase {
     protected void actualizarMovimiento(float delta) {
         movimientoLineal.actualizarMovimiento(delta, sprite, jugador);
         animacionVater.actualizarAnimacion(delta, sprite);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
 
     }
 
@@ -65,9 +65,9 @@ public class EnemigoVater extends EnemigoBase {
     @Override
     protected void iniciarAnimacionMuerte() {
         Animation<TextureRegion> animMuerteVater = GestorDeAssets.animations.get("vaterMuerte");
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteVater);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteVater);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override

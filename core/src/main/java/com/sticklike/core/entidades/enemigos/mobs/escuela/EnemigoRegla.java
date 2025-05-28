@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoProyeccion;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
@@ -31,7 +31,7 @@ public class EnemigoRegla extends EnemigoBase {
         sprite.setSize(26, 26);
         sprite.setPosition(x, y);
         this.movimientoProyeccion = new MovimientoProyeccion(velocidadEnemigo, 666, orthographicCamera, true);
-        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
+        this.animacionBaseEnemigos = new AnimacionBaseEnemigos();
         this.damageTexture = manager.get(DAMAGE_REGLA_TEXTURE, Texture.class);
         this.vidaEnemigo = VIDA_ENEMIGOREGLA;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
@@ -52,9 +52,9 @@ public class EnemigoRegla extends EnemigoBase {
     @Override
     protected void iniciarAnimacionMuerte() {
         Animation<TextureRegion> animMuerteRegla = GestorDeAssets.animations.get("reglaMuerte");
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteRegla);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteRegla);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
     }
 
     @Override

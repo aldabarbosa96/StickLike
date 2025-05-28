@@ -15,7 +15,7 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
  * Gestiona las animaciones visuales de los enemigos, como el efecto de parpadeo al recibir daño, la animación y fade de muerte y el volteo.
  */
 
-public class AnimacionesBaseEnemigos {
+public class AnimacionBaseEnemigos {
     private boolean enParpadeo = false;
     private float tiempoParpadeoRestante = TIEMPO_PARPADEO_RESTANTE;
     private Texture texturaOriginal;

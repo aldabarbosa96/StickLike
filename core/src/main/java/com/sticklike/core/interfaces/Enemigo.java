@@ -2,7 +2,7 @@ package com.sticklike.core.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 
 /**
@@ -30,7 +30,7 @@ public interface Enemigo {
     void aplicarKnockback(float fuerza, float dirX, float dirY);
     float getVida();
     float getDamageAmount();
-    AnimacionesBaseEnemigos getAnimaciones();
+    AnimacionBaseEnemigos getAnimaciones();
     boolean isMostrandoDamageSprite();
     boolean estaEnKnockback();
     MovimientoBaseEnemigos getMovimiento();

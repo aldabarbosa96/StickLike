@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
@@ -29,7 +29,7 @@ public abstract class EnemigoBase implements Enemigo {
     protected boolean deathAnimationTriggered = false;
     protected Float posXMuerte = null;
     protected Float posYMuerte = null;
-    protected AnimacionesBaseEnemigos animacionesBaseEnemigos;
+    protected AnimacionBaseEnemigos animacionBaseEnemigos;
     protected RenderBaseEnemigos renderBaseEnemigos;
     protected Jugador jugador;
     protected Texture damageTexture;
@@ -37,14 +37,14 @@ public abstract class EnemigoBase implements Enemigo {
 
     public EnemigoBase(Jugador jugador) {
         this.jugador = jugador;
-        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
+        this.animacionBaseEnemigos = new AnimacionBaseEnemigos();
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
     }
 
     @Override
     public void actualizar(float delta) {
         // Actualiza la animación de fade (común a todos los enemigos)
-        animacionesBaseEnemigos.actualizarFade(delta);
+        animacionBaseEnemigos.actualizarFade(delta);
 
         // Si el enemigo sigue vivo, actualiza su movimiento específico
         if (vidaEnemigo > 0) {
@@ -64,13 +64,13 @@ public abstract class EnemigoBase implements Enemigo {
                         deathAnimationTriggered = true;
                     }
                 }
-            } else if (animacionesBaseEnemigos.enAnimacionMuerte()) {
-                animacionesBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
+            } else if (animacionBaseEnemigos.enAnimacionMuerte()) {
+                animacionBaseEnemigos.actualizarAnimacionMuerte(sprite, delta);
             }
         }
 
         // Actualizamos el efecto de parpadeo
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
+        animacionBaseEnemigos.actualizarParpadeo(sprite, delta);
     }
 
     @Override
@@ -78,7 +78,7 @@ public abstract class EnemigoBase implements Enemigo {
         if (vidaEnemigo > 0 || mostrandoDamageSprite) {
             renderBaseEnemigos.dibujarEnemigos(batch, this);
         } else {
-            if (animacionesBaseEnemigos.enAnimacionMuerte()) {
+            if (animacionBaseEnemigos.enAnimacionMuerte()) {
                 sprite.draw(batch);
             }
         }
@@ -105,7 +105,7 @@ public abstract class EnemigoBase implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        return (vidaEnemigo <= 0 && !animacionesBaseEnemigos.enAnimacionMuerte() && !animacionesBaseEnemigos.estaEnParpadeo());
+        return (vidaEnemigo <= 0 && !animacionBaseEnemigos.enAnimacionMuerte() && !animacionBaseEnemigos.estaEnParpadeo());
     }
 
     @Override
@@ -158,7 +158,7 @@ public abstract class EnemigoBase implements Enemigo {
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
+        animacionBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -177,8 +177,8 @@ public abstract class EnemigoBase implements Enemigo {
     }
 
     @Override
-    public AnimacionesBaseEnemigos getAnimaciones() {
-        return animacionesBaseEnemigos;
+    public AnimacionBaseEnemigos getAnimaciones() {
+        return animacionBaseEnemigos;
     }
 
     @Override

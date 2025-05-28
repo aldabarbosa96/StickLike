@@ -27,6 +27,7 @@ public class ParticleManager {
     }
 
     public void loadAllParticles() {
+        load("xp", "particulas/xp_particle.p");
         load("piedra", "particulas/basic_particle.p");
         load("calcetin", "particulas/calcetin_particle.p");
         load("pedo", "particulas/pedo_particle.p");

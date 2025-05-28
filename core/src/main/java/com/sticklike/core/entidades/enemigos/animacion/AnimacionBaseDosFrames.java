@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * Componente genérico para alternar entre dos frames con tiempos A/B independientes.
  * Opcionalmente disparamos callbacks al cambiar de frame.
  */
-public class AnimacionDosFrames {
+public class AnimacionBaseDosFrames {
     private final TextureRegion frameA;
     private final TextureRegion frameB;
     private final float duracionA;
@@ -18,7 +18,7 @@ public class AnimacionDosFrames {
     private final Runnable callbackA;
     private final Runnable callbackB;
 
-    public AnimacionDosFrames(TextureRegion frameA, TextureRegion frameB, float duracionA, float duracionB, Runnable callbackA, Runnable callbackB) {
+    public AnimacionBaseDosFrames(TextureRegion frameA, TextureRegion frameB, float duracionA, float duracionB, Runnable callbackA, Runnable callbackB) {
         this.frameA = frameA;
         this.frameB = frameB;
         this.duracionA = duracionA;

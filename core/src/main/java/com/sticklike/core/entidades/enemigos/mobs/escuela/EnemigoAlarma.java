@@ -36,8 +36,8 @@ public class EnemigoAlarma extends EnemigoBase {
         this.crono = new Sprite(manager.get(ENEMIGO_ALARMA2, Texture.class));
         this.cronoCerrado = new Sprite(manager.get(ENEMIGO_ALARMA2_CERRADA, Texture.class));
         sprite = new Sprite(escogerTextura());
-        animacionCrono = new AnimacionAlarma(animacionesBaseEnemigos, crono, cronoCerrado, 1, 0.25f);
-        animacionAlarma = new AnimacionAlarma(animacionesBaseEnemigos, alarma, alarmaOjo, 0.33f, 0.25f);
+        animacionCrono = new AnimacionAlarma(animacionBaseEnemigos, crono, cronoCerrado, 1, 0.25f);
+        animacionAlarma = new AnimacionAlarma(animacionBaseEnemigos, alarma, alarmaOjo, 0.33f, 0.25f);
         sprite.setPosition(x, y);
         if (esCrono) sprite.setSize(48, 48);
         else sprite.setSize(42, 48);
@@ -69,7 +69,7 @@ public class EnemigoAlarma extends EnemigoBase {
         } else {
             animacionAlarma.actualizar(delta, sprite);
         }
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
@@ -85,9 +85,9 @@ public class EnemigoAlarma extends EnemigoBase {
         } else {
             animMuerteAlarma = GestorDeAssets.animations.get("alarmaMuerte");
         }
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteAlarma);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteAlarma);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
     }
 
     @Override

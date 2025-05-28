@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoIman;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoOro;
@@ -24,7 +24,7 @@ public class Destructibles2 implements Enemigo {
     private float vidaDestructible = VIDA_DESTRUCTIBLE2;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
-    private AnimacionesBaseEnemigos animacionesBaseEnemigos;
+    private AnimacionBaseEnemigos animacionBaseEnemigos;
     private RenderBaseEnemigos renderBaseEnemigos;
     private Texture damageTexture;
 
@@ -34,14 +34,14 @@ public class Destructibles2 implements Enemigo {
         sprite.setSize(ANCHO_DESTRUCT_LATA, ALTO_DESTRUCT_LATA);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear,Texture.TextureFilter.Linear);
-        this.animacionesBaseEnemigos = new AnimacionesBaseEnemigos();
+        this.animacionBaseEnemigos = new AnimacionBaseEnemigos();
         this.renderBaseEnemigos = renderBaseEnemigos;
     }
 
     @Override
     public void actualizar(float delta) {
-        animacionesBaseEnemigos.actualizarParpadeo(sprite, delta);
-        animacionesBaseEnemigos.actualizarFade(delta);
+        animacionBaseEnemigos.actualizarParpadeo(sprite, delta);
+        animacionBaseEnemigos.actualizarFade(delta);
     }
 
     @Override
@@ -53,8 +53,8 @@ public class Destructibles2 implements Enemigo {
     public void reducirSalud(float amount) {
         vidaDestructible -= amount;
         if (vidaDestructible <= 0) {
-            if (!animacionesBaseEnemigos.estaEnFade()) {
-                animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+            if (!animacionBaseEnemigos.estaEnFade()) {
+                animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
                 activarParpadeo(DURACION_PARPADEO_ENEMIGO);
             }
         }
@@ -62,7 +62,7 @@ public class Destructibles2 implements Enemigo {
 
     @Override
     public boolean estaMuerto() {
-        return (vidaDestructible <= 0 && !animacionesBaseEnemigos.estaEnFade());
+        return (vidaDestructible <= 0 && !animacionBaseEnemigos.estaEnFade());
     }
 
     @Override
@@ -129,7 +129,7 @@ public class Destructibles2 implements Enemigo {
 
     @Override
     public void activarParpadeo(float duracion) {
-        animacionesBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
+        animacionBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
     }
 
     @Override
@@ -152,8 +152,8 @@ public class Destructibles2 implements Enemigo {
     }
 
     @Override
-    public AnimacionesBaseEnemigos getAnimaciones() {
-        return animacionesBaseEnemigos;
+    public AnimacionBaseEnemigos getAnimaciones() {
+        return animacionBaseEnemigos;
     }
 
     @Override

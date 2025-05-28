@@ -37,7 +37,7 @@ public class EnemigoCalculadora extends EnemigoBase {
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimiento = new MovimientoLineal(true, velocidadBase);
-        this.animacion = new AnimacionCalculadora(animacionesBaseEnemigos, apagada, encendida, 0.2f, 1f);
+        this.animacion = new AnimacionCalculadora(animacionBaseEnemigos, apagada, encendida, 0.2f, 1f);
         this.damageTexture = manager.get(DAMAGE_CALCULADORA, Texture.class);
     }
 
@@ -46,7 +46,7 @@ public class EnemigoCalculadora extends EnemigoBase {
     protected void actualizarMovimiento(float delta) {
         movimiento.actualizarMovimiento(delta, sprite, jugador);
         animacion.actualizarAnimacion(delta, sprite);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
@@ -57,9 +57,9 @@ public class EnemigoCalculadora extends EnemigoBase {
     @Override
     protected void iniciarAnimacionMuerte() {
         Animation<TextureRegion> animMuertePolla = GestorDeAssets.animations.get("calculadoraMuerte");
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override

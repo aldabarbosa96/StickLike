@@ -41,7 +41,7 @@ public class EnemigoCulo extends EnemigoBase {
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);
-        this.animacionCulo = new AnimacionCulo(this, animacionesBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
+        this.animacionCulo = new AnimacionCulo(this, animacionBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
         this.damageTexture = manager.get(DAMAGE_CULO_TEXTURE, Texture.class);
 
     }
@@ -69,7 +69,7 @@ public class EnemigoCulo extends EnemigoBase {
     protected void actualizarMovimiento(float delta) {
         movimientoOscilante.actualizarMovimiento(delta, sprite, jugador);
         animacionCulo.actualizarAnimacion(delta, sprite);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
 
@@ -86,9 +86,9 @@ public class EnemigoCulo extends EnemigoBase {
         } else {
             animMuerteCulo = GestorDeAssets.animations.get("muerteCulo2");
         }
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.sticklike.core.utilidades.gestores.GestorDeAudio;
  */
 public class AnimacionBossPolla {
 
-    private final AnimacionDosFrames anim;
+    private final AnimacionBaseDosFrames anim;
 
     public AnimacionBossPolla(TextureRegion bocaAbierta, TextureRegion bocaCerrada, float tiempoBocaAbierta, float duracionBocaCerrada) {
 
@@ -24,7 +24,7 @@ public class AnimacionBossPolla {
             }
         };
 
-        this.anim = new AnimacionDosFrames(bocaCerrada, bocaAbierta, duracionBocaCerrada, tiempoBocaAbierta, null, sonidoAlAbrir);
+        this.anim = new AnimacionBaseDosFrames(bocaCerrada, bocaAbierta, duracionBocaCerrada, tiempoBocaAbierta, null, sonidoAlAbrir);
     }
 
     public void actualizarAnimacion(float delta, Sprite sprite) {

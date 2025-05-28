@@ -254,6 +254,7 @@ public class VentanaJuego1 implements Screen {
         for (int i = objetosXP.size - 1; i >= 0; i--) {
             ObjetosXP xp = objetosXP.get(i);
             xp.actualizarObjetoXP(delta, jugador, gestorDeAudio);
+            xp.particulas();
 
             // 2) Si colisionamos con cualquier objeto:
             if (xp.colisionaConOtroSprite(jugador.getSprite())) {

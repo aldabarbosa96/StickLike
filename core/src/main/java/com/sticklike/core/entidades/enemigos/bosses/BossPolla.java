@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBoss1;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
@@ -30,7 +30,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
     private Sprite spriteBocaAbierta;
     private Sprite spriteBocaCerrada;
     private Jugador jugador;
-    private AnimacionesBaseEnemigos animaciones;
+    private AnimacionBaseEnemigos animaciones;
     private AnimacionBossPolla animacionBossPolla;
     private MovimientoBoss1 movimientoBoss;
     private float vida = 1350;
@@ -54,7 +54,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.jugador = jugador;
-        this.animaciones = new AnimacionesBaseEnemigos();
+        this.animaciones = new AnimacionBaseEnemigos();
         this.movimientoBoss = new MovimientoBoss1(true);
         this.animacionBossPolla = new AnimacionBossPolla(spriteBocaAbierta, spriteBocaCerrada, 0.5f, 2.5f);
         this.damageTexture = manager.get(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
@@ -192,7 +192,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         return estaMuerto;
     }
 
-    public AnimacionesBaseEnemigos getAnimaciones() {
+    public AnimacionBaseEnemigos getAnimaciones() {
         return animaciones;
     }
 

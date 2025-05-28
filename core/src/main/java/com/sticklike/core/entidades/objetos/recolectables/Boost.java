@@ -281,6 +281,11 @@ public class Boost extends ObjetoBase {
     }
 
     @Override
+    public void particulas() {
+
+    }
+
+    @Override
     public void dispose() {
         // no hace falta hacer dispose de las texturas aquí porque se encarga el assetManager todo --> testear a fondo
     }

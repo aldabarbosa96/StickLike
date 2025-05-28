@@ -18,4 +18,5 @@ public interface ObjetosXP {
     boolean colisionaConOtroSprite(Sprite sprite);
     void dispose();
     void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game);
+    void particulas();
 }

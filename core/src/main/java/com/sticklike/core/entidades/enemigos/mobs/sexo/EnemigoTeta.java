@@ -38,7 +38,7 @@ public class EnemigoTeta extends EnemigoBase {
     @Override
     protected void actualizarMovimiento(float delta) {
         movimientoBotes.actualizarMovimiento(delta, sprite, jugador);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
         sprite.rotate(ROTATION_SPEED * delta);
     }
 
@@ -50,9 +50,9 @@ public class EnemigoTeta extends EnemigoBase {
     @Override
     protected void iniciarAnimacionMuerte() {
         Animation<TextureRegion> animMuerteTeta = GestorDeAssets.animations.get("tetaMuerte");
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteTeta);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteTeta);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override

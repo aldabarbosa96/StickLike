@@ -7,12 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * Alterna dos frames sólo si el enemigo es Crono (verde).
  */
 public class AnimacionAlarma {
-    private final AnimacionesBaseEnemigos base;
-    private final AnimacionDosFrames anim;
+    private final AnimacionBaseEnemigos base;
+    private final AnimacionBaseDosFrames anim;
 
-    public AnimacionAlarma(AnimacionesBaseEnemigos base, TextureRegion frameA, TextureRegion frameB, float tA, float tB) {
+    public AnimacionAlarma(AnimacionBaseEnemigos base, TextureRegion frameA, TextureRegion frameB, float tA, float tB) {
         this.base = base;
-        this.anim = new AnimacionDosFrames(frameA, frameB, tA, tB, null, null);
+        this.anim = new AnimacionBaseDosFrames(frameA, frameB, tA, tB, null, null);
     }
 
     public void actualizar(float delta, Sprite sprite) {

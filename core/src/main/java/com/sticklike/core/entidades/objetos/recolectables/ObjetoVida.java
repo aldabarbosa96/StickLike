@@ -41,6 +41,11 @@ public class ObjetoVida extends ObjetoBase {
     }
 
     @Override
+    public void particulas() {
+
+    }
+
+    @Override
     protected Texture getTexture() {
         return TEXTURE;
     }

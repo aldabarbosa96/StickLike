@@ -38,6 +38,11 @@ public class ObjetoPowerUp extends ObjetoBase {
     }
 
     @Override
+    public void particulas() {
+
+    }
+
+    @Override
     protected Texture getTexture() {
         return TEXTURA;
     }
