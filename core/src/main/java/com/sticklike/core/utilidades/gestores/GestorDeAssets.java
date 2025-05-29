@@ -40,6 +40,10 @@ public class GestorDeAssets {
     public static final String ENEMIGO_LIBRO = "enemigos/12libroMates.png";
     public static final String ENEMIGO_GRAPADORA = "enemigos/14grapadora.png";
     public static final String ENEMIGO_GRAPADORA_CERRADA = "enemigos/14grapadoraCerrada.png";
+    public static final String ENEMIGO_PERFORADORA = "enemigos/15perforadora.png";
+    public static final String ENEMIGO_PERFORADORA_CERRADA = "enemigos/15perforadoraCerrados.png";
+
+
     public static final String CORAZON_VIDA = "hud/life.png";
     public static final String ARMA_PIEDRA = "armas/01piedra.png";
     public static final String ARMA_CALCETIN = "armas/02calcetin.png";
@@ -122,6 +126,7 @@ public class GestorDeAssets {
     public static final String DAMAGE_CALCULADORA = "enemigos/damageSprites/11calculadoraD.png";
     public static final String DAMAGE_LIBRO = "enemigos/damageSprites/12libroMatesD.png";
     public static final String DAMAGE_GRAPADORA = "enemigos/damageSprites/14grapadoraD.png";
+    public static final String DAMAGE_PERFORADORA = "enemigos/damageSprites/15perforadoraD.png";
 
     public static void cargarRecursos() {
         cargarTexturas();
@@ -154,6 +159,8 @@ public class GestorDeAssets {
         manager.load(ENEMIGO_LIBRO, Texture.class);
         manager.load(ENEMIGO_GRAPADORA, Texture.class);
         manager.load(ENEMIGO_GRAPADORA_CERRADA, Texture.class);
+        manager.load(ENEMIGO_PERFORADORA, Texture.class);
+        manager.load(ENEMIGO_PERFORADORA_CERRADA, Texture.class);
 
         manager.load(CORAZON_VIDA, Texture.class);
         manager.load(ARMA_PIEDRA, Texture.class);
@@ -235,6 +242,7 @@ public class GestorDeAssets {
         manager.load(DAMAGE_CALCULADORA, Texture.class);
         manager.load(DAMAGE_LIBRO, Texture.class);
         manager.load(DAMAGE_GRAPADORA, Texture.class);
+        manager.load(DAMAGE_PERFORADORA, Texture.class);
 
         // Animaciones
         manager.load("acciones/movement/stickman_idle00.png", Texture.class);

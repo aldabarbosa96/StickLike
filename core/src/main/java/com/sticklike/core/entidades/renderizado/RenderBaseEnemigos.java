@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoLibro;
+import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoPerforadora;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles2;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoExamen;
@@ -81,9 +82,10 @@ public class RenderBaseEnemigos {
                     drawSombraBotes(teta, r, ex, ey, ew, eh, teta.getMovimientoBotes().getCurrentOffset(), teta.getMovimientoBotes().getAmplitudZigzag(), -5f);
                 case EnemigoLibro libro ->
                     drawSombraBotes(libro, r, ex, ey, ew, eh, libro.getMovimientoBotes().getCurrentOffset(), libro.getMovimientoBotes().getAmplitudZigzag(), -3f);
-
                 case Tragaperras tragaperras ->
                     drawSimple(tragaperras, r, ex - 3.5f, ey, ew, eh, ew * 0.9f, eh * 0.275f, SHADOW_OFFSET * 4);
+                case EnemigoPerforadora enemigoPerforadora ->
+                    drawSimple(enemigoPerforadora, r, ex, ey -2.5f, ew, eh, ew * SHADOW_WIDTH_PERF, eh * SHADOW_HEIGH_PERF, SHADOW_OFFSET);
                 default -> drawVater(e, r, ex, ey, ew, eh);
             }
         }

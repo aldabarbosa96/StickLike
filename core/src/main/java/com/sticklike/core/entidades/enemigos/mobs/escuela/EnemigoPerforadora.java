@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionGrapadora;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoLineal;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoOscilante;
 import com.sticklike.core.entidades.enemigos.mobs.EnemigoBase;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoVida;
@@ -15,44 +15,42 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
-import static com.sticklike.core.utilidades.gestores.GestorConstantes.TEMPORIZADOR_DANYO;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
-public class EnemigoGrapadora extends EnemigoBase {
+public class EnemigoPerforadora extends EnemigoBase {
     private Texture abierta;
     private Texture cerrada;
-    private MovimientoLineal movimientoLineal;
+    private MovimientoOscilante movimientoOscilante;
     private AnimacionGrapadora animacionGrapadora;
     private static float velocidadBase = VEL_BASE_GRAPADORA;
 
-    public EnemigoGrapadora(Jugador jugador, float x, float y) {
+    public EnemigoPerforadora(Jugador jugador, float x, float y) {
         super(jugador);
-        this.vidaEnemigo = VIDA_ENEMIGOCULO;
-        this.damageAmount = DANYO_CULO;
+        this.vidaEnemigo = VIDA_ENEMIGO_LIBRO;
+        this.damageAmount = DANYO_CALCULADORA;
         this.coolDownDanyo = COOLDOWN_ENEMIGOCULO;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
-        this.abierta = manager.get(ENEMIGO_GRAPADORA, Texture.class);
-        this.cerrada = manager.get(ENEMIGO_GRAPADORA_CERRADA, Texture.class);
+        this.abierta = manager.get(ENEMIGO_PERFORADORA, Texture.class);
+        this.cerrada = manager.get(ENEMIGO_PERFORADORA_CERRADA, Texture.class);
         sprite = new Sprite(abierta);
         sprite.setPosition(x, y);
-        sprite.setSize(36,26);
+        sprite.setSize(40, 36);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.movimientoLineal = new MovimientoLineal(true, velocidadBase);
-        this.animacionGrapadora = new AnimacionGrapadora(animacionBaseEnemigos, abierta, cerrada, 0.8f, 0.2f);
-        this.damageTexture = manager.get(DAMAGE_GRAPADORA, Texture.class);
-
+        this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);
+        this.animacionGrapadora = new AnimacionGrapadora(animacionBaseEnemigos, abierta, cerrada, 0.25f, 0.25f);
+        this.damageTexture = manager.get(DAMAGE_PERFORADORA, Texture.class);
     }
 
     @Override
     protected void actualizarMovimiento(float delta) {
-        movimientoLineal.actualizarMovimiento(delta, sprite, jugador);
+        movimientoOscilante.actualizarMovimiento(delta, sprite, jugador);
         animacionGrapadora.actualizarAnimacion(delta, sprite);
         animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
     protected void actualizarKnockback(float delta) {
-        movimientoLineal.actualizarSoloKnockback(delta, sprite, true);
+        movimientoOscilante.actualizarSoloKnockback(delta, sprite, true);
     }
 
     @Override
@@ -65,7 +63,7 @@ public class EnemigoGrapadora extends EnemigoBase {
 
     @Override
     protected void aplicarKnockbackEnemigo(float fuerza, float dirX, float dirY) {
-        movimientoLineal.aplicarKnockback(fuerza, dirX, dirY);
+        movimientoOscilante.aplicarKnockback(fuerza, dirX, dirY);
     }
 
     @Override
@@ -84,11 +82,11 @@ public class EnemigoGrapadora extends EnemigoBase {
 
     @Override
     public boolean estaEnKnockback() {
-        return movimientoLineal.getKnockbackTimer() > 0f;
+        return movimientoOscilante.getKnockbackTimer() > 0f;
     }
 
     @Override
     public MovimientoBaseEnemigos getMovimiento() {
-        return movimientoLineal;
+        return movimientoOscilante;
     }
 }

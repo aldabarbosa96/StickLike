@@ -399,6 +399,8 @@ public class ControladorEnemigos {
                 return new EnemigoLibro(jugador, x, y);
             case "GRAPADORA":
                 return new EnemigoGrapadora(jugador, x, y);
+            case "PERFORADORA":
+                return new EnemigoPerforadora(jugador,x,y);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }

@@ -201,7 +201,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float SHADOW_HEIGHT_CULO = 0.35f;
     public static final float SHADOW_OFFSET = 2.25f;
     public static final float SHADOW_OFFSET_POLLA = 2f;
-
+    public static final float SHADOW_WIDTH_PERF = 0.8f;
+    public static final float SHADOW_HEIGH_PERF = 0.3f;
     // -------------------------------------------------
     // Animaciones enemigos
     // -------------------------------------------------
@@ -312,6 +313,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO6 = 13;
     public static final int LVL_EVENTO7 = 14;
     public static final int LVL_EVENTO8 = 15;
+    public static final int LVL_EVENTO9 = 16;
     public static final float EVENTO1_SPAWN_RATE = 0.33f;
     public static final float EVENTO1_SPEED_MULT = 1.1f;
     public static final float EVENTO2_SPAWN_RATE = 0.2f;
@@ -321,6 +323,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO3_SPAWN_RATE = 0.1f;
     public static final float EVENTO4_SPAWN_RATE = 0.05f;
     public static final float EVENTO5_SPAWN_RATE = 0.025f;
+    public static final float EVENTO6_SPAWN_RATE = 0.02f;
     public static final float EVENTO_TETAS_SPAWN_RATE = 0.000001f;
     public static final String[] LISTA_TETAS = {"TETA", "TETA", "CULO"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN"};
@@ -331,6 +334,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "TETA"};
     public static final String[] TIPOS_ENEMIGOS4 = {"CALCULADORA", "LIBRO"};
     public static final String[] TIPOS_ENEMIGOS5 = {"GRAPADORA"};
+    public static final String[] TIPOS_ENEMIGOS6 = {"PERFORADORA"};
 
     // -------------------------------------------------
     // Configuración borrones

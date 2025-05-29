@@ -56,6 +56,7 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Regla", this::spawnReglas, LVL_EVENTO6, 7));
         eventos.add(new Evento("Calculadora y libro", this::spawnCalculadoras, LVL_EVENTO7, 8));
         eventos.add(new Evento("Grapadoras", this::spawnGrapadoras, LVL_EVENTO8, 9));
+        eventos.add(new Evento("Perforadoras", this::spawnPerforadoras, 1, 10));
     }
 
     public void actualizar() {
@@ -154,6 +155,11 @@ public class SistemaDeEventos {
     private void spawnGrapadoras() {
         ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS5);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO5_SPAWN_RATE);
+    }
+
+    private void spawnPerforadoras() {
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS6);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO6_SPAWN_RATE);
     }
 
     public void dispose() {
