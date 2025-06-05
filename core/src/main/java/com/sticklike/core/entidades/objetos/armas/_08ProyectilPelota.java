@@ -242,7 +242,7 @@ public final class _08ProyectilPelota implements Proyectiles {
         // límites visibles en coordenadas del mundo
         float left = cam.position.x - halfW;
         float right = cam.position.x + halfW - SIZE;
-        float bottom = cam.position.y - (halfH2 - HUD_HEIGHT);
+        float bottom = cam.position.y - (halfH2 - HUD_HEIGHT - HUD_BAR_Y_OFFSET);
         float top = cam.position.y + halfH - SIZE;
 
         boolean rebota = false;

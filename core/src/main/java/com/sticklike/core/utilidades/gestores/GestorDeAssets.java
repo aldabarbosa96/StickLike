@@ -315,6 +315,10 @@ public class GestorDeAssets {
         manager.load("enemigos/animaciones/grapadoraMuerte01.png", Texture.class);
         manager.load("enemigos/animaciones/grapadoraMuerte02.png", Texture.class);
         manager.load("enemigos/animaciones/grapadoraMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/perforadoraMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/perforadoraMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/perforadoraMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/perforadoraMuerte03.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte00.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte01.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte02.png", Texture.class);
@@ -374,6 +378,7 @@ public class GestorDeAssets {
         animations.put("calculadoraMuerte", crearAnimacion("enemigos/animaciones/calculadoraMuerte", 4,0.09f));
         animations.put("muerteLibro", crearAnimacion("enemigos/animaciones/libroMuerte", 4,0.09f));
         animations.put("grapadoraMuerte", crearAnimacion("enemigos/animaciones/grapadoraMuerte", 4,0.09f));
+        animations.put("perforadoraMuerte", crearAnimacion("enemigos/animaciones/perforadoraMuerte", 4,0.09f));
         animations.put("bossPollaMuerte", crearAnimacion("enemigos/animaciones/bossPollaMuerte", 15,0.1f));
     }
 

@@ -84,8 +84,11 @@ public class RenderBaseEnemigos {
                     drawSombraBotes(libro, r, ex, ey, ew, eh, libro.getMovimientoBotes().getCurrentOffset(), libro.getMovimientoBotes().getAmplitudZigzag(), -3f);
                 case Tragaperras tragaperras ->
                     drawSimple(tragaperras, r, ex - 3.5f, ey, ew, eh, ew * 0.9f, eh * 0.275f, SHADOW_OFFSET * 4);
-                case EnemigoPerforadora enemigoPerforadora ->
-                    drawSimple(enemigoPerforadora, r, ex, ey -2.5f, ew, eh, ew * SHADOW_WIDTH_PERF, eh * SHADOW_HEIGH_PERF, SHADOW_OFFSET);
+                case EnemigoPerforadora perforadora -> {
+                    boolean flipped = perforadora.getAnimaciones().isEstaFlipped();
+                    float shiftX = flipped ? 2f : -2f;
+                    drawSimple(perforadora, r, ex + shiftX, ey - 2.5f, ew, eh, ew * SHADOW_WIDTH_PERF, eh * SHADOW_HEIGH_PERF, SHADOW_OFFSET);
+                }
                 default -> drawVater(e, r, ex, ey, ew, eh);
             }
         }

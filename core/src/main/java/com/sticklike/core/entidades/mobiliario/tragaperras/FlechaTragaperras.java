@@ -72,7 +72,7 @@ public class FlechaTragaperras {
         float left = hudCam.position.x - halfW;
         float right = hudCam.position.x + halfW;
         float top = hudCam.position.y + halfH;
-        float bottom = hudCam.position.y - halfH;
+        float bottom = hudCam.position.y - halfH - HUD_BAR_Y_OFFSET;
 
         font.setColor(0, 0, 1, 1);
         font.getData().setScale(0.9f * invScale);

@@ -272,7 +272,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     // Configuración recolectables
     // -------------------------------------------------
-    public static final float DISTANCIA_ACTIVACION = 60f;
+    public static final float DISTANCIA_ACTIVACION = 75f;
     public static final float VEL_ATRACCION = 300f;
     public static final float OBJETO_VIDA_WIDTH = 13f * 1.09375f;
     public static final float OBJETO_VIDA_HEIGHT = 14f * 1.09375f;
@@ -314,6 +314,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO7 = 14;
     public static final int LVL_EVENTO8 = 15;
     public static final int LVL_EVENTO9 = 16;
+    public static final int LVL_EVENTO10 = 18;
     public static final float EVENTO1_SPAWN_RATE = 0.33f;
     public static final float EVENTO1_SPEED_MULT = 1.1f;
     public static final float EVENTO2_SPAWN_RATE = 0.2f;
@@ -324,6 +325,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO4_SPAWN_RATE = 0.05f;
     public static final float EVENTO5_SPAWN_RATE = 0.025f;
     public static final float EVENTO6_SPAWN_RATE = 0.02f;
+    public static final float EVENTO7_SPAWN_RATE = 0.015f;
+    public static final float EVENTO8_SPAWN_RATE = 0.01f;
     public static final float EVENTO_TETAS_SPAWN_RATE = 0.000001f;
     public static final String[] LISTA_TETAS = {"TETA", "TETA", "CULO"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN"};
@@ -333,8 +336,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] TIPOS_ENEMIGOS2 = {"CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "CULO", "POLLA", "POLLA", "CONDON"};
     public static final String[] TIPOS_ENEMIGOS3 = {"POLLA", "TETA"};
     public static final String[] TIPOS_ENEMIGOS4 = {"CALCULADORA", "LIBRO"};
-    public static final String[] TIPOS_ENEMIGOS5 = {"GRAPADORA"};
-    public static final String[] TIPOS_ENEMIGOS6 = {"PERFORADORA"};
+    public static final String[] TIPOS_ENEMIGOS5 = {"GRAPADORA","CALCULADORA","LIBRO"};
+    public static final String[] TIPOS_ENEMIGOS6 = {"PERFORADORA","GRAPADORA","CALCULADORA","LIBRO"};
+    public static final String[] TIPOS_ENEMIGOS9 = {"PERFORADORA","GRAPADORA","CALCULADORA","LIBRO","EXAMEN","REGLA","ALARMA"};
 
     // -------------------------------------------------
     // Configuración borrones

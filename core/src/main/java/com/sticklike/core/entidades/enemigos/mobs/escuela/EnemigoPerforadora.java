@@ -34,10 +34,10 @@ public class EnemigoPerforadora extends EnemigoBase {
         this.cerrada = manager.get(ENEMIGO_PERFORADORA_CERRADA, Texture.class);
         sprite = new Sprite(abierta);
         sprite.setPosition(x, y);
-        sprite.setSize(40, 36);
+        sprite.setSize(44, 40);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);
-        this.animacionGrapadora = new AnimacionGrapadora(animacionBaseEnemigos, abierta, cerrada, 0.25f, 0.25f);
+        this.animacionGrapadora = new AnimacionGrapadora(animacionBaseEnemigos, abierta, cerrada, 0.2f, 0.2f);
         this.damageTexture = manager.get(DAMAGE_PERFORADORA, Texture.class);
     }
 
@@ -55,7 +55,7 @@ public class EnemigoPerforadora extends EnemigoBase {
 
     @Override
     protected void iniciarAnimacionMuerte() {
-        Animation<TextureRegion> animMuerteGrapadora = GestorDeAssets.animations.get("grapadoraMuerte");
+        Animation<TextureRegion> animMuerteGrapadora = GestorDeAssets.animations.get("perforadoraMuerte");
         animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
         animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteGrapadora);
         animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);

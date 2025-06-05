@@ -56,7 +56,8 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Regla", this::spawnReglas, LVL_EVENTO6, 7));
         eventos.add(new Evento("Calculadora y libro", this::spawnCalculadoras, LVL_EVENTO7, 8));
         eventos.add(new Evento("Grapadoras", this::spawnGrapadoras, LVL_EVENTO8, 9));
-        eventos.add(new Evento("Perforadoras", this::spawnPerforadoras, 1, 10));
+        eventos.add(new Evento("Perforadoras", this::spawnPerforadoras, LVL_EVENTO9, 10));
+        eventos.add(new Evento("Repetimos todos", this::spawnTodosEscuela, LVL_EVENTO10, 13));
     }
 
     public void actualizar() {
@@ -144,7 +145,7 @@ public class SistemaDeEventos {
     private void spawnReglas() {
         ctrlEnemigos.setTiposDeEnemigos(LISTA_REGLA);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
-        ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.35f);
+        ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.5f);
     }
 
     private void spawnCalculadoras() {
@@ -160,6 +161,10 @@ public class SistemaDeEventos {
     private void spawnPerforadoras() {
         ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS6);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO6_SPAWN_RATE);
+    }
+    private void spawnTodosEscuela() {
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS9);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO8_SPAWN_RATE);
     }
 
     public void dispose() {
