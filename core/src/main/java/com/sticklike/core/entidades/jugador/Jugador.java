@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.comportamiento.*;
+import com.sticklike.core.entidades.objetos.armas.jugador.comportamiento.*;
 import com.sticklike.core.entidades.renderizado.RenderJugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasSangre;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -458,5 +458,9 @@ public class Jugador {
     public Vector2 getPosicionTmp() {
         tmpPos.set(sprite.getX(), sprite.getY());
         return tmpPos;
+    }
+
+    public ColisionesJugador getColisionesJugador() {
+        return colisionesJugador;
     }
 }

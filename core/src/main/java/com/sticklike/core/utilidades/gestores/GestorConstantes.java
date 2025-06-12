@@ -208,8 +208,9 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     // -------------------------------------------------
     public static final float TIEMPO_PARPADEO_RESTANTE = 0f;
     public static final float DURACION_PARPADEO_ENEMIGO = 0.09f;
-    public static final float DURACION_FADE_ENEMIGO = 0.6f;
-    public static final float DURACION_FADE_BOSS = 1.5f;
+    public static final float DURACION_FADE_ENEMIGO = 0.4f;
+    public static final float DURACION_FADE_BOSS_POLLA = 1.5f;
+    public static final float DURACION_FADE_BOSS_PROFE = 1f;
     public static final float TIEMPO_FADE_RESTANTE = 0f;
     public static final float TIEMPO_FADE_TOTAL = 1f;
     public static final float ALPHA_ACTUAL = 1f;
@@ -315,6 +316,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO8 = 15;
     public static final int LVL_EVENTO9 = 16;
     public static final int LVL_EVENTO10 = 18;
+    public static final int LVL_EVENTO11 = 20;
     public static final float EVENTO1_SPAWN_RATE = 0.33f;
     public static final float EVENTO1_SPEED_MULT = 1.1f;
     public static final float EVENTO2_SPAWN_RATE = 0.2f;

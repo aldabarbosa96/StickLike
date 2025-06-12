@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
-import com.sticklike.core.entidades.enemigos.ia.MovimientoBoss1;
+import com.sticklike.core.entidades.enemigos.ia.MovimientoBossPolla;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
@@ -32,7 +32,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
     private Jugador jugador;
     private AnimacionBaseEnemigos animaciones;
     private AnimacionBossPolla animacionBossPolla;
-    private MovimientoBoss1 movimientoBoss;
+    private MovimientoBossPolla movimientoBoss;
     private float vida = 1350;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
@@ -55,7 +55,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.jugador = jugador;
         this.animaciones = new AnimacionBaseEnemigos();
-        this.movimientoBoss = new MovimientoBoss1(true);
+        this.movimientoBoss = new MovimientoBossPolla(true);
         this.animacionBossPolla = new AnimacionBossPolla(spriteBocaAbierta, spriteBocaCerrada, 0.5f, 2.5f);
         this.damageTexture = manager.get(DAMAGE_BOSS_POLLA_TEXTURE, Texture.class);
         this.renderBaseEnemigos = jugador.getControladorEnemigos().getRenderBaseEnemigos();
@@ -75,6 +75,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
             animacionBossPolla.actualizarAnimacion(delta, sprite);
             animaciones.flipearEnemigo(jugador, sprite);
         } else {
+            animaciones.actualizarParpadeo(sprite, delta);
             if (animaciones.enAnimacionMuerte()) {
                 animaciones.actualizarAnimacionMuerteSinEscala(sprite, delta);
             }
@@ -100,7 +101,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
                 GestorDeAudio.getInstance().pausarMusica();
                 Animation<TextureRegion> animMuerteBoss = GestorDeAssets.animations.get("bossPollaMuerte");
                 animaciones.iniciarAnimacionMuerte(animMuerteBoss);
-                animaciones.iniciarFadeMuerte(DURACION_FADE_BOSS);
+                animaciones.iniciarFadeMuerte(DURACION_FADE_BOSS_POLLA);
                 animaciones.activarParpadeo(sprite, DURACION_PARPADEO_ENEMIGO, damageTexture);
                 GestorDeAudio.getInstance().reproducirEfecto("sonidoBossPollaMuerte", 1);
             }
@@ -186,10 +187,6 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
     @Override
     public float getDamageAmount() {
         return damageAmount;
-    }
-
-    public boolean isEstaMuerto() {
-        return estaMuerto;
     }
 
     public AnimacionBaseEnemigos getAnimaciones() {

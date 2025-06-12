@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.mobiliario.tragaperras.FlechaTragaperras;
 import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.pantallas.popUps.PopUpTragaperras;
 import com.sticklike.core.pantallas.popUps.TragaperrasInputProcessor;
 import com.sticklike.core.entidades.mobiliario.tragaperras.TragaperrasLogic;
@@ -20,7 +21,7 @@ import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.pantallas.popUps.PopUpMejorasInputProcessor;
 import com.sticklike.core.ui.*;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
-import com.sticklike.core.entidades.objetos.armas.comportamiento._00AtaquePiedra;
+import com.sticklike.core.entidades.objetos.armas.jugador.comportamiento._00AtaquePiedra;
 import com.sticklike.core.gameplay.sistemas.SistemaDeEventos;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.*;
@@ -82,6 +83,8 @@ public class VentanaJuego1 implements Screen {
     // Arrays de entidades
     private Array<TextoFlotante> textosDanyo;
     private Array<ObjetosXP> objetosXP;
+    private Array<Proyectiles> proyectilesEnemigos;
+
 
     private int currentScreenWidth;
     private int currentScreenHeight;
@@ -166,6 +169,7 @@ public class VentanaJuego1 implements Screen {
     private void inicializarListas() {
         textosDanyo = new Array<>();
         objetosXP = new Array<>();
+        proyectilesEnemigos = new Array<>();
     }
 
     @Override
@@ -238,7 +242,6 @@ public class VentanaJuego1 implements Screen {
         }
     }
 
-
     private void actualizarLogica(float delta, GestorDeAudio gestorDeAudio) {
         jugador.actualizarLogicaDelJugador(delta, pausado, textosDanyo, gestorDeAudio);
         sistemaDeEventos.actualizar();
@@ -247,6 +250,7 @@ public class VentanaJuego1 implements Screen {
         ParticleManager.get().update(delta);
         actualizarRecogidaObjetos(delta);
         actualizarTextoFlotante(delta);
+        actualizarProyectilesEnemigos(delta);
     }
 
     private void actualizarRecogidaObjetos(float delta) {
@@ -296,6 +300,31 @@ public class VentanaJuego1 implements Screen {
             floatingText.actualizarTextoFlotante(delta);
             if (floatingText.haDesaparecido()) {
                 textosDanyo.removeIndex(i);
+            }
+        }
+    }
+
+    private void actualizarProyectilesEnemigos(float delta) {
+        for (int i = proyectilesEnemigos.size - 1; i >= 0; i--) {
+            com.sticklike.core.interfaces.Proyectiles p = proyectilesEnemigos.get(i);
+            // 1) Mover proyectil en su update interno:
+            p.actualizarProyectil(delta);
+
+            // 2) Si sigue activo, chequear colisión contra jugador
+            if (p.isProyectilActivo()) {
+                com.badlogic.gdx.math.Rectangle rectP = p.getRectanguloColision();
+                com.badlogic.gdx.math.Rectangle rectJugador = jugador.getSprite().getBoundingRectangle();
+                if (rectP.overlaps(rectJugador)) {
+                    // Dañar al jugador:
+                    jugador.restarVidaJugador(p.getBaseDamage());
+                    // Opcional: parpadeo / sonido
+                    p.desactivarProyectil();
+                }
+            }
+
+            // 3) Si ya no está activo, lo quitamos del array
+            if (!p.isProyectilActivo()) {
+                proyectilesEnemigos.removeIndex(i);
             }
         }
     }
@@ -415,6 +444,14 @@ public class VentanaJuego1 implements Screen {
         }
     }
 
+    public void anyadirProyectilEnemigo(com.sticklike.core.interfaces.Proyectiles p) {
+        proyectilesEnemigos.add(p);
+    }
+
+    public ControladorProyectiles getControladorProyectiles() {
+        return controladorProyectiles;
+    }
+
     public SistemaDeNiveles getSistemaDeNiveles() {
         return sistemaDeNiveles;
     }
@@ -466,7 +503,12 @@ public class VentanaJuego1 implements Screen {
     public RenderVentanaJuego1 getRenderVentanaJuego1() {
         return renderVentanaJuego1;
     }
+
     public Array<ObjetosXP> getObjetosXP() {
         return objetosXP;
+    }
+
+    public Array<Proyectiles> getProyectilesEnemigos() {
+        return proyectilesEnemigos;
     }
 }

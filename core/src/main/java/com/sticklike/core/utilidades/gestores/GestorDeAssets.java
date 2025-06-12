@@ -38,10 +38,12 @@ public class GestorDeAssets {
     public static final String ENEMIGO_CALCULADORA = "enemigos/11calculadora.png";
     public static final String ENEMIGO_CALCULADORA_APAGADA = "enemigos/11calculadoraApagada.png";
     public static final String ENEMIGO_LIBRO = "enemigos/12libroMates.png";
+    public static final String ENEMIGO_CORRECTOR = "enemigos/13corrector.png";
     public static final String ENEMIGO_GRAPADORA = "enemigos/14grapadora.png";
     public static final String ENEMIGO_GRAPADORA_CERRADA = "enemigos/14grapadoraCerrada.png";
     public static final String ENEMIGO_PERFORADORA = "enemigos/15perforadora.png";
     public static final String ENEMIGO_PERFORADORA_CERRADA = "enemigos/15perforadoraCerrados.png";
+
 
 
     public static final String CORAZON_VIDA = "hud/life.png";
@@ -108,9 +110,12 @@ public class GestorDeAssets {
     public static final String JACKPOT = "drops/jackpot.png";
     public static final String BORRADOR = "drops/borrador.png";
 
-    // Boss y loading
+    // Bosses
     public static final String BOSS_POLLA = "enemigos/bossPolla.png";
     public static final String BOSS_POLLA_BOCACERRADA = "enemigos/bossPollaCerrada.png";
+    public static final String BOSS_PROFE = "enemigos/bossProfe.png";
+    public static final String BOSS_PROFE_CORRIENDO = "enemigos/bossProfe2.png";
+    public static final String BOSS_PROFE_LANZANDO = "enemigos/bossProfe3.png";
 
     // Damage sprites
     public static final String DAMAGE_CULO_TEXTURE = "enemigos/damageSprites/01culoD.png";
@@ -125,8 +130,10 @@ public class GestorDeAssets {
     public static final String DAMAGE_TETA = "enemigos/damageSprites/10tetaD.png";
     public static final String DAMAGE_CALCULADORA = "enemigos/damageSprites/11calculadoraD.png";
     public static final String DAMAGE_LIBRO = "enemigos/damageSprites/12libroMatesD.png";
+    public static final String DAMAGE_CORRECTOR = "enemigos/damageSprites/13correctorD.png";
     public static final String DAMAGE_GRAPADORA = "enemigos/damageSprites/14grapadoraD.png";
     public static final String DAMAGE_PERFORADORA = "enemigos/damageSprites/15perforadoraD.png";
+    public static final String DAMAGE_BOSS_PROFE = "enemigos/damageSprites/bossProfeD.png";
 
     public static void cargarRecursos() {
         cargarTexturas();
@@ -161,6 +168,7 @@ public class GestorDeAssets {
         manager.load(ENEMIGO_GRAPADORA_CERRADA, Texture.class);
         manager.load(ENEMIGO_PERFORADORA, Texture.class);
         manager.load(ENEMIGO_PERFORADORA_CERRADA, Texture.class);
+        manager.load(ENEMIGO_CORRECTOR, Texture.class);
 
         manager.load(CORAZON_VIDA, Texture.class);
         manager.load(ARMA_PIEDRA, Texture.class);
@@ -228,6 +236,9 @@ public class GestorDeAssets {
 
         manager.load(BOSS_POLLA, Texture.class);
         manager.load(BOSS_POLLA_BOCACERRADA, Texture.class);
+        manager.load(BOSS_PROFE, Texture.class);
+        manager.load(BOSS_PROFE_CORRIENDO, Texture.class);
+        manager.load(BOSS_PROFE_LANZANDO, Texture.class);
 
         manager.load(DAMAGE_CULO_TEXTURE, Texture.class);
         manager.load(DAMAGE_POLLA_TEXTURE, Texture.class);
@@ -241,8 +252,10 @@ public class GestorDeAssets {
         manager.load(DAMAGE_TETA, Texture.class);
         manager.load(DAMAGE_CALCULADORA, Texture.class);
         manager.load(DAMAGE_LIBRO, Texture.class);
+        manager.load(DAMAGE_CORRECTOR, Texture.class);
         manager.load(DAMAGE_GRAPADORA, Texture.class);
         manager.load(DAMAGE_PERFORADORA, Texture.class);
+        manager.load(DAMAGE_BOSS_PROFE, Texture.class);
 
         // Animaciones
         manager.load("acciones/movement/stickman_idle00.png", Texture.class);
@@ -267,6 +280,7 @@ public class GestorDeAssets {
         manager.load("enemigos/animaciones/culoMuerte01.png", Texture.class);
         manager.load("enemigos/animaciones/culoMuerte02.png", Texture.class);
         manager.load("enemigos/animaciones/culoMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/culoMuerte04.png", Texture.class);
         manager.load("enemigos/animaciones/culo2Muerte00.png", Texture.class);
         manager.load("enemigos/animaciones/culo2Muerte01.png", Texture.class);
         manager.load("enemigos/animaciones/culo2Muerte02.png", Texture.class);
@@ -319,6 +333,10 @@ public class GestorDeAssets {
         manager.load("enemigos/animaciones/perforadoraMuerte01.png", Texture.class);
         manager.load("enemigos/animaciones/perforadoraMuerte02.png", Texture.class);
         manager.load("enemigos/animaciones/perforadoraMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/correctorMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/correctorMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/correctorMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/correctorMuerte03.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte00.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte01.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte02.png", Texture.class);
@@ -335,6 +353,12 @@ public class GestorDeAssets {
         manager.load("enemigos/animaciones/bossPollaMuerte012.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte013.png", Texture.class);
         manager.load("enemigos/animaciones/bossPollaMuerte014.png", Texture.class);
+        manager.load("enemigos/animaciones/bossProfeMuerte00.png", Texture.class);
+        manager.load("enemigos/animaciones/bossProfeMuerte01.png", Texture.class);
+        manager.load("enemigos/animaciones/bossProfeMuerte02.png", Texture.class);
+        manager.load("enemigos/animaciones/bossProfeMuerte03.png", Texture.class);
+        manager.load("enemigos/animaciones/bossProfeMuerte04.png", Texture.class);
+        manager.load("enemigos/animaciones/bossProfeMuerte05.png", Texture.class);
 
 
         // Cargar borrones
@@ -365,7 +389,7 @@ public class GestorDeAssets {
         animations.put("moveRight", crearAnimacion("acciones/movement/stickman_movementD", 5, 0.05f));
         animations.put("moveLeft", crearAnimacion("acciones/movement/stickman_movementI", 5, 0.05f));
         animations.put("papelCuloImpacto", crearAnimacion("armas/05papelCuloImpacto", 3, 0.05f));
-        animations.put("muerteCulo", crearAnimacion("enemigos/animaciones/culoMuerte", 4,0.09f));
+        animations.put("muerteCulo", crearAnimacion("enemigos/animaciones/culoMuerte", 5,0.075f));
         animations.put("muerteCulo2", crearAnimacion("enemigos/animaciones/culo2Muerte", 4,0.09f));
         animations.put("muertePolla", crearAnimacion("enemigos/animaciones/pollaMuerte", 4,0.09f));
         animations.put("reglaMuerte", crearAnimacion("enemigos/animaciones/reglaMuerte", 4,0.09f));
@@ -379,7 +403,9 @@ public class GestorDeAssets {
         animations.put("muerteLibro", crearAnimacion("enemigos/animaciones/libroMuerte", 4,0.09f));
         animations.put("grapadoraMuerte", crearAnimacion("enemigos/animaciones/grapadoraMuerte", 4,0.09f));
         animations.put("perforadoraMuerte", crearAnimacion("enemigos/animaciones/perforadoraMuerte", 4,0.09f));
+        animations.put("correctorMuerte", crearAnimacion("enemigos/animaciones/correctorMuerte", 4,0.09f));
         animations.put("bossPollaMuerte", crearAnimacion("enemigos/animaciones/bossPollaMuerte", 15,0.1f));
+        animations.put("bossProfeMuerte", crearAnimacion("enemigos/animaciones/bossProfeMuerte", 6,0.15f));
     }
 
     private static Animation<TextureRegion> crearAnimacion(String ruta, int contadorFrames, float duracionContador) {

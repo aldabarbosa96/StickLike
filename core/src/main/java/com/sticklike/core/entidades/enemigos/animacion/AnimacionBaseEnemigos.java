@@ -121,7 +121,7 @@ public class AnimacionBaseEnemigos {
             float centerX = oldX + oldWidth / 2f;
             float centerY = oldY + oldHeight / 2f;
 
-            float scaleFactor = 1.011f; // factor de escalado de los sprites mientras se realiza la animación
+            float scaleFactor = 1.01f; // factor de escalado de los sprites mientras se realiza la animación
             float newWidth = oldWidth * scaleFactor;
             float newHeight = oldHeight * scaleFactor;
 
@@ -169,6 +169,12 @@ public class AnimacionBaseEnemigos {
         } else {
             GestorDeAudio.getInstance().reproducirEfecto("muerteGenerico", 0.2f);
         }
+    }
+
+    public float getProgresoAnimacionMuerte() {
+        if (!enAnimacionMuerte || animacionMuerte == null) return 1f;
+        float duracion = animacionMuerte.getAnimationDuration();
+        return duracion == 0 ? 1f : MathUtils.clamp(stateTimeMuerte / duracion, 0f, 1f);
     }
 
     public boolean enAnimacionMuerte() {

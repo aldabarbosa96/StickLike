@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
+import com.sticklike.core.entidades.enemigos.bosses.BossProfe;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles2;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.*;
@@ -66,6 +68,8 @@ public class ControladorEnemigos {
     private int sortCounter = 0;
     private float speedMult = 1;
     private boolean tragaperrasSpawned = false;
+    private boolean fleeing = false;
+    private float fleeSpeed = 225f;
 
     public ControladorEnemigos(Jugador jugador, float intervaloDeAparicion, VentanaJuego1 ventanaJuego1) {
         this.jugador = jugador;
@@ -82,38 +86,58 @@ public class ControladorEnemigos {
     public void actualizarSpawnEnemigos(float delta) {
         if (jugador.estaMuerto()) return;
 
-        /* ─── 1. Actualizamos timers de spawn ─────────────────────────── */
-        temporizadorGruposExamen = Math.max(0f, temporizadorGruposExamen - delta);
-
-        temporizadorDeAparicion += delta;
-        if (temporizadorDeAparicion >= intervaloDeAparicion) {
-            spawnEnemigo();
-            temporizadorDeAparicion = 0f;
-        }
-
-        temporizadorVaterSpawn += delta;
-        if (temporizadorVaterSpawn >= intervaloVaterSpawn) {
-            spawnVaterEnemigo();
-            temporizadorVaterSpawn = 0f;
-        }
-
-        /* ─── 2. Calculamos límites de reposición SOLO una vez ────────── */
+        // 1) Variables para el frustum
+        float left = 0f, right = 0f, bottom = 0f, top = 0f;
         final float margin = 175f;
-        OrthographicCamera cam = ventanaJuego1.getOrtographicCamera();
-        float halfW = ventanaJuego1.getViewport().getWorldWidth() * 0.5f;
-        float halfH = ventanaJuego1.getViewport().getWorldHeight() * 0.5f;
-        float camX = cam.position.x, camY = cam.position.y;
-        float left = camX - halfW - margin;
-        float right = camX + halfW + margin;
-        float bottom = camY - halfH - margin;
-        float top = camY + halfH + margin;
 
-        /* ─── 3. UNA sola pasada por la lista ─────────────────────────── */
+        // 2) Spawn y cálculo de frustum solo en modo normal
+        if (!fleeing) {
+            // 2A) Timers de spawn
+            temporizadorGruposExamen = Math.max(0f, temporizadorGruposExamen - delta);
+
+            temporizadorDeAparicion += delta;
+            if (temporizadorDeAparicion >= intervaloDeAparicion) {
+                spawnEnemigo();
+                temporizadorDeAparicion = 0f;
+            }
+
+            temporizadorVaterSpawn += delta;
+            if (temporizadorVaterSpawn >= intervaloVaterSpawn) {
+                spawnVaterEnemigo();
+                temporizadorVaterSpawn = 0f;
+            }
+
+            // 2B) Cálculo de frustum
+            OrthographicCamera cam = ventanaJuego1.getOrtographicCamera();
+            float halfW = ventanaJuego1.getViewport().getWorldWidth() * 0.5f;
+            float halfH = ventanaJuego1.getViewport().getWorldHeight() * 0.5f;
+            float camX = cam.position.x, camY = cam.position.y;
+
+            left = camX - halfW - margin;
+            right = camX + halfW + margin;
+            bottom = camY - halfH - margin;
+            top = camY + halfH + margin;
+        }
+
+        // 3) Bucle principal: actualización, muerte y reposición
         for (int i = enemigos.size - 1; i >= 0; i--) {
             Enemigo e = enemigos.get(i);
-            e.actualizar(delta);
 
-            /* 3A. Si muere -> procesamos drop y quitamos del array */
+            // 3A) Actualizar IA/animaciones:
+            if (!fleeing || e instanceof BossProfe || e instanceof EnemigoCorrector) {
+                e.actualizar(delta);
+
+            } else {
+
+                // Modo huida
+                float oldX = e.getSprite().getX();
+                float oldY = e.getSprite().getY();
+
+                e.actualizar(delta);
+                e.getSprite().setPosition(oldX, oldY);  // anulamos el desplazamiento de la IA propia
+            }
+
+            // 3B) Procesar muerte y drops
             if (e.estaMuerto()) {
                 if (!e.isProcesado()) {
                     if (e instanceof Destructibles d) {
@@ -124,23 +148,23 @@ public class ControladorEnemigos {
                         if (xp != null) ventanaJuego1.addXPObject(xp);
                     }
                     e.setProcesado(true);
-                    if (e instanceof Tragaperras t) {
-                        tragaperras.removeValue(t, true);
-                    }
                 }
                 enemigos.removeIndex(i);
                 killCounter++;
-                continue;
             }
-
-            /* 3B. Reposición si sale del viewport y NO es destructible */
-            if (!esEntidadEstatica(e)) reposiciona(e, left, right, bottom, top);
+            // 3C) Reposición en modo normal para entidades móviles
+            else if (!fleeing && !esEntidadEstatica(e)) {
+                reposiciona(e, left, right, bottom, top);
+            }
         }
 
+        // 4) Lógica de huida: desplazar fuera y eliminar mobs que huyen
+        if (fleeing) {
+            updateFleeMode(delta);
+        }
         aplicarSeparacionEntreIguales(delta);
-        //Gdx.app.log("ControladorEnemigos", "Enemigos vivos: " + enemigos.size);
-    }
 
+    }
 
     public void renderizarEnemigos(SpriteBatch batch) {
         if (jugador.estaMuerto()) {
@@ -241,7 +265,7 @@ public class ControladorEnemigos {
         tragaperrasSpawned = true;
 
         final float MIN_DIST = 1750f;
-        final float MAX_DIST = 4750f;
+        final float MAX_DIST = 3750f;
         final float MAX_PERP = 1250f;
 
         // centro actual del jugador
@@ -400,7 +424,7 @@ public class ControladorEnemigos {
             case "GRAPADORA":
                 return new EnemigoGrapadora(jugador, x, y);
             case "PERFORADORA":
-                return new EnemigoPerforadora(jugador,x,y);
+                return new EnemigoPerforadora(jugador, x, y);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
@@ -421,6 +445,14 @@ public class ControladorEnemigos {
         bossSpawned = true;
     }
 
+    public void spawnBossProfeAleatorio() {
+        Vector2 spawnPos = getRandomSpawnPosition();
+        BossProfe boss = new BossProfe(jugador, spawnPos.x, spawnPos.y, ventanaJuego1);
+        enemigos.add(boss);
+        bossSpawned = true;
+        fleeing = true;
+    }
+
 
     private void reposiciona(Enemigo e, float left, float right, float bottom, float top) {
 
@@ -434,12 +466,57 @@ public class ControladorEnemigos {
         else if (y > top) s.setY(bottom);
     }
 
-    /*public void resetTimers() {
+    private void updateFleeMode(float delta) {
+        // 1) Centro del jugador
+        float px = jugador.getSprite().getX() + jugador.getSprite().getWidth() * 0.5f;
+        float py = jugador.getSprite().getY() + jugador.getSprite().getHeight() * 0.5f;
+
+        // 2) Iteramos hacia atrás para poder eliminar in‐place
+        for (int i = enemigos.size - 1; i >= 0; i--) {
+            Enemigo e = enemigos.get(i);
+            Sprite s = e.getSprite();
+
+            // Solo reposicionamos a los que HUYEN, NO a bosses ni estáticos
+            if (e instanceof BossProfe || e instanceof EnemigoCorrector || e instanceof Tragaperras || e instanceof Destructibles || e instanceof Destructibles2) {
+                continue;
+            }
+
+            // 3) Calculamos vector unitario de huida (enemyCenter – playerCenter)
+            float ex = s.getX() + s.getWidth() * 0.5f;
+            float ey = s.getY() + s.getHeight() * 0.5f;
+            float dx = ex - px;
+            float dy = ey - py;
+            float dist = (float) Math.sqrt(dx * dx + dy * dy);
+            if (dist != 0f) {
+                dx /= dist;
+                dy /= dist;
+            }
+
+            // 4) Trasladar alejándose
+            s.translate(dx * fleeSpeed * delta, dy * fleeSpeed * delta);
+
+            // 5) Si sale del mapa, lo eliminamos
+            if (s.getX() + s.getWidth() < MAP_MIN_X || s.getX() > MAP_MAX_X || s.getY() + s.getHeight() < MAP_MIN_Y || s.getY() > MAP_MAX_Y) {
+                enemigos.removeIndex(i);
+            }
+        }
+
+        // 6) Si ya no quedan “normales”, desactivamos fuga
+        boolean quedan = false;
+        for (Enemigo e : enemigos) {
+            if (!(e instanceof BossProfe) && !(e instanceof EnemigoCorrector)) {
+                quedan = true;
+                break;
+            }
+        }
+        if (!quedan) fleeing = false;
+    }
+
+    public void resetTimers() {
         temporizadorDeAparicion = 0f;
         temporizadorVaterSpawn = 0f;
         temporizadorGruposExamen = 0f;
-    }*/
-
+    }
 
     public void dispose() {
         for (Enemigo enemigo : enemigos) {

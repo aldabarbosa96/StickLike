@@ -2,6 +2,7 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.utils.Timer;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
+import com.sticklike.core.entidades.enemigos.bosses.BossProfe;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.progreso.Evento;
 import com.sticklike.core.interfaces.Enemigo;
@@ -29,6 +30,7 @@ public class SistemaDeEventos {
     private final List<Evento> eventos;
     private int nextEventIndex = 0;
     private BossPolla bossRef;
+    private BossProfe bossRef2;
     private boolean efectoPollasActivo;
     private Timer.Task restauraSpawnTask;
 
@@ -58,6 +60,7 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Grapadoras", this::spawnGrapadoras, LVL_EVENTO8, 9));
         eventos.add(new Evento("Perforadoras", this::spawnPerforadoras, LVL_EVENTO9, 10));
         eventos.add(new Evento("Repetimos todos", this::spawnTodosEscuela, LVL_EVENTO10, 13));
+        eventos.add(new Evento("BossProfe", this::spawnSegundoBoss, LVL_EVENTO11, 14));
     }
 
     public void actualizar() {
@@ -100,6 +103,7 @@ public class SistemaDeEventos {
 
         ctrlEnemigos.setTiposDeEnemigos(LISTA_TETAS);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO_TETAS_SPAWN_RATE);
+        ctrlEnemigos.resetTimers();
 
         // Programamos restaurar spawn normal
         if (restauraSpawnTask != null) restauraSpawnTask.cancel();
@@ -121,6 +125,17 @@ public class SistemaDeEventos {
         for (Enemigo e : ctrlEnemigos.getEnemigos()) {
             if (e instanceof BossPolla bp) {
                 bossRef = bp;
+                break;
+            }
+        }
+        GestorDeAudio.getInstance().cambiarMusica("fondo3");
+    }
+
+    private void spawnSegundoBoss() {
+        ctrlEnemigos.spawnBossProfeAleatorio();
+        for (Enemigo e : ctrlEnemigos.getEnemigos()) {
+            if (e instanceof BossProfe bp) {
+                bossRef2 = bp;
                 break;
             }
         }

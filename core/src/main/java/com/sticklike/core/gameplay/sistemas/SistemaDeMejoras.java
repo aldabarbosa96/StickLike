@@ -2,7 +2,7 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.armas.comportamiento.*;
+import com.sticklike.core.entidades.objetos.armas.jugador.comportamiento.*;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
 

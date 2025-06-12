@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
+import com.sticklike.core.entidades.enemigos.bosses.BossProfe;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoLibro;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoPerforadora;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
@@ -50,6 +52,7 @@ public class RenderBaseEnemigos {
         float top = cam.position.y + halfH;
 
         for (Enemigo e : enemigos) {
+            if (!debeDibujarSombra(e)) continue;
             // Bounds de sprite
             float ex = e.getX();
             float ey = e.getY();
@@ -57,18 +60,12 @@ public class RenderBaseEnemigos {
             float eh = e.getSprite().getHeight();
 
             // Frustum culling
-            if (ex + ew < left || ex > right || ey + eh < bottom || ey > top) {
-                continue;
-            }
-
-            // Saltar muertos sin daño visible
-            if (!(e instanceof BossPolla) && e.getVida() <= 0 && !e.isMostrandoDamageSprite()) {
-                continue;
-            }
+            if (ex + ew < left || ex > right || ey + eh < bottom || ey > top) continue;
 
             // Switch por tipo
             switch (e) {
-                case BossPolla boss -> drawBoss(boss, r, ex, ey, ew, eh);
+                case BossPolla boss -> drawBoss(boss, r, ex, ey, ew, eh, 1f, 0.25f, 8f);
+                case BossProfe profe -> drawBoss(profe, r, ex, ey, ew, eh, 0.775f, 0.20f, 6f);
                 case Destructibles d1 -> drawDestructible(d1, r, ex, ey, ew, eh);
                 case Destructibles2 d2 -> drawDestructible2(d2, r, ex, ey, ew, eh);
                 case EnemigoCulo culo ->
@@ -94,16 +91,18 @@ public class RenderBaseEnemigos {
         }
     }
 
-    private void drawBoss(BossPolla b, ShapeRenderer r, float ex, float ey, float ew, float eh) {
+    private void drawBoss(Enemigo b, ShapeRenderer r, float ex, float ey, float ew, float eh, float shadowWidthMult, float shadowHeightMult, float yOffset) {
         float cx = ex + ew / 2f;
-        float w = ew;
-        float h = eh * 0.25f;
+        float w = ew * shadowWidthMult;
+        float h = eh * shadowHeightMult;
         float x = cx - w / 2f;
-        float y = ey - 8f;
+        float y = ey - yOffset;
 
-        dibujarParpadeoSombra(b, r, Color.BLACK);
+        Color colorSombra = b.getAnimaciones().enAnimacionMuerte() ? Color.BLACK : Color.WHITE;
+        dibujarParpadeoSombra(b, r, colorSombra);
         r.ellipse(x, y, w, h);
     }
+
 
     private void drawDestructible(Destructibles d, ShapeRenderer r, float ex, float ey, float ew, float eh) {
         float cx = ex + ew / 2f;
@@ -174,13 +173,39 @@ public class RenderBaseEnemigos {
         r.ellipse(x, y, w, h);
     }
 
-    private void dibujarParpadeoSombra(Enemigo enemigo, ShapeRenderer shapeRenderer, Color color) {
-        if (enemigo.getAnimaciones().estaEnParpadeo()) {
-            shapeRenderer.setColor(color);
-        } else if (enemigo.getAnimaciones().estaEnFade()) {
-            shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1);
-        } else {
-            shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
+    private void dibujarParpadeoSombra(Enemigo enemigo, ShapeRenderer sr, Color blinkColor) {
+
+        AnimacionBaseEnemigos anim = enemigo.getAnimaciones();
+
+        // 1) Parpadeo justo después de recibir daño
+        if (anim.estaEnParpadeo()) {
+            sr.setColor(blinkColor);
+            return;
         }
+
+        // 2) Mientras dura la animación de muerte
+        if (anim.enAnimacionMuerte()) {
+            float t = anim.getProgresoAnimacionMuerte();
+            float alpha = 0.5f * (1f - t);
+            tmpColor.set(0.25f, 0.25f, 0.25f, alpha);
+            sr.setColor(tmpColor);
+            return;
+        }
+
+        // 3) Después de la animación (fade del sprite) la sombra ya está invisible
+        if (anim.estaEnFade()) {
+            sr.setColor(0f, 0f, 0f, 0f);
+            return;
+        }
+
+        // 4) Estado normal (enemigo vivo)
+        sr.setColor(0.2f, 0.2f, 0.2f, 1f);
+    }
+
+    private static boolean debeDibujarSombra(Enemigo e) {
+        if (e.getVida() > 0) return true;                    // sigue vivo
+        AnimacionBaseEnemigos a = e.getAnimaciones();
+        // sombra visible solo mientras hay parpadeo o animación/fade de muerte
+        return a.estaEnParpadeo() || a.enAnimacionMuerte() || a.estaEnFade();
     }
 }
