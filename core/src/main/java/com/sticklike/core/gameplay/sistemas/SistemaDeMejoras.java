@@ -35,15 +35,15 @@ public class SistemaDeMejoras {
 
     private void inicializarMejoras() {
         // STATS (no relacionada con una habilidad, idHabilidad = null)
-        todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, manager.get(ICONO_VEL_MOV, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, manager.get(ICONO_RANGO, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 28%", () -> jugador.reducirIntervaloDisparo(0.22f), 5, manager.get(ICONO_VEL_ATAQUE, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 39%", () -> jugador.aumentarDanyo(1.39f), 5, manager.get(ICONO_FUERZA, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 2", () -> jugador.aumentarProyectilesPorDisparo(2), 5, manager.get(ICONO_PROYECTILES, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, manager.get(ICONO_REGENERACION, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, manager.get(ICONO_CRITICO, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%", () -> jugador.aumentarResistencia(0.2f), 3, manager.get(ICONO_RESISTENCIA, Texture.class), null));
-        todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, manager.get(ICONO_PODER, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡PIES VELOCES!", "Aumenta velocidad de movimiento un 13%", () -> jugador.aumentarVelocidad(0.13f), 3, manager.get(ICONO_VEL_MOV, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡BRAZOS LARGOS!", "Aumenta rango de ataque un 100%", () -> jugador.aumentarRangoAtaque(1f), 1, manager.get(ICONO_RANGO, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡MANOS RÁPIDAS!", "Aumenta velocidad de ataque un 28%", () -> jugador.reducirIntervaloDisparo(0.22f), 5, manager.get(ICONO_VEL_ATAQUE, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡PUÑO DURO!", "Aumenta daño del ataque básico un 39%", () -> jugador.aumentarDanyo(1.39f), 5, manager.get(ICONO_FUERZA, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡MULTI PROYECTIL!", "Aumenta número de proyectiles en 2", () -> jugador.aumentarProyectilesPorDisparo(2), 5, manager.get(ICONO_PROYECTILES, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡CHUTE VITAL!", "Aumenta regeneración de vida un 5%", () -> jugador.aumentarRegVida(0.005f), 5, manager.get(ICONO_REGENERACION, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡CRITICÓN!", "Aumenta probabilidad de crítico un 15%", () -> jugador.aumentarCritico(0.15f), 3, manager.get(ICONO_CRITICO, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡PECHO FIRME!", "Aumenta porcentaje de resistencia un 20%", () -> jugador.aumentarResistencia(0.2f), 3, manager.get(ICONO_RESISTENCIA, Texture.class), null));
+        //todasLasMejoras.add(new Mejora("¡PODER PODEROSO!", "Aumenta porcentaje de poder un 50%", () -> jugador.aumentarPoderJugador(1.5f), 5, manager.get(ICONO_PODER, Texture.class), null));
         todasLasMejoras.add(new Mejora("¡CORAZÓN GORDO!", "Aumenta la salud máxima en 15 puntos", () -> {
             jugador.setVidaMax(jugador.getMaxVidaJugador() + 15);
             jugador.setVidaJugador(jugador.getVidaJugador() + 15);
@@ -51,11 +51,11 @@ public class SistemaDeMejoras {
 
         // HABILIDADES (se especifica el id de la habilidad; no contienen "_" en el id)
 
-        todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new _01AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
-        todasLasMejoras.add(new Mejora("¡GIROTETAZOS!", "Invoca unos tetazos giratorios rotativos", () -> jugador.setTazo(new _03AtaqueTazo()), 1, manager.get(ARMA_TAZOS2, Texture.class), "TAZO"));
-        todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new _02AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
-        todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new _04AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
-        todasLasMejoras.add(new Mejora("¡LLUVIA DORADA!", "Llueve pipi y lo mancha todo", () -> jugador.setAtaquePipi(new _07AtaquePipi()), 1, manager.get(ARMA_PIPI, Texture.class), "PIPI"));
+        //todasLasMejoras.add(new Mejora("¡CALCETÍN ACARTONADO!", "Lanza calcetines lefados en todas direcciones", () -> jugador.setCalcetinazo(new _01AtaqueCalcetin()), 1, manager.get(ARMA_CALCETIN, Texture.class), "CALCETIN"));
+        //todasLasMejoras.add(new Mejora("¡GIROTETAZOS!", "Invoca unos tetazos giratorios rotativos", () -> jugador.setTazo(new _03AtaqueTazo()), 1, manager.get(ARMA_TAZOS2, Texture.class), "TAZO"));
+        //todasLasMejoras.add(new Mejora("¡PEDO TÓXICO!", "Emana pedo tóxico repelente", () -> jugador.setAtaqueNubePedo(new _02AtaqueNubePedo(jugador)), 1, manager.get(ARMA_NUBE_PEDO_HUD, Texture.class), "PEDO"));
+        //todasLasMejoras.add(new Mejora("¡PAPEL DEL CULO!", "Lanza rollos de papel de váter como granadas", () -> jugador.setPapelCulo(new _04AtaquePapelCulo()), 1, manager.get(ARMA_PAPELCULO, Texture.class), "PAPEL"));
+        //todasLasMejoras.add(new Mejora("¡LLUVIA DORADA!", "Llueve pipi y lo mancha todo", () -> jugador.setAtaquePipi(new _07AtaquePipi()), 1, manager.get(ARMA_PIPI, Texture.class), "PIPI"));
         todasLasMejoras.add(new Mejora("¡BOLI BICAZO!", "Lanzas bolis Bic como navajas en tu dirección", () -> jugador.setAtaqueBoliBic(new _05AtaqueBoliBic()), 1, manager.get(ARMA_BOLIBIC, Texture.class), "BOLI"));
         todasLasMejoras.add(new Mejora("¡SABLE DILDO!", "Bates un dildo rosa a derecha e izquierda", () -> jugador.setAtaqueDildo(new _06AtaqueDildo()), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO"));
         todasLasMejoras.add(new Mejora("¡TEZENNIS!", "Lanzas pelotas de tennis que rebotan", () -> jugador.setAtaquePelota(new _08AtaquePelota(2.5f)), 1, manager.get(ARMA_PELOTA, Texture.class), "PELOTA"));
@@ -124,7 +124,8 @@ public class SistemaDeMejoras {
         // LátigoDildo
         todasLasMejoras.add(new Mejora("¡DILDO: HALO!", "Proyecta una onda de energía perforante", () -> jugador.getAtaqueDildo().activarHaloEnergia(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_halo"));
         todasLasMejoras.add(new Mejora("¡DILDO: DOBLE!", "Repite el golpe una vez más", () -> jugador.getAtaqueDildo().activarGolpeDoble(), 2, manager.get(ARMA_DILDO, Texture.class), "DILDO_doble"));
-        todasLasMejoras.add(new Mejora("¡DILDO: VELOZ!", "Multiplica x2 la velocidad de golpeo", () -> jugador.getAtaqueDildo().mejorarVelocidadSwing(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_veloz"));
+        todasLasMejoras.add(new Mejora("¡DILDO: VELOZ!", "Multiplica x2 la velocidad de golpeo", () -> {jugador.getAtaqueDildo().mejorarVelocidadSwing();jugador.getAtaqueDildo().reducirCooldown(1f);}, 2, manager.get(ARMA_DILDO, Texture.class), "DILDO_veloz"));
+        todasLasMejoras.add(new Mejora("¡DILDO: SINFÓNICO!", "Golpea a ambos lados simultáneamente", () -> jugador.getAtaqueDildo().activarGolpeSimultaneo(), 1, manager.get(ARMA_DILDO, Texture.class), "DILDO_sinfonico"));
     }
 
     public List<Mejora> generarOpcionesDeMejoraAleatorias(int numMejoras) {

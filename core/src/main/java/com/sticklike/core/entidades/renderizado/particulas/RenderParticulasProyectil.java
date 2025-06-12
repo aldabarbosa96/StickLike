@@ -12,20 +12,14 @@ import com.sticklike.core.interfaces.Trail;
  * global {@link TrailRender}.  Ya no contiene su propio ShapeRenderer.
  */
 public class RenderParticulasProyectil implements Trail {
-
-    /* ---------- configuración ---------- */
     private final int maxLength;        // nº máximo de muestras
     private final float width;            // grosor de la estela
     private Color color;
     private float alphaMult = 1f;
-
-    /* ---------- buffers ---------- */
     private final Vector2[] buffer;
     private final Vector2[] normals;
     private int head = 0;                 // posición de escritura
     private int size = 0;                 // nº muestras válidas
-
-    /* ---------- temporales ---------- */
     private final Vector2 tmpTangent = new Vector2();
     private final Vector2 tmpNormal = new Vector2();
     private final Vector2 tmpV1 = new Vector2();
@@ -33,7 +27,6 @@ public class RenderParticulasProyectil implements Trail {
     private final Vector2 tmpV3 = new Vector2();
     private final Vector2 tmpV4 = new Vector2();
 
-    /* ===================================================================== */
 
     public RenderParticulasProyectil(int baseMaxLength, float width, Color baseColor) {
         float scale = Gdx.graphics.getWidth() / 2560f;           // ajusta a la resolución
@@ -48,10 +41,6 @@ public class RenderParticulasProyectil implements Trail {
             normals[i] = new Vector2();
         }
     }
-
-    /* --------------------------------------------------------------------- */
-    /*  API pública                                                          */
-    /* --------------------------------------------------------------------- */
 
     public void reset() {
         head = 0;
@@ -108,8 +97,6 @@ public class RenderParticulasProyectil implements Trail {
         }
     }
 
-    /* ---------- setters auxiliares ---------- */
-
     public void setAlphaMult(float m) {
         alphaMult = m;
     }
@@ -118,6 +105,5 @@ public class RenderParticulasProyectil implements Trail {
         color = c.cpy();
     }
 
-    /* ---------- sin recursos propios que liberar ---------- */
     public void dispose() {/* nada */}
 }

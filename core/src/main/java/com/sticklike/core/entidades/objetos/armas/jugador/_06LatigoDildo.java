@@ -91,7 +91,7 @@ public final class _06LatigoDildo implements Proyectiles {
         this.rapidoUpgrade = rapidoUpgrade;
 
         // duración del swing
-        duration = BASE_DURATION * (rapidoUpgrade ? 0.5f : 1f);
+        duration = BASE_DURATION * (rapidoUpgrade ? 0.75f : 1f);
         invDuration = 1f / duration;
 
         // sprite y colisión
@@ -187,7 +187,6 @@ public final class _06LatigoDildo implements Proyectiles {
 
             // Detenemos inmediatamente el emitter del ParticleManager
             efecto.allowCompletion();
-            // Para liberar de forma instantánea, podrías usar efecto.free();
         }
 
         /* -------- 6. Avance del halo proyectado -------- */
