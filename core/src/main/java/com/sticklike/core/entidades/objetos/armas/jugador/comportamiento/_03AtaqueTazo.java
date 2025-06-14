@@ -88,12 +88,18 @@ public class _03AtaqueTazo {
         this.duracionActivaTazo += incremento;
     }
 
-
+    public void aumentarRadio(){
+        this.radio *= 2;
+    }
     public float getGlobalAngle() {
         return globalAngle;
     }
 
     public float getDuracionActivaTazo() {
         return duracionActivaTazo;
+    }
+
+    public float getRadio() {
+        return radio;
     }
 }

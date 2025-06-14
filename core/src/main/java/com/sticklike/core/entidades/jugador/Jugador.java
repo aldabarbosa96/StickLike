@@ -1,6 +1,7 @@
 package com.sticklike.core.entidades.jugador;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.objetos.armas.jugador.comportamiento.*;
 import com.sticklike.core.entidades.renderizado.RenderJugador;
 import com.sticklike.core.entidades.renderizado.RenderParticulasSangre;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
@@ -44,6 +46,7 @@ public class Jugador {
     private StatsJugador statsJugador;
     private final Vector2 tmpVector = new Vector2();
     private final Vector2 tmpPos = new Vector2();
+    private ParticleEffectPool.PooledEffect efecto;
 
     private boolean estaVivo;
     private static int oroGanado;
@@ -122,6 +125,16 @@ public class Jugador {
         }
         renderJugador.actualizarAnimacion(delta);
         controladorProyectiles.actualizarProyectiles(delta, (controladorEnemigos != null ? controladorEnemigos.getEnemigos() : null), dmgText);
+
+        if (efecto != null) {
+            if (!efecto.isComplete()) {
+                float cx = sprite.getX() + sprite.getWidth() / 2;
+                float cy = sprite.getY() + sprite.getHeight() / 2;
+                efecto.setPosition(cx, cy);
+            } else {
+                efecto = null;
+            }
+        }
 
         if (renderParticulasSangre != null) {
             renderParticulasSangre.update(delta);
@@ -245,7 +258,7 @@ public class Jugador {
                 float cy = sprite.getY() + sprite.getHeight() / 2;
                 tmpVector.set(cx, cy);
                 renderParticulasSangre.spawnBlood(tmpVector, 8);
-
+                efecto = ParticleManager.get().obtainEffect("sangre",cx,cy, true);
             }
         }
     }

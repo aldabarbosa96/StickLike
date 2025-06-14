@@ -31,13 +31,16 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 public final class _08ProyectilPelota implements Proyectiles {
     private static final float SIZE = 17.5f;
     private static final float ORIGIN = SIZE * 0.5f;
-    private static final float SPEED = 350f;
-    private static final float MAX_DISTANCE = 2500f;
-    private static final int MAX_REBOTES = 5;
+    private float speed = 350f;
+    private float lowDmg = 13f;
+    private float highDmg = 26f;
+    private float knockBack = 101f;
+    private static final float MAX_DISTANCE = 5000f;
+    private int maxRebotes = 5;
     private static final float SPIN_SPEED = 666f;
-    private static final float PARTICLE_LEN_FACTOR = 25;
-    private static final float PARTICLE_WID_FACTOR = 5f;
-    private static final Color PARTICLE_COLOR = new Color(.55f, .85f, .25f, 0.9f);
+    //private static final float PARTICLE_LEN_FACTOR = 25;
+    //private static final float PARTICLE_WID_FACTOR = 5f;
+    //private static final Color PARTICLE_COLOR = new Color(.55f, .85f, .25f, 0.9f);
     private static Texture TEXTURE;
     private final Sprite sprite;
     private final Rectangle collisionRect = new Rectangle();
@@ -47,7 +50,7 @@ public final class _08ProyectilPelota implements Proyectiles {
     private final Set<Enemigo> impactados = new HashSet<>(4);
     private float dirX, dirY;
     private float distanciaRecorrida = 0f;
-    private int rebotesRestantes = MAX_REBOTES;
+    private int rebotesRestantes = maxRebotes;
     private boolean activo = true;
     private boolean esCritico = false;
     private float impactoTimer = 0f;
@@ -71,7 +74,7 @@ public final class _08ProyectilPelota implements Proyectiles {
         this.dirX = (mag != 0) ? dirX / mag : 1f;
         this.dirY = (mag != 0) ? dirY / mag : 0f;
 
-        /* partículas */
+        /* partículas
         float scale = Gdx.graphics.getWidth() / REAL_WIDTH;
         /*int maxLen = (int) (PARTICLE_LEN_FACTOR * scale);
         float partWid = PARTICLE_WID_FACTOR * scale;
@@ -89,7 +92,7 @@ public final class _08ProyectilPelota implements Proyectiles {
     public void actualizarProyectil(float delta) {
         if (!activo) return;
 
-        float move = SPEED * delta;
+        float move = speed * delta;
         sprite.translate(dirX * move, dirY * move);
         sprite.rotate(SPIN_SPEED * delta);
         comprobarReboteVentana();
@@ -147,7 +150,7 @@ public final class _08ProyectilPelota implements Proyectiles {
 
     @Override
     public float getBaseDamage() {
-        float base = MathUtils.random(13, 26);
+        float base = MathUtils.random(lowDmg, highDmg);
         if (MathUtils.random() < jugador.getCritico()) {
             esCritico = true;
             return base * 1.5f;
@@ -158,7 +161,7 @@ public final class _08ProyectilPelota implements Proyectiles {
 
     @Override
     public float getKnockbackForce() {
-        return 101;
+        return knockBack;
     }
 
     @Override
@@ -284,5 +287,21 @@ public final class _08ProyectilPelota implements Proyectiles {
         TEXTURE = null;
         //trail.dispose();
         efecto.free();
+    }
+
+    public int getMaxRebotes() {
+        return maxRebotes;
+    }
+
+    public void setMaxRebotes(int maxRebotes) {
+        this.maxRebotes = maxRebotes;
+        this.rebotesRestantes = maxRebotes;
+    }
+
+    public void setMaxPower() {
+        this.lowDmg *= 2;
+        this.highDmg *= 2;
+        this.knockBack *= 2;
+        this.speed *= 1.5f;
     }
 }

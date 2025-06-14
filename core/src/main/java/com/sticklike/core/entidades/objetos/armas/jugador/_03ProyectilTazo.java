@@ -98,8 +98,9 @@ public final class _03ProyectilTazo implements Proyectiles {
         float ang = MathUtils.degreesToRadians * (a03AtaqueTazo.getGlobalAngle() + offsetAngle);
         float px = jugador.getSprite().getX() + jugador.getSprite().getWidth() * .5f;
         float py = jugador.getSprite().getY() + jugador.getSprite().getHeight() * .5f - 5f;
-        float x = px + MathUtils.cos(ang) * radio - sprite.getWidth() * .5f;
-        float y = py + MathUtils.sin(ang) * radio - sprite.getHeight() * .5f;
+        float currentRadius = a03AtaqueTazo.getRadio();
+        float x = px + MathUtils.cos(ang) * currentRadius - sprite.getWidth() * .5f;
+        float y = py + MathUtils.sin(ang) * currentRadius - sprite.getHeight() * .5f;
 
         switch (phase) {
             case GROWING -> {
