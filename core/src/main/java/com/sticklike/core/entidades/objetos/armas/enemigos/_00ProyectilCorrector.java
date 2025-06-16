@@ -1,12 +1,14 @@
 package com.sticklike.core.entidades.objetos.armas.enemigos;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoCorrector;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -26,6 +28,7 @@ public class _00ProyectilCorrector implements Proyectiles {
     private float distanciaRecorrida = 0f;
     private boolean activo = true;
     private final Jugador jugador;
+    private ParticleEffectPool.PooledEffect effect;
 
     public _00ProyectilCorrector(float startX, float startY, float dirX, float dirY, Jugador jugador) {
         this.jugador = jugador;
@@ -49,6 +52,8 @@ public class _00ProyectilCorrector implements Proyectiles {
         float angDeg = (float) Math.toDegrees(Math.atan2(direction.y, direction.x));
         sprite.setRotation(angDeg + 90f);
 
+        effect = ParticleManager.get().obtainEffect("corrector", startX, startY);
+
         // Inicializar rectángulo de colisión
         collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
@@ -64,6 +69,9 @@ public class _00ProyectilCorrector implements Proyectiles {
 
         // 2) Actualizar rectángulo de colisión
         collisionRect.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        float cx = sprite.getX() + sprite.getWidth() * 0.5f;
+        float cy = sprite.getY() + sprite.getHeight() * 0.5f;
+        effect.setPosition(cx, cy);
 
         // 3) Verificar colisión contra el jugador
         Rectangle jugadorRect = jugador.getSprite().getBoundingRectangle();
@@ -95,6 +103,7 @@ public class _00ProyectilCorrector implements Proyectiles {
     @Override
     public void dispose() {
         // No liberamos TEXTURE aquí para no interferir con otros proyectiles
+        effect.free();
         activo = false;
     }
 
@@ -120,6 +129,7 @@ public class _00ProyectilCorrector implements Proyectiles {
 
     @Override
     public void desactivarProyectil() {
+        effect.allowCompletion();
         activo = false;
     }
 

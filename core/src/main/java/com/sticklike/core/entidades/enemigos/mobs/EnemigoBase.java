@@ -8,6 +8,7 @@ import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 
@@ -159,6 +160,7 @@ public abstract class EnemigoBase implements Enemigo {
     @Override
     public void activarParpadeo(float duracion) {
         animacionBaseEnemigos.activarParpadeo(sprite, duracion, damageTexture);
+        ParticleManager.get().obtainEffect("impacto", getX() + sprite.getWidth() / 2, getY() + sprite.getHeight() / 2);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.sticklike.core.entidades.jugador;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.sticklike.core.entidades.jugador.InputsJugador.ResultadoInput;
+import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -20,7 +21,12 @@ public class MovimientoJugador {
 
         /* -------- Paso 2: normalizamos si hay entrada -------- */
         if (direccion.len2() > 0f) {
+            // 1) normalizamos
             direccion.nor();
+            // 2) spawneamos partículas
+            float cx = jugador.getSprite().getX() + jugador.getSprite().getWidth() / 2;
+            float cy = jugador.getSprite().getY();
+            ParticleManager.get().obtainEffect("player", cx, cy, true);
         }
 
         /* -------- Paso 3: aplicamos velocidad y delta -------- */
@@ -42,4 +48,5 @@ public class MovimientoJugador {
         float clampedY = MathUtils.clamp(sprite.getY(), minY, maxY);
         sprite.setPosition(clampedX, clampedY);
     }
+
 }

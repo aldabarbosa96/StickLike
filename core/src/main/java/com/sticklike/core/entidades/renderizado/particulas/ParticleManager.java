@@ -29,6 +29,8 @@ public class ParticleManager {
 
     public void loadAllParticles() {
         load("sangre","particulas/sangre_particle.p");
+        load("player","particulas/player_particle.p");
+        load("impacto","particulas/impacto_particle.p");
         load("xp", "particulas/xp_particle.p");
         load("piedra", "particulas/basic_particle.p");
         load("calcetin", "particulas/calcetin_particle.p");
@@ -40,6 +42,7 @@ public class ParticleManager {
         load("papelExplosion", "particulas/papelExplosion_particle.p");
         load("pelota", "particulas/pelota_particle.p");
         load("dildo", "particulas/dildo_particle.p");
+        load("corrector", "particulas/corrector_particle.p");
     }
 
     private void load(String id, String effectPath) {
