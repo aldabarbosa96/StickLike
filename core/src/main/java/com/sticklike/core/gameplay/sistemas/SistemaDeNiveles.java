@@ -1,6 +1,8 @@
 package com.sticklike.core.gameplay.sistemas;
 
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.LevelUpEvent;
 import com.sticklike.core.pantallas.popUps.PopUpMejoras;
 
 /**
@@ -33,6 +35,7 @@ public class SistemaDeNiveles {
     private void subirDeNivel() {
         xpActual -= xpHastaSiguienteNivel;
         nivelActual++;
+        GameEventBus.publish(new LevelUpEvent(nivelActual));
 
         xpHastaSiguienteNivel = 50 * nivelActual * nivelActual + 50;
 

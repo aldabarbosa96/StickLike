@@ -1,14 +1,15 @@
 package com.sticklike.core.ui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.gameplay.sistemas.SistemaDeNiveles;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -22,6 +23,7 @@ public class HUD {
     private final SpriteBatch spriteBatch;
     private final OrthographicCamera hudCamara;
     private final StretchViewport hudViewport;
+    private final LogChat logChat;
     private static final float desplazamientoVertHUD = DESPLAZAMIENTO_VERTICAL_HUD;
 
     public HUD(Jugador jugador, SistemaDeNiveles sistemaDeNiveles, ShapeRenderer shapeRenderer, SpriteBatch spriteBatch) {
@@ -33,6 +35,11 @@ public class HUD {
         this.hudViewport.apply();
         this.hudCamara.update();
         renderHUDComponents.crearSlots();
+
+        BitmapFont hudFont = FontManager.getChatLogFont();
+        hudFont.getData().setScale(0.85f / FontManager.getScale());
+        this.logChat = new LogChat(spriteBatch, hudFont);
+        GameEventBus.register(logChat);
     }
 
     public void renderizarHUD(float delta) {
@@ -71,6 +78,8 @@ public class HUD {
         renderHUDComponents.renderizarMarcosMejoras();
         spriteBatch.end();
 
+        logChat.renderAboveHUD(hudHeight + HUD_BAR_Y_OFFSET);
+
         renderHUDComponents.getHudStage().act(delta);
         renderHUDComponents.getHudStage().draw();
     }
@@ -84,6 +93,7 @@ public class HUD {
         renderHUDComponents.dispose();
         shapeRenderer.dispose();
         spriteBatch.dispose();
+        GameEventBus.unregister(logChat);
     }
 
     public RenderHUDComponents getRenderHUDComponents() {

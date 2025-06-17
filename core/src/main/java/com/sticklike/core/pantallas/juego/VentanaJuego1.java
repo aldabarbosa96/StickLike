@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.sticklike.core.MainGame;
 import com.sticklike.core.entidades.mobiliario.tragaperras.FlechaTragaperras;
 import com.sticklike.core.entidades.renderizado.particulas.ParticleManager;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.PhaseEvent;
 import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.pantallas.popUps.PopUpTragaperras;
 import com.sticklike.core.pantallas.popUps.TragaperrasInputProcessor;
@@ -85,7 +87,6 @@ public class VentanaJuego1 implements Screen {
     private Array<ObjetosXP> objetosXP;
     private Array<Proyectiles> proyectilesEnemigos;
 
-
     private int currentScreenWidth;
     private int currentScreenHeight;
     private boolean pausado = false;
@@ -111,7 +112,7 @@ public class VentanaJuego1 implements Screen {
         // Ajustar la posición de la cámara
         actualizarPosCamara();
         Mensajes.getInstance().addMessage("StickMan", "Ah shit! Here we go again...", jugador.getSprite().getX(), jugador.getSprite().getY() - 10);
-
+        GameEventBus.publish(new PhaseEvent("1: \"SEXUALIDAD\""));
         ParticleManager.get().clear();
     }
 
@@ -270,11 +271,10 @@ public class VentanaJuego1 implements Screen {
                         }
                         boostActivo = nuevoBoost;
                         nuevoBoost.aplicarBoost(jugador, gestorDeAudio);
-                        xp.recolectar(gestorDeAudio);
                     }
                 } else {
-                    xp.aplicarEfecto(jugador, gestorDeAudio, this);
                     xp.recolectar(gestorDeAudio);
+                    xp.aplicarEfecto(jugador, gestorDeAudio, this);
                     objetosXP.removeIndex(i);
                 }
             }

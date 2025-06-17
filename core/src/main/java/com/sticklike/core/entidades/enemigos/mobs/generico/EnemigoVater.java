@@ -77,7 +77,7 @@ public class EnemigoVater extends EnemigoBase {
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        if (Jugador.getOroGanado() >= 15) return null;
+        if (jugador.getOroGanado() >= 15) return null;
         float randomXP = (float) (Math.random() * 100);
         if (!haSoltadoXP && randomXP <= 0.25f) {
             haSoltadoXP = true;

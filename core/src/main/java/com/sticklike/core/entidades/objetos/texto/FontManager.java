@@ -26,6 +26,7 @@ public class FontManager {
     public static BitmapFont loadingFont;
     public static BitmapFont slotFont;
     public static BitmapFont messageFont;
+    public static BitmapFont chatLogFont;
 
     private static float scale;
     private static final Color DARKER_WHITE = new Color(0.95f, 0.95f, 0.95f, 1);
@@ -37,6 +38,7 @@ public class FontManager {
         FreeTypeFontGenerator mainFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/fontPmaker.ttf"));
         FreeTypeFontGenerator slotsFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/fontPresStart2.ttf"));
         FreeTypeFontGenerator messagesFont = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/fontIndieFlower.ttf"));
+        FreeTypeFontGenerator logChat = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/Arimo-Bold.ttf"));
 
         // Texto mensajes
         FreeTypeFontGenerator.FreeTypeFontParameter messagesParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -133,6 +135,12 @@ public class FontManager {
         pauseParam.borderWidth = 2;
         pauseFont = dmgFont.generateFont(pauseParam);*/
 
+        FreeTypeFontGenerator.FreeTypeFontParameter chatLogParam = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        chatLogParam.size = Math.round(11 * scale);
+        chatLogParam.color = Color.WHITE;
+        chatLogFont = logChat.generateFont(chatLogParam);
+        //chatLogFont = new BitmapFont();
+
         // texto debug
         debugFont = new BitmapFont();
 
@@ -200,6 +208,10 @@ public class FontManager {
             messageFont.dispose();
             messageFont = null;
         }
+        if (chatLogFont != null) {
+            chatLogFont.dispose();
+            chatLogFont = null;
+        }
     }
 
     public static BitmapFont getDamageFont() {
@@ -260,5 +272,9 @@ public class FontManager {
 
     public static BitmapFont getMessageFont() {
         return messageFont;
+    }
+
+    public static BitmapFont getChatLogFont() {
+        return chatLogFont;
     }
 }

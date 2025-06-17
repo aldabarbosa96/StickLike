@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.TrazosEvent;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
@@ -21,7 +23,7 @@ public class ObjetoPowerUp extends ObjetoBase {
 
     public ObjetoPowerUp(float x, float y) {
         super(x, y, TEXTURA);
-
+        setSpriteTexture(getTexture());
     }
 
     @Override
@@ -29,12 +31,13 @@ public class ObjetoPowerUp extends ObjetoBase {
         contador++;
         gestorDeAudio.reproducirEfecto("recogerPowerUP", AUDIO_RECOLECCION_PWUP);
         super.recolectar(gestorDeAudio);
+        GameEventBus.publish(new TrazosEvent(1));
 
     }
 
     @Override
     public void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game) {
-        jugador.setTrazosGanados(Jugador.getTrazosGanados() + 1);
+        jugador.setTrazosGanados(jugador.getTrazosGanados() + 1);
     }
 
     @Override
@@ -67,7 +70,6 @@ public class ObjetoPowerUp extends ObjetoBase {
         }
         return powerUps;
     }
-
 
     public int getContador() {
         return contador;

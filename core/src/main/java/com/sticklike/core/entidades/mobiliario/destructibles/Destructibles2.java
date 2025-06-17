@@ -89,10 +89,10 @@ public class Destructibles2 implements Enemigo {
 
         if (dropChance < 60) {
             return new ObjetoOro(getX(), getY());  // 60%
-        } else if (dropChance < 90) {
-            return new ObjetoVida(getX(), getY());  // 30%
+        } else if (dropChance < 85) {
+            return new ObjetoVida(getX(), getY());  // 25%
         } else if (dropChance < 95){
-            return new ObjetoIman(getX(), getY());   // 5%
+            return new ObjetoIman(getX(), getY());   // 10%
         } else {
             return new ObjetoPowerUp(getX(),getY());  // 5%
         }

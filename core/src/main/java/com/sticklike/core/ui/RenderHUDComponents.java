@@ -227,9 +227,9 @@ public class RenderHUDComponents {
         float centerX = barX + barWidth * 0.5f;
         float posY = barY - 35f;
         float offset = 60f;
-        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf(Jugador.getOroGanado()), Color.GOLD, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_CACA_DORADA, Texture.class), 22f, 22f, centerX - offset, posY, String.valueOf(jugador.getOroGanado()), Color.GOLD, Color.DARK_GRAY);
         renderizarIconoConTexto(manager.get(ICONO_CALEAVELA_KILLS, Texture.class), 23f, 23f, centerX, posY, String.valueOf(controladorEnemigos.getKillCounter()), Color.WHITE, Color.DARK_GRAY);
-        renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(Jugador.getTrazosGanados()), Color.WHITE, Color.DARK_GRAY);
+        renderizarIconoConTexto(manager.get(RECOLECTABLE_POWER_UP, Texture.class), 9f, 22f, centerX + offset, posY, String.valueOf(jugador.getTrazosGanados()), Color.WHITE, Color.DARK_GRAY);
     }
 
     private void renderizarTextoBarraXP(float barX, float barY, float barWidth, float barHeight) {

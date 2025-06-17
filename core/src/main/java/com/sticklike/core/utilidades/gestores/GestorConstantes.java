@@ -31,7 +31,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float HUD_BAR_HEIGHT = 11.5f * 1.09375f;
     public static final float HUD_BAR_X = 380f * 1.4814814815f;
     public static final float HUD_BAR_Y_OFFSET = 10f * 1.09375f;
-    public static final float HUD_BAR_Y_OFFSET2 = 45f * 1.09375f;
+    public static final float HUD_BAR_Y_OFFSET2 = 20f * 1.09375f;
     public static final float HEART_SIZE = 20f * 1.09375f;
     public static final float HEART_X = 410f * 1.4814814815f;
     public static final float HEART_Y_OFFSET = 2.5f * 1.09375f;

@@ -5,6 +5,8 @@ import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.armas.jugador.comportamiento.*;
 import com.sticklike.core.gameplay.progreso.Mejora;
 import com.sticklike.core.MainGame;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.UpgradeEvent;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
@@ -156,6 +158,7 @@ public class SistemaDeMejoras {
 
         // Se aplica la mejora (se decrementa el contador de usos)
         mejoraSeleccionada.apply();
+        GameEventBus.publish(new UpgradeEvent(mejoraSeleccionada.getNombreMejora()));
 
         String idHabilidad = mejoraSeleccionada.getIdHabilidad();
         if (idHabilidad != null && idHabilidad.contains("_")) {

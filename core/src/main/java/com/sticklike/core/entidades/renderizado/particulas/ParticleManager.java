@@ -49,7 +49,7 @@ public class ParticleManager {
         ParticleEffectPool.PooledEffect tmp = null;
         ParticleEffect effect = new ParticleEffect();
         effect.load(Gdx.files.internal(effectPath), Gdx.files.internal("particulas"));
-        pools.put(id, new ParticleEffectPool(effect, 5, 50));
+        pools.put(id, new ParticleEffectPool(effect, 5, 500));
     }
 
 

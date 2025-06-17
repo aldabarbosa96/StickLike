@@ -5,6 +5,9 @@ import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.bosses.BossProfe;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.progreso.Evento;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.BossEvent;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.PhaseEvent;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.MensajesData;
 import com.sticklike.core.ui.RenderHUDComponents;
@@ -129,6 +132,7 @@ public class SistemaDeEventos {
             }
         }
         GestorDeAudio.getInstance().cambiarMusica("fondo3");
+        GameEventBus.publish(new BossEvent("LA >> POLLA <<"));
     }
 
     private void spawnSegundoBoss() {
@@ -140,9 +144,11 @@ public class SistemaDeEventos {
             }
         }
         GestorDeAudio.getInstance().cambiarMusica("fondo3");
+        GameEventBus.publish(new BossEvent("LA >> PROFE DE MATES <<"));
     }
 
     private void spawnAlarma() {
+        GameEventBus.publish(new PhaseEvent("2: \"INSTITUTO\""));
         GestorDeAudio.getInstance().cambiarMusica("fondo4");
         ctrlEnemigos.setTiposDeEnemigos(LISTA_ALARMA);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);

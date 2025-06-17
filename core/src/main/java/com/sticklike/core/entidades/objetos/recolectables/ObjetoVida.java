@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.VidaEvent;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
@@ -38,6 +40,7 @@ public class ObjetoVida extends ObjetoBase {
         }
         jugador.setVidaJugador(nuevaVida);
         ventanaJuego1.getRenderVentanaJuego1().triggerLifeFlash();
+        GameEventBus.publish(new VidaEvent((int) vidaExtra));
     }
 
     @Override
