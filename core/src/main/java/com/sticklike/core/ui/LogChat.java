@@ -98,7 +98,7 @@ public class LogChat implements GameEventListener {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1f, 1f, 1f, 0.33f);
+        shapeRenderer.setColor(1f, 1f, 1f, 0.35f);
 
         float radius = 4f;
         int segments = 20;

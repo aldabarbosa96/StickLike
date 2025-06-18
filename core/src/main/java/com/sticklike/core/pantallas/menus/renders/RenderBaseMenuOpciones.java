@@ -23,8 +23,6 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
-import java.util.List;
-
 public class RenderBaseMenuOpciones extends RenderBaseMenus {
     private MenuOpcionesListener listener;
     private Container<Container<Table>> mainContainer;
@@ -60,7 +58,7 @@ public class RenderBaseMenuOpciones extends RenderBaseMenus {
         innerContainer.pack();
 
         Container<Container<Table>> borderContainer = new Container<>(innerContainer);
-        borderContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
+        borderContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, Color.BLUE));
         borderContainer.pack();
         mainContainer = borderContainer;
 

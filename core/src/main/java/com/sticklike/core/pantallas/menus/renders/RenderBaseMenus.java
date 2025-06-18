@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.function.IntSupplier;
 
@@ -188,7 +187,7 @@ public abstract class RenderBaseMenus {
         Label.LabelStyle versionStyle = new Label.LabelStyle(menuFont, Color.BLACK);
         Label versionLabel = new Label("v 1.11.13-dev", versionStyle);
 
-        // lo coloco en su tabla
+        // lo colocamos en su tabla
         Table versionTable = new Table();
         versionTable.setFillParent(true);
         versionTable.bottom().right().padRight(35).padBottom(30);
@@ -197,8 +196,8 @@ public abstract class RenderBaseMenus {
     }
 
 
-    protected NinePatchDrawable crearSombraConBorde(Color shadowColor, int shadowSize, Color borderColor, int borderThickness) {
-        int totalSize = 16 + (shadowSize + borderThickness) * 2;
+    protected NinePatchDrawable crearSombraConBorde(Color shadowColor, Color borderColor) {
+        int totalSize = 16 + (10 + 2) * 2;
 
         Pixmap pixmap = new Pixmap(totalSize, totalSize, Pixmap.Format.RGBA8888);
         pixmap.setBlending(Pixmap.Blending.SourceOver);
@@ -206,8 +205,8 @@ public abstract class RenderBaseMenus {
         pixmap.fill();
 
         // 1) Dibujamos la sombra como "anillos" concéntricos
-        for (int i = 0; i < shadowSize; i++) {
-            float alpha = 0.25f * ((float) i / (shadowSize - 1));
+        for (int i = 0; i < 10; i++) {
+            float alpha = 0.25f * ((float) i / (10 - 1));
             pixmap.setColor(shadowColor.r, shadowColor.g, shadowColor.b, alpha);
 
             int size = totalSize - i * 2;
@@ -216,10 +215,10 @@ public abstract class RenderBaseMenus {
 
         // 2) Rellenamos la zona del borde
         pixmap.setColor(borderColor);
-        pixmap.fillRectangle(shadowSize, shadowSize, totalSize - 2 * shadowSize, totalSize - 2 * shadowSize);
+        pixmap.fillRectangle(10, 10, totalSize - 2 * 10, totalSize - 2 * 10);
 
         // 3) Vaciamos el interior (zona transparente) para que se vea el contenido o fondo del contenedor
-        int insideOffset = shadowSize + borderThickness;
+        int insideOffset = 10 + 2;
         int insideSize = totalSize - 2 * insideOffset;
         if (insideSize > 0) {
             pixmap.setColor(0, 0, 0, 0);
@@ -229,13 +228,13 @@ public abstract class RenderBaseMenus {
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
 
-        int split = shadowSize + borderThickness;
+        int split = 10 + 2;
         NinePatch ninePatch = new NinePatch(new TextureRegion(texture), split, split, split, split);
         return new NinePatchDrawable(ninePatch);
     }
 
-    protected TextButton crearBotonesNumerados(int number, String text, String styleName) {
-        TextButton button = new TextButton("", uiSkin, styleName);
+    protected TextButton crearBotonesNumerados(int number, String text) {
+        TextButton button = new TextButton("", uiSkin, "default-button");
 
         Table contentTable = new Table();
         contentTable.defaults().center().pad(0);

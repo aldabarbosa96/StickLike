@@ -140,7 +140,7 @@ public class PopUpMejoras extends RenderBaseMenus {
         float posY = (VIRTUAL_HEIGHT - h + POPUP_POSITION_CORRECTION) / 2f - EXTRA_BORDE;
         popupGroup.setPosition(posX, posY);
 
-        Image borderImage = new Image(super.crearSombraConBorde(Color.WHITE, 10, Color.WHITE, 2));
+        Image borderImage = new Image(super.crearSombraConBorde(Color.WHITE, Color.WHITE));
         borderImage.setSize(totalWidth, totalHeight);
         borderImage.addAction(Actions.forever(Actions.sequence(Actions.color(Color.PURPLE, 0.5f), Actions.color(Color.BLUE, 0.5f), Actions.color(Color.MAGENTA, 0.5f))));
         popupGroup.addActor(borderImage);
