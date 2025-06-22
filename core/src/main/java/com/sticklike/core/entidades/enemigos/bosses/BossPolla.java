@@ -10,9 +10,9 @@ import com.sticklike.core.entidades.enemigos.animacion.AnimacionBossPolla;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBossPolla;
+import com.sticklike.core.entidades.objetos.recolectables.ObjetoBolsa;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
 import com.sticklike.core.entidades.jugador.Jugador;
-import com.sticklike.core.entidades.objetos.recolectables.ObjetoXp;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
@@ -124,7 +124,7 @@ public class BossPolla implements Enemigo { // TODO --> deberá extender de Enem
     public ObjetosXP sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
-            return new ObjetoXp(getX(), getY());
+            return new ObjetoBolsa(getX(), getY());
         }
         return null;
     }

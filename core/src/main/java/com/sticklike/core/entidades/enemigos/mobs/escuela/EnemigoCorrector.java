@@ -23,7 +23,7 @@ public class EnemigoCorrector extends EnemigoBase {
 
     private static Texture TEXTURE;
     private final MovimientoLineal movimiento;
-    private static final float VELOCIDAD_BASE = 125f;
+    private static final float VELOCIDAD_BASE = 115f;
     private static final float VIDA_INICIAL = 333f;
     private static final float DANO = 15f;
     private static final float COOLDOWN_DANO = 0.8f;

@@ -25,7 +25,6 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class BossProfe implements Enemigo {
-
     private Sprite sprite;
     private final AnimacionBossProfe animBossProfe;
     private final Jugador jugador;
@@ -64,7 +63,7 @@ public class BossProfe implements Enemigo {
 
         //2) Crear la animación BossProfe (frame1↔frame2 para chase, frame2↔frame3 para lanzar)
         float dur12 = 0.1f;
-        float dur13 = 0.15f;
+        float dur13 = 0.2f;
         animBossProfe = new AnimacionBossProfe(frame1, frame2, frame3, dur12, dur13);
 
         //3) Registrar callback para disparar justo al pasar a frame3

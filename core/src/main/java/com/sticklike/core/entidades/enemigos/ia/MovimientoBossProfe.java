@@ -13,7 +13,7 @@ public class MovimientoBossProfe extends MovimientoBaseEnemigos {
 
     public MovimientoBossProfe(boolean puedeEmpujar) {
         super(puedeEmpujar);
-        this.velocidad = 125;
+        this.velocidad = 115;
         this.temporizador = 0f;
         this.enFaseChase = true;
         this.duracionActual = MathUtils.random(2,5);

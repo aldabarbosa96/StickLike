@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.bosses.BossProfe;
+import com.sticklike.core.entidades.enemigos.mobs.drogas.EnemigoCogollo;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles2;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.*;
@@ -424,6 +425,8 @@ public class ControladorEnemigos {
                 return new EnemigoGrapadora(jugador, x, y);
             case "PERFORADORA":
                 return new EnemigoPerforadora(jugador, x, y);
+            case "COGOLLO":
+                return new EnemigoCogollo(jugador, x, y);
             default:
                 throw new IllegalArgumentException("Tipo de enemigo no reconocido: " + tipoEnemigo);
         }
@@ -509,6 +512,18 @@ public class ControladorEnemigos {
             }
         }
         if (!quedan) fleeing = false;
+    }
+
+    public void desactivarHuida() {
+        fleeing = false;
+        for (int i = enemigos.size - 1; i >= 0; i--) {
+            Enemigo e = enemigos.get(i);
+            if (!(e instanceof BossProfe) && !(e instanceof EnemigoCorrector)
+                && !(e instanceof Destructibles) && !(e instanceof Destructibles2)
+                && !(e instanceof Tragaperras)) {
+                enemigos.removeIndex(i);
+            }
+        }
     }
 
     public void resetTimers() {

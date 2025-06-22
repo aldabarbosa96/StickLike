@@ -62,8 +62,9 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Calculadora y libro", this::spawnCalculadoras, LVL_EVENTO7, 8));
         eventos.add(new Evento("Grapadoras", this::spawnGrapadoras, LVL_EVENTO8, 9));
         eventos.add(new Evento("Perforadoras", this::spawnPerforadoras, LVL_EVENTO9, 10));
-        eventos.add(new Evento("Repetimos todos", this::spawnTodosEscuela, LVL_EVENTO10, 13));
-        eventos.add(new Evento("BossProfe", this::spawnSegundoBoss, LVL_EVENTO11, 14));
+        eventos.add(new Evento("Repetimos todos", this::spawnTodosEscuela, LVL_EVENTO10, 11));
+        eventos.add(new Evento("BossProfe", this::spawnSegundoBoss, LVL_EVENTO11, 12));
+        eventos.add(new Evento("Cogollos", this::spawnCogollos, LVL_EVENTO11, 13));
     }
 
     public void actualizar() {
@@ -74,10 +75,10 @@ public class SistemaDeEventos {
             Evento e = eventos.get(nextEventIndex);
             if (nivel < e.getNivelRequerido()) break;
 
-            // Si es el evento de alarma y el boss no ha muerto, lo aplazamos
-            if (e.getId() == 5 && (bossRef == null || !bossRef.estaMuerto())) {
-                break;
-            }
+            // Alarma se aplaza hasta que muera el BossPolla
+            if (e.getId() == 5 && (bossRef == null || !bossRef.estaMuerto())) break;
+            // Cogollos se aplaza hasta que muera el BossProfe
+            if (e.getId() == 13 && (bossRef2 == null || !bossRef2.estaMuerto())) break;
 
             // Aplicamos el evento y avanzamos el índice
             e.applyEvento();
@@ -183,8 +184,17 @@ public class SistemaDeEventos {
         ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS6);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO6_SPAWN_RATE);
     }
+
     private void spawnTodosEscuela() {
         ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS9);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO7_SPAWN_RATE);
+    }
+
+    private void spawnCogollos() {
+        GameEventBus.publish(new PhaseEvent("3: \"DROGAS\""));
+        GestorDeAudio.getInstance().cambiarMusica("fondo5");
+        ctrlEnemigos.desactivarHuida();
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS10);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO8_SPAWN_RATE);
     }
 

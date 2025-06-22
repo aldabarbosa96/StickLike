@@ -151,6 +151,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VIDA_ENEMIGO_CALCULADORA = 56f;
     public static final float VIDA_ENEMIGO_LIBRO = 23f;
     public static final float VIDA_ENEMIGO_TETA = 1f;
+    public static final float VIDA_ENEMIGO_COGOLLO = 75f;
     public static final float DANYO_CULO = 2f;
     public static final float DANYO_CALCULADORA = 5f;
     public static final float DANYO_LIBRO = 12.5f;
@@ -159,6 +160,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_TETA = 1.33f;
     public static final float DANYO_EXAMEN = 1.5f;
     public static final float DANYO_VATER = 50f;
+    public static final float DANYO_COGOLLO = 15f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
     public static final float COOLDOWN_POLLA = 1f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
@@ -172,6 +174,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_CALCULADORA = 85f;
     public static final float VEL_BASE_LIBRO = 85f;
     public static final float VEL_BASE_GRAPADORA = 90f;
+    public static final float VEL_BASE_COGOLLO = 95f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
     public static final float MULT_VELOCIDAD_CONDON = 3.25f;
@@ -317,6 +320,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final int LVL_EVENTO9 = 16;
     public static final int LVL_EVENTO10 = 18;
     public static final int LVL_EVENTO11 = 20;
+    public static final int LVL_EVENTO12 = 21;
     public static final float EVENTO1_SPAWN_RATE = 0.33f;
     public static final float EVENTO1_SPEED_MULT = 1.1f;
     public static final float EVENTO2_SPAWN_RATE = 0.2f;
@@ -328,7 +332,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float EVENTO5_SPAWN_RATE = 0.025f;
     public static final float EVENTO6_SPAWN_RATE = 0.02f;
     public static final float EVENTO7_SPAWN_RATE = 0.015f;
-    public static final float EVENTO8_SPAWN_RATE = 0.01f;
+    public static final float EVENTO8_SPAWN_RATE = 0.0125f;
     public static final float EVENTO_TETAS_SPAWN_RATE = 0.000001f;
     public static final String[] LISTA_TETAS = {"TETA", "TETA", "CULO"};
     public static final String[] LISTA_EXAMEN = {"EXAMEN"};
@@ -341,6 +345,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final String[] TIPOS_ENEMIGOS5 = {"GRAPADORA","CALCULADORA","LIBRO"};
     public static final String[] TIPOS_ENEMIGOS6 = {"PERFORADORA","GRAPADORA","CALCULADORA","LIBRO"};
     public static final String[] TIPOS_ENEMIGOS9 = {"PERFORADORA","GRAPADORA","CALCULADORA","LIBRO","EXAMEN","REGLA","ALARMA"};
+    public static final String[] TIPOS_ENEMIGOS10 = {"COGOLLO"};
 
     // -------------------------------------------------
     // Configuración borrones

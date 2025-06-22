@@ -18,7 +18,7 @@ import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 public class _00ProyectilCorrector implements Proyectiles {
 
     private static Texture TEXTURE;
-    private static final float SPEED = 666f;
+    private static final float SPEED = 500f;
     private static final float MAX_DISTANCE = 750f;
     private static final float DAMAGE = 15f;
 

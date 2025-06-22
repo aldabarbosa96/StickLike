@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
 import com.sticklike.core.entidades.enemigos.bosses.BossProfe;
+import com.sticklike.core.entidades.enemigos.mobs.drogas.EnemigoCogollo;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoLibro;
 import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoPerforadora;
 import com.sticklike.core.entidades.mobiliario.destructibles.Destructibles;
@@ -86,6 +87,7 @@ public class RenderBaseEnemigos {
                     float shiftX = flipped ? 2f : -2f;
                     drawSimple(perforadora, r, ex + shiftX, ey - 2.5f, ew, eh, ew * SHADOW_WIDTH_PERF, eh * SHADOW_HEIGH_PERF, SHADOW_OFFSET);
                 }
+                case EnemigoCogollo cogollo -> drawSimple(cogollo,r, ex, ey, ew, eh, ew * 0.6f, eh * 0.15f,0);
                 default -> drawVater(e, r, ex, ey, ew, eh);
             }
         }
