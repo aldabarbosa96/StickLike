@@ -181,7 +181,7 @@ public final class _08ProyectilPelota implements Proyectiles {
 
         sprite.setColor(Color.RED);
         //trail.setColor(Color.RED);
-        audio.reproducirEfecto("impactoBase", 1f);
+        audio.reproducirEfecto("impactoBase", 0.33f);
         impactoTimer = 0f;
 
         if (rebotesRestantes-- > 0) {

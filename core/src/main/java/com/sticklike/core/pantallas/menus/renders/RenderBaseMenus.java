@@ -185,7 +185,7 @@ public abstract class RenderBaseMenus {
         BitmapFont menuFont = FontManager.getMenuFont();
         menuFont.getData().setScale(inv);
         Label.LabelStyle versionStyle = new Label.LabelStyle(menuFont, Color.BLACK);
-        Label versionLabel = new Label("v 1.11.13-dev", versionStyle);
+        Label versionLabel = new Label("v 1.11.14-dev", versionStyle);
 
         // lo colocamos en su tabla
         Table versionTable = new Table();

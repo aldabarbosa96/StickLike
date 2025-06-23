@@ -195,7 +195,7 @@ public final class _05ProyectilBoliBic implements Proyectiles {
             // feedback visual/sonoro que ya tenías
             sprite.setColor(Color.RED);
             trail.setColor(Color.RED);
-            audio.reproducirEfecto("impactoBase", 1f);
+            audio.reproducirEfecto("impactoBase", 0.33f);
             impactoTimer = 0f;
 
             /* ===  Rebote === */

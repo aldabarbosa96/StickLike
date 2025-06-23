@@ -165,7 +165,7 @@ public final class _00ProyectilPiedra implements Proyectiles {
     /* -------------------------- Impacto ------------------------- */
     @Override
     public void registrarImpacto(Enemigo enemigo) {
-        audio.reproducirEfecto("impactoBase", 1f);
+        audio.reproducirEfecto("impactoBase", 0.33f);
         //desactivarProyectil();
     }
 
