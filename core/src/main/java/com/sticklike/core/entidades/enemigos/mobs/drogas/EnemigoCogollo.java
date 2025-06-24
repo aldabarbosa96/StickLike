@@ -30,7 +30,7 @@ public class EnemigoCogollo extends EnemigoBase {
         this.coolDownDanyo = COOLDOWN_ENEMIGOCULO;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
         sprite = new Sprite(colorCogollos());
-        sprite.setSize(40, 38);
+        sprite.setSize(62, 60);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);

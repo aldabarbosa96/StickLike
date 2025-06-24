@@ -34,7 +34,7 @@ public class EnemigoPerforadora extends EnemigoBase {
         this.cerrada = manager.get(ENEMIGO_PERFORADORA_CERRADA, Texture.class);
         sprite = new Sprite(abierta);
         sprite.setPosition(x, y);
-        sprite.setSize(44, 40);
+        sprite.setSize(46, 42);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);
         this.animacionGrapadora = new AnimacionGrapadora(animacionBaseEnemigos, abierta, cerrada, 0.2f, 0.2f);

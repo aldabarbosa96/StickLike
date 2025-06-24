@@ -48,16 +48,18 @@ public class EnemigoCulo extends EnemigoBase {
 
     private void esConOjo() {
         float random = MathUtils.random(10);
+        float randomSize = MathUtils.random(36,40);
+        float randomSizeConOjo = MathUtils.random(38,42);
         if (random >= 2.5f) {
             sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
-            sprite.setSize(36, 32);
+            sprite.setSize(randomSize, randomSize - 4);
             esConOjo = false;
         } else {
             tieneOjo = true;
             spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
-            spriteOjoAbierto.setSize(40, 36);
+            spriteOjoAbierto.setSize(randomSizeConOjo, randomSizeConOjo - 4);
             spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
-            spriteOjoCerrado.setSize(40, 36);
+            spriteOjoCerrado.setSize(randomSizeConOjo, randomSizeConOjo - 4);
             sprite = new Sprite(spriteOjoAbierto);
             // Con ojo, el enemigo tiene el doble de vida.
             this.vidaEnemigo = VIDA_ENEMIGOCULO * 2;

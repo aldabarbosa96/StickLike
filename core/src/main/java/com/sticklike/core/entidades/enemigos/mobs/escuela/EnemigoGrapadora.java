@@ -35,7 +35,7 @@ public class EnemigoGrapadora extends EnemigoBase {
         this.cerrada = manager.get(ENEMIGO_GRAPADORA_CERRADA, Texture.class);
         sprite = new Sprite(abierta);
         sprite.setPosition(x, y);
-        sprite.setSize(36,26);
+        sprite.setSize(40,30);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoLineal = new MovimientoLineal(true, velocidadBase);
         this.animacionGrapadora = new AnimacionGrapadora(animacionBaseEnemigos, abierta, cerrada, 0.8f, 0.2f);

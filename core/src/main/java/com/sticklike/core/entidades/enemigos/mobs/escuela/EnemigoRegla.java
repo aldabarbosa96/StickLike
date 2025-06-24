@@ -28,7 +28,7 @@ public class EnemigoRegla extends EnemigoBase {
     public EnemigoRegla(float x, float y, Jugador jugador, float velocidadEnemigo, OrthographicCamera orthographicCamera) {
         super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_REGLA_CRUZADA, Texture.class));
-        sprite.setSize(26, 26);
+        sprite.setSize(28, 28);
         sprite.setPosition(x, y);
         this.movimientoProyeccion = new MovimientoProyeccion(velocidadEnemigo, 666, orthographicCamera, true);
         this.animacionBaseEnemigos = new AnimacionBaseEnemigos();

@@ -26,7 +26,7 @@ public class EnemigoExamen extends EnemigoBase {
     public EnemigoExamen(float x, float y, Jugador jugador, float velocidadEnemigo) {
         super(jugador);
         sprite = new Sprite(manager.get(ENEMIGO_EXAMEN, Texture.class));
-        sprite.setSize(42f, 44f);
+        sprite.setSize(44f, 46f);
         sprite.setPosition(x, y);
         movimientoParabola = new MovimientoParabola();
         animacionExamen = new AnimacionExamen(animacionBaseEnemigos, manager.get(ENEMIGO_EXAMEN, Texture.class), manager.get(ENEMIGO_EXAMEN2, Texture.class), 0.25f);

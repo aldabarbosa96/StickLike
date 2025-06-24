@@ -39,7 +39,7 @@ public class EnemigoAlarma extends EnemigoBase {
         animacionCrono = new AnimacionAlarma(animacionBaseEnemigos, crono, cronoCerrado, 1, 0.25f);
         animacionAlarma = new AnimacionAlarma(animacionBaseEnemigos, alarma, alarmaOjo, 0.33f, 0.25f);
         sprite.setPosition(x, y);
-        if (esCrono) sprite.setSize(48, 48);
+        if (esCrono) sprite.setSize(50, 50);
         else sprite.setSize(42, 48);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoAlarma = new MovimientoOscilante(velocidadBase, true);

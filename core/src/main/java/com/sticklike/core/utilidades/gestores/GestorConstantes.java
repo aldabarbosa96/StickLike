@@ -159,8 +159,8 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float DANYO_POLLA = 1.25f;
     public static final float DANYO_TETA = 1.33f;
     public static final float DANYO_EXAMEN = 1.5f;
-    public static final float DANYO_VATER = 50f;
-    public static final float DANYO_COGOLLO = 15f;
+    public static final float DANYO_VATER = 40f;
+    public static final float DANYO_COGOLLO = 4.5f;
     public static final float COOLDOWN_ENEMIGOCULO = 1f;
     public static final float COOLDOWN_POLLA = 1f;
     public static final float COOLDOWN_ENEMIGOREGLA = 1.5f;
@@ -174,7 +174,7 @@ public class GestorConstantes { // todo -> si escala demasiado habrá que gestio
     public static final float VEL_BASE_CALCULADORA = 85f;
     public static final float VEL_BASE_LIBRO = 85f;
     public static final float VEL_BASE_GRAPADORA = 90f;
-    public static final float VEL_BASE_COGOLLO = 95f;
+    public static final float VEL_BASE_COGOLLO = 90f;
     public static final float MULT_VELOCIDAD_CULO = 0.85f;
     public static final float MULT_VELOCIDAD_REGLA = 3.8f;
     public static final float MULT_VELOCIDAD_CONDON = 3.25f;

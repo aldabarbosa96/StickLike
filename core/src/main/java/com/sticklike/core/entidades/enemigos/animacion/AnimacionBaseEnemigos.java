@@ -51,7 +51,6 @@ public class AnimacionBaseEnemigos {
         }
     }
 
-
     public boolean estaEnParpadeo() {
         return enParpadeo;
     }
