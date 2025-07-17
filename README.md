@@ -1,21 +1,26 @@
-# 🧠 StickLike
+# 🗒️ StickLike
 
 **StickLike** es un autobattler roguelike en tiempo real con estética de libreta, inspirado en los garabatos de un
 cuaderno escolar.
 
-Los personajes luchan automáticamente mientras el jugador se centra en moverse, recolectar mejoras y sobrevivir a
-oleadas cada vez más intensas. A medida que se progresa, el avatar evoluciona visualmente con nuevos detalles,
-expresiones y cambios estéticos que reflejan el rendimiento y las decisiones del jugador.
+Los personajes atacan automáticamente mientras el jugador se desplaza por el escenario, esquiva enemigos, 
+recoge mejoras y trata de sobrevivir a oleadas cada vez más agresivas. A medida que progresa, el avatar se fortalece ganando nuevas habilidades, 
+poderes y mejoras estadísticas que modifican su estilo de juego y lo hacen cada vez más letal.
 
 ---
 
 ## 🎮 Características del juego
 
-- ⚔️ **Combate automático en tiempo real**: los personajes atacan por sí solos mientras el jugador esquiva, se posiciona
-  y sobrevive.
-- 🖊️ **Estética de cuaderno dibujado a mano**: diseño único basado en trazos, manchas de boli y bocetos escolares.
-- 🔄 **Sistema de mejoras dinámico**: obtén power-ups, perks y evoluciones tras eliminar enemigos, subir niveles y superar oleadas.
-- 🧠 **HUD minimalista y expresivo**: persigue es.
+- ⚔️ **Combate automático en tiempo real**
+- 🖊️ **Estética de cuaderno dibujado a mano**
+- 🔄 **Sistema de mejoras dinámico**
+- 🧠 **HUD minimalista y expresivo**
+- 👹 **Jefes únicos al final de cada fase**
+- 📖 **Lore simbólico sobre los miedos e incertidumbres de la adolescencia**
+- 🧩 **Coleccionables ocultos con significado personal**
+- 💥 **Poderes, ítems y habilidades desbloqueables**
+- 🧰 **Equipo modificable que altera la estética y jugabilidad**
+- 🎯 **Estilo de juego adaptativo según decisiones y progresión**
 
 ---
 
@@ -24,7 +29,10 @@ expresiones y cambios estéticos que reflejan el rendimiento y las decisiones de
 - **Java 21**
 - **LibGDX**
 - **Gradle**
-- **Renderizado 2D personalizado** – con sprites dibujados a mano (PixelSutido)
-- **Sistema de mejoras y evolución visual interna**
+- **Pixel Studio**
+- **Audacity**
+- **GIMP**
+- **Git**
+- **GitHub**
 
 ---
