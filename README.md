@@ -1,91 +1,33 @@
-# StickLike
+# DeskFolk
 
-StickLike es un **videojuego roguelike** con combate estilo *autobattle*, diseñado con una **estética minimalista** inspirada en el cuaderno de un estudiante de la ESO.  
-El proyecto utiliza el framework [libGDX](https://libgdx.com/).
+A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
----
+This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
 
-# 🖊️ Descripción
+## Platforms
 
-**StickLike** te sumerge en un mundo dibujado a mano, donde el campo de batalla es el cuaderno de un adolescente. Encarna a un *StickMan* que debe sobrevivir a oleadas de enemigos tan absurdos como variados, ganar experiencia y elegir mejoras cada vez que subes de nivel.  
-Inspirado en el género *roguelike* y en títulos como **Vampire Survivors** o **Brotato**, el combate es automático (*autobattle*), pero tú decides cómo moverte y qué mejoras elegir.  
-Tu objetivo: **sobrevive hasta el nivel 30 y enfréntate al temido FINALBOSS.**
+- `core`: Main module with the application logic shared by all platforms.
+- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 
----
+## Gradle
 
-## ✨ Características principales
+This project uses [Gradle](https://gradle.org/) to manage dependencies.
+The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
+Useful Gradle tasks and flags:
 
-### ✏️ Estética de estudiante
-Todo el mundo del juego está concebido como dibujos en la libreta de un estudiante (o en la pizarra de clase, o el portátil del cole).  
-Los enemigos y objetos son chistes, criaturas extrañas y obscenas: miedos, prejuicios y metáforas de lo que cualquier adolescente ha vivido o dibujado cuando se aburría en clase. 😜
+- `--continue`: when using this flag, errors will not stop the tasks from running.
+- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
+- `--offline`: when using this flag, cached dependency archives will be used.
+- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
+- `build`: builds sources and archives of every project.
+- `cleanEclipse`: removes Eclipse project data.
+- `cleanIdea`: removes IntelliJ project data.
+- `clean`: removes `build` folders, which store compiled classes and built archives.
+- `eclipse`: generates Eclipse project data.
+- `idea`: generates IntelliJ project data.
+- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
+- `lwjgl3:run`: starts the application.
+- `test`: runs unit tests (if any).
 
----
-
-### 📈 Progresión de partida
-Al derrotar enemigos, obtienes experiencia que te permite **subir de nivel** y escoger entre varias mejoras (como más velocidad, daño, proyectiles múltiples, etc.).  
-Esto te permitirá desarrollar tu propio estilo de juego durante la partida.
-
----
-
-### 🧬 Progresión de personaje
-Cada muerte reinicia el nivel y borra tus mejoras y habilidades temporales.  
-Pero el **oro (💩 cacas doradas)** y los **trazos (✏️ lápices)** se conservan, y con ellos puedes mejorar tu personaje de forma permanente: subiendo estadísticas o desbloqueando equipamiento con poderes únicos.
-
----
-
-### ⚔️ Combate automático
-Tu personaje ataca automáticamente, pero tú controlas el movimiento: esquiva, recolecta orbes de experiencia, y combina habilidades de mil formas distintas para sobrevivir. 
-
----
-
-### 👾 Enemigos variopintos
-Las oleadas traen enemigos ridículamente creativos: culos y pollas con patas, exámenes suspensos vengativos, reglas voladoras, despertadores asesinos o váteres podridos.  
-Todos con frases sarcásticas, referencias adolescentes y un toque de humor negro. 
-
----
-
-### 🎲 Sistema de mejoras
-Al subir de nivel, aparece un **pop-up** con 3 mejoras aleatorias.  
-¿No te convencen? Usa los dados de *reroll* 🎲 para cambiar la selección.  
-Puedes obtener habilidades pasivas, nuevas armas o poderes especiales. ¡Escoge sabiamente!
-
----
-
-### 🧿 Recolectables
-Durante la partida encontrarás objetos útiles como:
-- Orbes de experiencia
-- Oro 💩
-- Trazos ✏️
-- ¡Y muchos más!
-
----
-
-### 🍕 Consumibles potentes
-Pizza, patatas fritas o hamburguesas aparecen en el mapa como objetos consumibles que te dan **boosts temporales** muy potentes (ej: velocidad, daño al máximo por unos segundos). 🍔⚡
-
----
-
-### 🎰 Máquinas tragaperras
-Aparecen de forma aleatoria en el mapa.  
-Puedes gastar tu oro en tiradas para obtener **premios aleatorios** muy jugosos. ¡La suerte está echada!
-
----
-
-### 💀 FINALBOSS
-Cuando llegas al nivel 30 y completas todas las fases, te espera el **FINALBOSS**.  
-Un enemigo colosal, temible y con varias fases que pondrá a prueba tus reflejos y la estrategia que hayas construido durante la partida.
-
----
-
-📌 **¡Prepárate para el caos, los lápices afilados y las risas!**  
-StickLike no es solo un juego, es una carta de amor al cuaderno del adolescente que todos fuimos.
-
-## Estado de Desarrollo
-
-- **Fase temprana**: StickLike cuenta con mecánicas básicas de movimiento, ia de enemigos, subida de nivel, gestión de mejoras y eventos y oleadas de enemigos. El juego se encuentra en una fase muy alpha de desarrollo pero se seguirá trabajando duro hasta completarlo con éxito y cumplir con los objetivos y expectativas.
-
----
-
-## Contribuciones
-
-**NO SE PUEDEN NI SE QUIERE ACEPTAR SUGERENCIAS**
+Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
+For example, `core:clean` removes `build` folder only from the `core` project.

@@ -41,23 +41,25 @@ public class EnemigoCulo extends EnemigoBase {
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);
-        this.animacionCulo = new AnimacionCulo(this, animacionesBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
+        this.animacionCulo = new AnimacionCulo(this, animacionBaseEnemigos, spriteOjoAbierto, spriteOjoCerrado);
         this.damageTexture = manager.get(DAMAGE_CULO_TEXTURE, Texture.class);
 
     }
 
     private void esConOjo() {
         float random = MathUtils.random(10);
+        float randomSize = MathUtils.random(36,40);
+        float randomSizeConOjo = MathUtils.random(38,42);
         if (random >= 2.5f) {
             sprite = new Sprite(manager.get(ENEMIGO_CULO, Texture.class));
-            sprite.setSize(36, 32);
+            sprite.setSize(randomSize, randomSize - 4);
             esConOjo = false;
         } else {
             tieneOjo = true;
             spriteOjoAbierto = new Sprite(manager.get(ENEMIGO_CULO_OJO, Texture.class));
-            spriteOjoAbierto.setSize(40, 36);
+            spriteOjoAbierto.setSize(randomSizeConOjo, randomSizeConOjo - 4);
             spriteOjoCerrado = new Sprite(manager.get(ENEMIGO_CULO_OJO_CERRADO, Texture.class));
-            spriteOjoCerrado.setSize(40, 36);
+            spriteOjoCerrado.setSize(randomSizeConOjo, randomSizeConOjo - 4);
             sprite = new Sprite(spriteOjoAbierto);
             // Con ojo, el enemigo tiene el doble de vida.
             this.vidaEnemigo = VIDA_ENEMIGOCULO * 2;
@@ -69,7 +71,7 @@ public class EnemigoCulo extends EnemigoBase {
     protected void actualizarMovimiento(float delta) {
         movimientoOscilante.actualizarMovimiento(delta, sprite, jugador);
         animacionCulo.actualizarAnimacion(delta, sprite);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
 
@@ -86,9 +88,9 @@ public class EnemigoCulo extends EnemigoBase {
         } else {
             animMuerteCulo = GestorDeAssets.animations.get("muerteCulo2");
         }
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteCulo);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override

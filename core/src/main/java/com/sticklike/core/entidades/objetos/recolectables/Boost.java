@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.BoostEvent;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.pantallas.overlay.BoostIconEffectManager;
 import com.sticklike.core.ui.RenderHUDComponents;
@@ -273,10 +275,16 @@ public class Boost extends ObjetoBase {
                 break;
         }
         super.recolectar(gestorDeAudio);
+        GameEventBus.publish(new BoostEvent(tipo.name(), duracion));
     }
 
     @Override
     public void aplicarEfecto(Jugador jugador, GestorDeAudio audio, VentanaJuego1 game) {
+
+    }
+
+    @Override
+    public void particulas() {
 
     }
 

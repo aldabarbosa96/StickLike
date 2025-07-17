@@ -189,7 +189,7 @@ public class PopUpTragaperras extends RenderBaseMenus {
         float posY = (VIRTUAL_HEIGHT - POPUP_HEIGHT + POPUP_POSITION_CORRECTION) / 2f - EXTRA_BORDE;
         popupGroup.setPosition(posX, posY);
 
-        Image border = new Image(crearSombraConBorde(Color.WHITE, 10, Color.WHITE, 2));
+        Image border = new Image(crearSombraConBorde(Color.WHITE, Color.WHITE));
         border.setSize(totalW, totalH);
         border.addAction(Actions.forever(Actions.sequence(Actions.color(Color.RED, 1f), Actions.color(Color.GREEN, 0.25f))));
         popupGroup.addActor(border);

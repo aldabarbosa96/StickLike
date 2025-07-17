@@ -2,8 +2,12 @@ package com.sticklike.core.gameplay.sistemas;
 
 import com.badlogic.gdx.utils.Timer;
 import com.sticklike.core.entidades.enemigos.bosses.BossPolla;
+import com.sticklike.core.entidades.enemigos.bosses.BossProfe;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
 import com.sticklike.core.gameplay.progreso.Evento;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.BossEvent;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.PhaseEvent;
 import com.sticklike.core.interfaces.Enemigo;
 import com.sticklike.core.ui.MensajesData;
 import com.sticklike.core.ui.RenderHUDComponents;
@@ -29,6 +33,7 @@ public class SistemaDeEventos {
     private final List<Evento> eventos;
     private int nextEventIndex = 0;
     private BossPolla bossRef;
+    private BossProfe bossRef2;
     private boolean efectoPollasActivo;
     private Timer.Task restauraSpawnTask;
 
@@ -55,6 +60,11 @@ public class SistemaDeEventos {
         eventos.add(new Evento("Examen", this::spawnExamen, LVL_EVENTO5, 6));
         eventos.add(new Evento("Regla", this::spawnReglas, LVL_EVENTO6, 7));
         eventos.add(new Evento("Calculadora y libro", this::spawnCalculadoras, LVL_EVENTO7, 8));
+        eventos.add(new Evento("Grapadoras", this::spawnGrapadoras, LVL_EVENTO8, 9));
+        eventos.add(new Evento("Perforadoras", this::spawnPerforadoras, LVL_EVENTO9, 10));
+        eventos.add(new Evento("Repetimos todos", this::spawnTodosEscuela, LVL_EVENTO10, 11));
+        eventos.add(new Evento("BossProfe", this::spawnSegundoBoss, LVL_EVENTO11, 12));
+        eventos.add(new Evento("Cogollos", this::spawnCogollos, LVL_EVENTO11, 13));
     }
 
     public void actualizar() {
@@ -65,10 +75,10 @@ public class SistemaDeEventos {
             Evento e = eventos.get(nextEventIndex);
             if (nivel < e.getNivelRequerido()) break;
 
-            // Si es el evento de alarma y el boss no ha muerto, lo aplazamos
-            if (e.getId() == 5 && (bossRef == null || !bossRef.estaMuerto())) {
-                break;
-            }
+            // Alarma se aplaza hasta que muera el BossPolla
+            if (e.getId() == 5 && (bossRef == null || !bossRef.estaMuerto())) break;
+            // Cogollos se aplaza hasta que muera el BossProfe
+            if (e.getId() == 13 && (bossRef2 == null || !bossRef2.estaMuerto())) break;
 
             // Aplicamos el evento y avanzamos el índice
             e.applyEvento();
@@ -97,6 +107,7 @@ public class SistemaDeEventos {
 
         ctrlEnemigos.setTiposDeEnemigos(LISTA_TETAS);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO_TETAS_SPAWN_RATE);
+        ctrlEnemigos.resetTimers();
 
         // Programamos restaurar spawn normal
         if (restauraSpawnTask != null) restauraSpawnTask.cancel();
@@ -122,9 +133,23 @@ public class SistemaDeEventos {
             }
         }
         GestorDeAudio.getInstance().cambiarMusica("fondo3");
+        GameEventBus.publish(new BossEvent("LA >> POLLA <<"));
+    }
+
+    private void spawnSegundoBoss() {
+        ctrlEnemigos.spawnBossProfeAleatorio();
+        for (Enemigo e : ctrlEnemigos.getEnemigos()) {
+            if (e instanceof BossProfe bp) {
+                bossRef2 = bp;
+                break;
+            }
+        }
+        GestorDeAudio.getInstance().cambiarMusica("fondo3");
+        GameEventBus.publish(new BossEvent("LA >> PROFE DE MATES <<"));
     }
 
     private void spawnAlarma() {
+        GameEventBus.publish(new PhaseEvent("2: \"INSTITUTO\""));
         GestorDeAudio.getInstance().cambiarMusica("fondo4");
         ctrlEnemigos.setTiposDeEnemigos(LISTA_ALARMA);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
@@ -142,12 +167,35 @@ public class SistemaDeEventos {
     private void spawnReglas() {
         ctrlEnemigos.setTiposDeEnemigos(LISTA_REGLA);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO3_SPAWN_RATE);
-        ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.35f);
+        ctrlEnemigos.setSpeedMult(ctrlEnemigos.getSpeedMult() * 0.5f);
     }
 
     private void spawnCalculadoras() {
         ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS4);
         ctrlEnemigos.setIntervaloDeAparicion(EVENTO4_SPAWN_RATE);
+    }
+
+    private void spawnGrapadoras() {
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS5);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO5_SPAWN_RATE);
+    }
+
+    private void spawnPerforadoras() {
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS6);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO6_SPAWN_RATE);
+    }
+
+    private void spawnTodosEscuela() {
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS9);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO7_SPAWN_RATE);
+    }
+
+    private void spawnCogollos() {
+        GameEventBus.publish(new PhaseEvent("3: \"DROGAS\""));
+        GestorDeAudio.getInstance().cambiarMusica("fondo5");
+        ctrlEnemigos.desactivarHuida();
+        ctrlEnemigos.setTiposDeEnemigos(TIPOS_ENEMIGOS10);
+        ctrlEnemigos.setIntervaloDeAparicion(EVENTO8_SPAWN_RATE);
     }
 
     public void dispose() {

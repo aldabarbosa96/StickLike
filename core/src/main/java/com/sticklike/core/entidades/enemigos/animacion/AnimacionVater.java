@@ -9,13 +9,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  */
 public class AnimacionVater {
 
-    private final AnimacionesBaseEnemigos base;
-    private final AnimacionDosFrames anim;
+    private final AnimacionBaseEnemigos base;
+    private final AnimacionBaseDosFrames anim;
 
-    public AnimacionVater(AnimacionesBaseEnemigos base, Texture texturaTapaLevantada, Texture texturaTapaBajada, float tiempoAbierta, float tiempoCerrada) {
+    public AnimacionVater(AnimacionBaseEnemigos base, Texture texturaTapaLevantada, Texture texturaTapaBajada, float tiempoAbierta, float tiempoCerrada) {
 
         this.base = base;
-        this.anim = new AnimacionDosFrames(new TextureRegion(texturaTapaBajada), new TextureRegion(texturaTapaLevantada), tiempoCerrada, tiempoAbierta, null, null);
+        this.anim = new AnimacionBaseDosFrames(new TextureRegion(texturaTapaBajada), new TextureRegion(texturaTapaLevantada), tiempoCerrada, tiempoAbierta, null, null);
     }
 
     public void actualizarAnimacion(float delta, Sprite sprite) {

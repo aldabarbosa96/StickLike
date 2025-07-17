@@ -1,6 +1,7 @@
 package com.sticklike.core.entidades.renderizado.particulas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -27,6 +28,10 @@ public class ParticleManager {
     }
 
     public void loadAllParticles() {
+        load("sangre","particulas/sangre_particle.p");
+        load("player","particulas/player_particle.p");
+        load("impacto","particulas/impacto_particle.p");
+        load("xp", "particulas/xp_particle.p");
         load("piedra", "particulas/basic_particle.p");
         load("calcetin", "particulas/calcetin_particle.p");
         load("pedo", "particulas/pedo_particle.p");
@@ -37,13 +42,14 @@ public class ParticleManager {
         load("papelExplosion", "particulas/papelExplosion_particle.p");
         load("pelota", "particulas/pelota_particle.p");
         load("dildo", "particulas/dildo_particle.p");
+        load("corrector", "particulas/corrector_particle.p");
     }
 
     private void load(String id, String effectPath) {
         ParticleEffectPool.PooledEffect tmp = null;
-        com.badlogic.gdx.graphics.g2d.ParticleEffect effect = new com.badlogic.gdx.graphics.g2d.ParticleEffect();
+        ParticleEffect effect = new ParticleEffect();
         effect.load(Gdx.files.internal(effectPath), Gdx.files.internal("particulas"));
-        pools.put(id, new ParticleEffectPool(effect, 5, 50));
+        pools.put(id, new ParticleEffectPool(effect, 5, 500));
     }
 
 

@@ -126,7 +126,7 @@ public class DebugStats {
             .append("GC Time (last): ").append(lastGCTime).append(" ms\n\n")
 
             // Bloque de draw calls y relacionados
-            .append("[PURPLE]DrawCalls: ").append(drawCalls).append('\n')
+            .append("[MAGENTA]DrawCalls: ").append(drawCalls).append('\n')
             .append("ShaderSwitches: ").append(shaderSwitches).append('\n')
             .append("TexBindings: ").append(texBindings).append('\n')
             .append("Vertices: ").append(vertices);

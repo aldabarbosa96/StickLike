@@ -12,6 +12,7 @@ import com.sticklike.core.entidades.enemigos.mobs.escuela.EnemigoAlarma;
 import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCulo;
 import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoPolla;
 import com.sticklike.core.interfaces.Enemigo;
+import com.sticklike.core.pantallas.juego.VentanaJuego1;
 
 public class MensajesData {
 
@@ -64,10 +65,6 @@ public class MensajesData {
         return instance;
     }
 
-    /**
-     * Punto A: en cuanto arranque la fase de "culos", llamamos a este método
-     * en lugar de hacer polling cada frame.
-     */
     public void activarMensajesCulos(final RenderHUDComponents renderHUD) {
         if (mensajeCulosActivado) return;
         mensajeCulosActivado = true;
@@ -76,7 +73,7 @@ public class MensajesData {
     }
 
     private void scheduleNextCulo(final RenderHUDComponents renderHUD) {
-        if (nextMessageCulosIndex >= opcionesChatCulos.size()) return;
+        if (nextMessageCulosIndex >= opcionesChatCulos.size() || renderHUD.isPausadoTemporizador()) return;
         float delay = MathUtils.random(10f, 20f);
         if (culoTask != null) culoTask.cancel();
         culoTask = Timer.schedule(new Timer.Task() {

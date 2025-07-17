@@ -32,17 +32,20 @@ public class Evento implements Comparable<Evento> {
     public int compareTo(Evento otro) {
         int cmp = Integer.compare(this.nivelRequerido, otro.nivelRequerido);
         if (cmp == 0) {
-            // Si ambos eventos tienen el mismo nivel, hacemos un desempate
-            if (this.id == 4 && otro.id == 5) {
-                return -1; // El boss tiene prioridad
-            } else if (this.id == 5 && otro.id == 4) {
-                return 1;  // El boss tiene prioridad, por lo tanto el evento alarma queda después
-            }
-            // Si no es uno de estos casos, se ordenan lexicográficamente
+            // --- Polla vs Alarma ---
+            if (this.id == 4 && otro.id == 5) return -1;
+            if (this.id == 5 && otro.id == 4) return 1;
+
+            // --- Profe vs Cogollos ---
+            if (this.id == 12 && otro.id == 13) return -1;   // El boss primero
+            if (this.id == 13 && otro.id == 12) return 1;    // El evento “cogollos” después
+
+            // Cualquier otro caso
             return this.nombreEvento.compareTo(otro.nombreEvento);
         }
         return cmp;
     }
+
 
     public float getId() {
         return id;

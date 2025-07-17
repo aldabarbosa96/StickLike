@@ -58,12 +58,12 @@ public class RenderBaseMenuNiveles extends RenderBaseMenus {
         titleActor.addAction(Actions.sequence(Actions.delay(0.25f), Actions.fadeIn(0.25f)));
 
         // Crear botones para cada nivel y "Volver"
-        btnNivel1 = crearBotonesNumerados(1, "<<  Cuaderno  >>", "default-button");
-        btnNivel2 = crearBotonesNumerados(2, "<<  Pizarra  >>", "default-button");
-        btnNivel3 = crearBotonesNumerados(3, "<<  Ordenador  >>", "default-button");
-        btnNivel4 = crearBotonesNumerados(4, "<<  ???  >>", "default-button");
-        btnNivel5 = crearBotonesNumerados(5, "<<  ???  >>", "default-button");
-        btnVolver = crearBotonesNumerados(6, "Volver", "default-button");
+        btnNivel1 = crearBotonesNumerados(1, "<<  Cuaderno  >>");
+        btnNivel2 = crearBotonesNumerados(2, "<<  Pizarra  >>");
+        btnNivel3 = crearBotonesNumerados(3, "<<  Ordenador  >>");
+        btnNivel4 = crearBotonesNumerados(4, "<<  ???  >>");
+        btnNivel5 = crearBotonesNumerados(5, "<<  ???  >>");
+        btnVolver = crearBotonesNumerados(6, "Volver");
 
         // Inicializar la lista de botones
         nivelButtons = new ArrayList<>();
@@ -145,7 +145,7 @@ public class RenderBaseMenuNiveles extends RenderBaseMenus {
         innerContainer.pack();
 
         buttonContainer = new Container<>(innerContainer);
-        buttonContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
+        buttonContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, Color.BLUE));
         buttonContainer.pack();
         animarEntrada(buttonContainer, 2.25f);
         actualizarBotonResaltado(nivelButtons, selectedIndex);

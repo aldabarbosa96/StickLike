@@ -19,6 +19,7 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.gameplay.controladores.ControladorEnemigos;
+import com.sticklike.core.interfaces.Proyectiles;
 import com.sticklike.core.ui.HUD;
 import com.sticklike.core.ui.Mensajes;
 import com.sticklike.core.utilidades.PoissonPoints;
@@ -100,7 +101,7 @@ public class RenderVentanaJuego1 {
         IntBuffer buffer = BufferUtils.newIntBuffer(1);
         Gdx.gl.glGetIntegerv(GL20.GL_MAX_RENDERBUFFER_SIZE, buffer);
         int maxFboSize = buffer.get(0);
-        Gdx.app.log("max_fbo_size","Máximo tamaño permitido para FrameBuffer: " + maxFboSize);
+        Gdx.app.log("max_fbo_size", "Máximo tamaño permitido para FrameBuffer: " + maxFboSize);
 
         // Limita el tamaño real
         int safeWidth = Math.min(mapPixelWidth, maxFboSize);
@@ -180,8 +181,11 @@ public class RenderVentanaJuego1 {
 
         shapeRenderer.setProjectionMatrix(camara.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         ctrlEnemigos.dibujarSombrasEnemigos(shapeRenderer);
         shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
         spriteBatch.begin();
         for (ObjetosXP xp : objetosXP) xp.renderizarObjetoXP(spriteBatch);
@@ -192,10 +196,18 @@ public class RenderVentanaJuego1 {
         for (TextoFlotante t : textos) t.renderizarTextoFlotante(spriteBatch);
         spriteBatch.end();
 
+        spriteBatch.setProjectionMatrix(camara.combined);
+        spriteBatch.begin();
+        for (Proyectiles p : ventanaJuego1.getProyectilesEnemigos()) {
+            p.renderizarProyectil(spriteBatch);
+        }
+        spriteBatch.end();
+
         Mensajes.getInstance().update();
         Mensajes.getInstance().draw(camara);
         hud.renderizarHUD(delta);
         ventanaJuego1.getFlechaTragaperras().render(spriteBatch, ventanaJuego1.getRenderHUDComponents());
+
     }
 
     private void prerenderBorrones() {

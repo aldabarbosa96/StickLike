@@ -2,6 +2,8 @@ package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.ImanEvent;
 import com.sticklike.core.interfaces.ObjetosXP;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
@@ -27,6 +29,16 @@ public class ObjetoIman extends ObjetoBase{
                 base.forzarAtraccion();
             }
         }
+    }
+    @Override
+    public void recolectar(GestorDeAudio audio){
+        audio.reproducirEfecto("recogerOro", AUDIO_RECOLECCION_ORO); // todo --> crear efecto sonido imán
+        super.recolectar(audio);
+        GameEventBus.publish(new ImanEvent());
+    }
+
+    @Override
+    public void particulas() {
     }
 
     @Override

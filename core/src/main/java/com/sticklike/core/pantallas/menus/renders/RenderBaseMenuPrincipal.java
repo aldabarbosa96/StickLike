@@ -55,13 +55,13 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         stage.addActor(titleTable);
         titleActor.addAction(Actions.sequence(Actions.delay(0.75f), Actions.fadeIn(0.5f)));
 
-        TextButton btnJugar = crearBotonesNumerados(1, "Jugar", "default-button");
-        TextButton btnNiveles = crearBotonesNumerados(2, "Niveles", "default-button");
-        TextButton btnPersonaje = crearBotonesNumerados(3, "Personaje", "default-button");
-        TextButton btnOpciones = crearBotonesNumerados(4, "Opciones", "default-button");
-        TextButton btnLogros = crearBotonesNumerados(5, "Logros", "default-button");
-        TextButton btnCreditos = crearBotonesNumerados(6, "Créditos", "default-button");
-        TextButton btnSalir = crearBotonesNumerados(7, "Salir", "default-button");
+        TextButton btnJugar = crearBotonesNumerados(1, "Jugar");
+        TextButton btnNiveles = crearBotonesNumerados(2, "Niveles");
+        TextButton btnPersonaje = crearBotonesNumerados(3, "Personaje");
+        TextButton btnOpciones = crearBotonesNumerados(4, "Opciones");
+        TextButton btnLogros = crearBotonesNumerados(5, "Logros");
+        TextButton btnCreditos = crearBotonesNumerados(6, "Créditos");
+        TextButton btnSalir = crearBotonesNumerados(7, "Salir");
 
         btnJugar.addListener(new ClickListener() {
             @Override
@@ -157,7 +157,7 @@ public class RenderBaseMenuPrincipal extends RenderBaseMenus {
         stack.add(bottomLeftContainer);
 
         buttonContainer = new Container<>(stack);
-        buttonContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, 10, Color.BLUE, 2));
+        buttonContainer.setBackground(crearSombraConBorde(Color.DARK_GRAY, Color.BLUE));
         buttonContainer.pack();
         animarEntrada(buttonContainer, 2.5f);
 

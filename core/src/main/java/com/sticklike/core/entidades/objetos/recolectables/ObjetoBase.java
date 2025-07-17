@@ -10,7 +10,7 @@ import com.sticklike.core.interfaces.ObjetosXP;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public abstract class ObjetoBase implements ObjetosXP {
-    private enum EstadoRecolectable {
+    public enum EstadoRecolectable {
         INACTIVO,
         REBOTE,
         ATRACCION,
@@ -139,4 +139,8 @@ public abstract class ObjetoBase implements ObjetosXP {
     protected abstract Texture getTexture();
     protected abstract float getWidth();
     protected abstract float getHeight();
+
+    public EstadoRecolectable getEstado() {
+        return estado;
+    }
 }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.sticklike.core.entidades.objetos.armas.*;
+import com.sticklike.core.entidades.objetos.armas.jugador.*;
 import com.sticklike.core.entidades.objetos.texto.FontManager;
 import com.sticklike.core.entidades.objetos.texto.TextoFlotante;
 import com.sticklike.core.interfaces.Enemigo;

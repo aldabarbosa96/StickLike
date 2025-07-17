@@ -41,7 +41,7 @@ public class EnemigoPolla extends EnemigoBase {
     @Override
     protected void actualizarMovimiento(float delta) {
         movimientoBotes.actualizarMovimiento(delta, sprite, jugador);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
@@ -52,9 +52,9 @@ public class EnemigoPolla extends EnemigoBase {
     @Override
     protected void iniciarAnimacionMuerte() {
         Animation<TextureRegion> animMuertePolla = GestorDeAssets.animations.get("muertePolla");
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuertePolla);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class EnemigoPolla extends EnemigoBase {
     }
 
     public float getFadeAlpha() {
-        return animacionesBaseEnemigos.getAlphaActual();
+        return animacionBaseEnemigos.getAlphaActual();
     }
 
     public static void resetStats() {

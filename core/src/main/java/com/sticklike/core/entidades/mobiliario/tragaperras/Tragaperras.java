@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.sticklike.core.entidades.enemigos.animacion.AnimacionesBaseEnemigos;
+import com.sticklike.core.entidades.enemigos.animacion.AnimacionBaseEnemigos;
 import com.sticklike.core.entidades.enemigos.ia.MovimientoBaseEnemigos;
 import com.sticklike.core.entidades.pools.RectanglePoolManager;
 import com.sticklike.core.entidades.renderizado.RenderBaseEnemigos;
@@ -26,7 +26,7 @@ public class Tragaperras implements Enemigo {
     private final Sprite sprite;
     private final TragaperrasLogic logic;
     private final RenderBaseEnemigos render;
-    private final AnimacionesBaseEnemigos anim = new AnimacionesBaseEnemigos();
+    private final AnimacionBaseEnemigos anim = new AnimacionBaseEnemigos();
     private final Direccion dir;
 
     private final VentanaJuego1 vj1;
@@ -111,7 +111,7 @@ public class Tragaperras implements Enemigo {
     }
 
     @Override
-    public AnimacionesBaseEnemigos getAnimaciones() {
+    public AnimacionBaseEnemigos getAnimaciones() {
         return anim;
     }
 

@@ -10,14 +10,14 @@ import com.sticklike.core.entidades.enemigos.mobs.sexo.EnemigoCulo;
 public class AnimacionCulo {
 
     private final EnemigoCulo enemigo;
-    private final AnimacionesBaseEnemigos base;
-    private final AnimacionDosFrames anim;
+    private final AnimacionBaseEnemigos base;
+    private final AnimacionBaseDosFrames anim;
 
-    public AnimacionCulo(EnemigoCulo enemigo, AnimacionesBaseEnemigos base, TextureRegion ojoAbierto, TextureRegion ojoCerrado) {
+    public AnimacionCulo(EnemigoCulo enemigo, AnimacionBaseEnemigos base, TextureRegion ojoAbierto, TextureRegion ojoCerrado) {
 
         this.enemigo = enemigo;
         this.base = base;
-        this.anim = new AnimacionDosFrames(ojoAbierto, ojoCerrado, 0.5f, 0.1f, null, null);
+        this.anim = new AnimacionBaseDosFrames(ojoAbierto, ojoCerrado, 0.5f, 0.1f, null, null);
     }
 
     public void actualizarAnimacion(float delta, Sprite sprite) {

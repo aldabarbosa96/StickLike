@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class AnimacionCalculadora {
 
-    private final AnimacionesBaseEnemigos base;
-    private final AnimacionDosFrames anim;
+    private final AnimacionBaseEnemigos base;
+    private final AnimacionBaseDosFrames anim;
 
-    public AnimacionCalculadora(AnimacionesBaseEnemigos base, Texture frameApagada, Texture frameEncendida, float duracionApagada, float duracionEncendida) {
+    public AnimacionCalculadora(AnimacionBaseEnemigos base, Texture frameApagada, Texture frameEncendida, float duracionApagada, float duracionEncendida) {
 
         this.base = base;
-        this.anim = new AnimacionDosFrames(new TextureRegion(frameApagada), new TextureRegion(frameEncendida), duracionApagada, duracionEncendida, null, null);
+        this.anim = new AnimacionBaseDosFrames(new TextureRegion(frameApagada), new TextureRegion(frameEncendida), duracionApagada, duracionEncendida, null, null);
     }
 
     public void actualizarAnimacion(float delta, Sprite sprite) {

@@ -2,6 +2,8 @@ package com.sticklike.core.entidades.objetos.recolectables;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.sticklike.core.entidades.jugador.Jugador;
+import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.gameplay.sistemas.eventBus.bus.GoldEvent;
 import com.sticklike.core.pantallas.juego.VentanaJuego1;
 import com.sticklike.core.utilidades.gestores.GestorDeAudio;
 
@@ -24,11 +26,16 @@ public class ObjetoOro extends ObjetoBase {
     public void recolectar(GestorDeAudio gestorDeAudio) {
         gestorDeAudio.reproducirEfecto("recogerOro", AUDIO_RECOLECCION_ORO);
         super.recolectar(gestorDeAudio);
+        GameEventBus.publish(new GoldEvent(1));
     }
 
     @Override
     public void aplicarEfecto(Jugador jugador, GestorDeAudio gestorDeAudio, VentanaJuego1 juego) {
         jugador.setOroGanado(jugador.getOroGanado() + 1);
+    }
+
+    @Override
+    public void particulas() {
     }
 
     @Override

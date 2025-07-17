@@ -15,45 +15,6 @@ import com.badlogic.gdx.utils.Array;
 public class RenderParticulasSangre {
     private static final Color COLOR_SANGRE_BASE = new Color(0.75f, 0, 0, 0.75f);
     private static Vector2 tmp = new Vector2();
-
-    /**
-     * Clase interna que representa cada partícula (gota/mancha) de sangre.
-     */
-    private class BloodParticle {
-        Vector2 position;
-        float radius;
-        float lifetime;
-        float elapsed;
-        Color color;
-        float initialAlpha;
-
-        public BloodParticle(Vector2 position, float radius, float lifetime, Color color) {
-            this.position = new Vector2(position);
-            this.radius = radius;
-            this.lifetime = lifetime;
-            this.elapsed = 0f;
-            this.color = new Color(color);
-            this.initialAlpha = color.a;
-        }
-
-
-        public boolean update(float delta) {
-            elapsed += delta;
-            float alpha = initialAlpha *(1f - (elapsed / lifetime));
-            if (alpha <= 0f) {
-                return false;
-            }
-            color.a = alpha;
-            return true;
-        }
-
-        public void render(ShapeRenderer shapeRenderer) {
-            shapeRenderer.setColor(color);
-            shapeRenderer.circle(position.x, position.y, radius);
-        }
-    }
-
-    // Lista de partículas (manchas) activas
     private Array<BloodParticle> particles;
     private ShapeRenderer shapeRenderer;
 
@@ -102,6 +63,44 @@ public class RenderParticulasSangre {
 
     public void dispose() {
         shapeRenderer.dispose();
+    }
+
+
+    /**
+     * Clase interna que representa cada partícula (gota/mancha) de sangre.
+     */
+    private class BloodParticle {
+        Vector2 position;
+        float radius;
+        float lifetime;
+        float elapsed;
+        Color color;
+        float initialAlpha;
+
+        public BloodParticle(Vector2 position, float radius, float lifetime, Color color) {
+            this.position = new Vector2(position);
+            this.radius = radius;
+            this.lifetime = lifetime;
+            this.elapsed = 0f;
+            this.color = new Color(color);
+            this.initialAlpha = color.a;
+        }
+
+
+        public boolean update(float delta) {
+            elapsed += delta;
+            float alpha = initialAlpha *(1f - (elapsed / lifetime));
+            if (alpha <= 0f) {
+                return false;
+            }
+            color.a = alpha;
+            return true;
+        }
+
+        public void render(ShapeRenderer shapeRenderer) {
+            shapeRenderer.setColor(color);
+            shapeRenderer.circle(position.x, position.y, radius);
+        }
     }
 }
 

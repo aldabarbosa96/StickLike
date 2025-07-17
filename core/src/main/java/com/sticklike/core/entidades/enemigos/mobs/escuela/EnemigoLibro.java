@@ -37,7 +37,7 @@ public class EnemigoLibro extends EnemigoBase {
     @Override
     protected void actualizarMovimiento(float delta) {
         movimientoBotes.actualizarMovimiento(delta, sprite, jugador);
-        animacionesBaseEnemigos.flipearEnemigo(jugador, sprite);
+        animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
     }
 
     @Override
@@ -48,9 +48,9 @@ public class EnemigoLibro extends EnemigoBase {
     @Override
     protected void iniciarAnimacionMuerte() {
         Animation<TextureRegion> animMuerteLibro = GestorDeAssets.animations.get("muerteLibro");
-        animacionesBaseEnemigos.reproducirSonidoMuerteGenerico();
-        animacionesBaseEnemigos.iniciarAnimacionMuerte(animMuerteLibro);
-        animacionesBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
+        animacionBaseEnemigos.reproducirSonidoMuerteGenerico();
+        animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteLibro);
+        animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.sticklike.core.entidades.renderizado;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.sticklike.core.entidades.jugador.Jugador;
 import com.sticklike.core.utilidades.gestores.GestorDeAssets;
 import com.sticklike.core.entidades.jugador.InputsJugador.Direction;
+
 import static com.sticklike.core.entidades.jugador.InputsJugador.Direction.*;
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
@@ -54,14 +54,13 @@ public class RenderJugador {
             batch.setColor(1, 1, 1, 0.1f);
         }
 
-        batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(),
-            jugador.getSprite().getWidth(), jugador.getSprite().getHeight());
-
+        batch.draw(currentFrame, jugador.getSprite().getX(), jugador.getSprite().getY(), jugador.getSprite().getWidth(), jugador.getSprite().getHeight());
 
         if (enParpadeo) {
             batch.setColor(1, 1, 1, 1);
         }
     }
+
     public void renderizarBarraDeSalud(ShapeRenderer shapeRenderer, Jugador jugador) {
         float healthPercentage = jugador.obtenerPorcetajeVida();
         float barWidth = 15f;
