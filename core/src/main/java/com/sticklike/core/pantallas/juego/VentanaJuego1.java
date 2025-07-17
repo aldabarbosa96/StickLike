@@ -299,6 +299,7 @@ public class VentanaJuego1 implements Screen {
             TextoFlotante floatingText = textosDanyo.get(i);
             floatingText.actualizarTextoFlotante(delta);
             if (floatingText.haDesaparecido()) {
+                floatingText.free();
                 textosDanyo.removeIndex(i);
             }
         }
@@ -418,10 +419,16 @@ public class VentanaJuego1 implements Screen {
             controladorEnemigos = null;
         }
 
+        for (TextoFlotante t : textosDanyo) {
+            t.free();
+        }
+
         textosDanyo.clear();
 
         for (ObjetosXP xp : objetosXP) {
-            xp.dispose();
+            if (xp instanceof ObjetoXp) {
+                ((ObjetoXp) xp).free();
+            }
         }
         objetosXP.clear();
         sistemaDeEventos.dispose();

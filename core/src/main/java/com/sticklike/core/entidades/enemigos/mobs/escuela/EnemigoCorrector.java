@@ -73,7 +73,7 @@ public class EnemigoCorrector extends EnemigoBase {
     public ObjetosXP sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
-            return new ObjetoXp(getX(), getY());
+            return ObjetoXp.obtain(getX(), getY());
         }
         return null;
     }

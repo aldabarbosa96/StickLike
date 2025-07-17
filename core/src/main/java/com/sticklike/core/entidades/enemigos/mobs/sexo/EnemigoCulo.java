@@ -107,7 +107,7 @@ public class EnemigoCulo extends EnemigoBase {
         }
         if (!haSoltadoXP && randomXP >= 15f) {
             haSoltadoXP = true;
-            return new ObjetoXp(posXMuerte, posYMuerte);
+            return ObjetoXp.obtain(posXMuerte, posYMuerte);
         }
         return null;
     }

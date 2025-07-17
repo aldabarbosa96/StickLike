@@ -17,17 +17,17 @@ public abstract class ObjetoBase implements ObjetosXP {
         RECOLECTADO
     }
 
-    private Sprite sprite;
-    private boolean recolectado = false;
-    private EstadoRecolectable estado = EstadoRecolectable.INACTIVO;
+    protected Sprite sprite;
+    protected boolean recolectado = false;
+    protected EstadoRecolectable estado = EstadoRecolectable.INACTIVO;
     private final float distanciaActivacion = DISTANCIA_ACTIVACION;
     private final float velocidadAtraccion = VEL_ATRACCION;
-    private float tiempoRebote = 0f;
+    protected float tiempoRebote = 0f;
     private float duracionRebote = 0.1f;
     private float velocidadRebote = 200;
     protected float x, y;
     private float reboteDirX, reboteDirY;
-    private boolean atraccionForzada = false;
+    protected boolean atraccionForzada = false;
 
     public ObjetoBase(float x, float y, Texture texturaInicial) {
         this.sprite = new Sprite(texturaInicial);

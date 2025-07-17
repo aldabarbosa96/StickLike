@@ -191,7 +191,7 @@ public final class _01ProyectilCalcetin implements Proyectiles {
             sprite.setColor(Color.RED);
             particles.setColor(Color.RED);
             impactoTimer = 0f;
-            GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 1f);
+            GestorDeAudio.getInstance().reproducirEfecto("impactoBase", 0.25f);
         }
     }
 

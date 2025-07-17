@@ -70,11 +70,11 @@ public class ObjetoBolsa extends ObjetoBase {
 
     @Override
     protected float getWidth() {
-        return 36;
+        return 42;
     }
 
     @Override
     protected float getHeight() {
-        return 36;
+        return 42;
     }
 }

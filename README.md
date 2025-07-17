@@ -1,33 +1,30 @@
-# DeskFolk
+# 🧠 StickLike
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+**StickLike** es un autobattler roguelike en tiempo real con estética de libreta, inspirado en los garabatos de un
+cuaderno escolar.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+Los personajes luchan automáticamente mientras el jugador se centra en moverse, recolectar mejoras y sobrevivir a
+oleadas cada vez más intensas. A medida que se progresa, el avatar evoluciona visualmente con nuevos detalles,
+expresiones y cambios estéticos que reflejan el rendimiento y las decisiones del jugador.
 
-## Platforms
+---
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+## 🎮 Características del juego
 
-## Gradle
+- ⚔️ **Combate automático en tiempo real**: los personajes atacan por sí solos mientras el jugador esquiva, se posiciona
+  y sobrevive.
+- 🖊️ **Estética de cuaderno dibujado a mano**: diseño único basado en trazos, manchas de boli y bocetos escolares.
+- 🔄 **Sistema de mejoras dinámico**: obtén power-ups, perks y evoluciones tras eliminar enemigos, subir niveles y superar oleadas.
+- 🧠 **HUD minimalista y expresivo**: persigue es.
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+---
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+## 🛠️ Tecnologías utilizadas
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+- **Java 21**
+- **LibGDX**
+- **Gradle**
+- **Renderizado 2D personalizado** – con sprites dibujados a mano (PixelSutido)
+- **Sistema de mejoras y evolución visual interna**
+
+---
