@@ -113,7 +113,7 @@ public class ControladorProyectiles {
                     Float ultimaY = ultimaYTexto.get(enemigo);
                     if (ultimaY != null) posY = ultimaY + DESPLAZAMIENTOY_TEXTO2;
 
-                    TextoFlotante texto = new TextoFlotante(String.valueOf((int) damage), baseX, posY, DURACION_TEXTO, FontManager.getDamageFont(), proyectil.esCritico());
+                    TextoFlotante texto = TextoFlotante.obtain(String.valueOf((int) damage), baseX, posY, DURACION_TEXTO, FontManager.getDamageFont(), proyectil.esCritico());
                     dmgText.add(texto);
                     ultimaYTexto.put(enemigo, posY);
 

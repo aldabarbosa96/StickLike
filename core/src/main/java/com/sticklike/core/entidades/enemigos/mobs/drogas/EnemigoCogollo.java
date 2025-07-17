@@ -18,51 +18,42 @@ import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 import static com.sticklike.core.utilidades.gestores.GestorDeAssets.*;
 
 public class EnemigoCogollo extends EnemigoBase {
-    private Texture textura1, textura2;
-    private MovimientoOscilante movimientoOscilante;
-    private AnimacionExamen animacionCogollo;
-    private static float velocidadBase = VEL_BASE_COGOLLO;
+    // 1) Precreamos las regiones de cada color para no volver a hacer new TextureRegion()
+    private static final TextureRegion[] C1 = {new TextureRegion(manager.get(ENEMIGO_COGOLLO, Texture.class)), new TextureRegion(manager.get(ENEMIGO_COGOLLO2, Texture.class))};
+    private static final TextureRegion[] C2 = {new TextureRegion(manager.get(ENEMIGO_COGOLLO_LILA, Texture.class)), new TextureRegion(manager.get(ENEMIGO_COGOLLO_LILA2, Texture.class))};
+    private static final TextureRegion[] C3 = {new TextureRegion(manager.get(ENEMIGO_COGOLLO_NARANJA, Texture.class)), new TextureRegion(manager.get(ENEMIGO_COGOLLO_NARANJA2, Texture.class))};
+
+    private final MovimientoOscilante movimientoOscilante;
+    private final AnimacionExamen animacionCogollo;
 
     public EnemigoCogollo(Jugador jugador, float x, float y) {
         super(jugador);
+
+        // 2) Stats
         this.vidaEnemigo = VIDA_ENEMIGO_COGOLLO;
         this.damageAmount = DANYO_COGOLLO;
         this.coolDownDanyo = COOLDOWN_ENEMIGOCULO;
         this.temporizadorDanyo = TEMPORIZADOR_DANYO;
-        sprite = new Sprite(colorCogollos());
+
+        // 3) Elegir color al azar y asignar sprite + animación
+        TextureRegion[] rs = MathUtils.randomBoolean() && MathUtils.randomBoolean() ? C3 : MathUtils.randomBoolean() ? C2 : C1;
+        sprite = new Sprite(rs[0]);
         sprite.setSize(62, 60);
         sprite.setPosition(x, y);
         sprite.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.movimientoOscilante = new MovimientoOscilante(velocidadBase, true);
-        this.animacionCogollo = new AnimacionExamen(animacionBaseEnemigos, textura1, textura2, 0.125f);
+
+        // 4) Movimiento y animación
+        movimientoOscilante = new MovimientoOscilante(VEL_BASE_COGOLLO, true);
+        // AnimacionExamen sólo necesita la base (para blink/fade) y las dos texturas originales
+        animacionCogollo = new AnimacionExamen(animacionBaseEnemigos, rs[0].getTexture(), rs[1].getTexture(), 0.125f);
+
+        // 5) Texture de daño
         this.damageTexture = manager.get(DAMAGE_COGOLLO, Texture.class);
-
     }
-
-    private Sprite colorCogollos() {
-        int random = MathUtils.random(1, 3);
-        Texture t1, t2;
-        switch (random) {
-            case 1:
-                t1 = manager.get(ENEMIGO_COGOLLO, Texture.class);
-                t2 = manager.get(ENEMIGO_COGOLLO2, Texture.class);
-                break;
-            case 2:
-                t1 = manager.get(ENEMIGO_COGOLLO_LILA, Texture.class);
-                t2 = manager.get(ENEMIGO_COGOLLO_LILA2, Texture.class);
-                break;
-            default:
-                t1 = manager.get(ENEMIGO_COGOLLO_NARANJA, Texture.class);
-                t2 = manager.get(ENEMIGO_COGOLLO_NARANJA2, Texture.class);
-        }
-        this.textura1 = t1;
-        this.textura2 = t2;
-        return new Sprite(t1);
-    }
-
 
     @Override
     protected void actualizarMovimiento(float delta) {
+        // Abstraemos la lógica exactamente como tenías:
         movimientoOscilante.actualizarMovimiento(delta, sprite, jugador);
         animacionCogollo.actualizarAnimacion(delta, sprite);
         animacionBaseEnemigos.flipearEnemigo(jugador, sprite);
@@ -75,6 +66,7 @@ public class EnemigoCogollo extends EnemigoBase {
 
     @Override
     protected void iniciarAnimacionMuerte() {
+        // Mismo código tuyo, usando el mapa `animations` que ya existía en EnemigoBase
         Animation<TextureRegion> animMuerteExamen = animations.get("cogollinMuerte");
         animacionBaseEnemigos.iniciarAnimacionMuerte(animMuerteExamen);
         animacionBaseEnemigos.iniciarFadeMuerte(DURACION_FADE_ENEMIGO);
@@ -88,14 +80,14 @@ public class EnemigoCogollo extends EnemigoBase {
 
     @Override
     public ObjetosXP sueltaObjetoXP() {
-        float randomXP = (float) (Math.random() * 100);
+        float randomXP = MathUtils.random(100f);
         if (!haSoltadoXP && randomXP <= 0.75f) {
             haSoltadoXP = true;
             return new ObjetoVida(posXMuerte, posYMuerte);
         }
         if (!haSoltadoXP && randomXP >= 30f) {
             haSoltadoXP = true;
-            return new ObjetoXp(posXMuerte, posYMuerte);
+            return ObjetoXp.obtain(posXMuerte, posYMuerte);
         }
         return null;
     }

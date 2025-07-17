@@ -72,7 +72,7 @@ public class EnemigoRegla extends EnemigoBase {
         } else if (randomNum <= 20) {
             haSoltadoXP = true;
             ObjetoXp objetoXp;
-            objetoXp = new ObjetoXp(posXMuerte, posYMuerte);
+            objetoXp = ObjetoXp.obtain(posXMuerte, posYMuerte);
             objetoXp.setTipo(2);
             return objetoXp;
         }

@@ -81,7 +81,7 @@ public class EnemigoExamen extends EnemigoBase {
         }
         if (!haSoltadoXP && randomXP >= 30f) {
             haSoltadoXP = true;
-            return new ObjetoXp(posXMuerte, posYMuerte);
+            return  ObjetoXp.obtain(posXMuerte, posYMuerte);
         }
         return null;
     }

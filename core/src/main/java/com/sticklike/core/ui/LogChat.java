@@ -1,3 +1,9 @@
+/*
+ *  LogChat – versión optimizada 2
+ *  · Anchos de texto correctos (ya no se superpone nada).
+ *  · Sin nuevas asignaciones por frame.
+ *  · Misma API que tu clase original: copia / pega y compila.
+ */
 package com.sticklike.core.ui;
 
 import com.badlogic.gdx.Gdx;
@@ -8,31 +14,48 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.sticklike.core.interfaces.GameEvent;
+import com.badlogic.gdx.utils.Pool;
 import com.sticklike.core.gameplay.sistemas.eventBus.GameEventBus;
+import com.sticklike.core.interfaces.GameEvent;
 import com.sticklike.core.interfaces.GameEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Locale;
 
 import static com.sticklike.core.utilidades.gestores.GestorConstantes.*;
 
 public class LogChat implements GameEventListener {
+
     private static final float MARGIN = HUD_BAR_Y_OFFSET2;
     private static final float FADE_IN_TIME = 0.75f;
     private static final float FADE_OUT_TIME = 0.75f;
     private static final int MAX_LINES = 6;
-    private static final SimpleDateFormat TIME_FMT = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm:ss");
+
     private final SpriteBatch batch;
     private final BitmapFont font;
     private final ShapeRenderer shapeRenderer;
     private final GlyphLayout layout = new GlyphLayout();
     private final LinkedList<ChatMessage> messages = new LinkedList<>();
+
+    private static final Color COLOR_PANEL = new Color(1f, 1f, 1f, 0.35f);
     private static final Color COLOR_TIME = new Color(0.25f, 0.25f, 0.25f, 1f);
     private static final Color COLOR_TEXT = new Color(0f, 0.8f, 0f, 1f);
+
+    private final Color tmpColorA = new Color();
+    private final Color tmpColorB = new Color();
+
+    private float cachedMaxWidth = 0f;
+
+    private static final Pool<StringBuilder> SB_POOL = new Pool<>() {
+        @Override
+        protected StringBuilder newObject() {
+            return new StringBuilder(128);
+        }
+    };
 
     public LogChat(SpriteBatch batch, BitmapFont font) {
         this.batch = batch;
@@ -40,112 +63,130 @@ public class LogChat implements GameEventListener {
         this.shapeRenderer = new ShapeRenderer();
     }
 
+    /* ─────────────────────────── Eventos ─────────────────────────── */
+
     @Override
     public void onEvent(GameEvent event) {
         addMessage(event.getType(), event.getLogMessage());
     }
 
     private void addMessage(GameEventBus.EventType type, String text) {
-        messages.addLast(new ChatMessage(TIME_FMT.format(new Date()), type, text));
+
+        StringBuilder sb = SB_POOL.obtain();
+        sb.setLength(0);
+        String time = TIME_FMT.format(LocalTime.now());
+
+        sb.append("- [").append(time).append("] - ");
+        String timePart = sb.toString();
+
+        sb.setLength(0);
+        sb.append('(').append(type.name()).append("): ");
+        String typePart = sb.toString();
+
+        sb.setLength(0);
+        sb.append(timePart).append(typePart).append(text);
+        String fullText = sb.toString();
+        SB_POOL.free(sb);
+
+        /* medir anchos una sola vez */
+        float timeWidth, typeWidth, fullWidth;
+        layout.setText(font, timePart);
+        timeWidth = layout.width;
+        layout.setText(font, typePart);
+        typeWidth = layout.width;
+        layout.setText(font, fullText);
+        fullWidth = layout.width;
+
+        cachedMaxWidth = Math.max(cachedMaxWidth, fullWidth);
+
+        messages.addLast(new ChatMessage(timePart, typePart, text, type, timeWidth, typeWidth, fullWidth));
+
         if (messages.size() > MAX_LINES) {
-            messages.removeFirst();
+            ChatMessage removed = messages.removeFirst();
+            if (Math.abs(removed.fullWidth - cachedMaxWidth) < 0.01f) recalcMaxWidth();
         }
     }
 
-    public void renderAboveHUD(float alturaDelHUD) {
-        float y0 = MARGIN + alturaDelHUD;
-        float lineHeight = font.getLineHeight();
-        float delta = Gdx.graphics.getDeltaTime();
-        float padding = 5f;
-        float lineSpacing = 1f;
+    /* ─────────────────────────── Render ─────────────────────────── */
 
-        // 1) Actualizar timers y eliminar expirados
+    public void renderAboveHUD(float alturaDelHUD) {
+
+        /* actualizar estado de mensajes */
+        float delta = Gdx.graphics.getDeltaTime();
         Iterator<ChatMessage> it = messages.iterator();
         while (it.hasNext()) {
             ChatMessage m = it.next();
-            if (m.state == ChatMessage.State.FADE_IN || m.state == ChatMessage.State.FADE_OUT) {
-                m.timer += delta;
-            }
-            if (m.state == ChatMessage.State.FADE_IN && m.timer >= FADE_IN_TIME) {
-                m.state = ChatMessage.State.DISPLAY;
-            }
-            if (m.state == ChatMessage.State.FADE_OUT && m.timer >= FADE_OUT_TIME) {
-                it.remove();
-            }
+            if (m.state != ChatMessage.State.DISPLAY) m.timer += delta;
+            if (m.state == ChatMessage.State.FADE_IN && m.timer >= FADE_IN_TIME) m.state = ChatMessage.State.DISPLAY;
+            if (m.state == ChatMessage.State.FADE_OUT && m.timer >= FADE_OUT_TIME) it.remove();
         }
+        if (messages.isEmpty()) return;
 
+        /* layout general */
         int lines = messages.size();
-        if (lines == 0) return;
+        float lineHeight = font.getLineHeight();
+        float padding = 5f;
+        float spacing = 1f;
+        float y0 = MARGIN + alturaDelHUD;
 
-        // 2) Medir ancho máximo de las líneas
-        float maxTextWidth = 0;
-        for (ChatMessage m : messages) {
-            String timePart = "- [" + m.time + "] - ";
-            String typePart = "(" + m.type.name() + "): ";
-            String full = timePart + typePart + m.text;
-            layout.setText(font, full);
-            maxTextWidth = Math.max(maxTextWidth, layout.width);
-        }
-
-        // 3) Dimensiones del panel translúcido
-        float panelWidth = maxTextWidth + padding * 2;
-        float panelHeight = padding * 2 + lines * lineHeight * lineSpacing;
+        float panelW = cachedMaxWidth + padding * 2f;
+        float panelH = padding * 2f + lines * (lineHeight + spacing);
         float panelX = MARGIN - padding;
         float panelY = y0 - padding;
 
-        // 4) Dibujar fondo translúcido (blanco con alfa baja)
+        /* fondo */
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1f, 1f, 1f, 0.35f);
+        shapeRenderer.setColor(COLOR_PANEL);
 
-        float radius = 4f;
-        int segments = 20;
-
-        shapeRenderer.rect(panelX + radius, panelY, panelWidth - 2 * radius, panelHeight);
-        shapeRenderer.rect(panelX, panelY + radius, radius, panelHeight - 2 * radius);
-        shapeRenderer.rect(panelX + panelWidth - radius, panelY + radius, radius, panelHeight - 2 * radius);
-        shapeRenderer.arc(panelX + radius, panelY + radius, radius, 180f, 90f, segments);
-        shapeRenderer.arc(panelX + panelWidth - radius, panelY + radius, radius, 270f, 90f, segments);
-        shapeRenderer.arc(panelX + panelWidth - radius, panelY + panelHeight - radius, radius,   0f, 90f, segments);
-        shapeRenderer.arc(panelX + radius, panelY + panelHeight - radius, radius,  90f, 90f, segments);
-
+        float r = 4f;
+        int segs = 20;
+        shapeRenderer.rect(panelX + r, panelY, panelW - 2 * r, panelH);
+        shapeRenderer.rect(panelX, panelY + r, r, panelH - 2 * r);
+        shapeRenderer.rect(panelX + panelW - r, panelY + r, r, panelH - 2 * r);
+        shapeRenderer.arc(panelX + r, panelY + r, r, 180f, 90f, segs);
+        shapeRenderer.arc(panelX + panelW - r, panelY + r, r, 270f, 90f, segs);
+        shapeRenderer.arc(panelX + panelW - r, panelY + panelH - r, r, 0f, 90f, segs);
+        shapeRenderer.arc(panelX + r, panelY + panelH - r, r, 90f, 90f, segs);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        // 5) Dibujar texto
+        /* texto */
         batch.begin();
         for (int i = 0; i < lines; i++) {
             ChatMessage m = messages.get(i);
             float alpha = m.getAlpha();
 
-            float yPos = y0 + (lines - 1 - i) * (lineHeight + lineSpacing);
-            float x = MARGIN;
+            float yPos = y0 + (lines - 1 - i) * (lineHeight + spacing);
+            float xPos = MARGIN;
 
-            String timePart = "- [" + m.time + "] - ";
-            layout.setText(font, timePart);
-            Color cTime = new Color(COLOR_TIME);
-            cTime.a = alpha;
-            font.setColor(cTime);
-            font.draw(batch, timePart, x, yPos + layout.height);
-            x += layout.width;
+            /* hora */
+            tmpColorA.set(COLOR_TIME);
+            tmpColorA.a = alpha;
+            font.setColor(tmpColorA);
+            font.draw(batch, m.timePart, xPos, yPos + lineHeight);
+            xPos += m.timeWidth;
 
-            String typePart = "(" + m.type.name() + "): ";
-            layout.setText(font, typePart);
-            Color cType = new Color(colorForType(m.type));
-            cType.a = alpha;
-            font.setColor(cType);
-            font.draw(batch, typePart, x, yPos + layout.height);
-            x += layout.width;
+            /* tipo */
+            tmpColorB.set(colorForType(m.type));
+            tmpColorB.a = alpha;
+            font.setColor(tmpColorB);
+            font.draw(batch, m.typePart, xPos, yPos + lineHeight);
+            xPos += m.typeWidth;
 
-            Color cText = new Color(COLOR_TIME);
-            cText.a = alpha;
-            font.setColor(cText);
-            font.draw(batch, m.text, x, yPos + layout.height);
+            /* texto */
+            tmpColorA.set(COLOR_TIME);
+            tmpColorA.a = alpha;
+            font.setColor(tmpColorA);
+            font.draw(batch, m.text, xPos, yPos + lineHeight);
         }
         batch.end();
     }
+
+    /* ─────────────────────────── Util ─────────────────────────── */
 
     private Color colorForType(GameEventBus.EventType t) {
         return switch (t) {
@@ -159,26 +200,36 @@ public class LogChat implements GameEventListener {
         };
     }
 
+    private void recalcMaxWidth() {
+        cachedMaxWidth = 0f;
+        for (ChatMessage m : messages)
+            if (m.fullWidth > cachedMaxWidth) cachedMaxWidth = m.fullWidth;
+    }
+
     public void dispose() {
         shapeRenderer.dispose();
     }
 
+    /* ───────────────────────── Data Class ───────────────────────── */
+
     private static class ChatMessage {
         enum State {FADE_IN, DISPLAY, FADE_OUT}
 
-        final String time;
+        final String timePart, typePart, text;
         final GameEventBus.EventType type;
-        final String text;
+        final float timeWidth, typeWidth, fullWidth;
 
-        State state;
-        float timer;
+        State state = State.FADE_IN;
+        float timer = 0f;
 
-        ChatMessage(String time, GameEventBus.EventType type, String text) {
-            this.time = time;
-            this.type = type;
+        ChatMessage(String timePart, String typePart, String text, GameEventBus.EventType type, float timeWidth, float typeWidth, float fullWidth) {
+            this.timePart = timePart;
+            this.typePart = typePart;
             this.text = text;
-            this.state = State.FADE_IN;
-            this.timer = 0f;
+            this.type = type;
+            this.timeWidth = timeWidth;
+            this.typeWidth = typeWidth;
+            this.fullWidth = fullWidth;
         }
 
         float getAlpha() {

@@ -30,7 +30,7 @@ public class BossProfe implements Enemigo {
     private final Jugador jugador;
     private final MovimientoBossProfe movimientoBoss;
     private final AnimacionBaseEnemigos animaciones;
-    private float vida = 2750;
+    private float vida = 27;
     private boolean haSoltadoXP = false;
     private boolean procesado = false;
     private final float damageAmount = 26.5f;
@@ -190,7 +190,7 @@ public class BossProfe implements Enemigo {
     public ObjetosXP sueltaObjetoXP() {
         if (!haSoltadoXP) {
             haSoltadoXP = true;
-            return new ObjetoXp(getX(), getY());
+            return ObjetoXp.obtain(getX(), getY());
         }
         return null;
     }

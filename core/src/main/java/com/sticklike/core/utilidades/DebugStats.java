@@ -171,4 +171,8 @@ public class DebugStats {
     public void dispose() {
         font.dispose();
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 }
